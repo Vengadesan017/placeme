@@ -1,0 +1,376 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+
+}
+
+
+.right-container {
+  min-height: 400px;
+  max-height: max-content;
+  height: auto;
+
+  /* mod */
+  width: 800px;
+
+
+  margin-top: 40px;
+  /*background-color: aqua;*/
+  /*background-color: white;*/
+  margin-left: 50px;
+  border-radius: 15px;
+}
+
+/**/
+.info-container {
+  min-height: 250px;
+  height: auto;
+  /*background-color: rgb(104, 77, 77);*/
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 15px;
+
+  /* mod */
+  background-color: #fff;
+}
+
+.info-name {
+  /* mod */
+  min-height: 80px;
+  height: auto;
+  /*background-color: bisque;*/
+  display: flex;
+
+}
+
+.info-name1 {
+  /* mod */
+  min-height: 80px;
+  height: auto;
+  /*background-color: blue;*/
+
+  width: 74%;
+}
+
+.info-date {
+  /* mod */
+  min-height: 80px;
+  height: auto;
+  /*background-color: cadetblue;*/
+  width: 26%;
+
+  display: flex;
+  justify-content: end;
+  /*background-color: blanchedalmond;*/
+}
+
+.name-div {
+  display: flex;
+  /*background-color: rgb(71, 216, 216);*/
+  flex-wrap: wrap;
+
+}
+
+.name-div h1 {
+  font-size: 28px;
+  font-weight: 900;
+  flex-wrap: wrap;
+
+}
+
+.fa-pencil {
+  font-size: 20px;
+  margin-top: 13px;
+  margin-left: 2px;
+
+}
+
+.detial-div-name p {
+  font-size: 12px;
+  font-weight: 500;
+
+}
+
+.info-date p {
+  font-size: 13px;
+  margin-top: 15px;
+}
+
+.update-p {
+  color: gray;
+}
+
+.date {
+  color: rgb(110, 110, 110);
+}
+
+.detail-main {
+  min-height: 160px;
+  height: auto;
+  /*background-color: blueviolet;*/
+  display: flex;
+}
+
+/* mod */
+.detail-1 {
+  min-height: 80px;
+  height: auto;
+  /* background-color: aquamarine; */
+  width: 50%;
+  display: flex;
+}
+
+/* mod */
+.gender-box {
+  /* background-color: darkgoldenrod;  */
+  height: 160px;
+  width: 40%;
+
+
+  padding-top: 10px;
+
+}
+
+/* mod */
+.gender-box-ul {
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 140px;
+  width: 100%;
+  border-right: 2px solid rgb(168, 158, 158);
+}
+
+.gender-box-person {
+  display: flex;
+}
+
+.gender-box-date {
+  display: flex;
+}
+
+.gender-box-place {
+  display: flex;
+  width: 100%;
+  margin-top: 2px;
+
+}
+
+
+
+
+.fa-user,
+.fa-calendar-week,
+.fa-location-dot {
+  margin-right: 8px;
+  margin-top: 3px;
+}
+
+.fa-location-dot {
+  font-size: 18px;
+}
+
+.gender-box-place p {
+  font-size: 14px;
+
+
+}
+
+.gender-box-date p {
+  margin-top: 2px;
+  font-size: 14px;
+}
+
+.phone-box {
+  /* background-color: cornflowerblue; */
+  height: 160px;
+  padding-right: 10px;
+  padding-top: 10px;
+  width: 60%;
+
+
+}
+
+/* mod */
+.phone-box-ul {
+  /* background-color: crimson;  */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  min-height: 140px;
+  height: auto;
+  width: 100%;
+  padding-left: 20px;
+  padding-top: 10px;
+}
+
+/* mod */
+.phone-box-ul li {
+  margin-bottom: 2px;
+}
+
+.phone-box-person {
+  display: flex;
+}
+
+.phone-box-date {
+  display: flex;
+  margin-top: 2px;
+
+}
+
+/* mod */
+.email {
+  flex-wrap: wrap;
+}
+
+.email-div {
+  flex-wrap: wrap;
+}
+
+
+.phone-box-place {
+  display: flex;
+  width: 100%;
+  margin-bottom: 10px;
+
+
+}
+
+.fa-phone {
+  margin-right: 8px;
+  margin-top: 3px;
+}
+
+.fa-envelope {
+  margin-right: 8px;
+  margin-top: 5px;
+}
+
+.fa-suitcase {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+.phone-box-place p {
+  font-size: 14px;
+
+
+}
+
+.phone-box-date p {
+  margin-top: 2px;
+  font-size: 14px;
+}
+
+
+.uploadfile-div {
+  height: 160px;
+
+  /* mod */
+  padding-top: 20px;
+  padding-right: 0px;
+
+  /* background-color: rgb(30, 210, 171);  */
+
+  margin-left: 45px;
+  display: flex;
+  justify-content: end;
+
+
+  width: 50%;
+
+}
+
+/* mod   */
+.color-div {
+  height: 120px;
+  background-color: #FFBD03;
+  display: flex;
+  border-radius: 15px;
+  width: 90%;
+
+
+}
+
+.resume {
+  height: 120px;
+  width: 100%;
+  /* background-color: rgb(200, 255, 0); */
+
+}
+
+.resume-ul li {
+  margin-top: 20px;
+  margin-left: 10px;
+}
+
+.resume-a1 {
+  display: flex;
+  margin-top: 5px;
+}
+
+.resume-a2 {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2px;
+
+}
+
+.add-resume {
+  /*display: flex;*/
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.fa-file {
+  margin-right: 10px;
+  margin-top: 2px;
+  font-size: 20px;
+}
+
+.resume-a1 .fa-regular {
+  font-size: 20px;
+  margin-top: 2px;
+}
+
+
+
+
+
+
+
+
+
+/* mod */
+
+.upload-file {
+  height: 120px;
+  width: 50%;
+  /* background-color: lightcoral; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  padding-top: 0px;
+  padding-bottom: 28px;
+}
+
+/* mod */
+.upload-btn {
+  width: 40%;
+  margin-right: 10px;
+  border: none;
+  border-radius: 15px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  font-size: 16px;
+  background-color: darkblue;
+  color: white;
+
+}

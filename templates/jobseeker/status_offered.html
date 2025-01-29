@@ -1,0 +1,154 @@
+<section class="dev-list" id="offered">
+
+
+    <div class="left">
+    
+        {% if offered %}
+        {% for job in offered %}
+            <div class="dev-detail-2 {% if job_status == job %}active{% endif %}">
+    
+                <div class="dev-detail-2-inside">
+            
+                    <h1 class="dev-name">{{ job.job.title }}</h1>
+                    <p class="company-name">{{ job.job.company.company_name }}</p>
+                    <div class="application">
+                        <i class="fa-sharp fa-solid fa-circle-check"></i>
+                        <p class="application-saved">
+                            {% if job.status == "Selected" %}
+                            Selected in Interview 
+                            {% elif job.status == "Offered"%}
+                            Offer letter issued
+                            {% elif job.status == "Accepted"%}
+                            Offer letter Accepted  
+                            {% elif job.status == "Rejected"%}
+                            Offer Rejected  
+                            {% else%}
+                            You are hired
+                            {% endif%}
+                            
+    
+                        </p>
+                    </div>
+                </div>
+                <div class="dev-box2">
+                    <div class="dev-box2-profile">
+    
+                    </div>
+                    <div class="dev-box2-a">
+                        {% if job_status != job %}                        
+                        <form method="post" action="#">
+                            {% csrf_token %}
+                        <input type="hidden" value="{{ job.id }}" name="id">
+                        <button type="submit" name="view_offered_status" style="color:#000" class="save_job"><u>View Status</u></button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                
+            </div>
+
+            {% endfor %}
+            {% else %}
+                <a href="{% url 'job_seeker:home' %}">No data found. Click here to search.</a>
+            {% endif%}
+    
+    
+    </div>
+    
+    
+    <!-----------right side dev-info------------------------------------------------------------------->
+    <div class="right">
+    
+    
+    
+    
+        <div class="right-insert">
+    
+    
+            <div class="right-dev-info">
+    
+    
+                <div class="right-dev-info-fixed-1">
+    
+                    <!--dev-name-company-and about-job-->
+                    <div class="right-dev-info-fixed-1-1">
+    
+                        <div class="right-dev-info-fixed-1-part1">
+    
+                            <h1 class="right-fixied-name">JUNIOR DEVELOPER</h1>
+                            <p class="right-fixied-company">Kavery technologes</p>
+                        
+                            <div class="right-a-div">
+                                <a href="{% url 'job_seeker:search' %}?q={{ job_status.job.title }}" class="right-a">
+                                    View similar jobs
+                                </a>
+                            </div>
+                        </div>
+                        <div class="right-dev-info-fixed-1-part2">
+                           <div class="right-dev-info-about-job">
+                            <a href="{% url 'job_seeker:job' %}?r={{ job_status.job.slug }}" class="a-aboutjob">About job</a>
+                           </div> 
+                        </div>  
+                    </div>
+    
+    
+    
+    
+    
+                    <!-----fixed-box-2-->
+                    <div class="right-dev-info-fixed-1-2">
+                        <div class="application-div-text">
+                            <p class="application-status-p">Application Status</p>
+                        </div>
+                    </div>
+    
+                    <!---pending status-bar-->
+                    <div class="bar-set">
+                        <div class="progress-track">
+                            {% if job_status.rejected_at%}
+                            <ul id="progressbar">
+                            <p><h3>Sorry, the job offer rejected.</h3><p>
+                            </ul>
+                            {% else %}
+                            <ul id="progressbar">
+                                <li class="step0 {% if job_status.offered_at %}active{% endif %}" id="step1">Offered <p>{{job_status.offered_at|date:'d M Y'}}</p></li>
+                                <li class="step0 text-center {% if job_status.accepted_at %}active{% endif %}" id="step2">Offer Accepted<p>{{job_status.accepted_at|date:'d M Y'}}</p></li>
+                                <li class="step0 text-center {% if job_status.onboarding_at %}active{% endif %}" id="step2-1">Onboarding await<p>{{job_status.onboarding_at|date:'d M Y'}}</p></li>
+    <!--                                         <li class="step0 active text-right" id="step3"><span id="three">Joining Await<p>27 Feb 24</p></span></li> -->
+                                <li class="step0 text-right {% if job_status.hired_at %}active{% endif %}" id="step4">Joining Await<p>{{job_status.hired_at|date:'d M Y'}}</p></li>
+                            </ul>
+                            {% endif %}
+
+                        </div>            
+                    </div>     
+                </div>
+                <!--completed fixed right box-->
+                <!--recommendation box text-->
+                <div class="right-recommdation-info">
+                    <div class="right--div">
+                        <h1 class="right-recommdation-text">Action Required :</h1>
+                     </div>
+                     <!--create recommendation box start-->
+                     <div class="right-rec-box-scroll">
+
+    
+                            <div class="right-rec-box-width">
+                        {% if not job_status.rejected_at and job_status.accepted_at and not job_status.onboarding_at%}                            
+                        <div class="button" style="display: flex;justify-content: space-around;position: relative;bottom: 20px;">
+                                <a href="{% url 'job_seeker:onboarding' page="personal" %}" class="">Click here to process Onboarding</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                </div>
+            </div>
+    
+    
+    
+        </div>
+        
+    
+    </div>
+    </section>

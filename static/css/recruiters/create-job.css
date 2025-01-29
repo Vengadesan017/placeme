@@ -1,0 +1,390 @@
+
+.main{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 100px;
+}
+.all-info{
+        width: 1100px;
+        /* background-color: bisque; */
+        min-height: 700px;
+        height: auto;
+}
+
+.account{
+        font-size: 18px;
+        text-decoration: underline solid #141B5F;
+        color: #141B5F;
+        margin-left: 10px; 
+        /* background-color: #333; */
+        padding-left: 15px;   
+}
+.info-list{
+        width: auto;
+        min-height: 1000px;
+        height: auto;
+        /* background-color: khaki; */
+        margin-top: 10px;
+        margin-left:30px ;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+
+}
+    .company-div{
+        display: flex;
+        width: 100%;
+        /* background-color: brown;  */
+        justify-content: space-between;
+        align-items: center;
+        height: 80px;
+        padding-top: 10px;
+
+    }
+    span{
+        color: red;
+    }
+
+    .company-input {
+        width: 80%;
+        height: 40px;
+        border-radius: 10px;
+        border: 1px solid #141B5F;
+        padding-left: 10px;
+        font-size: 16px;
+        color: #333;
+        background-color: #f0f4f8;  /* Light background color */
+        transition: all 0.3s ease;   /* Smooth transition for effects */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for elevation */
+    }
+    
+
+    /* Focused input style (when user clicks/selects the input field) */
+    .company-input:focus ,.company-input-last:focus ,.admin-input:focus ,.textarea-div textarea:focus {
+        border: 1px solid #0066cc;  /* Blue border on focus */
+        background-color: #fff;     /* White background when focused */
+        box-shadow: 0 4px 8px rgba(0, 102, 204, 0.3); /* Subtle blue shadow */
+        outline: none;  /* Remove default outline */
+    }
+    
+    /* Hover effect (when the user hovers over the input) */
+    .company-input:hover ,.company-input-last:hover,.admin-input:hover,.textarea-div textarea:hover {
+        border: 1px solid #0066cc;  /* Change border color on hover */
+        background-color: #e8f0fe;   /* Slightly darker background */
+        box-shadow: 0 2px 8px rgba(0, 102, 204, 0.15); /* Light shadow on hover */
+    }
+    
+    /* Active state style when typing (focused and typed into) */
+    .company-input:active,.company-input-last:active ,.admin-input:active ,.textarea-div textarea:active {
+        border: 1px solid #005bb5;  /* Darker blue border when typing */
+        box-shadow: 0 2px 8px rgba(0, 91, 181, 0.3); /* Darker shadow when typing */
+    }
+    
+    /* Placeholder text customization */
+    .company-input::placeholder ,.company-input-last::placeholder,.admin-input::placeholder{
+        color: #999;  /* Light grey placeholder */
+        font-style: italic;
+        opacity: 0.7;  /* Slightly transparent */
+    }
+    
+
+
+    .company-div p{
+        font-size: 20px;
+        width: 20%;
+    }
+    .address-div{
+        display: flex;
+        width: 1000px;
+        /* background-color: rgb(58, 97, 134);  */
+        justify-content: space-between;
+    
+        height: 80px;
+        padding-top: 10px;
+    }
+    .address-div p{
+        font-size: 20px;
+    }
+    .admin-div{
+        display: flex;
+        /* background-color: darksalmon; */
+        width: 100%;
+        height: 100px;
+        flex-wrap: wrap;
+        
+    }
+    .admin-name{
+        display: flex;
+        width: 50%;
+        /* background-color: brown; */
+        justify-content: space-between;
+        align-items: center;
+    }
+    .admin-name p{
+        font-size: 20px;
+        width: 40%;
+        flex-wrap: nowrap;
+    }
+    .admin-input{
+        width: 60%;
+        height: 40px;
+        border-radius: 10px;
+        border: 0.5px solid #141B5F;
+        padding-left: 10px;
+        background-color: #f0f4f8;  /* Light background color */
+        transition: all 0.3s ease;   /* Smooth transition for effects */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for elevation */
+    }
+    .admin-role{
+        display: flex;
+        width: 50%;
+        /* background-color: cornflowerblue; */
+        justify-content: space-between;
+        padding-left: 20px;
+        align-items: center;
+    }
+    .admin-role p{
+        font-size: 20px;
+        width: 40%;
+        flex-wrap: nowrap;
+    }
+    .email-div{
+        display: flex;
+        /* background-color: darksalmon; */
+        width: 100%;
+        height: 80px;
+        flex-wrap: wrap;
+    }
+    .email-name{
+        display: flex;
+        width: 50%;
+        /* background-color: rgb(34, 110, 38); */
+        justify-content: space-between;
+        align-items: center;
+    }
+    .email-name p{
+        font-size: 20px;
+        width: 40%;
+    }
+    .website{
+        display: flex;
+        width: 50%;
+        /* background-color: rgb(221, 100, 237); */
+        justify-content: space-between;
+        padding-left: 20px;
+        align-items: center; 
+    }
+    .website p{
+        font-size: 20px;
+        width: 40%;
+    }
+
+    .based-div {
+        display: flex;
+        /* background-color: darksalmon; */
+        width: 1000px;
+        height: 80px;
+    }
+    
+    .manufactoring{
+        display: flex;
+        width: 50%;
+        /* background-color: rgb(47, 122, 141); */
+        
+        align-items: center;
+    }
+    .man-div{
+        margin-left: 20px;
+    }
+    
+
+    /* Hide the default radio button appearance */
+.check {
+    -webkit-appearance: none;  /* Remove default radio button in Webkit browsers */
+    -moz-appearance: none;     /* Remove default radio button in Firefox */
+    appearance: none;          /* Remove default appearance */
+    width: 20px;               /* Set a larger width for the box */
+    height: 20px;              /* Set a larger height for the box */
+    background-color: gray;
+    border-radius: 0;          /* Keep the box square (no rounding) */
+    display: inline-block;     /* Ensure it stays inline with text */
+    position: relative;
+    cursor: pointer;          /* Pointer cursor for better user experience */
+    transition: background-color 0.3s ease; /* Smooth transition on color change */
+    margin-top: 5px;
+}
+
+/* When the radio button is checked, change the background to green */
+.check:checked {
+    background-color: green;   /* Green color when checked */
+    border-color: green;       /* Green border when checked */
+}
+
+/* Optional: Styling for hover effect */
+.check:hover {
+    border-color: #007BFF; /* Change border color on hover */
+}
+
+/* Optional: Style when radio button is focused */
+.check:focus {
+    outline: none; /* Remove outline when focused */
+    border-color: #47B749; /* Dark green border on focus */
+}
+
+
+.service{
+    display: flex;
+    width: 50%;
+    /* background-color: rgb(98, 86, 165); */
+        
+    align-items: center;
+}
+.ser-div{
+    margin-left: 20px;
+}
+
+
+
+
+.admin-input-sel{
+    border-radius: 10px;
+    border: 1px solid #141B5F;
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 16px;
+    color: #333;
+    background-color: #f0f4f8;  /* Light background color */
+    transition: all 0.3s ease;   /* Smooth transition for effects */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    width: 60%;
+}
+.admin-input-sel:active{
+    border: 3px solid #005bb5;  /* Darker blue border when typing */
+    box-shadow: 0 2px 8px rgba(0, 91, 181, 0.3); 
+}
+
+.about{
+    display: flex;
+    /* background-color: rgb(100, 154, 199); */
+    width: 100%;
+    min-height: 80px;
+    height: auto;
+    justify-content: space-between;
+}
+.about-p-div{
+    height: 80px;
+    display: flex;
+    align-items: center;
+    width: 20%;
+}
+.about-p-div p{
+    font-size: 20px;
+}
+.textarea-div textarea{
+    width: 99%;
+    margin: 5px;
+    padding: 5px;
+    font-size: 20px;
+    border: solid #141B5F 0.5px;
+    border-radius: 10px;
+    height: 300px;
+    margin-top: 50px;
+    background-color: #f0f4f8;  /* Light background color */
+    transition: all 0.3s ease;   /* Smooth transition for effects */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for elevation */
+    
+}
+.textarea-div{
+ width: 80%;
+ /* background-color: bisque; */
+ display: flex;
+ flex-direction: column;
+ align-items: end;
+
+}
+.textarea-div p{
+    margin-top: 10px;
+    margin-right: 20px;
+    font-size: 14px;
+    color: #555;
+    
+    /* background-color: #333; */
+}
+
+
+.btn-div{
+    display: flex;
+    /* background-color: darksalmon; */
+    width: 100%;
+    height: 80px;
+    justify-content: end;
+    align-items: center;
+}
+
+.btn{
+    background-color: #141B5F;
+    border: none;
+    font-size: 16px;
+    color: aliceblue;
+    padding: 6px 12px;
+    border-radius: 5px;
+
+}
+.company-div-last{
+    display: flex;
+    width: 100%;
+    /* background-color: brown;  */
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    padding-top: 10px;
+}
+.company-input-last{
+    width: 80%;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid #141B5F;
+    padding-left: 10px;
+    font-size: 16px;
+    color: #333;
+    background-color: #f0f4f8;  /* Light background color */
+    transition: all 0.3s ease;   /* Smooth transition for effects */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.company-div-last p{
+    font-size: 20px;
+    width: 20%;
+}
+
+.admin-name-last{
+    display: flex;
+    width: 50%;
+    /* background-color: brown; */
+    justify-content: space-between;
+    align-items: center;
+}
+.admin-name-last p{
+    font-size: 20px;
+    width: 40%;
+    flex-wrap: nowrap;
+}
+.admin-input-last{
+    width: 60%;
+    height: 40px;
+    border-radius: 10px;
+    border: 0.5px solid #141B5F;
+    padding-left: 10px;
+    background-color: #f0f4f8;  /* Light background color */
+    transition: all 0.3s ease;   /* Smooth transition for effects */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for elevation */
+    
+}
+.admin-div-last{
+    display: flex;
+    /* background-color: darksalmon; */
+    width: 100%;
+    height: 100px;
+    flex-wrap: wrap;
+}

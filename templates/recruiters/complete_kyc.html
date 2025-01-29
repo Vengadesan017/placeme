@@ -1,0 +1,157 @@
+{% extends "recruiters/layout.html" %}
+
+{% block title %}
+Waiting for KYC verification
+{% endblock title %}
+{% load static %}
+{% block statics %}
+{% comment %} <link rel="stylesheet" href="{% static 'css/profile2.css' %}"> {% endcomment %}
+<link rel="stylesheet" href="{% static 'css/recruiters/create-job.css' %}">
+<style>
+.r-down-main{
+    background-color: #f4f5ff;
+}
+.kyc-card{
+    background-color: #fff;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    padding: 20px 20px;
+    margin-bottom: 20px;
+}
+</style>
+{% endblock statics %}
+
+
+{% block content %}
+
+            {% if messages %}
+            {% for message in messages %}
+              <div class='alert alert-{{ message.tags }}'>
+                <span class="closebtn">&times;</span>
+                  {{ message }}
+              </div>    
+            {% endfor %}
+          {% endif %}
+ 
+
+
+<div class="r-right-down-main">
+    <div class="r-down-main">
+        <div class="account-div">
+            <p class="account">Hai {{company.admin_name}}</p>
+        </div>
+        <div class="info-list">
+
+            {% if company %}
+            <form method="POST" action="#" enctype="multipart/form-data">
+                {% csrf_token %}    
+                <div class="kyc-card" style="display:block">
+                <h3 style="color:#141B5F;">Complete KYC verification process to access PlaceNow recruiting portal</h3>
+
+
+                <div class="admin-div">
+                    <div class="admin-name">
+                        
+                        <p >GST no.<span>*</span></p>
+                        <input type="text" name="gst_no" class="admin-input" placeholder="Enter your company GST no." required/> 
+                    </div>
+                    <div class="admin-role">
+                        <p>GST Document <span>*</span></p>
+                        <input type="file" name="gst_doc" class="admin-input" placeholder="onsite / remote / hybrid" required/>
+                    </div>
+    
+                </div>
+                <div class="admin-div">
+                    <div class="admin-name">
+                        
+                        <p >PAN no.<span>*</span></p>
+                        <input type="text" name="pan_no" class="admin-input" placeholder="Enter your company PAN no." required/> 
+                    </div>
+                    <div class="admin-role">
+                        <p>PAN Document <span>*</span></p>
+                        <input type="file" name="pan_doc" class="admin-input" placeholder="onsite / remote / hybrid" required/>
+                    </div>
+    
+                </div>
+
+                <div class="admin-div">
+                    <div class="admin-name">
+                        
+                        <p >IFSC code<span>*</span></p>
+                        <input type="text" class="admin-input" name="back_ifsc_no" placeholder="Enter your company bank IFSC code" required/> 
+                    </div>
+                    <div class="admin-role">
+                        <p>Bank book<span>*</span></p>
+                        <input type="file" class="admin-input" name="bank_account_doc" placeholder="onsite / remote / hybrid" required/>
+                    </div>
+    
+                </div> 
+                {% if 'Limited' in company.Company_type or 'limited' in company.Company_type %}
+                
+                <div class="admin-div">
+                    {% comment %} <div class="admin-name">
+                        
+                        <p >Li</p>
+                        <input class="admin-input" placeholder="Enter your company GST no." required/> 
+                    </div> {% endcomment %}
+                    <div class="admin-role">
+                        <p>List of director Document <span>*</span></p>
+                        <input type="file" class="admin-input" name="list_of_dir_doc" placeholder="onsite / remote / hybrid" required/>
+                    </div>
+    
+                </div>
+                {% endif %}
+
+            </div>
+
+
+
+
+            <div class="btn-div">
+                <button type="submit" name="upload_kyc" class="btn" >Save Documents</button>
+            </div>
+        </form>
+            {% else %}
+                <div class="kyc-card" style="display:block">
+                <h3 style="color:#141B5F;margin-bottom: 20px;">Waiting for KYC verification</h3>
+
+                    <center style="margin: 20px;">With in 24 hr your KYC is Verified. Please wait</center>
+
+            </div>
+
+                <div class="kyc-card" style="display:block">
+                <h3 style="color:#141B5F;">For Help. Contact us</h3>
+
+                <div class="admin-div">
+                    <div class="admin-name">
+                        Call : 
+                        987-9879-987<br>
+                        Mail : 
+                        support@placenow.com
+                    </div>
+    
+                </div>
+            </div>
+
+
+            {% endif %}
+
+
+
+        </div>
+    </div>
+    </div>
+
+
+ 
+
+
+
+
+
+
+        
+    {% comment %} <script src="{% static 'js/jobseeker/profile.js' %}"></script> {% endcomment %}
+ 
+    {% endblock content %}

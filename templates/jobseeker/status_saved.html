@@ -1,0 +1,146 @@
+<section class="#">
+    <div class="#">
+
+    {% if bookmarks%}
+    {% for job in bookmarks %}
+    <div class="saved-jobs">
+    <a href="/job/?r={{ job.slug }}" target="_blank" class="job-description">
+        <div class="job-card">
+            <div class="job-header">
+                <div>
+                    <h2>{{ job.title }}</h2>
+                    <p class="" style="font-size: 14px;font-weight: 520;color: #141b5f;">{{ job.company.company_name }}</p>
+                </div>
+                <div class="company-logo"></div>
+            </div>
+    
+            <div class="job-details">
+                <p class="details-row">
+                    <span><i class="fas fa-map-marker-alt"></i>
+                        {{ job.location_id.all|join:", " }}
+                    </span>
+                    <span><i class="fa fa-briefcase"></i>
+                        {% if job.min_experience != job.max_experience %}
+                        {{ job.min_experience|floatformat:0 }} - {{ job.max_experience|floatformat:0 }} Years
+                        {% else %}
+                            {{ job.max_experience|floatformat:0 }} Years
+                        {% endif%}
+                        </span>
+                  </p>
+                  <p class="details-row">
+                    <span><i class="fas fa-clock"></i>{{ job.employment_type }}</span>
+                    <span><i class="fa fa-indian-rupee-sign"></i>{{ job.salary|floatformat:0 }}/Month</span>
+                    <span><i class="fa fa-graduation-cap"></i>{{ job.qualifications.all|join:", " }}</span>
+                    <span><i class="fa fa-laptop"></i>
+                        {%if job.is_onsite %}
+                        Onsite
+                    {% endif %}
+                    {%if job.is_work_from_home %}
+                        {%if job.is_onsite%}
+                           ,
+                        {% endif %}
+                        Work from Home
+                    {% endif %}
+                    {%if job.is_hybrid %}
+                        {%if job.is_work_from_home %}
+                            , 
+                        {% endif %}
+                        Hybrid
+                    {% endif %}                            
+                    </span>
+                  </p>
+                <div class="skills">
+                    {% comment %} {% if skills_list %}
+                    {% for skill in skills_list %}
+                    {% if skill %}
+                        <span class="key-skills">{{ skill }}</span>
+                    {% else %}
+                    {% endif%}
+                    {% endfor %}
+                    {% else %}
+                        <span class="key-skills">No skills provided</span>
+                    {% endif %} {% endcomment %}
+
+                    <span class="key-skills">{{ job.skills }}</span>
+                    <span class="key-skills">CSS</span>
+                    <span class="key-skills">Java Script</span>
+                    <span class="key-skills">Django</span>
+                </div>
+                <p3 class="description">
+                    {{ job.description }}
+                </p3>
+            </div>
+    
+            <div class="job-footer">
+                <span>{{ job.posted_date|timesince }} ago</span>
+                <span>{{ job.opening_count }} Openings</span>
+                <span>{{ job.applied_count }} Applied</span>
+                <form method="POST" action="/bookmark/">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{ job.slug }}" name="slug">
+                    <input type="checkbox" id="save{{ job.job_id }}" class="bookmark-checkbox" {% if job in bookmarks %} checked{% endif%}>
+                    <label for="save{{ job.job_id }}">
+                        <button type="submit" class="save_job" name="save_job"><i class="fas fa-bookmark bookmark-icon"></i><span class="save-text">{% if job in bookmarks %}Saved{% else  %}Save{% endif%}<span></button>
+                        
+                    </label>
+                </form>
+                
+            </div>
+        </div>
+        </a>
+    </div>
+{% endfor %}
+{% else %}
+<center><a href="{% url 'job_seeker:home' %}">No saved jobs. Click here to search you dream job</a></center>
+{% endif %}
+    </div>
+   </section>
+
+
+
+
+
+
+
+{% comment %} <section class="dev-list" id="saved">
+
+
+
+
+
+    <!-----------right side dev-info------------------------------------------------------------------->
+    <div class="right">
+    
+    
+    
+    
+        <div class="right-insert">
+    
+    
+            <div class="right-dev-info">
+    
+    
+                
+                <!--completed fixed right box-->
+                <!--recommendation box text-->
+                <div class="right-recommdation-info">
+                    <div class="right-recommendation-div">
+                        <h1 class="right-recommdation-text">Saved Jobs page is work in progress due to API INTEGRATION</h1>
+                     </div>
+                     <!--create recommendation box start-->
+                     <div class="right-rec-box-scroll scroll">
+    
+    
+                     </div>
+    
+                </div>
+    
+            </div>
+    
+    
+    
+        </div>
+        
+    
+    </div>
+    </section> {% endcomment %}

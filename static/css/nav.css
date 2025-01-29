@@ -1,0 +1,372 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+
+}
+
+body {
+  font-family: sans-serif;
+  background-color: #f4f4ff;
+
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 3;
+}
+
+nav {
+  background: #fff;
+  /*    padding: 5px 20px;*/
+}
+
+ul {
+  list-style-type: none;
+}
+
+a {
+  color: #000000;
+  text-decoration: none;
+}
+
+nav ul li a,
+nav ul li a:after,
+nav ul li a:before {
+  transition: all .5s;
+}
+
+/* nav ul li a:hover {
+  color: #FF8C00;
+} */
+
+.logo a:hover {
+  text-decoration-color: #FFBD03;
+  width: 100%;
+}
+
+.logo a:hover {
+  text-decoration: none;
+}
+
+.item.active a {
+  font-weight: bold;
+  color: #FFBD03;
+  /* text-shadow: 1px 1px 1px #FFBD03; 141b5f*/
+}
+
+.menu li {
+  font-size: 14px;
+  padding: 6px 6px;
+  white-space: nowrap;
+}
+
+.logo a,
+.toggle a {
+  font-size: 16px;
+}
+
+.button.secondary {
+  border-bottom: 1px #444 solid;
+}
+
+/* Mobile menu */
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggle {
+  order: 1;
+}
+
+.item.button {
+  order: 3;
+}
+
+.item {
+  width: 100%;
+  text-align: center;
+  order: 3;
+  display: none;
+}
+
+.item.active {
+  display: block;
+}
+
+/* Navbar Toggle */
+.toggle {
+  cursor: pointer;
+}
+
+.bars {
+  background: #999;
+  display: inline-block;
+  height: 2px;
+  position: relative;
+  transition: background .2s ease-out;
+  width: 18px;
+}
+
+.bars:before,
+.bars:after {
+  background: #999;
+  content: '';
+  display: block;
+  height: 100%;
+  position: absolute;
+  transition: all .2s ease-out;
+  width: 100%;
+}
+
+.bars:before {
+  top: 5px;
+}
+
+.bars:after {
+  top: -5px;
+}
+
+.toggle.active .bars {
+  background-color: transparent;
+  /* Makes the middle bar invisible */
+}
+
+.toggle.active .bars:before {
+  transform: rotate(45deg);
+  /* Rotates the top bar to 45 degrees */
+  top: 0;
+  /* Centers the rotated top bar */
+}
+
+.toggle.active .bars:after {
+  transform: rotate(-45deg);
+  /* Rotates the bottom bar to -45 degrees */
+  top: 0;
+  /* Centers the rotated bottom bar */
+}
+
+
+.nav_select {
+  border: 2px solid #FFBD03;
+  background-color: #FFBD03;
+  color: #000;
+  padding: 8px 8px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  /* Remove default arrow in some browsers */
+  outline: none;
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 8px 8px;
+  /* Size of the arrow */
+}
+
+.nav_link {
+  /* border: 2px solid #FFBD03; */
+  background-color: #FFBD03;
+  color: #000;
+  padding: 8px 8px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 8px 8px;
+  transition: all .9s;
+}
+
+/* .nav_select:focus {
+  border-color: #FF8C00;
+  box-shadow: 0 0 5px rgba(255, 140, 0, 0.5);
+} */
+
+.nav_link:hover{
+  background-color: #141b5f;
+  color: #fff;
+}
+
+.nav_link:hover a{
+  color: #fff;
+}
+
+.nav_select option {
+  background-color: #FFFFFF;
+  color: #000;
+}
+
+
+/* Tablet menu */
+@media all and (min-width: 468px) {
+  .menu {
+    justify-content: center;
+  }
+
+  .logo {
+    flex: 1;
+  }
+
+  .item.button {
+    width: auto;
+    order: 1;
+    display: block;
+  }
+
+  .toggle {
+    order: 2;
+  }
+
+  .button.secondary {
+    border: 0;
+  }
+
+  .button a {
+    padding: 9px 18px;
+    background: #141b5f;
+    /* border: 1px #141b5f solid; */
+    color: #fff;
+    border-radius: 50em;
+    transition: all .5s;
+  }
+
+  .button.secondary a {
+    background: transparent;
+  }
+
+  .button a:hover {
+    text-decoration: none;
+    transition: all .5s;
+  }
+
+  .button:not(.secondary) a:hover {
+    background: #FFBD03;
+    border-color: #141b5f;
+    color: #141b5f;
+  }
+
+  .button.secondary a:hover {
+    color: #ddd;
+  }
+}
+
+/* Desktop menu */
+@media all and (min-width: 768px) {
+  .item {
+    display: block;
+    width: auto;
+  }
+
+  .toggle {
+    display: none;
+  }
+
+  .logo {
+    order: 0;
+  }
+
+  .item {
+    order: 1;
+  }
+
+  .button {
+    order: 2;
+  }
+
+  .menu li {
+    padding: 8px 10px;
+  }
+
+  .menu li.button {
+    padding-right: 0;
+  }
+}
+
+nav {
+  border-bottom: 3px solid transparent;
+  border-image: linear-gradient(to right, #9DAAF2, #141b5f, #141b5f, #141b5f, #141b5f, #141b5f, #9DAAF2);
+  border-image-slice: 1;
+
+}
+
+
+footer {
+  /* background-color: #f0f0f0; */
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+  margin-top: auto;
+  /* Pushes the footer to the bottom */
+}
+
+footer .footer-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+footer .footer-content a {
+  color: #000;
+  text-decoration: none;
+}
+
+
+footer span {
+  color: #000;
+}
+
+/*add home logo*/
+.fa-house,
+.fa-briefcase {
+  font-size: 20px;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+/*add notification bell*/
+.fa-bell {
+  font-size: 20px;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bag-logo {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.profile-logo {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 12px;
+}

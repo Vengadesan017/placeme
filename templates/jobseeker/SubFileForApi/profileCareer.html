@@ -1,0 +1,93 @@
+
+<!-- The Modal for ==========personal Info===================== -->
+<div class="modal" id="CareerModal">
+    <div class="modal-dialog">
+        <form method="post" action="#">
+            {% csrf_token %}
+        <div class="modal-content">
+    
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h3 class="modal-title">Edit your Career Info</h3>
+            <button type="button" class="btn-close" id="closeCareerModalButton"><i class='fas fa-times edit'></i></button>
+        </div>
+    
+        <!-- Modal Body -->
+        <div class="modal-body">
+        <div class="margin20">
+        <div class="">
+
+            <table class="modal-table">
+                <tr> 
+                    <td><b>Current cost to company(CTC)</b></td>
+                    <td><input type="text" id="#" name="present_ctc" value="{{ candidate.present_ctc|default_if_none:'' }}"></td>
+                </tr>
+                <tr> 
+                    <td><b>Expected cost to company(CTC)</b></td>
+                    <td><input type="text" id="#" name="expected_ctc" value="{{ candidate.expected_ctc|default_if_none:'' }}"></td>
+                </tr>
+                <tr> 
+                    <td><b>Current take home</b></td>
+                    <td><input type="text" id="#" name="present_take_home" value="{{ candidate.present_take_home|default_if_none:'' }}"></td>
+                </tr>
+                <tr> 
+                    <td><b>Expected take home</b></td>
+                    <td><input type="text" id="#" name="expected_take_home" value="{{ candidate.expected_take_home|default_if_none:'' }}" ></td>
+                </tr>
+                <tr> 
+                    <td><b>Total year of Experience</b></td>
+                    <td><input type="number" id="#" name="work_experience" value="{{ candidate.work_experience|default_if_none:'' }}" min="0" max="40">
+                        {% comment %} <input type="number" id="#" name="experience_month" value="{{ candidate.experience_month|default_if_none:'' }}" min="0" max="12"> {% endcomment %}
+                    </td>
+                </tr>
+                <tr> 
+                    <td><b>Notice period</b></td>
+                    <td><input type="number" id="#" name="notice_period" value="{{ candidate.notice_period|default_if_none:'' }}" min="0" max="24"></td>
+                </tr>
+
+            </table>
+
+        </div>
+        </div>
+        </div>
+    
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+            <button type="submit" name="profile_career_edit" class="model-btn-save" id="">Save</button>
+        </div>
+    
+        </div>
+    </form>
+    </div>
+    </div>
+
+<script type="text/javascript">
+
+    // Get modal and close button elements==========Personal=============
+    var Cmodal = document.getElementById("CareerModal");
+    var CopenButton = document.getElementById("openCareerModalButton");
+    var CcloseButton = document.getElementById("closeCareerModalButton");
+    {% comment %} var closeFooterButton = document.getElementById("closeModalFooterButton"); {% endcomment %}
+    
+    // Function to open modal
+    CopenButton.onclick = function() {
+        Cmodal.style.display = "block";
+    };
+    
+    // Function to close modal
+    CcloseButton.onclick = function() {
+        Cmodal.style.display = "none";
+    };
+    
+    {% comment %} // Close modal with footer button
+    closeFooterButton.onclick = function() {
+        modal.style.display = "none";
+    }; {% endcomment %}
+    
+    // Close the modal when clicking outside of it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+        Cmodal.style.display = "none";
+        }
+    };
+    </script>

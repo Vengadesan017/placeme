@@ -1,0 +1,78 @@
+{% extends "auth/layout.html" %}
+
+{% block title %}
+Sigup page
+{% endblock title %}
+
+
+{% block content %}
+
+<form action="" method="POST"  class="signup">
+  {% csrf_token %}
+  <div class="slide-controls">
+    <input type="radio" name="slide" id="login">
+    <input type="radio" name="slide" id="signup" checked>       
+    <a for="login" class="slide login" id="login-btn" href="{% url 'auth:login' %}">Login</a>
+    <a for="signup" class="slide signup white" id="signup-btn" href="{% url 'auth:signup' %}">Signup</a>
+    <div class="slider-tab"></div>
+  </div>
+  <div class="form-inner"> 
+    {% if messages %}
+      {% for message in messages %}
+        <div class='alert alert-{{ message.tags }}'>
+          <span class="closebtn">&times;</span>
+            {{ message }}
+        </div>    
+      {% endfor %}
+    {% endif %}
+    <div class="scroll">
+      <div class="field">
+        <input type="text" name="first_name" placeholder="First name" required>
+      </div>
+      <div class="field">
+          <input type="text" name="last_name" placeholder="Last name" required>
+      </div>
+      <div class="field">
+          <input type="email" name="email" placeholder="Email Address" required>
+      </div>
+      <div class="field">
+          <input type="password" name="password1" placeholder="Create Password" required>
+      </div>
+      <div class="field">
+        <input type="password" name="password2" placeholder="Confirm Password" required>
+    </div>
+      <div class="field">
+          <input type="tel" name="mobile_no" pattern="[0-9]{10}" placeholder="Mobile number" required>
+      </div>
+      <div class="center">
+        <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}" placeholder="reCAPTCHA" aria-required></div>
+      </div>
+
+
+  </div>
+  <div class="login-link">
+    <div class="field btn">
+      <div class="btn-layer"></div>
+      <input type="submit" id="signupbtn" value="Signup">
+    </div>
+    <p>
+      <span>
+        Already Have an Account?
+      </span>
+    <p1 onclick="toggle()" class="pointer"> <a class="link-colour" href="{% url 'auth:login' %}">
+        login here</a>
+    </p2>
+    </p>
+  </div>
+</div>
+</form>
+
+{% endblock content %}
+
+
+
+{% block msg %}
+  <p id="paragraph1">Get Started Now! Find your dreamjob.</p>
+{% endblock msg %}
+
+

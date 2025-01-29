@@ -1,0 +1,16 @@
+<svg width="500" height="100" viewBox="0 0 500 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Load the Russo One font -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Russo+One&amp;display=swap');
+    text {
+      font-family: 'Russo One', sans-serif;
+    }
+  </style>
+
+  <g fill-rule="evenodd" font-size="30">
+    <text x="10" y="50" letter-spacing="0.07em">
+      <tspan fill="#FF5733">Place</tspan>
+      <tspan fill="#141b5f">now</tspan>
+    </text>
+  </g>
+</svg>

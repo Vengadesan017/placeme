@@ -1,0 +1,420 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+
+}
+
+.Perference {
+  min-height: 100px;
+  height: auto;
+  /*background-color: rgb(231, 157, 67);*/
+  padding-top: 10px;
+}
+
+.Perference-heading {
+  display: flex;
+  justify-content: space-between;
+  /*background-color: blue;*/
+  height: auto;
+  margin-top: 10px;
+}
+
+.Perference-heading h4 {
+  /* mod */
+  font-size: 22px;
+
+}
+
+.Perference-add-div {
+  display: flex;
+  justify-content: space-around;
+  cursor: pointer;
+}
+
+.Perference-add-div a {
+  font-size: 20px;
+  font-weight: 700;
+  margin-right: 7px;
+}
+
+.Perference-add-div .fa-pen-to-square {
+  margin-top: 2px;
+}
+
+.languages {
+  padding-top: 10px;
+
+
+}
+
+.languages-row {
+  display: flex;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  justify-content: space-around;
+
+}
+
+.languages-ul-div {
+  width: 85%;
+  display: flex;
+  /* justify-content: center;
+    align-items: center; */
+}
+
+.languages-ul {
+  display: flex;
+  flex-direction: column;
+
+
+
+  margin-top: 20px;
+
+  /* mod */
+  margin-left: 25px;
+
+}
+
+.languages h4 {
+  text-decoration: 2px underline;
+  margin-left: 5px;
+
+  font-size: 18px;
+
+  /* mod */
+  font-weight: 650;
+}
+
+.languages-ul-li-1-head {
+  padding: 10px;
+  /*border: 2px solid black;*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: 100px;
+
+  /* mod */
+  font-weight: 700;
+  font-size: 17px;
+}
+
+.languages-ul-li-1 {
+  padding: 10px;
+  /*border: 2px solid black;*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: 100px;
+
+  /* mod */
+  font-size: 17px;
+}
+
+.fa-circle-check,
+.fa-circle-xmark {
+  /* mod */
+  font-size: 24px;
+}
+
+.fa-circle-check {
+  color: rgb(37, 155, 56);
+}
+
+.fa-circle-xmark {
+  color: rgb(163, 46, 46);
+}
+
+
+/* mod */
+.Preferred-text-div-par {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 15px;
+}
+
+.Preferred-text-div {
+  /* background-color: blanchedalmond; */
+  overflow-y: hidden;
+  height: 25px;
+  width: 85%;
+}
+
+.Preferred-btn-div {
+  margin-left: 10px;
+}
+
+.Preferred-more-btn {
+  /*margin-top: 17px;*/
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  /*background-color: blueviolet;*/
+  background-color: snow;
+  border: none;
+  border-radius: 50px;
+  text-decoration: underline;
+
+  /* mod */
+  display: inline-block;
+}
+
+.Preferred-close-btn {
+  /*margin-top: 17px;*/
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  /*background-color: blueviolet;*/
+  background-color: snow;
+  border: none;
+  border-radius: 50px;
+  text-decoration: underline;
+  display: none;
+}
+
+.Preferred-text {
+  padding-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+/* end */
+
+
+
+
+
+
+.fa-pen {
+  margin-left: 5px;
+  margin-top: 2px;
+}
+
+
+.employement {
+  min-height: 100px;
+  height: auto;
+  /*background-color: rgb(53, 201, 201);*/
+  padding-top: 10px;
+  margin-top: 10px;
+  border-top: 2px solid gray;
+}
+
+.employement-heading {
+  display: flex;
+  justify-content: space-between;
+  /*background-color: blue;*/
+  height: auto;
+  margin-top: 10px;
+}
+
+.employement-heading h4 {
+  font-size: 20px;
+
+}
+
+.employement-add-div {
+  display: flex;
+  justify-content: space-around;
+  cursor: pointer;
+}
+
+.employement-add-div a {
+  font-size: 20px;
+  font-weight: 700;
+  margin-right: 7px;
+}
+
+.employement-add-div .fa-pen-to-square {
+  margin-top: 2px;
+}
+
+.employement-flex {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.employement-role {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+
+.employement-date-div {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  margin-top: 8px;
+}
+
+.employement-date {
+  font-size: 14px;
+}
+
+.employement-time {
+  font-size: 12px;
+}
+
+
+
+.internship {
+  min-height: 100px;
+  height: auto;
+  /*background-color: rgb(53, 201, 201);*/
+  padding-top: 10px;
+  margin-top: 10px;
+  border-top: 2px solid gray;
+}
+
+.internship-heading {
+  display: flex;
+  justify-content: space-between;
+  /*background-color: blue;*/
+  height: auto;
+  margin-top: 10px;
+}
+
+.internship-heading h4 {
+  font-size: 20px;
+
+}
+
+.internship-add-div {
+  display: flex;
+  justify-content: space-around;
+  cursor: pointer;
+}
+
+.internship-add-div a {
+  font-size: 20px;
+  font-weight: 700;
+  margin-right: 7px;
+}
+
+.internship-add-div .fa-pen-to-square {
+  margin-top: 2px;
+}
+
+.internship-flex {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.internship-role {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.internship-date-div {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  margin-top: 8px;
+  margin-right: 10px;
+}
+
+.internship-date {
+  font-size: 14px;
+}
+
+.internship-time {
+  font-size: 12px;
+}
+
+
+
+
+
+
+
+
+
+.career {
+  min-height: 100px;
+  height: auto;
+  /*background-color: rgb(53, 201, 201);*/
+  padding-top: 10px;
+  margin-top: 10px;
+  border-top: 2px solid gray;
+}
+
+.career-heading {
+  display: flex;
+  justify-content: space-between;
+  /*background-color: blue;*/
+  height: auto;
+  margin-top: 10px;
+}
+
+.career-heading h4 {
+  font-size: 20px;
+
+}
+
+.career-add-div {
+  display: flex;
+  justify-content: space-around;
+  cursor: pointer;
+}
+
+.career-add-div a {
+  font-size: 20px;
+  font-weight: 700;
+  margin-right: 7px;
+}
+
+.career-add-div .fa-pen-to-square {
+  margin-top: 2px;
+}
+
+
+.career-info-list {
+  display: flex;
+  /*background-color: indianred;*/
+  margin-top: -10px;
+  min-height: 40px;
+  height: auto;
+}
+
+.career-info-list-1 {
+  /*background-color: burlywood;*/
+  width: 40%;
+
+
+}
+
+.career-info-list-2 {
+  /*background-color: crimson;*/
+  width: 40%;
+}
+
+.career-info-list-1-1 {
+  margin-top: 25px;
+}
+
+.career-info-list-2-1 {
+  margin-top: 25px;
+}
+
+.career-info-list-1-1 h4 {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.career-info-list-1-1 p {
+  font-size: 14px;
+}
+
+.career-info-list-2-1 h4 {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.career-info-list-2-1 p {
+  font-size: 14px;
+}

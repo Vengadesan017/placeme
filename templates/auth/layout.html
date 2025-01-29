@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title%}
+
+        {% endblock title %}
+    </title>
+    
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/error.css' %}">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    
+</head>
+<body>
+  <div class="form-container">  
+        {% block content %}
+
+        {% endblock content %}
+
+  </div>
+
+  <div class="image-container">
+    {% comment %} <img src="{% static 'img/loginForm.png' %}" alt="Right-aligned image"> {% endcomment %}
+    <div class="overlay-text">
+      <h1>Place<span style="color: #F3DE1B;">me</span></h1>  
+      {% comment %} <a href="{% url 'job_seeker:home' %}"><img src="{% static 'img/logo.svg' %}" alt="Placenow Logo" style="height: 25px;"></a>       {% endcomment %}
+      {% block msg %}
+
+      {% endblock msg %}
+    </div>
+        
+  </div>
+
+  <script src="{% static "js/script.js" %}" defer></script>
+  <script src="{% static "js/error.js" %}" defer></script>
+</body>
+</html>

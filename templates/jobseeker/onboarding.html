@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboarding Employee</title>
+
+    {% comment %} <link href="{% static 'bootstrap/Content/Site.css' %}" rel="stylesheet" type="text/css" /> {% endcomment %}
+    <link href="{% static 'bootstrap/Content/bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'bootstrap/Content/bootstrap-datetimepicker.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'bootstrap/Content/toastr/toastr-responsive.css' %}" rel="stylesheet" />
+    <link href="{% static 'bootstrap/Content/toastr/toastr.css' %}" rel="stylesheet" />
+    <script src="{% static 'bootstrap/Scripts/modernizr-2.8.3.js' %}"></script>
+    {% comment %} <script src="{% static 'bootstrap/Scripts/Employee/Employee.js' %}"></script> {% endcomment %}
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+    <link href="{% static 'bootstrap/Content/Common.css' %}" rel="stylesheet" />
+
+
+
+    <link rel="stylesheet" href="{% static 'css/nav.css' %}">
+    <link rel="stylesheet" href="{% static 'css/error.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />    
+
+
+    <style>
+.form-control  {
+    {% comment %} margin-right:10px; {% endcomment %}
+    width:90%
+}
+ol, ul {
+    margin-bottom: unset;
+}
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="navbar">    
+      <nav>
+        <ul class="menu">
+            <li class="logo">
+                <!-- change the name of logo according to your name of image (mani/vengu) -->
+                <a href="{% url 'job_seeker:home' %}"><img src="{% static 'img/logo.svg' %}" alt="Placenow Logo" style="height: 20px;"></a>
+            </li>
+            <div class="item" style="color:#000;">      
+                <li><a href="{% url 'job_seeker:home' %}" style="color:#000;"><i class="fa-solid fa-house" ></i><div >Home</div></a></li>
+            </div>
+            <div class="item">
+                <li><a href="{% url 'job_seeker:status'  page="applied"%}" style="color:#000;"><i class="fa-solid fa-briefcase"></i><div>Jobs</div></a></li>
+            </div>
+            <div class="item">
+                <li><a href="{% url 'job_seeker:notifications' %}" style="color:#000;"><i class="fa-solid fa-bell"></i><div>Notifications</div></a></li>
+            </div>
+            <li class="toggle" id="menu-toggle"><span class="bars"></span></li>
+            {% if user.is_authenticated %}
+                <li class="item button {% if request.resolver_match.url_name == 'profile' %}active{% endif %}"><a href="{% url 'job_seeker:profile' %}"><i class="fa-solid fa-user" style="margin-right: 8px;"></i>Profile</a></li>
+            {% else %}    
+                <li class="item button {% if request.resolver_match.url_name == 'login' %}active{% endif %}"><a href="{% url 'auth:login' %}">Log In</a></li>        
+            {% endif %}
+            <li class="item">
+                <select class="nav_select" name="Usertypes" onchange="location = this.value;">
+                    <option value="{% url 'job_seeker:home' %}">Job Seeker</option>
+                    <option value="{% url 'recruiters:home' %}">Recruiter</option>
+                    <option value="{% url 'administrator:dashboard' %}">Administrator</option>
+                    <option value="{% url 'refer_and_earn:home' %}">Refer and earn</option>
+                </select>
+            </li>
+        </ul>
+    </nav>
+    </div>
+    </header>
+
+    <div class="container body-content" style="margin:60px; 0 20px 0">
+        <div class="container">
+            {% comment %} <div class="row">
+                <table class="tblassetsteps">
+                    <tr>
+                        <td style="padding-left:12px">
+                            <label class="SideLabelBold" style="font-weight: bold;">Employee ID</label>
+                            <label><font size="3" color="red">*</font></label>
+                        </td>
+                        <td style="padding-left:12px">
+                            <input typeof="textbox" id="txtEmpId" class="form-control  k-textbox" type="text">
+                        </td>
+                    </tr>
+                </table>
+    
+    
+    
+            </div> {% endcomment %}
+            <br />
+    
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel with-nav-tabs panel-default">
+                        <div class="panel-heading">
+                            <ul class="nav nav-tabs">
+                                <li class="{% if request.resolver_match.kwargs.page == 'personal' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' page="personal" %}" data-toggle="">Personal details</a></li>
+                                <li class="{% if request.resolver_match.kwargs.page == 'family' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' page="family" %}" data-toggle="">Family Details</a></li>
+                                <li class="{% if request.resolver_match.kwargs.page == 'education' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' page="education" %}" data-toggle="">Educational Details</a></li>
+                                <li class="{% if request.resolver_match.kwargs.page == 'experience' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' page="experience" %}" data-toggle="">Experience Details</a></li>
+                                <li class="{% if request.resolver_match.kwargs.page == 'identity' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' page="identity" %}" data-toggle="">Identity Details</a></li>
+                            </ul>
+                        </div>
+                        <div class="panel-body">
+                            <div class="tab-content">
+                                
+
+                                {% if page == "personal" %}
+                                    {% include "jobseeker/onboarding_personal.html" %}                                
+                                {% elif page == "family" %}
+                                    {% include "jobseeker/onboarding_family.html" %}                                
+                                {% elif page == "education" %}
+                                    {% include "jobseeker/onboarding_edu.html" %}                                
+                                {% elif page == "experience" %}
+                                    {% include "jobseeker/onboarding_experience.html" %}                                
+                                {% elif page == "identity" %}
+                                    {% include "jobseeker/onboarding_indentity.html" %}                                
+                                {% else %}
+                                    <h2>Invalid page</h2>                            
+                                
+                                
+                                {% endif %}
+                                
+                                
+                                
+                                
+                                
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+            
+    
+        </div>
+    
+        {% comment %} <hr /> {% endcomment %}
+        {% comment %} <footer>
+            <p>&copy;  Placenow</p>
+        </footer> {% endcomment %}
+    </div>
+
+
+    <script src="{% static 'bootstrap/Scripts/jquery-3.4.1.min.js' %}"></script>
+    <script src="{% static 'bootstrap/Scripts/bootstrap.min.js' %}"></script>
+    <script src="{% static 'bootstrap/Scripts/moment.min.js' %}"></script>
+    <script src="{% static 'bootstrap/Scripts/bootstrap-datetimepicker.min.js' %}"></script>
+    <script src="{% static 'bootstrap/Scripts/toastr/customToastr.js' %}"></script>
+    <script src="{% static 'bootstrap/Scripts/toastr/toastr.js' %}"></script>
+    <script src="{% static 'bootstrap/Scripts/Common.js' %}"></script>
+    <script src="{% static 'bootstrap/Scripts/jquery.validate.min.js' %}"></script>
+    <script src="{% static 'bootstrap/Scripts/Employee/Employee.js?ver=5' %}"></script>
+    <!-- @RenderSection("scripts", required: false) -->
+  
+</body>
+</html>

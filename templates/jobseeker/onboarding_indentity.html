@@ -1,0 +1,113 @@
+{% load static %}
+
+<div class="tab-pane fade active in show" id="tab5default">
+                                    
+
+
+    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-start align-items-start d-inline-block" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;width:100%">
+        <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-center order-2 d-inline-block bg-white align-top  align-items-start">
+            <table border="0" class="tblassetsteps" style="width:100%">
+                <tr>
+                    <td>
+                        <label class="SideLabelBold">Aadhar Number</label> <label><font size="3" color="red">*</font></label>
+                       
+                    </td>
+           
+                    <td>
+                        <input typeof="textbox" placeholder="Enter Aadhar Number" id="txtAadhar" class="form-control k-textbox " type="text">
+                       
+                    
+                    </td>
+                    <td>
+                        <label class="SideLabelBold">PAN Number</label><label><font size="3" color="red">*</font></label>
+                    </td>
+                    <td>
+                        <input typeof="textbox" placeholder="Enter PAN Number" id="txtPANNo" class="form-control  k-textbox" type="text">
+                      
+                    </td>
+                    <td>
+                        <label class="SideLabelBold">PF Number</label>
+                    </td>
+                    <td>
+                        <input typeof="textbox" placeholder="Enter PF Number" id="txtPF" class="form-control  k-textbox" type="text">
+                      
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="SideLabelBold">PFUAN</label>
+                    </td>
+                    <td>
+                        <input typeof="textbox" placeholder="Enter PFUAN Number" id="txtPFUAN" class="form-control k-textbox " type="text">
+                        
+                    </td>
+                    <td>
+                        <label class="SideLabelBold">ESIC Number </label>
+                    </td>
+                    <td>
+                        <input typeof="textbox" placeholder="Enter ESIC Number" id="txtESICNo" class="form-control  k-textbox" type="text">
+                        
+                    </td>
+                    <td>
+                        <label class="SideLabelBold">Bank Account Number</label><label><font size="3" color="red">*</font></label>
+                    </td>
+                    <td>
+                        <input typeof="textbox" placeholder="Enter Bank Account Number" id="txtBankAccountNo" class="form-control  k-textbox numberonly" type="text">
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="SideLabelBold">Bank Name</label><label><font size="3" color="red">*</font></label>
+                    </td>
+                    <td>
+                        <input typeof="textbox" placeholder="Enter Bank Number" id="txtBankName" class="form-control k-textbox " type="text">
+                       
+                    </td>
+                    <td>
+                        <label class="SideLabelBold">IFSC Code</label><label><font size="3" color="red">*</font></label>
+                    </td>
+                    <td>
+                        <input typeof="textbox" placeholder="Enter IFSC Number" id="txtIFSCCode" class="form-control k-textbox " type="text">
+                   
+                    </td>
+    
+                    <td>
+                        <label class="SideLabelBold">Nationality</label><label><font size="3" color="red">*</font></label>
+                    </td>
+    
+    
+                    <td>
+                        <input typeof="textbox"placeholder="Enter Nationality" id="txtNationality" class="form-control k-textbox " type="text">
+                    </td>
+    
+                </tr>
+    
+            </table>
+            <br/>
+            <br/>
+            <div class="row">
+                <button id="btnlegelData" onclick="saveLegalData()" style="color:#254b96 !important;margin-left:1000px" class="btn btn-default">Save & Next</button>
+    
+            </div>
+      
+     
+    </div>
+    </div>
+    
+    
+    <script>
+        $(document).ready(function () {
+            $('.numberonly').keypress(function (e) {
+                var charCode = (e.which) ? e.which : event.keyCode
+                if (String.fromCharCode(charCode).match(/[^0-9]/g))
+                    return false;
+    
+            });
+    
+        });
+    
+    </script>
+
+
+</div>

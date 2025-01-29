@@ -1,0 +1,150 @@
+{% load static %}
+<div class="tab-pane fade active in show" id="tab2default">
+
+
+
+    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-start align-items-start d-inline-block " style="padding-left:0px;padding-right:0px;padding-top:5px;padding-bottom:5px;width:100%">
+        <form method="POST" id="dynamic_form" action="">
+            {% csrf_token %}
+            <span id="result"></span>
+            <table class="table-bordered dynamictbl" id="tblEmpFamily">
+                <thead>
+                    <tr>                    
+                        <th width="15%"><label class="SideLabelBold">First Name</label> <label><font size="3" color="red">*</font></label> </th>
+                        <th width="12%"><label class="SideLabelBold">Last Name</label></th>
+                        <th width="8%"><label class="SideLabelBold">Sex</label> <label><font size="3" color="red">*</font></label> </th>
+                        <th width="10%"><label class="SideLabelBold">Relationship <label><font size="3" color="red">*</font></label> </label></th>
+                        <th width="10%"><label class="SideLabelBold">DOB</label> <label><font size="3" color="red">*</font></label> </th>
+                        <th width="15%"><label class="SideLabelBold">Aadhar #</label> <label><font size="3" color="red">*</font></label> </th>
+                        <th width="12%"><label class="SideLabelBold">Mobile Number</label></th>
+                        <th width="5%"><label class="SideLabelBold">Action</label></th>
+    
+                    </tr>
+                </thead>
+                <tbody id="bindrow">
+                    {%for fam in family_forms%}
+                    <tr>
+                        <td><input type="text" name="txtFirstName[]" id="txtFFirstName1" class="form-control dynamic_input name_input" value="{{fam.first_name}}"></td>
+                        <td><input type="text" name="txtLastName[]" id="txtFLastName1" class="form-control dynamic_input name_input" value="{{fam.last_name}}"> </td>
+                        <td><select id="ddlFGender1" name="Gender[]" class="dropdownCustomcss">
+                            <option value="">Select </option>
+                            <option value="Male" {% if fam.gender == 'Male' %}selected{% endif %}>Male </option>
+                            <option value="Female" {% if fam.gender == 'Female' %}selected{% endif %}>Female </option>
+                            <option value="Transgender" {% if fam.gender == 'Transgender' %}selected{% endif %}>Transgender </option>
+                            <option value="NotDisclosed" {% if fam.gender == 'NotDisclosed' %}selected{% endif %}>NotDisclosed </option>
+                        </select></td>
+                        <td><select id="ddlFReleationship1" name="Releationship[]" class="dropdownCustomcss">
+                            <option value="">Select </option>
+                            <option value="Father" {% if fam.relationship == 'Father' %}selected{% endif %}>Father </option>
+                            <option value="Mother" {% if fam.relationship == 'Mother' %}selected{% endif %}>Mother </option>
+                            <option value="Spouse" {% if fam.relationship == 'Spouse' %}selected{% endif %}>Spouse </option>
+                            <option value="Son" {% if fam.relationship == 'Son' %}selected{% endif %}>Son </option>
+                            <option value="Daughter" {% if fam.relationship == 'Daughter' %}selected{% endif %}>Daughter </option>
+                        </select></td>
+                        <td><input type="date" name="txtdob" style="position: relative" id="" class="form-control" value="{{fam.dob|date:'Y-m-d'}}"> </td>
+                        <td><input type="text" name="txtAadhar" id="txtFamilyAadhar1" class="form-control dynamic_input name_input" onchange="validateAadharNumber()" value="{{fam.aadhar_no}}"> </td>
+                        <td><input type="text" name="txtFContactNo" id="txtFContactNo1" class="form-control dynamic_input name_input" value="{{fam.mobile_no}}"> </td>
+                    </tr>
+                    {{fam}}
+                    {% endfor %}
+                </tbody>
+            </table>
+    
+            <br />
+            <div style="float:right">            
+                <button type="type" name="family" id="add" class="btn btn-primary"> Add Row</button> &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="submit" name="family" id="btnSaveEmpFamilyData" onclick="SaveEmpFamilyData()" style="color:#254b96 !important;" class="btn btn-default">Save & Next</button>
+            </div>
+    
+        </form>
+    </div>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
+    <script src="{% static 'bootstrap/Scripts/Employee/Employee.js' %}"></script>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+    
+    <script>
+        $(document).ready(function () {
+            var count = 2;
+            if (count > 1) {
+                for (var i = 1; i <= count; i++) {
+                    dynamic_field(i);
+                }
+            }
+    
+            function dynamic_field(number) {
+                var html = '<tr>';
+                html += '<td><input type ="text" name="txtFirstName[]"  id="txtFFirstName' + number + '"  class ="form-control dynamic_input name_input" /> </td >';
+                html += '<td><input type ="text" name="txtLastName[]" id="txtFLastName' + number + '"  class ="form-control dynamic_input name_input" /> </td >';
+                {% comment %} html += '<td><select class="dropdownCustomcss" id="ddlGender' + number + '" name="Gender[]">< option value=""> Select Gender </option > </select > </td >'; {% endcomment %}
+    
+                var select_list = '<select id="ddlFGender' + number + '" name="Gender[]" class = "dropdownCustomcss">';
+                select_list += '<option value="">Select </option>';
+                select_list += '<option value="Male">Male </option>';
+                select_list += '<option value="Female">Female </option>';
+                select_list += '<option value="Transgender">Transgender </option>';
+                select_list += '<option value="NotDisclosed">NotDisclosed </option>';
+                select_list += '</select>';
+                html += '<td>' + select_list + '</td>';
+    
+                var select_list = '<select id="ddlFReleationship' + number + '" name="Releationship[]" class = "dropdownCustomcss">';
+                select_list += '<option value="">Select </option>';
+                select_list += '<option value="Father">Father </option>';
+                select_list += '<option value="Mother">Mother </option>';
+                select_list += '<option value="Spouse">Spouse </option>';
+                select_list += '<option value="Son">Son </option>';
+                select_list += '<option value="Daughter">Daughter </option>';
+                select_list += '</select>';
+                html += '<td>' + select_list + '</td>';
+    
+                html += '<td><input type ="text" name="txtdob" style="position: relative" id="txtFamilydob' + number + '"   class ="form-control dynamic_input datetimepicker name_input" /> </td >';
+                html += '<td><input type ="text" name="txtAadhar" id="txtFamilyAadhar' + number + '"  class ="form-control dynamic_input name_input"  onChange="validateAadharNumber()"/> </td >';
+                html += '<td><input type ="text" name="txtFContactNo" id="txtFContactNo' + number + '"  class ="form-control dynamic_input name_input" /> </td >';
+                //if (number > 1) {
+                //    html += '<td><button type="button" name="remove" id="remove" class="btn btn-danger"> Remove </button> </td >  </tr>';
+                //    $('#bindrow').append(html);
+                //}
+                //else {
+                //    html += '<td><button type="button" name="add" id="add" class="btn btn-success"> Add </button> </td>  </tr>';
+                //    $('#bindrow').append(html);
+                //}
+                if (number > 1) {
+                    html += '<td><button class="deleteButton " id="remove" type="button"></button></td >  </tr>';
+                }
+                $('#bindrow').append(html);
+            }
+    
+            $('#add').click(function () {
+                count++;
+                dynamic_field(count);
+            });
+    
+    
+            $(document).on('click', '#remove', function () {
+                count--;
+                //dynamic_field(count);
+                $(this).closest('tr').remove();
+            });
+    
+    
+        });
+    
+    
+        $("#dynamic_form").validate({
+            rules: {
+                Name: "required"
+            }
+        });
+    
+    </script>
+
+
+
+</div>

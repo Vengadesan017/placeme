@@ -1,0 +1,298 @@
+<section class="dev-list" id="applied">
+
+
+    <div class="left">
+    
+    
+        {% if applied %}
+        {% for job in applied %}
+            <div class="dev-detail-2 {% if job_status == job %}active{% endif %}">
+    
+                <div class="dev-detail-2-inside">
+                    <h1 class="dev-name">{{ job.job.title }}</h1>
+                    <p class="company-name">{{ job.job.company.company_name }}</p>
+                    <div class="application">
+                        <i class="fa-sharp fa-solid fa-circle-check"></i>
+                        <p class="application-saved"> 
+                            {% if job.status == "Applied" %}
+                             Application send 
+                            {% elif job.status == "Viewed"%}
+                            Recruiter Viewed 
+                            {% elif job.status == "Shortlisted"%}
+                            Shortlisted for Interview 
+                            {% else%}
+                            Selected in Interview
+                            {% endif%}
+                            
+    
+                        </p>
+                    </div>
+                </div>
+                <div class="dev-box2">
+                    <div class="dev-box2-profile">
+    
+                    </div>
+                    <div class="dev-box2-a">
+                        {% if job_status != job %}                        
+                        <form method="post" action="#">
+                            {% csrf_token %}
+                        <input type="hidden" value="{{ job.id }}" name="id">
+                        <button type="submit" name="view_appiled_status" style="color:#000" class="save_job"><u>View Status</u></button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                
+            </div>
+            {% endfor %}
+            {% else %}
+                <a href="{% url 'job_seeker:home' %}">No data found. Click here to search.</a>
+            {% endif%}
+    
+    </div>
+    
+    
+    <!-----------right side dev-info------------------------------------------------------------------->
+    <div class="right">
+    
+    
+    
+    
+        <div class="right-insert">
+    
+    
+            <div class="right-dev-info">
+    
+    
+                <div class="right-dev-info-fixed-1">
+    
+                    <!--dev-name-company-and about-job-->
+                    <div class="right-dev-info-fixed-1-1">
+    
+                        <div class="right-dev-info-fixed-1-part1">
+    
+                            <h1 class="right-fixied-name">{{job_status.job.title}}</h1>
+                            <p class="right-fixied-company">{{ job_status.job.company.company_name }}</p>
+                        
+                            <div class="right-a-div">
+                                <a href="{% url 'job_seeker:search' %}?q={{ job_status.job.title }}" class="right-a">
+                                    View similar jobs
+                                </a>
+                                
+                            </div>
+                        </div>
+                        <div class="right-dev-info-fixed-1-part2">
+                           <div class="right-dev-info-about-job">
+                                <a href="{% url 'job_seeker:job' %}?r={{ job_status.job.slug }}" class="a-aboutjob">About job</a>
+                           </div> 
+                        </div>  
+                    </div>
+    
+    
+    
+    
+    
+                    <!-----fixed-box-2-->
+                    <div class="right-dev-info-fixed-1-2">
+                        <div class="application-div-text">
+                            <p class="application-status-p">Application Status</p>
+                        </div>
+                    </div>
+    
+                    <!---pending status-bar-->
+                    <div class="bar-set">
+                        <div class="progress-track">
+                            <ul id="progressbar">
+                                <li class="step0 {% if job_status.applied_date %}active{% endif %}" id="step1">Job Applied <p>{{job_status.applied_date|date:'d M Y'}}</p></li>
+                                <li class="step0 text-center {% if job_status.viewed_at %}active{% endif %}" id="step2">Application View <p>{{job_status.viewed_at|date:'d M Y'}}</p></li>
+                                <li class="step0 text-center {% if job_status.shortlisted_at %}active{% endif %}" id="step2-1">Shortlisted<p>{{job_status.shortlisted_at|date:'d M Y'}}</p></li>
+                                <li class="step0 text-right {% if job_status.interview_at %}active{% endif %}" id="step3">Interviewed<p>{{job_status.interview_at|date:'d M Y'}}</p></li>
+                                <li class="step0 text-right {% if job_status.selected_at %}active{% endif %}" id="step3">Selected<p>{{job_status.selected_at|date:'d M Y'}}<p></li> 
+                            </ul>
+                        </div>
+                    </div> 
+                </div>
+                <!--completed fixed right box-->
+                <!--recommendation box text-->
+                <div class="right-recommdation-info">
+                    <div class="right-recommendation-div">
+                        <h1 class="right-recommdation-text">RECOMMENDED JOBS</h1>
+                     </div>
+                     <!--create recommendation box start-->
+                     <div class="right-rec-box-scroll">
+    
+                        <div class="right-rec-box-1">
+    
+                            <div class="right-rec-box-width">
+                                
+                                <div class="right-rec-box-name">
+    
+                                    <div class="right-rec-box-name-1">
+                                        <p class="right-rec-box-dev-name">JUNIOR DEVELOPER</p>
+                                        <p class="right-rec-box-dev-company">KAVERY TECH</p>
+                                    </div>
+                                    <div class="right-rec-box-photo">
+                                        <div class="photo">
+    
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--dev info box-2 location skill and page-->
+                                <div class="right-rec-box-info">
+                                    <div class="right-rec-box-info-personal">
+                                        <ul class="right-box-ul">
+                                            <li><i class="fa-sharp fa-solid fa-location-dot"></i> Bangalore </li>
+                                            <li>|</li>
+                                            <li><i class="fa-solid fa-suitcase"></i> 0-2 Years  </li>
+                                            <li>|</li>
+                                            <li><i class="fa-solid fa-clock"></i> Full Time </li>
+                                            <li>|</li>
+                                            <li> RS 30000/month</li>
+                                        </ul>
+                                    </div>
+    
+    
+                                    <div class="right-rec-box-info-language">
+                                        <ul class="right-box-ul-lag">
+                                            <li>html</li>
+                                            <li>css</li>
+                                            <li>javaScript</li>
+                                            <li>React.js</li>
+                                            <li>node.js</li>
+                                            
+                                        </ul>
+                                    </div>
+    
+    
+    
+    
+    
+                                    <div class="right-rec-box-info-text">
+                                        <p class="right-para">Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa eligendi maiores porro laudantium nostrum ab explicabo sapiente.</p>
+    
+                                    </div>
+    
+    
+    
+    
+    
+    
+                                    
+                                </div>
+    
+                                 <div class="right-rec-box-info-adv">
+                                    <ul class="right-rec-box-adv-ul">
+                                        <li>4 days ago</li>
+                                        <li>30 opening</li>
+                                        <li>10 Applied</li>
+                                    </ul>
+                                </div> 
+    
+    
+    
+    
+    
+    
+                            </div>
+                            
+    
+    
+                        </div>
+    
+    
+    
+    
+    
+                        <!--box-2-->
+                        <div class="right-rec-box-1">
+    
+                            <div class="right-rec-box-width">
+                                
+                                <div class="right-rec-box-name">
+    
+                                    <div class="right-rec-box-name-1">
+                                        <p class="right-rec-box-dev-name">JUNIOR DEVELOPER</p>
+                                        <p class="right-rec-box-dev-company">KAVERY TECH</p>
+                                    </div>
+                                    <div class="right-rec-box-photo">
+                                        <div class="photo">
+    
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--dev info box-2 location skill and page-->
+                                <div class="right-rec-box-info">
+                                    <div class="right-rec-box-info-personal">
+                                        <ul class="right-box-ul">
+                                            <li><i class="fa-sharp fa-solid fa-location-dot"></i> Bangalore </li>
+                                            <li>|</li>
+                                            <li><i class="fa-solid fa-suitcase"></i> 0-2 Years  </li>
+                                            <li>|</li>
+                                            <li><i class="fa-solid fa-clock"></i> Full Time </li>
+                                            <li>|</li>
+                                            <li> RS 30000/month</li>
+                                        </ul>
+                                    </div>
+    
+    
+                                    <div class="right-rec-box-info-language">
+                                        <ul class="right-box-ul-lag">
+                                            <li>html</li>
+                                            <li>css</li>
+                                            <li>javaScript</li>
+                                            <li>React.js</li>
+                                            <li>node.js</li>
+                                            
+                                        </ul>
+                                    </div>
+    
+    
+    
+    
+    
+                                    <div class="right-rec-box-info-text">
+                                        <p class="right-para">Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa eligendi maiores porro laudantium nostrum ab explicabo sapiente.</p>
+    
+                                    </div>
+    
+    
+    
+    
+    
+    
+                                    
+                                </div>
+    
+                                 <div class="right-rec-box-info-adv">
+                                    <ul class="right-rec-box-adv-ul">
+                                        <li>4 days ago</li>
+                                        <li>30 opening</li>
+                                        <li>10 Applied</li>
+                                    </ul>
+                                </div> 
+    
+    
+    
+    
+    
+    
+                            </div>
+                            
+    
+    
+                        </div>
+    
+                     </div>
+    
+                </div>
+    
+            </div>
+    
+    
+    
+        </div>
+        
+    
+    </div>
+    </section>

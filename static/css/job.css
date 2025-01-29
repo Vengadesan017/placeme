@@ -1,0 +1,281 @@
+.container {
+  height: 100%;
+  background-color: #c0c5f2;
+  scroll-behavior: smooth;
+}
+
+.container {
+  margin-top: 60px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+
+}
+
+.company {
+  background-color: white;
+  margin: 20px 100px;
+  min-width: 700px;
+  width: 80%;
+  padding: 35px;
+  border-radius: 8px;
+  overflow-x: auto;
+
+}
+
+
+
+.company-details {
+  position: relative;
+  text-align: left;
+}
+
+h1 {
+  display: inline-block;
+  font-family: sans-serif;
+  margin-bottom: 10px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+h5 {
+  font-family: sans-serif;
+  margin-bottom: 19px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #141b5f;
+}
+
+.apply-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 16px;
+  padding: 12px 45px;
+  background-color: #141b5f;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all .5s;
+}
+
+.apply-button:hover {
+  background-color: #FFBD03;
+  color: #141b5f;
+}
+
+
+@media screen and (max-width: 768px) {
+  .apply-button {
+    position: relative;
+    display: block;
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px 0;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .company-details {
+    text-align: center;
+  }
+
+  h5 {
+    margin-bottom: 10px;
+  }
+}
+
+
+.info {
+  background-color: white;
+  border-radius: 8px;
+  margin-bottom: 5px;
+}
+
+.company-info a {
+  color: #000000;
+  text-decoration: none;
+}
+
+.company-info a:hover {
+  color: #FFBD03;
+}
+
+.company-info li {
+  display: inline-block;
+  text-align: center;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+/* General Section Styling */
+.Role {
+  background-color: #fff;
+  padding: 20px 20px 0 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px #9999996e;
+  margin: 20px;
+}
+
+/* Flexbox layout for desktop/larger screens */
+.role-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  position: relative;
+  text-align: left;
+}
+
+/* Styling for icon and data items */
+.icon-item,
+.data {
+  list-style: none;
+  padding: 0;
+  margin: 10px;
+  flex: 1;
+}
+
+/* Alignment for icons and text */
+.icon-item li,
+.data li {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+/* Adjust margin for icons */
+.icon-item li i,
+.data li i {
+  margin-right: 10px;
+}
+
+/* Ensure flex items have proper alignment on larger screens */
+.icon-item {
+  flex: 1;
+}
+
+.data {
+  flex: 1;
+  text-align: center;
+}
+
+/* RESPONSIVE DESIGN - For smaller screens (mobile view) */
+@media screen and (max-width: 768px) {
+  .role-details {
+    flex-direction: column;
+    /* Stack items vertically on mobile */
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .icon-item,
+  .data {
+    width: 100%;
+    /* Take full width on mobile */
+    margin-bottom: 15px;
+  }
+
+  .icon-item li,
+  .data li {
+    text-align: left;
+  }
+}
+
+/* ADDITIONAL STYLING FOR VERY SMALL SCREENS */
+@media screen and (max-width: 480px) {
+  .Role {
+    padding: 15px;
+    margin: 10px;
+  }
+
+  .icon-item li,
+  .data li {
+    font-size: 12px;
+    /* Slightly smaller font on very small screens */
+  }
+
+  .icon-item,
+  .data {
+    margin-bottom: 10px;
+  }
+}
+
+h2,
+h3 {
+  color: #333;
+}
+
+p,
+ul {
+  color: #555;
+  line-height: 1.6;
+}
+
+/* Section Titles */
+h3 {
+  margin: 10px 0;
+  font-size: 1.2em;
+}
+
+.scroll {
+  /* Set the height of the container */
+  overflow-y: auto;
+  scrollbar-width: none;
+  /* For Firefox */
+  -ms-overflow-style: none;
+}
+
+.scroll:-webkit-scrollbar {
+  display: none;
+  /* Hide scrollbar for Webkit browsers */
+}
+
+/* List Styling */
+.benefits ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+
+
+.divider {
+  border: none;
+  height: 1px;
+  background-color: #eeeeeeee;
+  margin: 5px 0;
+  width: 100%;
+}
+
+
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.skills span {
+  margin: 5px 5px;
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  text-align: center;
+}
+
+
+
+.to-view-button {
+  padding: 12px;
+  background-color: #ffbd03;
+  color: #000;
+}
+
+.to-view-button:hover {
+  padding: 12px;
+  background-color: #141b5f;
+  color: #fff;
+}

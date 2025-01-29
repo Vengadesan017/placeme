@@ -1,0 +1,133 @@
+.bar-set {
+    width: 100%;
+    display: block;
+}
+
+.progress-track {
+    padding: 0 8%;
+    width: 100%;
+    /* Ensure the track fits within the .bar-set container */
+}
+
+#progressbar {
+    margin-bottom: 3vh;
+    overflow: hidden;
+    padding-left: 0px;
+    margin-top: 3vh;
+    display: flex;
+    justify-content: space-between;
+    color: blue;
+}
+
+#progressbar li {
+    list-style-type: none;
+    font-size: 0.8rem;
+    flex: 1;
+    /* Distributes space evenly */
+    position: relative;
+    font-weight: 800;
+    color: black;
+    /* Default text color */
+    text-align: center;
+    /* Centers the label */
+    font-size: 14px;
+
+}
+
+#progressbar li:before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    display: block;
+    background: #e7e7f1;
+    /* Default background color */
+    border-radius: 50%;
+    margin: 0 auto 1vh;
+    /* Centers the circle */
+    line-height: 29px;
+    z-index: 1;
+}
+
+#progressbar li:after {
+    content: '';
+    height: 3px;
+    background: #e7e7f1;
+    /* Default bar color */
+    position: absolute;
+    left: 50%;
+    /* Starts from the middle of the circle */
+    top: 8px;
+    /* Centers the line vertically with the circle */
+    z-index: 0;
+    width: calc(100% - 10px);
+    /* Ensures the line connects between circles */
+    transform: translateX(10px);
+    /* Positions the line starting at the edge of the circle */
+}
+
+/* Show line between first and second bar */
+#progressbar li:nth-child(1):after {
+    background: #e7e7f1;
+    /* Ensure the line is gray */
+}
+
+/* Set the line between the fourth bar circle and the final bar circle to gray */
+#progressbar li:nth-child(4):after {
+    background: #e7e7f1;
+    /* Line color for the transition from the fourth to the last bar */
+}
+
+/* Hide the line before the first circle */
+#progressbar li:first-child:after {
+    display: block;
+    /* Ensure the line is shown from the first circle to the second */
+}
+
+/* Hide the line after the last circle */
+#progressbar li:last-child:after {
+    display: none;
+}
+
+/* Style for active states */
+#progressbar li.active:before {
+    background: #47b749;
+    /* Active circle color */
+}
+
+#progressbar li.active:after {
+    background: #47b749;
+    /* Active bar color */
+}
+
+/* Custom color for the last circle (Delivered) */
+/* #progressbar li:last-child:before {
+    background: #e7e7f1;
+} */
+#progressbar li span.active:after {
+    background: #47b749;
+    /* Active bar color */
+}
+
+/* Styling for the text under each step */
+#progressbar li span {
+    display: block;
+    /* Space between the circle and text */
+    font-size: 0.8rem;
+    color: #e7e7f1;
+    /* Ensure text is gray */
+    text-align: center;
+    /* Aligns the text under each circle */
+}
+
+/* Remove active text color */
+#progressbar li.active span {
+    color: black;
+    /* Ensure text color stays gray for active steps */
+}
+
+
+/*date bar chart*/
+#progressbar li p {
+    color: gray;
+    font-size: 10px;
+}

@@ -1,0 +1,224 @@
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1050;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    /* overflow: auto; Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+    transition: all 0.9s ease;
+}
+
+/* Modal content */
+.modal-dialog {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    /* padding: 20px; */
+    background-color: #fff;
+    border-radius: 10px;
+    /* width: 80%; Modal width */
+    width: 60%;
+
+    z-index: 10;
+}
+
+
+/* Style the modal header */
+.modal-header {
+    padding: 10px 20px;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+    border-bottom: 2px solid #dee2e6;
+    color: #333;
+}
+
+.modal {
+    position: absolute;
+    top: auto;
+    right: auto;
+}
+
+/* Style the modal title */
+.modal-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Style the modal body to handle scrolling */
+.modal-body {
+    max-height: 500px;
+    overflow: auto;
+    padding: 0 20px;
+}
+
+/* Style for the close button */
+.btn-close {
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    color: #000;
+}
+
+/* Style the modal footer */
+.modal-footer {
+
+
+    background-color: #fff;
+    padding: 10px 20px;
+    border-radius: 0 0 10px 10px;
+    border-top: 2px solid #dee2e6;
+    display: flex;
+    justify-content: flex-end;
+    height: 60px;
+
+}
+
+/* Custom button style */
+.model-btn-save {
+    color: white;
+    margin: 0 10px 0 0;
+    padding: 8px 15px;
+    background-color: #141b5f;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    font-size: medium;
+    cursor: pointer;
+    height: fit-content;
+    transition: all .5s;
+}
+
+.btn-save:hover {
+    background-color: #FFBD03;
+    border-color: #FFBD03;
+    color: #000;
+}
+
+/* Animation for modal */
+.modal {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: opacity 0.4s ease;
+}
+
+/* Show the modal with opacity transition */
+.modal.show {
+    display: block;
+    opacity: 1;
+    animation: fadeIn 0.5s ease;
+}
+
+/* Hide the modal with opacity transition */
+.modal.hide {
+    opacity: 0;
+    animation: fadeOut 0.5s ease;
+}
+
+/* Keyframes for the fade-in effect */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Keyframes for the fade-out effect */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+}
+
+
+.modal-body {
+
+    input[type="text"],
+    input[type="email"],
+    input[type="date"],
+    select {
+        width: 90%;
+        padding: 10px;
+        margin: 5px 0 20px 20px;
+        border: none;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        color: #333;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="date"]:focus,
+    select:focus {
+        border-color: #5c6bc0;
+        outline: none;
+    }
+
+    input[type="text"]::placeholder,
+    input[type="email"]::placeholder,
+    input[type="date"]::placeholder {
+        color: #aaa;
+    }
+
+    input[type="date"] {
+        padding: 9px;
+    }
+
+    select {
+        height: 40px;
+    }
+
+    div label {
+        display: inline-block;
+        margin-right: 20px;
+
+    }
+
+    input[type="radio"] {
+        margin: 0 5px 0 20px;
+    }
+
+}
+
+
+.modal-table {
+    width: 100%;
+}
+
+/* .modal-table tr td:nth-child(1){
+    width: fit-content;
+    background-color: red;
+}
+
+.modal-table tr td:nth-child(2){
+    background-color: blue;
+} */

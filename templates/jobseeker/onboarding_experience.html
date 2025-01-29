@@ -1,0 +1,82 @@
+{% load static %}
+<div class="tab-pane fade active in show" id="tab4default">
+
+
+
+    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-start align-items-start d-inline-block" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;width:100%">
+        <form method="post" id="form_Experiance">
+            <span id="result"></span>
+            <table class="table-bordered dynamictbl" id="user_table">
+                <thead>
+                    <tr>
+                        <th width="15%"><label class="SideLabelBold">Company Name</label></th>
+                        <th width="15%"><label class="SideLabelBold">DOJ</label></th>
+                        <th width="10%"><label class="SideLabelBold">DOL</label></th>
+                        <th width="10%"><label class="SideLabelBold">Designation</label></th>
+                        <th width="10%"><label class="SideLabelBold">Reason For leavning</label></th>
+                        <th width="5%"><label class="SideLabelBold">Action</label></th>
+                    </tr>
+                </thead>
+                <tbody id="bindrowExp">
+                </tbody>
+    
+    
+            </table>
+    
+            <br />
+            <div style="float:right">
+                <input type="submit" name="save" id="btnsaveexp" class="btn btn-primary" value="save" /> &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" name="add" id="btnaddExp" class="btn btn-primary"> Add Row</button>
+    
+            </div>
+    
+        </form>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var count = 4;
+            if (count > 1) {
+                for (var i = 1; i <= count; i++)
+                    {
+                    dynamic_fieldExp(i);
+                    }
+            }
+    
+            function dynamic_fieldExp(number) {
+                var html = '<tr>';
+                html += '<td><input type ="text" name="CompanyName[]" class ="form-control dynamic_input" /> </td >';
+                html += '<td><input type ="text" name="DOJ[]" class ="form-control dynamic_input" /> </td >';
+                html += '<td><input type ="text" name="DOL[]" class ="form-control dynamic_input" /> </td >';
+                html += '<td><input type ="text" name="Designation[]" class ="form-control dynamic_input" /> </td >';
+                html += '<td><input type ="text" name="ReasonForleaving[]" class ="form-control dynamic_input" /> </td >';
+                if (number > 1) {
+                    html += '<td><button class="deleteButton " id="removeExp" type="button"></button></td >  </tr>';
+                    $('#bindrowExp').append(html);
+                }
+            }
+    
+            $('#btnaddExp').click(function () {
+                count++;
+                dynamic_fieldExp(count);
+            });
+    
+    
+            $(document).on('click', '#removeExp', function () {
+                count--;
+                //dynamic_field(count);
+                $(this).closest('tr').remove();
+            });
+    
+    
+    
+            $('#dynamic_form').on('submit', function (event) {
+                event.preventDefault();
+    
+            })
+        });
+    </script>
+    
+    
+
+
+</div>

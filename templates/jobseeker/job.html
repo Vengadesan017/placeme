@@ -1,0 +1,231 @@
+{% extends "jobseeker/layout.html" %}
+
+{% block title %}
+{{ job.title }} in {{ job.company.company_name }}
+{% endblock title %}
+{% load static %}
+{% block statics %}
+<link rel="stylesheet" href="{% static 'css/job.css' %}">
+<style>
+    .to-view-button{
+        padding:12px;
+        background-color: #ffbd03;
+        color:#000;
+    }
+
+    .to-view-button:hover{
+        padding:12px;
+        background-color: #141b5f;
+        color:#fff;
+    }
+
+</style>
+{% endblock statics %}
+
+
+{% block content %}
+
+<div class="container">     
+    <div class="company">
+        {% if messages %}
+        {% for message in messages %}
+          <div class='alert alert-{{ message.tags }}'>
+            <span class="closebtn">&times;</span>
+              {{ message }}
+          </div>    
+        {% endfor %}
+      {% endif %}         
+        <div class="fixed">
+        <div class="company-details">
+            <h1>{{ job.title }}</h1>
+            <h5>{{ job.company.company_name }}</h5>
+            <form method="POST" action="{% url 'job_seeker:apply' %}">
+                {% csrf_token %}
+                {% comment %} <input type="hidden" value="{{ job.job_id }}" name="id"> {% endcomment %}
+                <input type="hidden" value="{{ job.title }}" name="title">
+                <input type="hidden" value="{{ job.slug }}" name="slug">
+                {% if applied %}
+                    <a href="{% url 'job_seeker:status' page="applied"%}" class="apply-button to-view-button">View Status</a>
+                {% elif login %}
+                    <button type="submit" name="apply-job" href="#" class="apply-button">Apply</button>
+                {% else %}
+                    <a type="submit" href="{% url 'auth:login' %}" class="apply-button">Login to Apply</a>
+                {% endif %}
+            </form>
+                <div class="company-info">
+                    <ul>
+                        <li><a href="#highlights">Highlights</a></li>
+                        <li><a href="#description">Job Description</a></li>
+                        <li><a href="#key-skills">Key Skills</a></li>
+                        <li><a href="#benefits">Benefits</a></li>
+                        <li><a href="#about-company">About Company</a></li>
+                    </ul>
+                </div>
+            </div>
+                <hr class="divider">
+                <div class="scroll">
+                    <section class="Role" id="highlights">
+                        <div class="role-details">
+                          <!-- First Row: Location, Rotational, No Site -->
+                          <ul class="icon-item">
+                            <li><i class="fas fa-map-marker-alt"></i>
+                                {{ job.location_id.all|join:", " }}
+
+                            </li>
+                            <li><i class="fas fa-indian-rupee-sign"></i>{{ job.salary|floatformat:0 }}/Month</li>
+                            <li><i class="fas fa-calendar-alt"></i> {{ job.posted_date|timesince }} ago</li>
+                          </ul>
+                          
+                          <!-- Second Row: Salary, Experience, Qualification -->
+                          <ul class="data">
+                            <li><i class="fas fa-clock"></i>{{ job.employment_type }}</li>
+                            <li><i class="fas fa-briefcase"></i>{{ job.required_experience|floatformat:0 }} Years</li>
+                            <li><i class="fas fa-eye"></i>{{ job.views }} viewed</li>
+                          </ul>
+                          
+                          <!-- Third Row: Date, Viewed, Applied -->
+                          <ul class="data">
+                            <li><i class="fas fa-laptop"></i>
+                                {%if job.is_onsite %}
+                                Onsite
+                            {% endif %}
+                            {%if job.is_work_from_home %}
+                                {%if job.is_onsite%}
+                                   ,
+                                {% endif %}
+                                Work from Home
+                            {% endif %}
+                            {%if job.is_hybrid %}
+                                {%if job.is_work_from_home %}
+                                    , 
+                                {% endif %}
+                                Hybrid
+                            {% endif %}
+                            </li>
+                            <li><i class="fas fa-graduation-cap"></i>{{ job.qualifications.all|join:", " }}</li>
+                            <li><i class="fas fa-paper-plane"></i>{{ job.applied_count }} Applied</li>
+                          </ul>
+                        </div>
+                      </section>
+                      
+                      
+                <hr class="divider">
+                <section id="description">
+                    <h3>Description</h3>
+                    <p>{{ job.description }}</p>
+            </section>
+                <hr class="divider">                
+                <section class="responsibilities" id="key-skills">
+                    <h3>Key Skills</h3>
+                    <div class="skills">
+                        {% if skills_list %}
+                        {% for skill in skills_list %}
+                        {% if skill %}
+                          <span>{{ skill }}</span>
+                        {% else %}
+                        {% endif%}
+                        {% endfor %}
+                      {% else %}
+                        <span>No skills provided</span>
+                      {% endif %}
+                    </div>
+                </section>
+                <hr class="divider">
+                <section class="benefits" id="benefits">
+                    <h3>Benefits</h3>
+                    <ul>
+                        {% for benefit_map in job.benefit_id.all %}
+                           <li> {{ benefit_map}}</li>
+                        {% endfor %}
+                    </ul>
+                </section>
+                <hr class="divider">
+                <section class="about" id="about-company">
+                    <h3>About {{ job.company.company_name }}</h3>
+                    <p>
+                        {{ job.company.about }}
+                    </p>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} 
+
+{% block content %}
+<div class="container">
+    <div class="job-details">
+        <h1>{{ job.title }}</h1>
+        <p><span class="label">Company:</span> <span class="value">{{ job.company.company_name }}</span></p>
+        <p><span class="label">Location:</span> <span class="value">{{ job.location }}</span></p>
+        <p><span class="label">Employment Type:</span> <span class="value">{{ job.get_employment_type_display }}</span></p>
+        <p><span class="label">Skills:</span> <span class="value">{{ job.skills }}</span></p>
+        <p><span class="label">Required Experience:</span> <span class="value">{{ job.required_experience }} years</span></p>
+        <p><span class="label">Salary:</span> <span class="value">${{ job.salary }}</span></p>   #########
+        <p><span class="label">Posted Date:</span> <span class="value">{{ job.posted_date }}</span></p>
+        <p><span class="label">Last Date to Apply:</span> <span class="value">{{ job.last_date_to_apply }}</span></p>
+        <p><span class="label">Opening Count:</span> <span class="value">{{ job.opening_count }}</span></p> #####
+        <p><span class="label">Views:</span> <span class="value">{{ job.views }}</span></p>
+        <p><span class="label">Active:</span> <span class="value">{{ job.is_active|yesno:"Yes,No" }}</span></p>####
+        <p><span class="label">Post Verified:</span> <span class="value">{{ job.is_post_verified|yesno:"Yes,No" }}</span></p>$$$$$$$$$$$$$$
+        <div class="tags">
+            {% if job.is_fixed_shift %}<span>Fixed Shift</span>{% endif %}
+            {% if job.is_rotational_shift %}<span>Rotational Shift</span>{% endif %}
+            {% if job.is_day_shift %}<span>Day Shift</span>{% endif %}
+            {% if job.is_night_shift %}<span>Night Shift</span>{% endif %}
+            {% if job.is_onsite %}<span>Onsite</span>{% endif %}
+            {% if job.is_work_from_home %}<span>Work from Home</span>{% endif %}
+            {% if job.is_hybrid %}<span>Hybrid</span>{% endif %}
+        </div>
+        <div class="description">
+            <h2>Description</h2>
+            <p>{{ job.description }}</p>
+        </div>
+        <div class="specification">
+            <h2>Specification</h2>###################
+            <p>{{ job.specification }}</p>
+        </div>
+    </div>
+</div>
+
+{% endblock content %} {% endcomment %}

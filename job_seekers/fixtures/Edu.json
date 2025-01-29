@@ -1,0 +1,222 @@
+[
+    {
+        "model": "job_seekers.levelforedu",
+        "pk": 1,
+        "fields": {
+            "name": "Undergraduate",
+            "code": "UG"
+        }
+    },
+    {
+        "model": "job_seekers.levelforedu",
+        "pk": 2,
+        "fields": {
+            "name": "Postgraduate",
+            "code": "PG"
+        }
+    },
+    {
+        "model": "job_seekers.levelforedu",
+        "pk": 3,
+        "fields": {
+            "name": "Doctorate",
+            "code": "PhD"
+        }
+    },
+    {
+        "model": "job_seekers.levelforedu",
+        "pk": 4,
+        "fields": {
+            "name": "Diploma",
+            "code": "DIP"
+        }
+    },
+    {
+        "model": "job_seekers.levelforedu",
+        "pk": 5,
+        "fields": {
+            "name": "School",
+            "code": "Scl"
+        }
+    },
+
+
+
+
+
+
+
+
+
+
+
+    {
+        "model": "job_seekers.courseforedu",
+        "pk": 1,
+        "fields": {
+            "level": 1,
+            "name": "Bachelor of Technology",
+            "code": "B.Tech"
+        }
+    },
+    {
+        "model": "job_seekers.courseforedu",
+        "pk": 2,
+        "fields": {
+            "level": 1,
+            "name": "Bachelor of Arts",
+            "code": "B.A"
+        }
+    },
+    {
+        "model": "job_seekers.courseforedu",
+        "pk": 3,
+        "fields": {
+            "level": 2,
+            "name": "Master of Technology",
+            "code": "M.Tech"
+        }
+    },
+    {
+        "model": "job_seekers.courseforedu",
+        "pk": 4,
+        "fields": {
+            "level": 3,
+            "name": "Doctor of Philosophy",
+            "code": "PhD"
+        }
+    },
+    {
+        "model": "job_seekers.courseforedu",
+        "pk": 5,
+        "fields": {
+            "level": 4,
+            "name": "Diploma in Engineering",
+            "code": "PhDe"
+        }
+    },
+    {
+        "model": "job_seekers.courseforedu",
+        "pk": 6,
+        "fields": {
+            "level": 5,
+            "name": "State Board",
+            "code": "state"
+        }
+    },
+    {
+        "model": "job_seekers.courseforedu",
+        "pk": 7,
+        "fields": {
+            "level": 5,
+            "name": "Central Board",
+            "code": "CBSE"
+        }
+    },
+
+
+
+
+
+
+
+
+    {
+        "model": "job_seekers.specificationforedu",
+        "pk": 1,
+        "fields": {
+            "course": 1,
+            "name": "Computer Science and Engineering",
+            "created_by": null,
+            "is_verified": true
+        }
+    },
+    {
+        "model": "job_seekers.specificationforedu",
+        "pk": 2,
+        "fields": {
+            "course": 1,
+            "name": "Information Technology",
+            "created_by": null,
+            "is_verified": false
+        }
+    },
+    {
+        "model": "job_seekers.specificationforedu",
+        "pk": 3,
+        "fields": {
+            "course": 2,
+            "name": "Philosophy",
+            "created_by": null,
+            "is_verified": true
+        }
+    },
+    {
+        "model": "job_seekers.specificationforedu",
+        "pk": 4,
+        "fields": {
+            "course": 6,
+            "name": "12th",
+            "created_by": null,
+            "is_verified": true
+        }
+    },
+    {
+        "model": "job_seekers.specificationforedu",
+        "pk": 5,
+        "fields": {
+            "course": 6,
+            "name": "10th",
+            "created_by": null,
+            "is_verified": true
+        }
+    },
+    {
+        "model": "job_seekers.specificationforedu",
+        "pk": 4,
+        "fields": {
+            "course": 7,
+            "name": "12th",
+            "created_by": null,
+            "is_verified": true
+        }
+    },
+    {
+        "model": "job_seekers.specificationforedu",
+        "pk": 5,
+        "fields": {
+            "course": 7,
+            "name": "10th",
+            "created_by": null,
+            "is_verified": true
+        }
+    },
+
+
+
+
+
+
+
+    {
+        "model": "job_seekers.educationtype",
+        "pk": 1,
+        "fields": {
+            "edu_type":"Full-Time"
+        }
+    },
+    {
+        "model": "job_seekers.educationtype",
+        "pk": 2,
+        "fields": {
+          "edu_type":"Part-Time"
+        }
+    },
+    {
+        "model": "job_seekers.educationtype",
+        "pk": 2,
+        "fields": {
+          "edu_type":"Distance Education"
+        }
+    }
+]

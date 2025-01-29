@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}
+
+      {% endblock %}
+    </title>
+
+    <link rel="stylesheet" href="{% static 'css/recruiters/body.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/recruiters/nav.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/recruiters/nav1.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/recruiters/nav2.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/recruiters/nav3.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/recruiters/nav4.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/recruiters/nav5.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/recruiters/nav-info.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/recruiters/container.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/error.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    {% block statics %}
+
+    {% endblock %}
+    <script src="{% static 'js/recruiters/nav.js' %}" async defer></script>
+    {% comment %} <script src="https://www.google.com/recaptcha/api.js" async defer></script> {% endcomment %}
+  </head>
+  <body>
+    <div class="parent">
+      <div class="r-left">
+          <nav class="left-nav">
+              <div class="nav-div">
+                  <a href="#" class="active" id="close-menu"><i class="fa-solid fa-chevron-left"></i>CLOSE</a>
+              </div>
+              <div class="nav-div-hide">
+                  <a href="#" class="active" id="open-menu"><i class="fa-solid fa-chevron-right"></i></a>
+              </div>
+          </nav>
+          
+          <div class="left-down">
+              <div class="l-box-div">
+                  <div class="box-1">
+                      <a href="#">
+                          <div class="p">
+                              <i class="fa-solid fa-suitcase"></i> Post or job  
+                          </div>
+                          <i class="fa-solid fa-caret-right"></i>
+                      </a>
+                      
+                  </div>
+                  <div class="box-1-hide">
+                      <a href="#">
+                          <i class="fa-solid fa-suitcase"></i> 
+                      </a>
+                  </div>
+
+                  <div class="box-1">
+                      <a href="#">
+                          <div class="p">
+                              <i class="fa-regular fa-id-card"></i> Canditates 
+                          </div>
+                          <i class="fa-solid fa-caret-right"></i>                         
+                      </a>
+                      
+                  </div>
+                  <div class="box-1-hide">
+                      <a href="#">
+                          <i class="fa-regular fa-id-card"></i>
+                      </a>
+                  </div>
+
+                  <div class="box-1">
+                      <a href="#">
+                          <div class="p">
+                              <i class="fa-solid fa-magnifying-glass-location"></i> Open search
+                          </div>
+                          <i class="fa-solid fa-caret-right"></i>
+                      </a>
+                      
+                  </div>
+                  <div class="box-1-hide">
+                      <a href="#">
+                          <i class="fa-solid fa-magnifying-glass-location"></i> 
+                      </a>
+                  </div>
+                  
+
+                  <div class="box-1">
+                      <a href="#">
+                          <div class="p">
+                              <i class="fa-solid fa-building-user"></i> On Boarding
+                          </div>
+                          <i class="fa-solid fa-caret-right"></i>
+                      </a>
+                      
+                  </div>
+                  <div class="box-1-hide">
+                      <a href="#">
+                          <i class="fa-solid fa-building-user"></i> 
+                      </a>
+                  </div>
+
+                  <div class="box-1">
+                      <a href="#">
+                          <div class="p">
+                              <i class="fa-solid fa-user-pen"></i> Admin control
+                          </div>
+                          <i class="fa-solid fa-caret-right"></i>
+                      </a>
+                      
+                  </div>
+                  <div class="box-1-hide">
+                      <a href="#">
+                          <i class="fa-solid fa-user-pen"></i> 
+                      </a>
+                  </div>
+
+                  <div class="box-1">
+                      <a href="#">
+                          <div class="p">
+                              <i class="fa-solid fa-users-gear"></i> empolyee info
+                          </div>
+                          <i class="fa-solid fa-caret-right"></i>
+                      </a>
+                      
+                  </div>
+                  <div class="box-1-hide">
+                      <a href="#">
+                          <i class="fa-solid fa-users-gear"></i> 
+                      </a>
+                  </div>
+                  
+              </div>
+              
+          </div>
+      </div>
+      <div class="r-right">
+          <header class="header">
+              <div class="navbar">
+                  <nav>
+                      <ul class="menu">
+                          <div class="logo-div">
+                              <li class="logo">
+                                <a href="{% url 'recruiters:home' %}"><img src="{% static 'img/logo.svg' %}" alt="Placenow Logo" style="height: 20px;margin-left: 60px;" /></a>
+                              </li>
+                              
+                              
+                              
+                              
+                          </div>
+                          <div class="last-div">
+                              <!-- <div class="item">
+                                  <li><a href="{% url 'job_seeker:profile' %}"><i class="fa-solid fa-bell"></i>Notifications</a></li>
+                              </div> -->
+                              <div class="item-div-1">
+                                  <li class="item button">
+                                      <a href="#" >
+                                          Recruiter Company name
+                                      </a>
+                                      
+                                  </li>
+                              </div>
+                              <div class="item-div">
+                                  <li class="item button"><a href="#"><i class="fa-solid fa-bell"></i> 
+                                      Notifications</a></li>
+                              </div>
+                              <div class="item-div">
+                                  <li class="item button"><a href="{% url 'job_seeker:profile' %}"><i class="fa-solid fa-user"></i> 
+                                      Profile</a></li>
+                              </div>
+                              
+                              
+                              
+                          </div>
+                          <div class="item-div-menu" >
+                              <li class="item button">
+                                  <a>
+                                      <i class="fa-solid fa-bars" id="mobile-menu-open"></i>
+                                      <i class="fa-solid fa-xmark" id="mobile-menu-close"></i>
+                                  </a>
+                              </li>
+                          </div>
+                          
+                          
+                      </ul>
+                  </nav>
+              </div>
+          </header>
+          <div class="r-right-down">
+              <div class="r-right-menu" id="mobile-menu-box">
+                  <div class="box-1-menu">
+                      <a href="#">
+                          <p>Recruiter Company name</p>
+                      </a>
+                  </div>
+                  <div class="box-2-menu">
+                      <a href="#">
+                          <!-- <i class="fa-solid fa-bell"></i>  -->
+                          <p>Notifications</p></a>
+                  </div>
+                  <div class="box-3-menu">
+                      <a href="#">
+                          <!-- <i class="fa-solid fa-user"></i>  -->
+                          <p>profile</p>
+                      </a>
+                  </div>
+              </div>
+              
+
+    {% block content %}
+
+    {% endblock %}
+            </div>
+          </div>
+        </div>
+    <footer>
+      <div class="footer-content">
+        <span>© 2024 Placeme</span>
+        <a href="#">Terms</a>
+        <a href="#">Privacy Centre and Ad Choices</a>
+      </div>
+    </footer>
+    {% comment %} <script src="{% static 'js/script.js' %}" defer></script> {% endcomment %}
+    <script src="{% static 'js/error.js' %}" defer></script>
+  </body>
+</html>

@@ -1,0 +1,75 @@
+{% extends "jobseeker/layout.html" %}
+
+{% block title %}
+Application Status
+{% endblock title %}
+{% load static %}
+{% block statics %}
+<link rel="stylesheet" href="{% static 'css/status-bar.css' %}">
+<link rel="stylesheet" href="{% static 'css/status-box.css' %}">
+<link rel="stylesheet" href="{% static 'css/status-menu.css' %}">
+<link rel="stylesheet" href="{% static 'css/status-right.css' %}">
+<link rel="stylesheet" href="{% static 'css/jobs.css' %}">
+
+<style>
+    .saved-jobs{
+        margin: 30px;
+        display: flex;
+        justify-content: space-around;
+    }
+</style>
+{% endblock statics %}
+
+
+{% block content %}
+
+<div class="all-menu">
+    <ul class="menu-item">
+        <li class="save "><a href="{% url 'job_seeker:status' page="saved" %}" class="{% if request.resolver_match.kwargs.page == 'saved' %}active{% endif %}" onclick="showSection('saved')">Saved Jobs({{bookmarks|length}})</a></li>
+        <li class="applied {% if request.resolver_match.kwargs.page == 'applied' %}active{% endif %}"><a href="{% url 'job_seeker:status' page="applied" %}" class="{% if request.resolver_match.kwargs.page == 'applied' %}active{% endif %}" onclick="showSection('applied')">Applied Jobs({{applied|length}})</a></li>
+        <li class="offer {% if request.resolver_match.kwargs.page == 'offered' %}active{% endif %}"><a href="{% url 'job_seeker:status' page="offered" %}" class="{% if request.resolver_match.kwargs.page == 'offered' %}active{% endif %}" onclick="showSection('offered')">My Offers({{offered|length}})</a></li>
+    </ul>
+</div>
+
+        {% if page == "saved" %}
+        {% include "jobseeker/status_saved.html" %}                                
+        {% elif page == "applied" %}
+        {% include "jobseeker/status_applied.html" %}                                
+        {% elif page == "offered" %}
+        {% include "jobseeker/status_offered.html" %}                                                        
+        {% else %}
+        <section class="dev-list" id="#">
+        <h2>Invalid page</h2>                            
+        </section>
+
+        {% endif %}
+
+
+
+
+
+{% comment %} <script>
+showSection('applied')
+function showSection(sectionId) {
+// Hide all sections
+var sections = document.querySelectorAll('.dev-list');
+sections.forEach(function(section) {
+section.classList.remove('active');
+});
+
+// Show the selected section
+var activeSection = document.getElementById(sectionId);
+activeSection.classList.add('active');
+}
+</script>
+
+ {% endcomment %}
+
+{% endblock content %}
+
+
+
+
+
+
+

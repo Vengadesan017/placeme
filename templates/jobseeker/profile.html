@@ -1,0 +1,547 @@
+{% extends "jobseeker/layout.html" %}
+
+{% block title %}
+{{ candidate.first_name }} {{ candidate.last_name }}'s profile
+{% endblock title %}
+{% load static %}
+{% block statics %}
+{% comment %} <link rel="stylesheet" href="{% static 'css/profile2.css' %}"> {% endcomment %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+<link rel="stylesheet" href="{% static 'css/profile-right.css' %}">
+<link rel="stylesheet" href="{% static 'css/profile-right-skill.css' %}">
+<link rel="stylesheet" href="{% static 'css/profile-right-skill-2.css' %}">
+<link rel="stylesheet" href="{% static 'css/model.css' %}">
+{% endblock statics %}
+
+
+{% block content %}
+
+
+<main class="main">
+    <div class="profile-container"> 
+        <div class="left-container">
+            <div class="profile-pic">
+                <div class="pic-div">
+                    {% if doc.profile_picture %}
+                    <img src="{{doc.profile_picture}}" class="pic-photo" alt="profile pic" width="100%">
+                {% else %}
+                    <img src="{% static 'img/image.png' %}" class="pic-photo" alt="profile pic" width="100%">
+                {% endif %}
+                    <button class="btn">+</button>
+                </div>
+                
+            </div>
+            <div class="profile-link">
+                <div class="link-name">
+                    <ul class="left-ul">
+                        <li>
+                            <div class="li-1">
+                                <div class="personal-div"><a href="#personal-info" class="profile-link">Personal Info</a></div>
+                                <div class="height"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="li-1">
+                                <div class="personal-div"><a href="#education" class="profile-link">Education</a></div>
+                                <div class="height"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="li-1">
+                                <div class="personal-div"><a href="#skills" class="profile-link">Key Skills</a></div>
+                                <div class="height"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="li-1">
+                                <div class="personal-div"><a href="#preference" class="profile-link">Preference</a></div>
+                                <div class="height"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="li-1">
+                                <div class="personal-div">
+                                <a href="#internship" class="profile-link">Internship</a></div>
+                                <div class="height"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="li-1">
+                                <div class="personal-div">
+                                    <a href="#employement" class="profile-link">Employement</a></div>
+                                <div class="height"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="li-1">
+                                <div class="personal-div"><a href="#career-info" class="profile-link">Career Info</a></div>
+                                <div class="height"></div>
+                            </div>
+                        </li>
+                       </ul>
+                    
+                </div>
+                <div class="logout-div">
+                    <div class="logout-btn-div">
+                        <a href="{% url 'auth:logout' %}" class="logout-btn">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right-container">
+            {% if messages %}
+            {% for message in messages %}
+              <div class='alert alert-{{ message.tags }}'>
+                <span class="closebtn">&times;</span>
+                  {{ message }}
+              </div>    
+            {% endfor %}
+          {% endif %}
+            <div class="info-container" id="personal-info">
+                <div class="info-name">
+
+
+
+                    <div class="info-name1">
+                        <!-- mod -->
+                        <div class="name-div">
+                            <h1 id="userName">{{ candidate.first_name }} {{ candidate.last_name }} <a href="#" id="openPersonalModalButton"> <i class='fa-solid fa-pencil'></i></a></h1>
+                            
+                        </div>
+                        <div class="detial-div-name">
+                            <p>Diplamo/ITI</p>
+                            <p>don bosco disloma and polytechnic college</p>
+                        </div>
+                        
+                    </div>
+                    <div class="info-date">
+                        <p class="update-p">Last Updated -</p>
+                        <p class="date"> {{ candidate.last_update }}</p>
+                    </div>
+
+
+                </div>
+
+                <div class="detail-main">
+                    <div class="detail-1">
+
+
+
+                        <div class="gender-box">
+                            <ul class="gender-box-ul">
+                                <li>
+                                    <div class="gender-box-person">
+                                        <i class="fa-solid fa-user"></i>
+                                        <p>
+                                            {% if candidate.gender %}
+                                                {{ candidate.gender }}
+                                            {% else %}
+                                            <a href="#" id="openPersonalModalButtong">Add Gender</a>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="gender-box-date">
+                                        <i class="fa-solid fa-calendar-week"></i>
+                                        <p>
+                                            {% if candidate.dob %}
+                                                {{ candidate.dob|date:'d-m-Y' }}
+                                            {% else %}
+                                            <a href="#" id="openPersonalModalButton">Add DOB</a>
+                                            {% endif %}
+
+                                        </p>
+                                    </div>
+                                </li>
+                                <!-- mod -->
+                                <li>
+                                    <div class="phone-box-place">
+                                        <i class="fa-solid fa-suitcase"></i>
+                                        {% if candidate.work_status %}
+                                            {{ candidate.work_status|default_if_none:'' }}
+                                        {% else %}
+                                        <a href="#" id="openPersonalModalButton">Add Status</a>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+
+
+
+                        <div class="phone-box">
+                            <ul class="phone-box-ul">
+                                <li>
+                                    <div class="phone-box-person">
+                                        <i class="fa-solid fa-phone"></i>
+                                        <p>{{ candidate.user.mobile_no|default_if_none:'' }}</p>
+                                    </div>
+                                </li>
+                                <!-- mod -->
+                                <li>
+                                    <div class="phone-box-date">
+                                        <i class="fa-solid fa-envelope"></i>
+                                        <div class="email-div">
+                                            <p class="email" id="email">{{ candidate.user.email|default_if_none:'' }}</p>
+                                        </div>
+                                    </div>
+                                </li>
+                                
+                                <li>
+                                    <div class="gender-box-place">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                        <p>
+                                            {% if candidate.city and candidate.state and candidate.country %}
+                                            {{ candidate.city }}, {{ candidate.state }}, {{ candidate.country }}
+                                            {% else %}
+                                            <a href="#" id="openPersonalModalButton">Add Location</a>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+                    <div class="uploadfile-div">
+                        <div class="color-div">
+                            <div class="resume">
+                                <ul class="resume-ul">
+                                    <li class="resume-li1">
+                                        <a class="resume-a1">
+                                            <i class="fa-regular fa-envelope"></i>
+                                            <p>Verify Email</p>
+                                        </a>
+                                    </li>
+                                    <li class="resume-li2">
+                                        <a class="resume-a2">
+                                            <i class="fa-regular fa-file"><span class="add-resume">Add Resume</span> </i>
+                                                               
+                                            <button class="upload-btn">Upload file</button>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+<!--                                 <div class="upload-file">
+                                <button class="upload-btn">Upload file</button>
+                            </div> -->
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="skill-container" id="education">
+                <div class="education">
+                    <div class="education-name1">
+                        <h2>Education</h2>
+                        <div class="add-div">
+                            <a href="#" id="openEduModalButton">Add</a>
+                            <i id="openEduEditModalButton" class="fa-solid fa-pen-to-square"></i>
+                        </div>
+                    </div>
+                    <div class="education-name2">
+
+                        {% if education %}
+                        {% for edu in education %}
+                        <div class="education-name2-1">
+                            <div class="education-name2-1-col">
+                                <h2>{{edu.institute|default_if_none:''}}</h2>
+                                <p>{{edu.edu_id|default_if_none:''}}</p>
+                            </div>
+                            <div class="employement-date-div">
+                                <p class="employement-date">{{edu.year_of_passing|default_if_none:''}}</p>
+                                <p class="employement-time">{{edu.type_id|default_if_none:''}}</p>
+                            </div>
+                            {% comment %} <div class="education-name2-1-date">
+                                <p>{{edu.year_of_passing}}</p>
+                                <p>{{edu.type_id}}</p>
+                            </div> {% endcomment %}
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="education-name2-1">
+                            <div class="education-name2-1-col">
+                                <a href="#" id="openEduModalButton">Add</a>
+
+                            </div>
+                        </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+                <div class="key-skills" id="skills">
+                    <div class="key-headline">
+                        <h4>Key Skills</h4>
+                        <div class="key-add-div">
+                            <a href="#" id="openSkillEditModalButton">Add</a>
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </div>
+                    </div>
+                    <div class="key-list">
+                        <div class="key-list-div">
+                            <ul class="key-list-ul" id="keyUl">
+                                {% if skills_list %}
+                                {% for skill in skills_list %}
+                                {% if skill %}                                
+                                <li class="key-list-li">
+                                    {{ skill }}
+
+                                </li>
+                                {% else %}
+                                {% endif%}
+                                {% endfor %}
+                                {% else %}
+                                <li class="key-list-li">
+                                    No skills provided,
+                                   <a href="">Add key skills</a>
+                                </li>
+                                {% endif %}
+                                
+                            </ul>
+                        </div>
+                        <div class="key-list-more">
+
+                            <!-- mod -->
+                            <button class="more-btn" id="skill-more">More <i class="fa-solid fa-arrow-right"></i></button>
+                            <button class="close-btn" id="skill-close">Close <i class="fa-solid fa-xmark"></i></i></button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="Perference" id="preference">
+                    <div class="Perference-heading">
+                        <h4>Preference</h4>
+                        <div class="Perference-add-div">
+                            <a href="#" id="openPreferModalButton">Add</a>
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </div>
+                    </div>
+                    <div class="languages">
+                        <h4>Perfered languages</h4>
+                        <div class="languages-row">
+                            <div class="languages-ul-div">
+
+                                <table class="language-table">
+                                    {% if language %}
+                                    <thead>
+                                        <tr>
+                                            <th class="">Languages</th>
+                                            <th class="">Speak</th>
+                                            <th>Read</th>
+                                            <th>Write</th>
+                                            <th>Proficiency rate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for lan in language %}
+                                    <tr>
+                                        <td>{{lan.language_id}}
+                                        <td>{% if lan.can_speak %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}</td>
+                                        <td>{% if lan.can_read %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}</td>
+                                        <td>{% if lan.can_write %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}</td>
+                                        <td>{{lan.proficiency|default_if_none:''}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                    {% else %}
+                                            <a href="#" id="openEduModalButton">Add</a>
+                                    {% endif %}
+
+                                </table>
+
+                            </div>
+                            <div class="key-list-more">
+                                <!-- <button class="more-btn">Check <i class="fa-solid fa-arrow-right"></i></button> -->
+                            </div>
+                            
+                        </div>
+                        
+                        
+                        
+                        
+
+                        <h4>Preferred location</h4>
+
+                        <!-- mod -->
+                         <div class="Preferred-text-div-par">
+                            <div class="Preferred-text-div" id="PreferredTextDiv">
+                                {% if location %}
+                                {% for loc in location %}
+                                    <p class="Preferred-text">{{loc}}</p> 
+                                {% endfor %}
+                                {% else %}
+                                        <a href="#" id="openEduModalButton">Add</a>
+                                {% endif %}
+
+                            </div>
+                            <div class="Preferred-btn-dic">
+                                <button class="Preferred-more-btn" id="PreferredMoreBtn">More <i class="fa-solid fa-arrow-right"></i></button>
+                                <button class="Preferred-close-btn" id="PreferredCloseBtn">Close <i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                         </div>
+                        
+                         
+                    </div>
+                </div>
+
+
+
+                <div class="employement" id="employement">
+                    <div class="employement-heading">
+                        <h4>Employement</h4>
+                        <div class="employement-add-div">
+                            <a href="#" id="openEmpModalButton">Add</a>
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </div>
+                    </div>
+                    {% if employment %}
+                    {% for emp in employment %}
+                    <div class="employement-flex">
+                        <div class="employement-play">
+                            <p class="employement-role">{{emp.company_role|default_if_none:''}}</p>
+                            <p class="employement-company">{{emp.company_name|default_if_none:''}}</p>
+                        </div>
+                        <div class="employement-date-div">
+                            <p class="employement-date">{{emp.doj|date:'M Y'|default_if_none:''}} - {{emp.dol|date:'M Y'|default_if_none:''}}</p>
+                            <p class="employement-time">{{emp.type_id|default_if_none:''}}</p>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                    {% else %}
+                    <div class="education-name2-1">
+                        <div class="education-name2-1-col">
+                            <a href="#" id="openEduModalButton">Add</a>
+
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                </div>
+
+
+
+
+                <div class="internship" id="internship">
+                    <div class="internship-heading">
+                        <h4>Internship</h4>
+                        <div class="internship-add-div">
+                            <a href="#" id="openInternModalButton">Add</a>
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </div>
+                    </div>
+                    {% if internship %}
+                    {% for intern in internship %}
+                    <div class="internship-flex">
+                        <div class="internship-play">
+                            <p class="internship-role">{{intern.company_role|default_if_none:''}}</p>
+                            <p class="internship-company">{{intern.company_name|default_if_none:''}}</p>
+                        </div>
+                        <div class="internship-date-div">
+                            <p class="internship-date">{{intern.doj|date:'M Y'|default_if_none:''}} - {{intern.dol|date:'M Y'|default_if_none:''}}</p>
+                            <p class="internship-time">Internship</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="education-name2-1">
+                        <div class="education-name2-1-col">
+                            <a href="#" id="openEduModalButton">Add</a>
+
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="career" id="career-info">
+                    <div class="career-heading">
+                        <h4>Career</h4>
+                        <div class="career-add-div">
+                            <a href="#" id="openCareerModalButton">Add</a>
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </div>
+                    </div>
+                    <div class="career-info-list">
+                        <div class="career-info-list-1">
+                            
+                            <div class="career-info-list-1-1">
+                                <h4>Current CTC</h4>
+                                <p>{{ candidate.present_ctc|floatformat:0|default_if_none:'' }} LPA</p>
+                            </div>
+                            <div class="career-info-list-1-1">
+                                <h4>Current Take Home</h4>
+                                <p>{{ candidate.present_take_home|floatformat:0|default_if_none:'' }} LPA</p>
+                            </div>
+                            <div class="career-info-list-1-1">
+                                <h4>Total Year of Experience</h4>
+                                <p>{{ candidate.work_experience|floatformat:0|default_if_none:'' }} year</p>
+                            </div>
+
+                        </div>
+                        <div class="career-info-list-2">
+                            <div class="career-info-list-2-1">
+                                <h4>Expected CTC</h4>
+                                <p>{{ candidate.expected_ctc|floatformat:0|default_if_none:'' }} LPA</p>
+                            </div>
+                            <div class="career-info-list-2-1">
+                                <h4>Expected Take Home</h4>
+                                <p>{{ candidate.expected_take_home|floatformat:0|default_if_none:'' }} LPA</p>
+                            </div>
+                            <div class="career-info-list-2-1">
+                                <h4>Notice Period</h4>
+                                <p>{{ candidate.notice_period|default_if_none:'' }} month</p>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+
+
+
+                </div>
+
+
+            </div>
+        </div>
+        
+    </div>
+    
+</main>
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+        {% include "jobseeker/SubFileForApi/profilePersonal.html" %}
+        {% include "jobseeker/SubFileForApi/profileEdu.html" %}
+        {% include "jobseeker/SubFileForApi/profileSkill.html" %}
+        {% include "jobseeker/SubFileForApi/profilePrefer.html" %}
+        {% include "jobseeker/SubFileForApi/profileEmp.html" %}
+        {% include "jobseeker/SubFileForApi/profileCareer.html" %}
+        {% include "jobseeker/SubFileForApi/profileIntern.html" %}
+        
+    <script src="{% static 'js/jobseeker/profile.js' %}"></script>
+ 
+    {% endblock content %}

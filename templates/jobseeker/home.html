@@ -1,0 +1,146 @@
+{% extends "jobseeker/layout.html" %}
+
+{% block title %}
+Search Job
+{% endblock title %}
+{% load static %}
+{% block statics %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+
+<style>
+    /* Main container styling */
+    .search-container {
+        max-width: 600px;
+        margin: 20px auto;
+        position: relative;
+    }
+
+    /* Search input styling */
+    .search-container input[type="text"] {
+        width: 100%;
+        padding: 10px 15px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    /* Recommendation dropdown styling */
+    .recommendation-box {
+        position: absolute;
+        top: 28%;
+        left: 30%;
+        width: auto;
+        max-width: 300px;
+        height: auto;
+        max-height: 300px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-height: 300px;
+        overflow: auto;
+        z-index: 1000;
+        display: none; /* Initially hidden */
+    }
+
+    /* Recommendation item styling */
+    .recommendation-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .recommendation-item:hover {
+        background-color: #f0f0f0;
+    }
+
+</style>
+
+{% endblock statics %}
+
+{% block content %}
+<form method="get" action="{% url 'job_seeker:search' %}" class="home-form">
+<div class="search-section">
+    <div class="search-bar">
+ 
+            <input type="text" name='q' placeholder="Jobs title / company / Skills" id="searchInput"  autocomplete="off">
+            <div class="recommendation-box" id="recommendationBox">
+
+                    {% for jobs_title in jobs_titles %}
+                    <div class="recommendation-item">
+                    <span>{{jobs_title}}</span>
+                    </div>
+                    {% endfor %}
+
+            </div>
+            <div class="divider"></div> <!-- Divider -->
+            <input type="text" name='p'  placeholder="Location / remote">
+            <button>Find Jobs</button>
+
+    </div>
+</div>
+</form>
+
+<header class="dream-job-header">
+    <h1>FIND YOUR DREAM JOB</h1>
+</header>
+
+
+
+<script>
+    // Get elements
+    const searchInput = document.getElementById("searchInput");
+    const recommendationBox = document.getElementById("recommendationBox");
+    const recommendationItems = Array.from(recommendationBox.getElementsByClassName("recommendation-item"));
+
+    // Show recommendations on focus
+    searchInput.addEventListener("focus", () => {
+        if (searchInput.value) {
+            filterRecommendations(searchInput.value);
+        }
+        recommendationBox.style.display = "block";
+    });
+
+    // Hide recommendations when clicking outside the input or box
+    document.addEventListener("click", (event) => {
+        if (!searchInput.contains(event.target) && !recommendationBox.contains(event.target)) {
+            recommendationBox.style.display = "none";
+        }
+    });
+
+    // Filter recommendations based on input
+    searchInput.addEventListener("input", () => {
+        filterRecommendations(searchInput.value);
+    });
+
+    function filterRecommendations(query) {
+        const lowerCaseQuery = query.toLowerCase();
+        let hasVisibleItems = false;
+
+        recommendationItems.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(lowerCaseQuery)) {
+                item.style.display = "flex"; // Show matching items
+                hasVisibleItems = true;
+            } else {
+                item.style.display = "none"; // Hide non-matching items
+            }
+        });
+
+        // Show or hide the recommendation box based on whether there are visible items
+        recommendationBox.style.display = hasVisibleItems ? "block" : "none";
+    }
+    
+    recommendationItems.forEach(item => {
+        item.addEventListener("click", () => {
+            searchInput.value = item.textContent.trim(); // Set input value to clicked item
+            recommendationBox.style.display = "none"; // Hide recommendation box
+        });
+    });
+</script>
+
+
+
+{% endblock content %}

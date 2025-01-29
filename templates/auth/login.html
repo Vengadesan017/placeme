@@ -1,0 +1,63 @@
+{% extends "auth/layout.html" %}
+
+{% block title %}
+login page
+{% endblock title %}
+
+{% block topbutton %}
+    <input type="radio" name="slide" id="login" checked>
+    <input type="radio" name="slide" id="signup">
+{% endblock topbutton %}
+
+{% block content %}
+
+<form action="" method="POST" class="login">
+  {% csrf_token %}
+  <div class="slide-controls">
+    <input type="radio" name="slide" id="login" checked>
+    <input type="radio" name="slide" id="signup">       
+    <a for="login" class="slide login white" id="login-btn"  href="{% url 'auth:login' %}">Login</a>
+    <a for="signup" class="slide signup" id="signup-btn" href="{% url 'auth:signup' %}">Signup</a>
+    <div class="slider-tab"></div>
+  </div>
+  <div class="form-inner">
+    {% if messages %}
+      {% for message in messages %}
+        <div class='alert alert-{{ message.tags }}'>
+          <span class="closebtn">&times;</span>
+            {{ message }}
+        </div>    
+      {% endfor %}
+    {% endif %}
+      <div class="field">
+        <input type="text" name="username" placeholder="Email ID / Mobile no." required>
+      </div>
+      <div class="field">
+        <input type="password" name="password" placeholder="Password" required>
+      </div>
+      <div class="pass-link"><a class="link-colour" href="#">Forgot password?</a></div>
+      <div class="center">
+        <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}" placeholder="reCAPTCHA" aria-required></div>
+      </div>
+      <div class="field btn">
+        <div class="btn-layer"></div>
+        <input type="submit"  value="Login">
+      </div>
+      <div class="signup-link">
+
+        <span>
+          Don't have an account? 
+        </span>
+        <a class="link-colour" href="{% url 'auth:signup' %}">
+          Signup here</a>
+      </div>
+    </div>
+    </form>
+{% endblock content %}
+
+
+
+{% block msg %}
+  <p id="paragraph1">Welcome Back! Log in to access your job application</p>
+
+{% endblock msg %}

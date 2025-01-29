@@ -1,0 +1,137 @@
+/* Search Section */
+.search-section {
+  /*background: linear-gradient(90deg, #1b3b72, #506cc3);*/
+  background-image: linear-gradient(to right, #9DAAF2, #141b5f, #141b5f, #141b5f, #141b5f, #141b5f, #9DAAF2);
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.search-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #fff;
+  border-radius: 50px;
+}
+
+.search-bar input[type="text"] {
+  border: none;
+  outline: none;
+  padding: 20px 20px;
+  border-radius: 50px;
+  font-size: medium;
+  /* width: 200px; */
+}
+
+.search-bar .divider {
+  width: 1px;
+  height: 30px;
+  /* Adjust height as needed */
+  background-color: #ccc;
+  /* Divider color */
+}
+
+.search-bar button {
+  background-color: #141b5f;
+  color: #fff;
+  border: none;
+  outline: none;
+  padding: 17px 34px;
+  border-radius: 50px;
+  cursor: pointer;
+  margin-right: 4px;
+  font-size: medium;
+  transition: all .5s;
+}
+
+.search-bar button:hover {
+  background-color: #ffbd03;
+  color: #141b5f;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .search-bar {
+    flex-direction: column;
+  }
+
+  .search-bar input[type="text"] {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .search-bar .divider {
+    display: none;
+    /* Hide the divider on mobile */
+  }
+
+  .search-bar button {
+    width: 100%;
+  }
+}
+
+/* Dream Job Header */
+.dream-job-header {
+  background-color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+.dream-job-header h1 {
+  color: #000;
+  font-size: 32px;
+  font-weight: bold;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+form {
+  margin-top: 60px;
+}
+
+@media (max-width: 600px) {
+  .search-bar {
+    flex-direction: column;
+    /* Stack the inputs and button vertically */
+    gap: 15px;
+    /* Add some space between the stacked elements */
+    padding: 10px 20px;
+    /* Adjust padding for mobile */
+    background-color: none;
+  }
+
+  .search-bar input[type="text"] {
+    width: 100%;
+    /* Make inputs full width */
+    padding: 15px 10px;
+    border: 2px solid #000;
+    /* Adjust padding for better touch interaction */
+  }
+
+  .search-bar .divider {
+    display: none;
+    /* Hide the divider */
+  }
+
+  .search-bar button {
+    width: 100%;
+    /* Make button full width */
+    padding: 15px;
+    /* Adjust padding for better touch interaction */
+    font-size: 16px;
+    border-color: #000;
+    /* Slightly larger text for the button */
+  }
+}

@@ -1,0 +1,181 @@
+{% extends "jobseeker/layout.html" %}
+
+{% block title %}
+Create Account for your company
+{% endblock title %}
+{% load static %}
+{% block statics %}
+<link rel="stylesheet" href="{% static 'css/recruiters/create-company.css' %}">
+<script src="{% static "js/recruiters/create-company.js" %}" defer></script>
+{% endblock statics %}
+
+
+{% block content %}
+<main class="main">
+    <div class="all-info">
+        <div class="account-div">
+            <p class="account">Create an employer account</p>
+        </div>
+        <div class="info-list">
+            {% if messages %}
+            {% for message in messages %}
+              <div class='alert alert-{{ message.tags }}'>
+                <span class="closebtn">&times;</span>
+                  {{ message }}
+              </div>    
+            {% endfor %}
+          {% endif %}
+          <form method="POST" action="#">
+            {% csrf_token %}
+            <div class="admin-div">
+                <div class="admin-name">
+                    <p >Company name <span>*</span></p>
+                    <input type="text" class="admin-input" name="company_name" value="{{ createForm.initial.company_name|default_if_none:'' }}" placeholder="Enter Company name" required/>
+                </div>
+                <div class="admin-role">
+                <p >Company Type<span>*</span></p>
+                <select name="company_type" class="admin-input" required>
+                    <option value="">Select Company Type</option>
+                    {% for choice in createForm.fields.Company_type.choices %}
+                    {% if choice.0 != "" %}
+                    <option value="{{ choice.0 }}" {% if choice.0 == createForm.initial.Company_type %}selected{% endif %}>
+                        {{ choice.1 }}
+                    </option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+                </div>
+
+            </div>
+            <div class="admin-div">
+                <div class="admin-name">
+                    <p >Business Type<span>*</span></p>
+                    <select name="business_type" class="admin-input" required>
+                        <option value="">Business Type</option>
+                        {% for choice in createForm.fields.business_type.choices %}
+                        {% if choice.0 != "" %}
+                        <option value="{{ choice.0 }}" {% if choice.0 == createForm.initial.business_type %}selected{% endif %}>
+                            {{ choice.1 }}
+                        </option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="admin-role">
+                    <p>Company Scale<span>*</span></p>
+                    <select name="organization_type" class="admin-input" required>
+                        <option value="">Select Company Scale</option>
+                        {% for choice in createForm.fields.organization_type.choices %}
+                        {% if choice.0 != "" %}
+                        <option value="{{ choice.0 }}" {% if choice.0 == createForm.initial.organization_type %}selected{% endif %}>
+                            {{ choice.1 }}
+                        </option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+            </div>                
+            <div class="admin-div">
+                <div class="admin-name">
+                    <p>Industry Type<span>*</span></p>
+                    <input type="text" name="industry_type" class="admin-input" value="{{ createForm.initial.industry_type|default_if_none:'' }}" placeholder="IT / Finance / HealthCare.." required/>
+                </div>
+                <div class="admin-role">
+                    <p>Established year<span>*</span></p>
+                    <input type="number" name="established_at" class="admin-input" value="{{ createForm.initial.established_at|default_if_none:'' }}" placeholder="2000" required/>
+                </div>
+
+            </div>
+            <div class="admin-div">
+                <div class="admin-name">
+                    <p >Admin Name <span>*</span></p>
+                    <input type="text" name="admin_name" class="admin-input" value="{{ candidate.first_name|default_if_none:'' }} {{ candidate.last_name|default_if_none:''}}" placeholder="Enter Admin name" required/> 
+                </div>
+                <div class="admin-role">
+                    <p>Admin Role <span>*</span></p>
+                    <input type="text" name="admin_role" class="admin-input" value="{{ createForm.initial.admin_role|default_if_none:'' }}" placeholder="General Manager / HR Manager....." required/>
+                </div>
+
+            </div>
+
+            <div class="email-div">
+                <div class="email-name">
+                    <p >Official e-mail ID<span>*</span></p>
+                    <input type="email" name="official_email" class="admin-input" value="{{ createForm.initial.official_email|default_if_none:'' }}" placeholder="example@mail.com" required/> 
+                </div>
+                <div class="website">
+                    <p>Contact No.<span>*</span></p>
+                    <input type="number" name="contact_no" class="admin-input" value="{{ createForm.initial.contact_no|default_if_none:'' }}" placeholder="Enter Contact number" required/>
+                </div>
+            </div>
+            <div class="email-div">
+                <div class="email-name">
+                    <p>Phone No.<span>*</span></p>
+                    <input type="number" name="phone_no" class="admin-input" value="{{ createForm.initial.phone_no|default_if_none:'' }}" placeholder="Enter Phone number" required/>
+                </div>
+                <div class="website">
+                    <p>Total Employees<span>*</span></p>
+                    <input class="admin-input" name="no_of_employees" value="{{ createForm.initial.no_of_employees|default_if_none:'' }}" placeholder="50 - 100" type="text" required/> 
+                </div>
+            </div>
+            <div class="email-div">
+                <div class="email-name">
+                    <p>Permanent address<span>*</span></p>
+                    <input type="text" name="permanent_address" value="{{ createForm.initial.permanent_address|default_if_none:'' }}" class="admin-input" placeholder="Registered address" required/> 
+                </div>
+                <div class="website">
+                    <p>Address<span>*</span></p>
+                    <input type="text" name="communication_address" value="{{ createForm.initial.communication_address|default_if_none:'' }}" class="admin-input" placeholder="Communication address" required/>
+                </div>
+            </div>
+
+            <div class="email-div">
+                <div class="email-name">
+                    <p>LinkedIn Profile</p>
+                    <input type="text" name="linkedin" value="{{ createForm.initial.linkedin|default_if_none:'' }}" class="admin-input" placeholder="www.linkedin.com/in/YourCompanyProfile" required/> 
+                </div>
+                <div class="website">
+                    <p>Website URL</p>
+                    <input type="text" name="website" value="{{ createForm.initial.website|default_if_none:'' }}" class="admin-input" placeholder="exampledomain.com" required/>
+                </div>
+            </div>
+            <div class="email-div">
+                <div class="email-name">
+                    <p>On Role Employees</p>
+                    <input class="admin-input" name="on_role_employees" value="{{ createForm.initial.on_role_employees|default_if_none:'' }}" placeholder="50 - 100" type="text" required/> 
+                </div>
+                <div class="website">
+                    <p>Off Role Employees</p>
+                    <input class="admin-input" name="off_role_employees" value="{{ createForm.initial.off_role_employees|default_if_none:'' }}" placeholder="50 - 100" type="text" required/> 
+                </div>
+            </div>
+            <div class="about">
+                <div class="about-p-div">
+                    <p>About Company <span>*</span></p>
+                </div>
+                <div class="textarea-div">
+                    <textarea name="about" value="{{ createForm.initial.about|default_if_none:'' }}" placeholder="Write Description about your Company......" id="book-description-input"></textarea>
+                    <p id="char-count">0/200 chart</p>
+                </div>
+                    
+                
+            </div>
+            <div class="btn-div">
+                <button type="sibmit" name="create_company" class="btn" >Create Account</button>
+            </div>
+
+
+            
+
+        </form>
+
+        </div>
+
+    </div>
+    
+</main>
+
+{% endblock content %}
+
+

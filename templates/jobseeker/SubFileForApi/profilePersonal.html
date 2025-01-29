@@ -1,0 +1,133 @@
+
+<!-- The Modal for ==========personal Info===================== -->
+<div class="modal" id="PersonalModal">
+    <div class="modal-dialog">
+        <form method="post" action="#">
+            {% csrf_token %}
+        <div class="modal-content">
+    
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h3 class="modal-title">Edit your Personal Info</h3>
+            <button type="button" class="btn-close" id="closePersonalModalButton"><i class='fas fa-times edit'></i></button>
+        </div>
+    
+        <!-- Modal Body -->
+        <div class="modal-body">
+        <div class="margin20">
+        <div class="">
+
+            <table class="modal-table">
+                <tr> 
+                    <td><b>First name</b></td>
+                    <td><input type="text" id="firstname" name="first_name" value="{{ candidate.first_name|default_if_none:'' }}" required></td>
+                </tr>
+                <tr> 
+                    <td><b>Last name</b></td>
+                    <td><input type="text" id="lastname" name="last_name" value="{{ candidate.last_name|default_if_none:'' }}" required></td>
+                </tr>
+                <tr> 
+                    <td><b>Email</b></td>
+                    <td><input type="text" id="email" name="email" value="{{ candidate.user.email|default_if_none:'' }}" disabled></td>
+                </tr>
+                <tr> 
+                    <td><b>Phone No</b></td>
+                    <td><input type="text" id="no" name="no" value="{{ candidate.user.mobile_no|default_if_none:'' }}" disabled></td>
+                </tr>
+                <tr> 
+                    <td><b>Date of birth</b></td>
+                    <td>
+                        {% if candidate.dob %}
+                            <input type="date" id="dob" name="dob" value="{{ candidate.dob|date:'Y-m-d'|default_if_none:'' }}" disabled>
+                        {% else %}
+                        <input type="date" id="dob" name="dob" value="{{ candidate.dob|date:'Y-m-d'|default_if_none:'' }}" >
+                        {% endif %}   
+                    </td>
+                </tr>
+                <tr> 
+                    <td><b>Country</b></td>
+                    <td><input type="text" id="country" name="country" value="{{ candidate.country|default_if_none:'' }}"></td>
+                </tr>
+                <tr> 
+                    <td><b>State</b></td>
+                    <td><input type="text" id="state" name="state" value="{{ candidate.state|default_if_none:'' }}"></td>
+                </tr>
+                <tr> 
+                    <td><b>City</b></td>
+                    <td><input type="text" id="city" name="city" value="{{ candidate.city|default_if_none:'' }}"></td>
+                </tr>
+                <tr> 
+                    <td><b>Gender</b></td>
+                    <td><select id="gender" name="gender">
+                        <option value="">Select</option>
+                        <option value="Male" {% if candidate.gender == 'Male' %}selected{% endif %}>Male</option>
+                        <option value="Female" {% if candidate.gender == 'Female' %}selected{% endif %}>Female</option>
+                        <option value="Other" {% if candidate.gender == 'Other' %}selected{% endif %}>Other</option>
+                    </select></td>
+                </tr>
+                <tr> 
+                    <td><b>Marital Status</b></td>
+                    <td><select id="marital_status" name="marital_status">
+                        <option value="">Select</option>
+                        <option value="Single" {% if candidate.marital_status == 'Single' %}selected{% endif %}>Single</option>
+                        <option value="Married" {% if candidate.marital_status == 'Married' %}selected{% endif %}>Married</option>
+                    </select></td>
+                </tr>
+                {% comment %} <tr> 
+                    <td><b>LinkedIn profile</b></td>
+                    <td><input type="text" id="linkedin_profile" name="linkedin_profile" value="{{ candidate.linkedin_profile|default_if_none:'' }}"></td>
+                </tr> {% endcomment %}
+                <tr> 
+                    <td><b>Work status</b></td>
+                    <td><select id="work_status" name="work_status">
+                        <option value="">Select</option>
+                        <option value="Fresher" {% if candidate.work_status == 'Fresher' %}selected{% endif %}>Fresher</option>
+                        <option value="Experienced" {% if candidate.work_status == 'Experienced' %}selected{% endif %}>Experienced</option>
+                    </select></td>
+                </tr>
+            </table>
+
+        </div>
+        </div>
+        </div>
+    
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+            <button type="submit" name="profile_personal_edit" class="model-btn-save" id="">Save</button>
+        </div>
+    
+        </div>
+    </form>
+    </div>
+    </div>
+
+<script type="text/javascript">
+
+    // Get modal and close button elements==========Personal=============
+    var modal = document.getElementById("PersonalModal");
+    var openButton = document.getElementById("openPersonalModalButton");
+    var closeButton = document.getElementById("closePersonalModalButton");
+    {% comment %} var closeFooterButton = document.getElementById("closeModalFooterButton"); {% endcomment %}
+    
+    // Function to open modal
+    openButton.onclick = function() {
+        modal.style.display = "block";
+    };
+    
+    // Function to close modal
+    closeButton.onclick = function() {
+        modal.style.display = "none";
+    };
+    
+    {% comment %} // Close modal with footer button
+    closeFooterButton.onclick = function() {
+        modal.style.display = "none";
+    }; {% endcomment %}
+    
+    // Close the modal when clicking outside of it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+        modal.style.display = "none";
+        }
+    };
+    </script>

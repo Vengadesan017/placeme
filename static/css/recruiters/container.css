@@ -1,0 +1,29 @@
+.r-right-down-main{
+    position: absolute;
+    top: 50px;
+    min-height: 800px;
+    height: auto;
+    width: 100%;
+    left: 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10px;
+    /* background-color: aqua; */
+}
+.r-down-main{
+    
+    
+    right: 50px;
+    
+    height: auto;
+    width: 96%;
+    /* background-color: bisque; */
+    background-color: #fff;
+    border-radius: 10px;
+    padding-top: 20px;
+    padding-right: 30px;
+    
+    /* padding-left: 20px; */
+    
+}

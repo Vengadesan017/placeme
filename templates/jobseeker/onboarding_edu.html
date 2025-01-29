@@ -1,0 +1,89 @@
+{% load static %}
+
+<div class="tab-pane fade active in show" id="tab3default">
+
+
+    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-start align-items-start d-inline-block" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;width:100%">
+        <form method="post" id="form_Education">
+            <span id="result"></span>
+            <table class="table-bordered dynamictbl" id="user_table">
+                <thead>
+                    <tr>
+                        <th width="15%"><label class="SideLabelBold">Course</label></th>
+                        <th width="15%"><label class="SideLabelBold">Specialization</label></th>
+                        <th width="10%"><label class="SideLabelBold">Name of the College / School</label></th>
+                        <th width="10%"><label class="SideLabelBold">Board/University</label></th>
+                        <th width="10%"><label class="SideLabelBold">Year of Passing</label></th>
+                        <th width="5%"><label class="SideLabelBold">% of Marks Scored</label></th>
+    
+                    </tr>
+                </thead>
+                <tbody id="bindrowEdu">
+                </tbody>
+    
+    
+            </table>
+    
+    
+            <div class="form-group">
+                <label>First check in:</label>
+                <input type="text" class="form-control form-control-1 input-sm from" placeholder="CheckIn">
+            </div>
+    
+            <br />
+            <div style="float:right">
+                <input type="submit" name="save" id="btnsaveedu" class="btn btn-primary" value="save" /> &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" name="add" id="btnaddEdu" class="btn btn-primary"> Add Row</button>
+    
+            </div>
+    
+        </form>
+    </div>
+    <script src="{% static 'bootstrap/cripts/jquery-3.4.1.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            var count = 4;
+            if (count > 1) {
+                for (var i = 1; i <= count; i++)
+                    {
+                        dynamic_fieldEdu(i);
+                    }
+            }
+    
+            function dynamic_fieldEdu(number) {
+                var html = '<tr>';
+                html += '<td><input type ="text" name="Course[]" class ="form-control dynamic_input" /> </td >';
+                html += '<td><input type ="text" name="Specialization[]" class ="form-control dynamic_input" /> </td >';
+                html += '<td><input type ="text" name="Colleage[]" class ="form-control dynamic_input" /> </td >';
+                html += '<td><input type ="text" name="University[]" class ="form-control dynamic_input" /> </td >';
+                html += '<td><input type ="text" name="yop[]" style="position: relative"  class ="form-control dynamic_input monthyear" /> </td >';            
+                html += '<td><input type ="text" name="Mark[]" class ="form-control dynamic_input" /> </td >';
+                $('#bindrowEdu').append(html);
+                //if (number > 1) {
+                //    html += '<td><button class="deleteButton " id="remove" type="button"></button></td >  </tr>';
+                //    $('#bindrow').append(html);
+                //}
+            }
+    
+            $('#btnaddEdu').click(function () {
+                count++;
+                dynamic_fieldEdu(count);
+            });
+    
+    
+            $(document).on('click', '#remove', function () {
+                count--;
+                //dynamic_field(count);
+                $(this).closest('tr').remove();
+            });
+    
+    
+    
+            $('#dynamic_form').on('submit', function (event) {
+                event.preventDefault();
+    
+            })
+        });
+    </script>                                    
+
+</div>
