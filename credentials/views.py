@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login as auth_login, logout, authenticate
 from django.urls import reverse
 from .models import Users
-from job_seekers.models import Candidates, Onboarding
+from job_seekers.models import Candidates
 from django.contrib.auth import get_user_model
 from django.conf import settings
 import requests
@@ -138,10 +138,10 @@ def SignupPage(request):
                                         last_name=last_name
                                     )
 
-                                    # create Onboarding
-                                    Onboarding.objects.create(
-                                        candidate=c
-                                    )
+                                    # # create Onboarding
+                                    # Onboarding.objects.create(
+                                    #     candidate=c
+                                    # )
                                     
                                     user=authenticate(request,username=email,password=password1)
                                     if user is not None:
@@ -277,10 +277,10 @@ def EmployerSignup(request):
                                         last_name=last_name
                                     )
 
-                                    # create Onboarding
-                                    Onboarding.objects.create(
-                                        candidate=c
-                                    )
+                                    # # create Onboarding
+                                    # Onboarding.objects.create(
+                                    #     candidate=c
+                                    # )
                                     
                                     user=authenticate(request,username=email,password=password1)
                                     if user is not None:

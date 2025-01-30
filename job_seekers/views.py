@@ -8,6 +8,25 @@ from django.contrib.auth.decorators import login_required
 from .forms import CandidatePersonalUpdateForm, CandidateEducationUpdateForm, OnboardingCandidatePersonalForm, OnboardingPersonalForm ,CandidateLanguageUpdateForm, CandidateLocationUpdateForm, CandidateCareerUpdateForm, CandidateEmploymentUpdateForm, CandidateIntenshipUpdateForm, OnboardingFamilyForm
 from django.contrib import messages
 from django.db.models import Count, Case, When, Q
+from functools import wraps
+
+
+def is_onboarding(view_func):
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        onboarding_id = kwargs.get("onboarding_id")
+        candidate = Candidates.objects.filter(user=request.user).first()
+        # print("1 ",candidate)
+        if candidate:
+            onboarding = Onboarding.objects.filter(candidate=candidate, job_post=onboarding_id).first()
+            # print("2 ",onboarding)
+            if onboarding:
+                if onboarding.created_date and not onboarding.completed_date and not onboarding.closed:
+                    # print("3 ",onboarding)
+                    return view_func(request, *args, **kwargs)
+        messages.warning(request, "You do not have access to enter the onboarding page.")
+        return redirect('job_seeker:home')
+    return _wrapped_view
 
 def Home(request):
     try:
@@ -496,15 +515,15 @@ def Notifications(request):
     return HttpResponse("<h1>Notifications are With pop up window</h1>")
 
 @login_required
-def OnboardingCandidate(request, page):
+@is_onboarding
+def OnboardingCandidate(request,onboarding_id, page):
     try:
-        # print("page Name :",page)
         candidate = Candidates.objects.get(user=request.user)
         if request.method == 'POST':
             if 'personal' in request.POST:
                     
                 candidate_form = OnboardingCandidatePersonalForm(request.POST, request.FILES, instance=Candidates.objects.get(user=request.user))
-                onboarding_form = OnboardingPersonalForm(request.POST, request.FILES, instance=Onboarding.objects.get(candidate=candidate))
+                onboarding_form = OnboardingPersonalForm(request.POST, request.FILES, instance=Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id))
                 if not candidate_form.is_valid():
                     messages.error(request, candidate_form.errors)
                 else:
@@ -563,15 +582,16 @@ def OnboardingCandidate(request, page):
                 # return render(request,'jobseeker/onboarding.html',context)
 
         candidate_form = OnboardingCandidatePersonalForm(instance=Candidates.objects.get(user=request.user))
-        onboarding_form = OnboardingPersonalForm(instance=Onboarding.objects.get(candidate=candidate))
-        onboarding_form = OnboardingPersonalForm(instance=Onboarding.objects.get(candidate=candidate))
+        onboarding_form = OnboardingPersonalForm(instance=Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id))
+        onboarding_form = OnboardingPersonalForm(instance=Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id))
         family_forms =Familys.objects.filter(candidate=candidate)
 
         context = {
             'candidate': candidate_form,
             'onboarding': onboarding_form,
             'family_forms': family_forms,
-            'page':page
+            'onboarding_id':onboarding_id,
+            'page':page,
             
         }
         return render(request,'jobseeker/onboarding.html',context)

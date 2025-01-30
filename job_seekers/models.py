@@ -173,8 +173,8 @@ class Bookmarks(models.Model):
 
 class Onboarding(models.Model):
     Onbording_id = models.AutoField(primary_key=True)
-    candidate = models.OneToOneField('Candidates', on_delete=models.CASCADE, related_name='onbording_documents', null=True, blank=True)
-
+    candidate = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='onbording_candidate', null=True, blank=True)
+    job_post = models.ForeignKey('JobApplications', on_delete=models.CASCADE,related_name='onboarding_job',null=True, blank=True)
     father_name = models.CharField(max_length=255, null=True, blank=True)
     mobile_two = models.BigIntegerField(null=True,blank=True)
     communication_country = models.CharField(max_length=100, blank=True, null=True)
@@ -192,6 +192,12 @@ class Onboarding(models.Model):
     aadhar_card = models.FileField(upload_to=upload_onboarding, blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'pdf']),validate_file_size])
     bank_book = models.FileField(upload_to=upload_onboarding, blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'pdf']),validate_file_size])
     pf = models.FileField(upload_to=upload_onboarding, blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'pdf']),validate_file_size])
+    created_date = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+    completed_date = models.DateTimeField(blank=True, null=True)
+    verified = models.BooleanField(default=False)
+    verified_by = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='onbording_verified_by', null=True, blank=True)
+    opened_by = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='onbording_opened_by', null=True, blank=True)
+    closed = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.candidate.user.email} - {self.aadhar_card}'
@@ -199,6 +205,7 @@ class Onboarding(models.Model):
 class Familys(models.Model):
     family_member_id = models.AutoField(primary_key=True)
     candidate = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='user_family', null=True, blank=True)
+    job_post = models.ForeignKey('JobApplications', on_delete=models.CASCADE,related_name='onboarding_family_job',null=True, blank=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255, null=True,blank=True)
     dob = models.DateField(null=True, blank=True)

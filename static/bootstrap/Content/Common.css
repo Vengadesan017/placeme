@@ -1,10 +1,10 @@
 ﻿@charset "utf-8";
 
-body {
+/* body {
     background: url(images/BGBody.gif) repeat-x fixed bottom left;
     color: #657478;
     border-bottom: 1px solid #D4D3D3;
-}
+} */
 
 .SideLabelBold
 {
@@ -94,16 +94,16 @@ body {
 }
 
 table thead tr th {
-    background: url(images/BGMenu.gif) repeat-x;
+    /* background: url(images/BGMenu.gif) repeat-x; */
     height: 10px;
-    border-right: 2px solid #e1e1e1;
-    margin: 0px 0px 6px;
+    /* border-right: 2px solid #e1e1e1; */
+    /* margin: 0px 0px 6px; */
     padding: 6px 1px 4px 20px;
     background-color: #fff;
-    border-left: 2px solid #e1e1e1;
+    /* border-left: 2px solid #e1e1e1; */
     font-size: 12px;
     font-weight: normal;
-    border-top: 2px solid #e1e1e1;
+    width: fit-content;
 }
 
 .btn_save {

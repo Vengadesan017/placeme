@@ -270,9 +270,9 @@
             </table>
         </div>
        
-        <div class="row">
+        <div style="float:right">
             {% comment %} <button id="btnEmpSave" onclick="saveEmpData()" style="color:#254b96 !important;margin-left:1000px" class="btn btn-default">Save & Next</button> {% endcomment %}
-            <button type="submit" name="personal"  style="color:#254b96 !important;margin-left:85%" class="btn btn-default">Save & Next</button>
+            <button type="submit" name="personal"  style="margin-top: 25px;" class="btn btn-primary">Save & Next</button>
             
         </div>
     </div>
@@ -281,5 +281,26 @@
     <script src="{% static 'bootstrap/Scripts/jquery-3.4.1.min.js' %}"></script>
     <script src="{% static 'bootstrap/Scripts/toastr/customToastr.js' %}"></script>
     <script src="{% static 'bootstrap/Scripts/toastr/toastr.js' %}"></script>
+    <script>
+        function UsePermanentAddress() {
+            if ($("input[name='chkUsePaddress']:checked").prop('checked') == true) {
+                $("#txtCAddress1").val($("#txtPAddress1").val());
+                $("#txtCAddress2").val($("#txtPAddress2").val());
+                $("#txtCAddress3").val($("#txtPAddress3").val());
+                $("#txtCState").val($("#txtPState").val());
+                $("#txtCCountry").val($("#txtPCountry").val());
+                $("#txtCPincode").val($("#txtPPIN").val());
+            }
+            else {
+                $("#txtCAddress1").val('');
+                $("#txtCAddress2").val('');
+                $("#txtCAddress3").val('');
+                $("#txtCState").val('');
+                $("#txtCCountry").val('');
+                $("#txtCPincode").val('');
+            }
+            
+        }
+    </script>
 
 </div>

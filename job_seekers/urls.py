@@ -1,4 +1,4 @@
-from django.urls import path,include
+from django.urls import path
 from . import views
 
 app_name = 'job_seeker'
@@ -13,6 +13,7 @@ urlpatterns = [
     path('apply/',views.Apply,name='apply'),
     path('bookmark/',views.Bookmark,name='bookmark'),
     path('status/<str:page>',views.Status,name='status'),
-    path('onboarding/<str:page>',views.OnboardingCandidate,name='onboarding'),
+    path('onboarding/<int:onboarding_id>/<str:page>',views.OnboardingCandidate,name='onboarding'),
+
 
 ]

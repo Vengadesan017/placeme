@@ -1,10 +1,9 @@
-﻿<!DOCTYPE html>
+﻿{% extends "jobseeker/layout.html" %}
+{% block title %}
+Employee Onboarding
+{% endblock title %}
 {% load static %}
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onboarding Employee</title>
+{% block statics %}
 
     {% comment %} <link href="{% static 'bootstrap/Content/Site.css' %}" rel="stylesheet" type="text/css" /> {% endcomment %}
     <link href="{% static 'bootstrap/Content/bootstrap.min.css' %}" rel="stylesheet" />
@@ -25,72 +24,59 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />    
 
 
-    <style>
+
+
+<style>
+    *{
+        font-family: Poppins,sans-serif;
+    }
 .form-control  {
-    {% comment %} margin-right:10px; {% endcomment %}
-    width:90%
+width:90%
 }
 ol, ul {
-    margin-bottom: unset;
+margin-bottom: unset;
 }
-    </style>
-</head>
-<body>
+.onboarding-message{
+margin:15px 15px 0 15px;
+font-weight: 550;
+font-size: 16px;
+color:#141b5f;
+}
+.btn-primary{
+margin: 0 15px 15px 0;
+background-color: #141b5f;
+color: #fff;
+border: #141b5f;
+transition: all .5s;
+}
+.btn-primary:hover{
+background-color: #FFBD03;
+color: #000;
+border: #FFBD03;
 
-    <header>
-        <div class="navbar">    
-      <nav>
-        <ul class="menu">
-            <li class="logo">
-                <!-- change the name of logo according to your name of image (mani/vengu) -->
-                <a href="{% url 'job_seeker:home' %}"><img src="{% static 'img/logo.svg' %}" alt="Placenow Logo" style="height: 20px;"></a>
-            </li>
-            <div class="item" style="color:#000;">      
-                <li><a href="{% url 'job_seeker:home' %}" style="color:#000;"><i class="fa-solid fa-house" ></i><div >Home</div></a></li>
-            </div>
-            <div class="item">
-                <li><a href="{% url 'job_seeker:status'  page="applied"%}" style="color:#000;"><i class="fa-solid fa-briefcase"></i><div>Jobs</div></a></li>
-            </div>
-            <div class="item">
-                <li><a href="{% url 'job_seeker:notifications' %}" style="color:#000;"><i class="fa-solid fa-bell"></i><div>Notifications</div></a></li>
-            </div>
-            <li class="toggle" id="menu-toggle"><span class="bars"></span></li>
-            {% if user.is_authenticated %}
-                <li class="item button {% if request.resolver_match.url_name == 'profile' %}active{% endif %}"><a href="{% url 'job_seeker:profile' %}"><i class="fa-solid fa-user" style="margin-right: 8px;"></i>Profile</a></li>
-            {% else %}    
-                <li class="item button {% if request.resolver_match.url_name == 'login' %}active{% endif %}"><a href="{% url 'auth:login' %}">Log In</a></li>        
-            {% endif %}
-            <li class="item">
-                <select class="nav_select" name="Usertypes" onchange="location = this.value;">
-                    <option value="{% url 'job_seeker:home' %}">Job Seeker</option>
-                    <option value="{% url 'recruiters:home' %}">Recruiter</option>
-                    <option value="{% url 'administrator:dashboard' %}">Administrator</option>
-                    <option value="{% url 'refer_and_earn:home' %}">Refer and earn</option>
-                </select>
-            </li>
-        </ul>
-    </nav>
-    </div>
-    </header>
+}
+</style>
 
-    <div class="container body-content" style="margin:60px; 0 20px 0">
-        <div class="container">
-            {% comment %} <div class="row">
+{% endblock statics %}
+
+{% block content %}
+
+    <div class="container-fluid" style="margin:60px;">
+        <div class="container-fluid">
+           <div class="row">
                 <table class="tblassetsteps">
                     <tr>
-                        <td style="padding-left:12px">
-                            <label class="SideLabelBold" style="font-weight: bold;">Employee ID</label>
-                            <label><font size="3" color="red">*</font></label>
+                        <td style="">
+                            <label class="onboarding-message">Please Complete Your Onboarding Process for <span style="color:#FFBD03">Comapny name{{company_name}}</span></label>
+
                         </td>
-                        <td style="padding-left:12px">
-                            <input typeof="textbox" id="txtEmpId" class="form-control  k-textbox" type="text">
-                        </td>
+
                     </tr>
                 </table>
     
     
     
-            </div> {% endcomment %}
+            </div> 
             <br />
     
             <div class="row">
@@ -98,13 +84,21 @@ ol, ul {
                     <div class="panel with-nav-tabs panel-default">
                         <div class="panel-heading">
                             <ul class="nav nav-tabs">
-                                <li class="{% if request.resolver_match.kwargs.page == 'personal' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' page="personal" %}" data-toggle="">Personal details</a></li>
-                                <li class="{% if request.resolver_match.kwargs.page == 'family' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' page="family" %}" data-toggle="">Family Details</a></li>
-                                <li class="{% if request.resolver_match.kwargs.page == 'education' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' page="education" %}" data-toggle="">Educational Details</a></li>
-                                <li class="{% if request.resolver_match.kwargs.page == 'experience' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' page="experience" %}" data-toggle="">Experience Details</a></li>
-                                <li class="{% if request.resolver_match.kwargs.page == 'identity' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' page="identity" %}" data-toggle="">Identity Details</a></li>
+                                <li class="{% if request.resolver_match.kwargs.page == 'personal' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="personal" %}" data-toggle="">Personal details</a></li>
+                                <li class="{% if request.resolver_match.kwargs.page == 'family' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="family" %}" data-toggle="">Family Details</a></li>
+                                <li class="{% if request.resolver_match.kwargs.page == 'education' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="education" %}" data-toggle="">Educational Details</a></li>
+                                <li class="{% if request.resolver_match.kwargs.page == 'experience' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="experience" %}" data-toggle="">Experience Details</a></li>
+                                <li class="{% if request.resolver_match.kwargs.page == 'identity' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="identity" %}" data-toggle="">Identity Details</a></li>
                             </ul>
                         </div>
+                        {% if messages %}
+                        {% for message in messages %}
+                          <div class='alert alert-{{ message.tags }}'>
+                            <span class="closebtn">&times;</span>
+                              {{ message }}
+                          </div>    
+                        {% endfor %}
+                      {% endif %}
                         <div class="panel-body">
                             <div class="tab-content">
                                 
@@ -156,8 +150,7 @@ ol, ul {
     <script src="{% static 'bootstrap/Scripts/toastr/toastr.js' %}"></script>
     <script src="{% static 'bootstrap/Scripts/Common.js' %}"></script>
     <script src="{% static 'bootstrap/Scripts/jquery.validate.min.js' %}"></script>
-    <script src="{% static 'bootstrap/Scripts/Employee/Employee.js?ver=5' %}"></script>
+    <script src="{% static 'bootstrap/Scripts/Employee/Employee.js' %}"></script>
     <!-- @RenderSection("scripts", required: false) -->
-  
-</body>
-</html>
+     
+    {% endblock content %}
