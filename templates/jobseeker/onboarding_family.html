@@ -15,13 +15,13 @@
                         <th width="10%"><label class="SideLabelBold">DOB</label> <label><font size="3" color="red">*</font></label> </th>
                         <th width="15%"><label class="SideLabelBold">Aadhar #</label> <label><font size="3" color="red">*</font></label> </th>
                         <th width="12%"><label class="SideLabelBold">Mobile Number</label></th>
-                        <th width="5%"><label class="SideLabelBold">Action</label></th>
+                        <th width="10%"><label class="SideLabelBold">Action</label></th>
     
                     </tr>
                 </thead>
                 <tbody id="bindrow">
                     {%for fam in family_forms%}
-                    <tr>
+                    <tr><input type="hidden" name="id[]" id="" class="form-control" value="{{fam.family_member_id}}">
                         <td><input type="text" name="txtFirstName[]" id="txtFFirstName1" class="form-control" value="{{fam.first_name}}"></td>
                         <td><input type="text" name="txtLastName[]" id="txtFLastName1" class="form-control" value="{{fam.last_name}}"> </td>
                         <td><select id="ddlFGender1" name="Gender[]" class="form-control">
@@ -39,11 +39,11 @@
                             <option value="Son" {% if fam.relationship == 'Son' %}selected{% endif %}>Son </option>
                             <option value="Daughter" {% if fam.relationship == 'Daughter' %}selected{% endif %}>Daughter </option>
                         </select></td>
-                        <td><input type="date" name="txtdob" style="position: relative" id="" class="form-control" value="{{fam.dob|date:'Y-m-d'}}"> </td>
-                        <td><input type="text" name="txtAadhar" id="txtFamilyAadhar1" class="form-control" onchange="validateAadharNumber()" value="{{fam.aadhar_no}}"> </td>
-                        <td><input type="text" name="txtFContactNo" id="txtFContactNo1" class="form-control" value="{{fam.mobile_no}}"> </td>
+                        <td><input type="date" name="txtdob[]" style="position: relative" id="" class="form-control" value="{{fam.dob|date:'Y-m-d'}}"> </td>
+                        <td><input type="text" name="txtAadhar[]" id="txtFamilyAadhar1" class="form-control" onchange="validateAadharNumber()" value="{{fam.aadhar_no}}"> </td>
+                        <td><input type="text" name="txtFContactNo[]" id="txtFContactNo1" class="form-control" value="{{fam.mobile_no}}"> </td>
                     </tr>
-                    {{fam}}
+                    
                     {% endfor %}
                 </tbody>
             </table>
@@ -71,7 +71,7 @@
     <script>
         $(document).ready(function () {
             var count = 1;
-            if (count => 1) {
+            if (count >= 1) {
                 for (var i = 1; i <= count; i++) {
                     dynamic_field(i);
                 }
@@ -79,7 +79,7 @@
     
             function dynamic_field(number) {
                 var html = '<tr>';
-                html += '<td><input type ="text" name="txtFirstName[]"  id="txtFFirstName' + number + '"  class ="form-control" /> </td >';
+                html += '<input type="hidden" name="id[]" id="" class="form-control" value=""><td><input type ="text" name="txtFirstName[]"  id="txtFFirstName' + number + '"  class ="form-control" /> </td >';
                 html += '<td><input type ="text" name="txtLastName[]" id="txtFLastName' + number + '"  class ="form-control" /> </td >';
                 {% comment %} html += '<td><select class="form-control" id="ddlGender' + number + '" name="Gender[]">< option value=""> Select Gender </option > </select > </td >'; {% endcomment %}
     
@@ -102,9 +102,9 @@
                 select_list += '</select>';
                 html += '<td>' + select_list + '</td>';
     
-                html += '<td><input type ="date" name="txtdob" style="position: relative" id="txtFamilydob' + number + '"   class ="form-control" /> </td >';
-                html += '<td><input type ="text" name="txtAadhar" id="txtFamilyAadhar' + number + '"  class ="form-control"  onChange="validateAadharNumber()"/> </td >';
-                html += '<td><input type ="text" name="txtFContactNo" id="txtFContactNo' + number + '"  class ="form-control" /> </td >';
+                html += '<td><input type ="date" name="txtdob[]" style="position: relative" id="txtFamilydob' + number + '"   class ="form-control" /> </td >';
+                html += '<td><input type ="text" name="txtAadhar[]" id="txtFamilyAadhar' + number + '"  class ="form-control"  onChange="validateAadharNumber()"/> </td >';
+                html += '<td><input type ="text" name="txtFContactNo[]" id="txtFContactNo' + number + '"  class ="form-control" /> </td >';
                 //if (number > 1) {
                 //    html += '<td><button type="button" name="remove" id="remove" class="btn btn-danger"> Remove </button> </td >  </tr>';
                 //    $('#bindrow').append(html);

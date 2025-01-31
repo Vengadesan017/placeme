@@ -77,7 +77,15 @@ class OnboardingPersonalForm(forms.ModelForm):
 class OnboardingFamilyForm(forms.ModelForm):
     class Meta:
         model = Familys
-        fields = ['first_name', 'last_name', 'gender', 'relationship', 'aadhar_no', 'mobile_no']
+        fields = ['first_name', 'last_name', 'gender', 'dob', 'relationship', 'aadhar_no', 'mobile_no']
+        
+    def save(self, commit=True, candidate=None):
+        instance = super().save(commit=False)
+        if candidate:
+            instance.candidate = candidate
+        if commit:
+            instance.save()
+        return instance    
 
 class CandidateLanguageUpdateForm(forms.ModelForm):
     class Meta:

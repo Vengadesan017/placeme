@@ -542,36 +542,60 @@ def OnboardingCandidate(request,onboarding_id, page):
 
             if 'family' in request.POST:
                 # Create a list to hold the form instances
-                family_forms = []
+                create_family_forms = []
+                edit_family_forms = []
+                
 
                 # Get the data from the request
+                id = request.POST.getlist('id[]')
                 first_names = request.POST.getlist('txtFirstName[]')
                 last_names = request.POST.getlist('txtLastName[]')
                 genders = request.POST.getlist('Gender[]')
                 relationships = request.POST.getlist('Releationship[]')
-                aadhar_numbers = request.POST.getlist('txtAadhar')
-                mobile_numbers = request.POST.getlist('txtFContactNo')
-
+                aadhar_numbers = request.POST.getlist('txtAadhar[]')
+                dob = request.POST.getlist('txtdob[]')
+                mobile_numbers = request.POST.getlist('txtFContactNo[]')
                 # Loop through the lists and create forms for each family member
+                edit_family_original_forms =Familys.objects.filter(candidate=candidate)
                 for i in range(len(first_names)):
-                    # Create a new Familys instance for each member
-                    family_data = {
-                        'first_name': first_names[i],
-                        'last_name': last_names[i],
-                        'gender': genders[i],
-                        'relationship': relationships[i],
-                        'aadhar_no': aadhar_numbers[i],
-                        'mobile_no': mobile_numbers[i]
-                    }
-                    # Create and add the form to the list
-                    family_forms.append(OnboardingFamilyForm(family_data))
+                    if first_names[i] and last_names[i] and genders[i] and relationships[i]:
+                        if id[i]:
+                            family_edit = {
+                                'first_name': first_names[i],
+                                'last_name': last_names[i],
+                                'gender': genders[i],
+                                'relationship': relationships[i],
+                                'dob':dob[i],
+                                'aadhar_no': aadhar_numbers[i],
+                                'mobile_no': mobile_numbers[i]
+                            }
+                            family_id= edit_family_original_forms.filter(family_member_id=id[i])
+                            # Create and add the form to the list
+                            edit_family_forms.append(OnboardingFamilyForm(family_edit, instance=family_id[0]))
+                        else:
+                            family_data = {
+                                'first_name': first_names[i],
+                                'last_name': last_names[i],
+                                'gender': genders[i],
+                                'relationship': relationships[i],
+                                'dob':dob[i],
+                                'aadhar_no': aadhar_numbers[i],
+                                'mobile_no': mobile_numbers[i]
+                            }
+                            # Create and add the form to the list
+                            create_family_forms.append(OnboardingFamilyForm(family_data))
 
                 # # Validate and save each form if valid
-                for form in family_forms:
+                for form in create_family_forms:
 
                     if form.is_valid():
-                        print(form)
-                        form.instance.candidate = candidate  
+                        form.save(candidate=candidate)
+                    else:
+                        print("Form errors:", form.errors)
+                        
+                for form in edit_family_forms:
+
+                    if form.is_valid():
                         form.save()
                     else:
                         print("Form errors:", form.errors)
@@ -582,14 +606,18 @@ def OnboardingCandidate(request,onboarding_id, page):
                 # return render(request,'jobseeker/onboarding.html',context)
 
         candidate_form = OnboardingCandidatePersonalForm(instance=Candidates.objects.get(user=request.user))
-        onboarding_form = OnboardingPersonalForm(instance=Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id))
-        onboarding_form = OnboardingPersonalForm(instance=Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id))
-        family_forms =Familys.objects.filter(candidate=candidate)
+        # onboarding_form = OnboardingPersonalForm(instance=Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id))
+        onboarding = Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id)
+        onboarding_form = OnboardingPersonalForm(instance=onboarding)
+        company = 1
+        print(onboarding)
+        create_family_forms =Familys.objects.filter(candidate=candidate)
 
         context = {
+            'company':company,
             'candidate': candidate_form,
             'onboarding': onboarding_form,
-            'family_forms': family_forms,
+            'family_forms': create_family_forms,
             'onboarding_id':onboarding_id,
             'page':page,
             

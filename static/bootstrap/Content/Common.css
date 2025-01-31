@@ -103,7 +103,7 @@ table thead tr th {
     /* border-left: 2px solid #e1e1e1; */
     font-size: 12px;
     font-weight: normal;
-    width: fit-content;
+    /* width: fit-content; */
 }
 
 .btn_save {

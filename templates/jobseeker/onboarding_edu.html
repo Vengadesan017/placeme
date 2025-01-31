@@ -6,15 +6,15 @@
     <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-start align-items-start d-inline-block" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;width:100%">
         <form method="post" id="form_Education">
             <span id="result"></span>
-            <table class="table-bordered dynamictbl" id="user_table">
+            <table class="tblassetsteps dynamictbl" id="user_table">
                 <thead>
                     <tr>
                         <th width="15%"><label class="SideLabelBold">Course</label></th>
                         <th width="15%"><label class="SideLabelBold">Specialization</label></th>
-                        <th width="10%"><label class="SideLabelBold">Name of the College / School</label></th>
-                        <th width="10%"><label class="SideLabelBold">Board/University</label></th>
-                        <th width="10%"><label class="SideLabelBold">Year of Passing</label></th>
-                        <th width="5%"><label class="SideLabelBold">% of Marks Scored</label></th>
+                        <th width="20%"><label class="SideLabelBold">Name of the College / School</label></th>
+                        <th width="20%"><label class="SideLabelBold">Board/University</label></th>
+                        <th width="8%"><label class="SideLabelBold">Year of Passing</label></th>
+                        <th width="10%"><label class="SideLabelBold">% of Marks Scored</label></th>
     
                     </tr>
                 </thead>
@@ -23,12 +23,7 @@
     
     
             </table>
-    
-    
-            <div class="form-group">
-                <label>First check in:</label>
-                <input type="text" class="form-control form-control-1 input-sm from" placeholder="CheckIn">
-            </div>
+
     
             <br />
             <div style="float:right">
@@ -42,32 +37,56 @@
     <script src="{% static 'bootstrap/cripts/jquery-3.4.1.min.js' %}"></script>
     <script>
         $(document).ready(function () {
-            var count = 4;
-            if (count > 1) {
-                for (var i = 1; i <= count; i++)
-                    {
-                        dynamic_fieldEdu(i);
-                    }
+            var count = 1;
+            if (count >= 1) {
+                for (var i = 1; i <= count; i++) {
+                    dynamic_field(i);
+                }
             }
     
-            function dynamic_fieldEdu(number) {
+            function dynamic_field(number) {
                 var html = '<tr>';
-                html += '<td><input type ="text" name="Course[]" class ="form-control dynamic_input" /> </td >';
-                html += '<td><input type ="text" name="Specialization[]" class ="form-control dynamic_input" /> </td >';
-                html += '<td><input type ="text" name="Colleage[]" class ="form-control dynamic_input" /> </td >';
-                html += '<td><input type ="text" name="University[]" class ="form-control dynamic_input" /> </td >';
-                html += '<td><input type ="text" name="yop[]" style="position: relative"  class ="form-control dynamic_input monthyear" /> </td >';            
-                html += '<td><input type ="text" name="Mark[]" class ="form-control dynamic_input" /> </td >';
-                $('#bindrowEdu').append(html);
+                html += '<input type="hidden" name="id[]" id="" class="form-control" value=""><td><input type ="text" name="txtFirstName[]"  id="txtFFirstName' + number + '"  class ="form-control" /> </td >';
+                html += '<td><input type ="text" name="txtLastName[]" id="txtFLastName' + number + '"  class ="form-control" /> </td >';
+                {% comment %} html += '<td><select class="form-control" id="ddlGender' + number + '" name="Gender[]">< option value=""> Select Gender </option > </select > </td >'; {% endcomment %}
+    
+                var select_list = '<select id="ddlFGender' + number + '" name="Gender[]" class = "form-control">';
+                select_list += '<option value="">Select </option>';
+                select_list += '<option value="Male">Male </option>';
+                select_list += '<option value="Female">Female </option>';
+                select_list += '<option value="Transgender">Transgender </option>';
+                select_list += '<option value="NotDisclosed">NotDisclosed </option>';
+                select_list += '</select>';
+                html += '<td>' + select_list + '</td>';
+    
+                var select_list = '<select id="ddlFReleationship' + number + '" name="Releationship[]" class = "form-control">';
+                select_list += '<option value="">Select </option>';
+                select_list += '<option value="Father">Father </option>';
+                select_list += '<option value="Mother">Mother </option>';
+                select_list += '<option value="Spouse">Spouse </option>';
+                select_list += '<option value="Son">Son </option>';
+                select_list += '<option value="Daughter">Daughter </option>';
+                select_list += '</select>';
+                html += '<td>' + select_list + '</td>';
+    
+                html += '<td><input type ="date" name="txtdob[]" style="position: relative" id="txtFamilydob' + number + '"   class ="form-control" /> </td >';
+                html += '<td><input type ="text" name="txtAadhar[]" id="txtFamilyAadhar' + number + '"  class ="form-control"  onChange="validateAadharNumber()"/> </td >';
+                html += '<td><input type ="text" name="txtFContactNo[]" id="txtFContactNo' + number + '"  class ="form-control" /> </td >';
                 //if (number > 1) {
-                //    html += '<td><button class="deleteButton " id="remove" type="button"></button></td >  </tr>';
+                //    html += '<td><button type="button" name="remove" id="remove" class="btn btn-danger"> Remove </button> </td >  </tr>';
                 //    $('#bindrow').append(html);
                 //}
+                //else {
+                //    html += '<td><button type="button" name="add" id="add" class="btn btn-success"> Add </button> </td>  </tr>';
+                //    $('#bindrow').append(html);
+                //}
+                    html += '<td><button type="button" name="remove" id="remove" class="btn btn-danger"> Remove </button> </td >  </tr>';
+                    $('#bindrow').append(html);
             }
     
-            $('#btnaddEdu').click(function () {
+            $('#add').click(function () {
                 count++;
-                dynamic_fieldEdu(count);
+                dynamic_field(count);
             });
     
     
@@ -78,12 +97,15 @@
             });
     
     
-    
-            $('#dynamic_form').on('submit', function (event) {
-                event.preventDefault();
-    
-            })
         });
-    </script>                                    
+    
+    
+        $("#dynamic_form").validate({
+            rules: {
+                Name: "required"
+            }
+        });
+    
+    </script>
 
 </div>
