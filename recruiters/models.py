@@ -42,13 +42,13 @@ class Companies(models.Model):
     company_id = models.AutoField(primary_key=True)
     candidate = models.OneToOneField('job_seekers.Candidates', on_delete=models.CASCADE, related_name='company_candidate', null=True, blank=True)
     company_name = models.CharField(max_length=150)
-    permanent_address = models.CharField(max_length=255, blank=True, null=True)
-    communication_address = models.CharField(max_length=255, blank=True, null=True)
-    official_email  = models.EmailField(validators=[EmailValidator()], blank=True, null=True)
+    permanent_address = models.CharField(max_length=255)
+    communication_address = models.CharField(max_length=255)
+    official_email  = models.EmailField(validators=[EmailValidator()])
     contact_no = models.CharField(max_length=15)
-    phone_no = models.CharField(max_length=15)
-    admin_name = models.CharField(max_length=255, blank=True, null=True)
-    admin_role = models.CharField(max_length=255, blank=True, null=True)
+    phone_no = models.CharField(max_length=15, blank=True, null=True)
+    admin_name = models.CharField(max_length=255)
+    admin_role = models.CharField(max_length=255)
     Company_type  = models.CharField(max_length=100, choices=[
         ('Limited liability', 'Limited liability'),
         ('Sole proprietorship', 'Sole proprietorship'),
@@ -108,6 +108,7 @@ class Companies(models.Model):
     is_email_verified = models.BooleanField(default=False)
     is_contact_verified = models.BooleanField(default=False)
     is_kyc_verified = models.BooleanField(default=False)
+    kyc_uploaded_at = models.DateTimeField(null=True, blank=True)
     is_verified = models.BooleanField(default=False)
 
     def __str__(self):

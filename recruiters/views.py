@@ -10,10 +10,14 @@ from django.contrib import messages
 def is_recruiter(view_func):
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
-        if request.user.is_authenticated and request.user.is_recruiter:
-            return view_func(request, *args, **kwargs)
-        messages.info(request, "You must rigister your company or admin add you as recruiter")
-        return redirect('recruiters:create_company')  # Replace with your no-permission page
+        
+        if request.user.is_authenticated:
+            if request.user.is_recruiter: 
+                return view_func(request, *args, **kwargs)
+            messages.info(request, "You must rigister your company or Your company admin must add you as recruiter")
+            return redirect('recruiters:create_company')  # Replace with your no-permission page
+        messages.info(request, "Please login  or signup")
+        return redirect('auth:employer_login')  # Replace with your no-permission page
     return _wrapped_view
 
 def is_kyc(view_func):
@@ -26,7 +30,7 @@ def is_kyc(view_func):
                 return view_func(request, *args, **kwargs)
             else:
                 messages.error(request, "Your KYC verification is pending.")
-                return redirect('no_permission_page')  # Replace with your KYC verification page
+                return redirect('recruiters:complete_kyc')  # Replace with your KYC verification page
         except (Candidates.DoesNotExist, Companies.DoesNotExist):
             messages.error(request, "You must be associated with a company.")
             return redirect('error_page')  # Replace with your error page
@@ -48,7 +52,7 @@ def CreateCompany(request):
                         user.is_recruiter = True
                         user.save()
                     except Exception as e:
-                        messages.error(request, 'An error occurred while updating your profile.')
+                        messages.error(request, 'An error occurred while garding you a company admin access.')
                     return redirect('recruiters:complete_kyc') 
                 else:
                     print("Form errors:", form.errors)
@@ -63,7 +67,7 @@ def CreateCompany(request):
         return HttpResponse(f"An error occurred: {e}", status=500)
 
 
-# @is_recruiter
+@is_recruiter
 def CompleteKYC(request):
     try:
         candidate = Candidates.objects.get(user=request.user)
@@ -79,11 +83,6 @@ def CompleteKYC(request):
                     print("Form errors:", form.errors)
                     messages.error(request, 'Please enter the valid data')
         KYCForm = CreateCompanyKYCForm()
-        if company.gst_no or company.gst_doc or company.pan_no or company.pan_doc or company.back_ifsc_no or company.bank_account_doc:
-            company = False
-            print(False)
-        else:
-            print(True)
         context = {
             'KYCForm': KYCForm,
             'company':company
@@ -94,6 +93,7 @@ def CompleteKYC(request):
 
 
 @is_recruiter
+@is_kyc
 def Home(request):
     return render(request,'recruiters/layout.html')
 

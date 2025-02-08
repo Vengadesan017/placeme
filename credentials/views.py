@@ -147,6 +147,15 @@ def SignupPage(request):
                                     if user is not None:
                                         auth_login(request,user)  # Log the user in after registration
                                         return redirect('job_seeker:profile')
+                                    
+                                    # if user.is_admin:
+                                    #     return redirect("administrator:dashboard")  # Admin dashboard
+                                    # elif user.is_recruiter:
+                                    #     return redirect("recruiters:home")  # Recruiter homepage
+                                    # else:
+                                    #     return redirect("jobseeks:home")
+                                                            
+                                    
                                     else:
                                         messages.error(request, "Your account is created, you need to login here manually.")
                                         return render(request,'auth/login.html',{'recaptcha_site_key': settings.RECAPTCHA_PUBLIC_KEY})   

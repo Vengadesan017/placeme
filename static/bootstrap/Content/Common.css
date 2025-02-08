@@ -73,6 +73,9 @@
 .border {
     border: 0.5px solid #dee2e6 !important;
 }
+.border-top {
+    border-top: 0.5px solid #dee2e6 !important;
+}
 
 
 .deleteButton {

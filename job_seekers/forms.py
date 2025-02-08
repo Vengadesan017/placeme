@@ -33,6 +33,13 @@ class OnboardingCandidatePersonalForm(forms.ModelForm):
             'country', 'state', 'city', 'languages', 'address', 'pincode', 
             'linkedin_profile', 'profile_pic', 'resume'
         ]
+    def clean(self):
+        cleaned_data = super().clean()  # Get cleaned data from Django
+        required_fields = ['first_name', 'last_name', 'gender', 'dob', 'country', 'state', 'city', 'pincode']
+
+        for field in required_fields:
+            if not cleaned_data.get(field):
+                self.add_error(None, f"{field.replace('_', ' ').capitalize()} is required.")
         # widgets = {
         #     'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
         #     'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
@@ -58,6 +65,22 @@ class OnboardingPersonalForm(forms.ModelForm):
             'communication_city', 'communication_address', 'communication_pincode', 
             'doj', 'dol'
         ]
+        
+    def clean(self):
+        cleaned_data = super().clean()
+        required_fields = ['father_name', 'doj']
+        
+        if self.instance.pk:  # Ensure it's an existing record
+            self.instance.save()
+        
+        if self.instance.pk:  # Ensure it's an existing record
+            self.instance.save()
+        for field in required_fields:
+            if not cleaned_data.get(field):
+                self.add_error(None, f"{field.replace('_', ' ').capitalize()} is required.")  # ✅ Adds only the message
+        return cleaned_data
+
+    
         # widgets = {
         #     'father_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Father's Name"}),
         #     'mobile_two': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Mobile No 2'}),

@@ -1,3 +1,4 @@
+from django.utils.timezone import now
 from django import forms
 from recruiters.models import Locations , Companies
 
@@ -23,6 +24,12 @@ class CreateCompanyKYCForm(forms.ModelForm):
         fields = ['gst_no', 'gst_doc', 'pan_no', 'pan_doc', 'back_ifsc_no',
                   'bank_account_doc', 'list_of_dir_doc']
         
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.kyc_uploaded_at = now()
+        if commit:
+            instance.save()
+        return instance
 # class JobForm(forms.ModelForm):
 #     locations = forms.ModelMultipleChoiceField(
 #         queryset=Locations.objects.all(),

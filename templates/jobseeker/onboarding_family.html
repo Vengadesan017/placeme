@@ -5,15 +5,15 @@
             {% csrf_token %}
     <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-start align-items-start d-inline-block" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;width:100%">
         <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-center order-2 d-inline-block bg-white align-top  align-items-start">
-            <table class="tblassetsteps dynamictbl" id="tblEmpFamily">
+            <table class="tblassetsteps dynamictbl table table-hover" id="tblEmpFamily">
                 <thead>
                     <tr>                    
-                        <th width="15%"><label class="SideLabelBold">First Name</label> <label><font size="3" color="red">*</font></label> </th>
+                        <th width="15%"><label class="SideLabelBold">First Name</label></th>
                         <th width="12%"><label class="SideLabelBold">Last Name</label></th>
-                        <th width="8%"><label class="SideLabelBold">Sex</label> <label><font size="3" color="red">*</font></label> </th>
-                        <th width="10%"><label class="SideLabelBold">Relationship <label><font size="3" color="red">*</font></label> </label></th>
-                        <th width="10%"><label class="SideLabelBold">DOB</label> <label><font size="3" color="red">*</font></label> </th>
-                        <th width="15%"><label class="SideLabelBold">Aadhar #</label> <label><font size="3" color="red">*</font></label> </th>
+                        <th width="8%"><label class="SideLabelBold">Sex</label></th>
+                        <th width="10%"><label class="SideLabelBold">Relationship </label></th>
+                        <th width="10%"><label class="SideLabelBold">DOB</label></th>
+                        <th width="15%"><label class="SideLabelBold">Aadhar #</label></th>
                         <th width="12%"><label class="SideLabelBold">Mobile Number</label></th>
                         <th width="10%"><label class="SideLabelBold">Action</label></th>
     
@@ -42,6 +42,7 @@
                         <td><input type="date" name="txtdob[]" style="position: relative" id="" class="form-control" value="{{fam.dob|date:'Y-m-d'}}"> </td>
                         <td><input type="text" name="txtAadhar[]" id="txtFamilyAadhar1" class="form-control" onchange="validateAadharNumber()" value="{{fam.aadhar_no}}"> </td>
                         <td><input type="text" name="txtFContactNo[]" id="txtFContactNo1" class="form-control" value="{{fam.mobile_no}}"> </td>
+                        <td></td>
                     </tr>
                     
                     {% endfor %}

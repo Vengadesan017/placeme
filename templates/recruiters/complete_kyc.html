@@ -39,11 +39,18 @@ Waiting for KYC verification
 <div class="r-right-down-main">
     <div class="r-down-main">
         <div class="account-div">
-            <p class="account">Hai {{company.admin_name}}</p>
+            <p class="account">Hello {{company.admin_name}}</p>
         </div>
         <div class="info-list">
-
-            {% if company %}
+            {% if messages %}
+            {% for message in messages %}
+              <div class='alert alert-{{ message.tags }}'>
+                <span class="closebtn">&times;</span>
+                  {{ message }}
+              </div>    
+            {% endfor %}
+          {% endif %}
+            {% if not company.kyc_uploaded_at %}
             <form method="POST" action="#" enctype="multipart/form-data">
                 {% csrf_token %}    
                 <div class="kyc-card" style="display:block">

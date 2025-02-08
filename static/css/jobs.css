@@ -436,7 +436,7 @@ button:hover {
 .bookmark-icon {
   font-size: 1.5em;
   color: #aaa;
-  cursor: pointer;
+  /* cursor: pointer; */
   transition: color 0.3s ease;
 }
 

@@ -18,7 +18,7 @@ def is_onboarding(view_func):
         candidate = Candidates.objects.filter(user=request.user).first()
         # print("1 ",candidate)
         if candidate:
-            onboarding = Onboarding.objects.filter(candidate=candidate, job_post=onboarding_id).first()
+            onboarding = Onboarding.objects.filter(candidate=candidate, Onbording_id=onboarding_id).first()
             # print("2 ",onboarding)
             if onboarding:
                 if onboarding.created_date and not onboarding.completed_date and not onboarding.closed:
@@ -425,7 +425,12 @@ def Apply(request):
                 # job = Jobs.objects.get(slug=slug)
                 job.increment_applied_count()
                 messages.info(request, f'You have successfully applied to {title} job')
-                return redirect('job_seeker:status', page="applied")
+                referer_url = request.META.get('HTTP_REFERER')
+                if referer_url:
+                    return redirect(referer_url)
+                else:
+                    return redirect('job_seeker:home')
+                # return redirect('job_seeker:status', page="applied")
         return redirect('job_seeker:home')
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
@@ -528,12 +533,12 @@ def OnboardingCandidate(request,onboarding_id, page):
                     messages.error(request, candidate_form.errors)
                 else:
                     candidate_form.save()
-
+                    # x(not cleaned_data.get(field) for field in ['firstname', 'lastname', 'dob', 'email']):
                 if not onboarding_form.is_valid():
                     messages.error(request, onboarding_form.errors)
+                    print(onboarding_form.errors)
                 else:
                     onboarding_form.save()
-
                 page = "family"
 
 

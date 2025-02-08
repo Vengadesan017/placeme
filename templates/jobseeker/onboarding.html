@@ -55,6 +55,8 @@ color: #000;
 border: #FFBD03;
 
 }
+
+
 </style>
 
 {% endblock statics %}
@@ -67,7 +69,9 @@ border: #FFBD03;
                 <table class="tblassetsteps">
                     <tr>
                         <td style="">
-                            <label class="onboarding-message">Please Complete Your Onboarding Process for <span style="color:#FFBD03">{{company}}</span></label>
+                            <label class="onboarding-message">Please Complete Your Onboarding Process for <span style="color:#FFBD03">Abc Private Limited
+                                {% comment %} {{company}} {% endcomment %}
+                            </span></label>
 
                         </td>
 
@@ -84,11 +88,16 @@ border: #FFBD03;
                     <div class="panel with-nav-tabs panel-default">
                         <div class="panel-heading">
                             <ul class="nav nav-tabs">
-                                <li class="{% if request.resolver_match.kwargs.page == 'personal' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="personal" %}" data-toggle="">Personal details</a></li>
+                                <li class="{% if page == 'personal' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="personal" %}" data-toggle="">Personal details</a></li>
+                                <li class="{% if page == 'family' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="family" %}" data-toggle="">Family Details</a></li>
+                                <li class="{% if page == 'education' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="education" %}" data-toggle="">Educational Details</a></li>
+                                <li class="{% if page == 'experience' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="experience" %}" data-toggle="">Experience Details</a></li>
+                                <li class="{% if page == 'identity' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="identity" %}" data-toggle="">Identity Details</a></li>
+                                {% comment %} <li class="{% if request.resolver_match.kwargs.page == 'personal' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="personal" %}" data-toggle="">Personal details</a></li>
                                 <li class="{% if request.resolver_match.kwargs.page == 'family' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="family" %}" data-toggle="">Family Details</a></li>
                                 <li class="{% if request.resolver_match.kwargs.page == 'education' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="education" %}" data-toggle="">Educational Details</a></li>
                                 <li class="{% if request.resolver_match.kwargs.page == 'experience' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="experience" %}" data-toggle="">Experience Details</a></li>
-                                <li class="{% if request.resolver_match.kwargs.page == 'identity' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="identity" %}" data-toggle="">Identity Details</a></li>
+                                <li class="{% if request.resolver_match.kwargs.page == 'identity' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="identity" %}" data-toggle="">Identity Details</a></li> {% endcomment %}
                             </ul>
                         </div>
                         {% if messages %}
