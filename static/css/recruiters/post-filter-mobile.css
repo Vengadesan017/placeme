@@ -1,0 +1,562 @@
+
+@media (min-width: 1000px) and (max-width:1250px){
+    .r-right-down-main{
+        padding-right: 5px;
+    }    
+    .r-down-main{
+        width: 99%;
+        
+    }
+    .list-left{
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .form{
+        width: 99%;
+    }
+    
+    .c-box-1{
+        width: 35% !important;
+        /* background-color: aqua; */
+    }
+    .c-box-2{
+        width: 35% !important;
+    }
+    .input-text{
+        gap: 1px;
+        padding-right: 1px;
+    }
+    .input-text .check{
+        margin-left: 5px;
+    }
+    .c-3-postion-1{
+        width: 90% !important;
+        font-size: 15px;
+    }
+    .c-3-postion-2{
+        width: 90% !important;
+        font-size: 15px;
+    }
+}
+
+
+
+
+@media (min-width: 622px) and (max-width:999px){
+    .r-down-main{
+        padding-right: 0px;
+        background-color:#f4f5ff ;
+    }
+    .list-main{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .list-left{
+        width: 40%;
+        display: none;
+    }
+    .right-top{
+        border: none !important;
+    }
+    .list-right{
+        width: 100% !important;
+        /* background-color: rgb(184, 37, 171); */
+        padding-left: 0px !important;
+    }
+    .m-right-top{
+        display: flex !important;
+    }
+    .role-post-text{
+        display: none !important;
+    }
+    .m-filter-div{
+        display: flex !important;
+
+    }
+    .c-box-1{
+        width: 35% !important;
+        /* background-color: aqua; */
+    }
+    .c-box-2{
+        width: 35% !important;
+    }
+    .c-3-postion-1{
+        width: 90% !important;
+        font-size: 15px;
+    }
+    .c-3-postion-2{
+        width: 90% !important;
+        font-size: 15px;
+    }
+
+    
+
+}
+@media (min-width:387px) and (max-width:621px) {
+    .r-down-main{
+        padding-right: 0px;
+        background-color:#f4f5ff ;
+    }
+    .list-main{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .list-left{
+        width: 40%;
+        display: none;
+    }
+    .list-right{
+        width: 100% !important;
+        /* background-color: rgb(184, 37, 171); */
+        padding-left: 0px !important;
+    }
+    .m-right-top{
+        display: flex !important;
+        
+    }
+    .right-top{
+        border: none !important;
+    }
+    .role-post-text{
+        display: none !important;
+    }
+    .m-filter-div{
+        display: flex !important;
+        width: fit-content !important;
+        padding: 2px !important;
+        /* background-color: rgb(148, 44, 44) !important; */
+    }
+    .rigth-top-1{
+        width: 50% !important;
+    }
+    .role-post-div{
+        width: 50% !important;
+        margin-right: 1px !important;
+        /* background-color: black; */
+        padding-right: 10px;
+    }
+    .select{
+        padding-left: 2px !important;
+        gap: 5px !important;
+        width: 30% !important;
+        /* background-color: brown; */
+    }
+    .post-date{
+        width: 70% !important;
+        padding-right: 10px !important;
+    }
+    .right-box-1{
+        height: 200px !important;
+    }
+
+    .right-box-1-content{
+        min-height: 170px !important;
+        height: auto !important;
+        position: relative !important;
+    }
+    .input-text{
+        position: absolute !important;
+        width: 70% !important;
+        left: 1% !important;
+        /* background-color: bisque !important; */
+        gap: 10px !important;
+        justify-content: start !important;
+
+    }
+    .text-1{
+        font-size: 16px !important;
+
+    }
+    .text-2{
+        font-size: 12px !important;
+    }
+    .Expired,.Expired-1,.Expired-2{
+        position: absolute !important;
+        width: 30% !important;
+        left: 2% !important;
+        align-items: end !important;
+        padding-bottom: 5px;
+        bottom: 2px;
+        
+        /* background-color: rgb(168, 144, 47) !important; */
+    }
+    .Expired p,.Expired-1 p,.Expired-2 p{
+        
+        position: absolute;
+        left: 1px;
+    }
+    .Expired i,.Expired-1 i,.Expired-2 i{
+        position: absolute;
+        left: 55px;
+        bottom: 8px;
+    }
+    .Report{
+        position: absolute !important;
+        /* background-color: blue; */
+        width: 60% !important;
+        right: 1%;
+        justify-content: end !important;
+    }
+    .Report p{
+        font-size: 16px !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        
+    }
+    .Report i{
+        margin-left: 2% !important;
+    }
+
+    
+    .date{
+        position: absolute !important;
+        bottom: 1%;
+        width: 70% !important;
+        /*background-color: bisque;*/
+        right: 1%;
+        height: 30px !important;
+        justify-content: end !important;
+        padding-right:10px ;
+    }
+    .c-box-3{
+        position: absolute !important;
+        right: 1px !important;
+        height: 100% !important;
+        width: 80% !important;
+    }
+
+    .c-box-2{
+        width: 70% !important;
+        position: absolute !important;
+        top: 35%;
+        left: 15%;
+        min-height: 60px !important;
+        /* background-color: bisque; */
+    }
+
+    .c-3-postion{
+        align-items: end !important;
+        right: 1% !important;
+        padding-right: 5%;
+    }
+    .c-3-postion-1{
+        width: 50% !important;
+        font-size: 14px;
+        
+        
+    }
+    .c-3-postion-2{
+        width: 50% !important;
+        font-size: 14px;
+        
+        
+    }
+   
+
+
+}
+@media (min-width:425px) and (max-width:589px) {
+     .hightlight{
+        padding-left: 2px !important;
+        position: relative !important;
+    }
+    .hightlight p{
+        font-size: 10px !important;
+        display: flex;
+        
+        /* position: absolute !important; */
+    }
+    /* .one{
+        width: 80% !important;
+        background-color: blue;
+        top: 2px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    } */
+    /* .two{
+        width: 20%;
+        top: 2px;
+        right: 1px;
+        background-color: aqua;
+        padding-left: 2px;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+    } */
+    /* .three{
+        width: 10%;
+        bottom:  1px;
+        left: 4px;
+        background-color: aqua;
+        padding-left: 2px;
+        display: flex;
+        justify-content: start;
+        align-items: center; 
+    } */
+    /* .four{
+        width: 30% !important;
+        bottom: 1px !important;
+        left: 10% !important;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        background-color: blue !important;
+    }  */
+}
+@media (min-width:400px) and (max-width:424px){
+    .hightlight{
+        padding-left: 2px !important;
+        position: relative !important;
+    }
+    .hightlight p{
+        font-size: 9px !important;
+        display: flex;
+        
+        /* position: absolute !important; */
+    }
+}
+@media (min-width:360px) and (max-width:399px){
+    .hightlight{
+        padding-left: 2px !important;
+        position: relative !important;
+    }
+    .hightlight p{
+        font-size: 9px !important;
+        display: flex;
+        
+        
+    }
+}
+@media (min-width:320px) and (max-width:386px){
+    .r-down-main{
+        padding-right: 0px;
+        background-color:#f4f5ff ;
+    }
+    .list-main{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .list-left{
+        width: 40%;
+        display: none;
+    }
+    .list-right{
+        width: 100% !important;
+        /* background-color: rgb(184, 37, 171); */
+        padding-left: 0px !important;
+    }
+    .m-right-top{
+        display: flex !important;
+        
+    }
+    .right-top{
+        border: none !important;
+    }
+    .role-post-text{
+        display: none !important;
+    }
+    .m-filter-div{
+        display: flex !important;
+        width: fit-content !important;
+        padding: 2px !important;
+        
+        /* background-color: rgb(148, 44, 44) !important; */
+    }
+    .m-filter-div p{
+        font-size: 18px !important;
+    }
+    .m-filter-div i{
+        font-size: 16px !important;
+    }
+    .rigth-top-1{
+        width: 50% !important;
+        /* background-color: bisque !important; */
+    }
+    .all-job p{
+        padding: 5px 8px !important;
+        font-size: 15px !important;
+    }
+    .draft p {
+        padding: 5px 8px !important;
+        font-size: 15px !important;
+    }
+    .role-post-div{
+        width: 50% !important;
+        margin-right: 1px !important;
+        /* background-color: black; */
+        padding-right: 1%;
+
+    }
+    .select{
+        padding-left: 2px !important;
+        gap: 5px !important;
+        width: 40% !important;
+        /* background-color: brown; */
+    }
+    .select p{
+        font-size: 14px !important;
+        font-weight: 600 !important;
+    }
+    .check{
+        width: 16px !important;
+        height: 16px !important;
+    }
+    .post-date{
+        width: 70% !important;
+        padding-right: 2px !important;
+        gap: 5px !important;
+    }
+    .post-date p{
+        font-size: 14px !important;
+    }
+    .post-date i{
+        font-size: 16px !important;
+        background-color: #f4f5ff !important;
+    }
+    .right-box-1{
+        height: 200px !important;
+    }
+
+    .right-box-1-content{
+        min-height: 170px !important;
+        height: auto !important;
+        position: relative !important;
+    }
+    .input-text{
+        position: absolute !important;
+        width: 70% !important;
+        left: 1% !important;
+        /* background-color: bisque !important; */
+        gap: 10px !important;
+        justify-content: start !important;
+
+    }
+    .text-1{
+        font-size: 15px !important;
+
+    }
+    .text-2{
+        font-size: 11px !important;
+    }
+    .Expired,.Expired-1,.Expired-2{
+        position: absolute !important;
+        width: 30% !important;
+        left: 2% !important;
+        align-items: end !important;
+        padding-bottom: 5px;
+        bottom: 2px;
+        
+        /* background-color: rgb(168, 144, 47) !important; */
+    }
+    .Expired p,.Expired-1 p,.Expired-2 p{
+        
+        position: absolute;
+        left: 1px;
+        font-size: 14px !important;
+    }
+    .Expired i,.Expired-1 i,.Expired-2 i{
+        position: absolute;
+        left: 52px !important;
+        bottom: 6px !important;
+    }
+    .Report{
+        position: absolute !important;
+        /* background-color: blue; */
+        width: 60% !important;
+        right: 1%;
+        justify-content: end !important;
+    }
+    .Report p{
+        font-size: 14px !important;
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+        
+    }
+    .Report i{
+        margin-left: 1% !important;
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
+
+    
+    .date{
+        position: absolute !important;
+        bottom: 1%;
+        width: 85% !important;
+        /*background-color: bisque;*/
+        right: 1%;
+        height: 30px !important;
+        justify-content: end !important;
+        padding-right:8px ;
+    }
+    .date p{
+        font-size: 13px !important;
+    }
+    .c-box-3{
+        position: absolute !important;
+        right: 1px !important;
+        height: 100% !important;
+        width: 80% !important;
+    }
+
+    .c-box-2{
+        width: 80% !important;
+        position: absolute !important;
+        top: 35%;
+        left: 11%;
+        min-height: 60px !important;
+        /* background-color: bisque; */
+    }
+    .hightlight{
+        padding-left: 1px !important;
+        position: relative !important;
+    }
+    .hightlight p{
+        font-size: 7.5px !important;
+        display: flex;
+        
+        
+    }
+
+    .c-3-postion{
+        align-items: end !important;
+        right: 1% !important;
+        padding-right: 2%;
+    }
+    .c-3-postion-1{
+        width: 50% !important;
+        font-size: 13px;
+        
+        
+    }
+    .c-3-postion-2{
+        width: 50% !important;
+        font-size: 13px;
+        
+        
+    }
+}
+@media (min-width:320px) and (max-width:333px){
+
+    .hightlight{
+        padding-left: 1px !important;
+        position: relative !important;
+    }
+    .hightlight p{
+        font-size: 7px !important;
+        display: flex;
+        
+        
+    }
+    .post-date p{
+        font-size: 13px !important;
+    }
+}
+
+
+
+

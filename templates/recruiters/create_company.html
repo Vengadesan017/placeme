@@ -5,8 +5,8 @@ Create Account for your company
 {% endblock title %}
 {% load static %}
 {% block statics %}
-<link rel="stylesheet" href="{% static 'css/recruiters/create-company.css' %}">
-<script src="{% static "js/recruiters/create-company.js" %}" defer></script>
+<link rel="stylesheet" href="{% static 'css/recruiters/old/create-company.css' %}">
+<script src="{% static "js/recruiters/old/create-company.js" %}" defer></script>
 {% endblock statics %}
 
 
@@ -34,7 +34,7 @@ Create Account for your company
                 </div>
                 <div class="admin-role">
                 <p >Company Type<span>*</span></p>
-                <select name="company_type" class="admin-input" required>
+                <select name="Company_type" class="admin-input" required>
                     <option value="">Select Company Type</option>
                     {% for choice in createForm.fields.Company_type.choices %}
                     {% if choice.0 != "" %}

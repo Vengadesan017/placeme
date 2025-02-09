@@ -10,7 +10,6 @@ body{
       font-family: sans-serif;
       overflow-x: hidden;
       background-color: #f4f5ff;
-      
 }
 .parent{
     display: flex;
@@ -32,7 +31,7 @@ body{
 }
 .r-right{
     /* background-color: blanchedalmond; */
-    min-height: 1800px;
+    min-height: 1300px;
     height: auto;
     transition: width 0.3s ease;
     width: 100%;
@@ -65,18 +64,16 @@ body{
     color: #FFFFFF;
     font-size: 18px;
     display: flex;
-    transition: all .5s;
     /* changes----------------------------------------------- */
 }
 .nav-div a:hover{
-    color: #FFBD03;
+    color: #ec0c0c;
 }
 
 .nav-div a:active{
-    color: #FFBD03;
+    color: #ec0c0c;
     font-size: 18px;
 }
-
 .nav-div{
     display: flex;
     flex-direction: column;
@@ -130,24 +127,19 @@ body{
     border-radius: 5px;
     padding-left: 5px;
     margin-bottom: 10px;
-    transition: all .5s;
+    
 }
 
 .box-1 a:hover{
-    border: #fff;
-    background-color: #fff; 
-
-    .p,i{
-    color: #141b5f;
-    }
-
+    border: 1px solid rgb(255, 255, 255);
+    background-color: #000000; 
 }
 .fa-caret-right {
-    font-size: 24px;
+    font-size: 22px;
     color: white;
 }
 .fa-suitcase,.fa-id-card,.fa-users-gear,.fa-user-pen,.fa-building-user,.fa-magnifying-glass-location{
-    font-size: 22px;
+    font-size: 20px;
     padding-right: 2px;
     color: white;
     margin-left: 5px;
@@ -156,11 +148,6 @@ body{
 .p{
     font-size: 16px;
     color: white;
-    display: flex;
-    gap: 5px;
-}
-.p p{
-    font-size: 16px;
 }
 /*hide left bar */
 .nav-div-hide{
@@ -190,10 +177,9 @@ body{
     border: 1px solid rgb(0, 0, 0);
     border-radius: 5px;
     padding-left: 5px;
-    background-color: #141b5f;
+    background-color: white;
     
     margin-bottom: 10px;
-    transition: all .5s;
 }
 .box-1-hide a .fa-suitcase,.box-1-hide a .fa-id-card,.box-1-hide a .fa-users-gear,.box-1-hide a .fa-user-pen,.box-1-hide a .fa-building-user,.box-1-hide a .fa-magnifying-glass-location{
     font-size: 20px;
@@ -203,53 +189,3 @@ body{
     
 }
 
-
-.nav-div-hide a:hover{
-    background-color: #fff;
-    color: #141b5f;
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.r-right-down-main{
-    position: absolute;
-    top: 50px;
-    min-height: 800px;
-    height: auto;
-    width: 100%;
-    left: 1px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 10px;
-    /* background-color: aqua; */
-}
-.r-down-main{
-    
-    
-    right: 50px;
-    
-    height: auto;
-    width: 96%;
-    /* background-color: bisque; */
-    /*background-color: #fff;*/
-    border-radius: 10px;
-    padding-top: 20px;
-    
-    
-    /* padding-left: 20px; */
-    
-}

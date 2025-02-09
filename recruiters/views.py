@@ -83,6 +83,8 @@ def CompleteKYC(request):
                     print("Form errors:", form.errors)
                     messages.error(request, 'Please enter the valid data')
         KYCForm = CreateCompanyKYCForm()
+        if company.is_kyc_verified:
+            return redirect('recruiters:home') 
         context = {
             'KYCForm': KYCForm,
             'company':company
@@ -94,8 +96,13 @@ def CompleteKYC(request):
 
 @is_recruiter
 @is_kyc
-def Home(request):
-    return render(request,'recruiters/layout.html')
+def SearchCandidates(request):
+    candidate = Candidates.objects.get(user=request.user)
+    company = Companies.objects.get(candidate=candidate)
+    context = {
+        'company':company
+    }
+    return render(request,'recruiters/layout.html',context)
 
 @is_recruiter
 @is_kyc
@@ -104,9 +111,28 @@ def Applications(request):
 
 @is_recruiter
 @is_kyc
-def Jobs(request):
-    return HttpResponse("<h1>view or edit Jobs</h1>")
-
+def Post(request):
+    try:
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+        # if request.method == "POST":
+        #     if 'upload_kyc' in request.POST:
+        #         form = CreateCompanyKYCForm(request.POST, request.FILES,instance=company)
+        #         if form.is_valid():
+        #             form.save()
+        #             messages.info(request,'Your KYC was successfully Registered.')
+        #             return redirect('recruiters:complete_kyc') 
+        #         else:
+        #             print("Form errors:", form.errors)
+        #             messages.error(request, 'Please enter the valid data')
+        # KYCForm = CreateCompanyKYCForm()
+        context = {
+            # 'KYCForm': KYCForm,
+            'company':company
+        }
+        return render(request,'recruiters/post.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
 @is_recruiter
 @is_kyc
 def CreateJob(request):
