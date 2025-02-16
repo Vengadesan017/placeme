@@ -42,6 +42,8 @@ class Companies(models.Model):
     company_id = models.AutoField(primary_key=True)
     candidate = models.OneToOneField('job_seekers.Candidates', on_delete=models.CASCADE, related_name='company_candidate', null=True, blank=True)
     company_name = models.CharField(max_length=150)
+    state = models.CharField(max_length=255,blank=True,null=True)
+    city = models.CharField(max_length=255,blank=True,null=True)
     permanent_address = models.CharField(max_length=255)
     communication_address = models.CharField(max_length=255)
     official_email  = models.EmailField(validators=[EmailValidator()])

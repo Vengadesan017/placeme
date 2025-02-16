@@ -52,12 +52,25 @@
               <li class="item button {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
                 <a href="{% url 'job_seeker:profile' %}"><i class="fa-solid fa-user" style="margin-right: 8px;"></i>Profile</a>
               </li>
+              {% if request.resolver_match.url_name == 'home'%}
+              <li class="item"></li>
+              <li class="item nav_link">
+                <a href="{% url 'auth:employer_login' %}">Employers Login</a>
+                {% comment %} <a href="{% url 'auth:employer_login' %}">Employers Login</a> {% endcomment %}
+                {% comment %} <select class="nav_select" name="Usertypes" onchange="location = this.value;">
+                  <option value="{% url 'job_seeker:home' %}">Job Seeker</option>
+                  <option value="{% url 'recruiters:home' %}">Recruiter</option>
+                  <option value="{% url 'administrator:dashboard' %}">Administrator</option>
+                  <option value="{% url 'refer_and_earn:home' %}">Refer and earn</option>
+                </select> {% endcomment %}
+              </li>
+              {% endif %}
             {% else %}
               <li class="item button {% if request.resolver_match.url_name == 'login' %}active{% endif %}">
                 <a href="{% url 'auth:login' %}">Login</a>
               </li>
               <li class="item"></li>
-              {% if not user.is_authenticated %}
+              {% if request.resolver_match.url_name == 'home'%}
               <li class="item nav_link">
                 <a href="{% url 'auth:employer_login' %}">Employers Login</a>
                 {% comment %} <a href="{% url 'auth:employer_login' %}">Employers Login</a> {% endcomment %}

@@ -5,7 +5,7 @@ from recruiters.models import Locations , Companies
 class CreateCompanyForm(forms.ModelForm):
     class Meta:
         model = Companies
-        fields = ['candidate', 'company_name', 'permanent_address', 'communication_address', 'official_email',
+        fields = ['candidate', 'company_name', 'permanent_address', 'communication_address', 'state','city','official_email',
                   'contact_no', 'phone_no', 'admin_name', 'admin_role', 'Company_type', 'no_of_employees',
                   'on_role_employees', 'off_role_employees','business_type', 'industry_type', 'organization_type',
                   'website', 'linkedin', 'about', 'established_at']

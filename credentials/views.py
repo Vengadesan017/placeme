@@ -62,15 +62,26 @@ def LoginPage(request):
             user=authenticate(request,username=username,password=password)
             if user is not None:
                     auth_login(request,user)
+                    # if user.is_admin:
+                    #     return redirect("administrator:dashboard")  # Admin dashboard
+                    if user.is_recruiter:
+                        return redirect("recruiters:home")
+                    else:
+                        return redirect("job_seeker:home")
                     return redirect('job_seeker:home')
             else:
                 messages.error(request, "Invalid Username and Password.")
                 return render(request,'auth/login.html',{'recaptcha_site_key': settings.RECAPTCHA_PUBLIC_KEY})
+
+        if request.user.is_authenticated:
+            if request.user.is_recruiter:
+                return redirect('recruiters:home')
+            else :
+                return redirect('job_seeker:home')
+                
+        return render(request,'auth/login.html' ,{'recaptcha_site_key': settings.RECAPTCHA_PUBLIC_KEY})
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
-
-
-    return render(request,'auth/login.html' ,{'recaptcha_site_key': settings.RECAPTCHA_PUBLIC_KEY})
 
 
 @ratelimit(key='ip', rate='5/m', method='POST', block=True)
@@ -146,14 +157,15 @@ def SignupPage(request):
                                     user=authenticate(request,username=email,password=password1)
                                     if user is not None:
                                         auth_login(request,user)  # Log the user in after registration
+                                        # if user.is_admin:
+                                        #     return redirect("administrator:dashboard")  # Admin dashboard
+                                        if user.is_recruiter:
+                                            return redirect("recruiters:home")
+                                        else:
+                                            return redirect("jobseeks:home")
                                         return redirect('job_seeker:profile')
                                     
-                                    # if user.is_admin:
-                                    #     return redirect("administrator:dashboard")  # Admin dashboard
-                                    # elif user.is_recruiter:
-                                    #     return redirect("recruiters:home")  # Recruiter homepage
-                                    # else:
-                                    #     return redirect("jobseeks:home")
+   
                                                             
                                     
                                     else:
@@ -173,7 +185,11 @@ def SignupPage(request):
                 messages.error(request, "Enter all required details.")
                 return render(request,'auth/signup.html',{'recaptcha_site_key': settings.RECAPTCHA_PUBLIC_KEY})
 
-
+        if request.user.is_authenticated:
+            if request.user.is_recruiter:
+                return redirect('recruiters:home')
+            else :
+                return redirect('job_seeker:home')
         return render(request,'auth/signup.html',{'recaptcha_site_key': settings.RECAPTCHA_PUBLIC_KEY})
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
@@ -214,11 +230,13 @@ def EmployerLogin(request):
             else:
                 messages.error(request, "Invalid Username and Password.")
                 return render(request,'auth/login.html',{'recaptcha_site_key': settings.RECAPTCHA_PUBLIC_KEY})
+            
+        if request.user.is_authenticated:
+            return redirect('recruiters:home')
+        return render(request,'auth/employer_login.html' ,{'recaptcha_site_key': settings.RECAPTCHA_PUBLIC_KEY})
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
 
-
-    return render(request,'auth/employer_login.html' ,{'recaptcha_site_key': settings.RECAPTCHA_PUBLIC_KEY})
 
 
 @ratelimit(key='ip', rate='5/m', method='POST', block=True)
@@ -312,7 +330,8 @@ def EmployerSignup(request):
                 messages.error(request, "Enter all required details.")
                 return render(request,'auth/signup.html',{'recaptcha_site_key': settings.RECAPTCHA_PUBLIC_KEY})
 
-
+        if request.user.is_authenticated:
+            return redirect('recruiters:home')
         return render(request,'auth/employer_signup.html',{'recaptcha_site_key': settings.RECAPTCHA_PUBLIC_KEY})
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)

@@ -96,13 +96,43 @@ def CompleteKYC(request):
 
 @is_recruiter
 @is_kyc
-def SearchCandidates(request):
+def OpenSearch(request):
     candidate = Candidates.objects.get(user=request.user)
     company = Companies.objects.get(candidate=candidate)
     context = {
         'company':company
     }
-    return render(request,'recruiters/layout.html',context)
+    return render(request,'recruiters/open_search.html',context)
+
+@is_recruiter
+@is_kyc
+def OfferingOnboaring(request):
+    candidate = Candidates.objects.get(user=request.user)
+    company = Companies.objects.get(candidate=candidate)
+    context = {
+        'company':company
+    }
+    return render(request,'recruiters/offer_onboarding.html',context)
+
+@is_recruiter
+@is_kyc
+def Vacancy(request):
+    candidate = Candidates.objects.get(user=request.user)
+    company = Companies.objects.get(candidate=candidate)
+    context = {
+        'company':company
+    }
+    return render(request,'recruiters/vacancy.html',context)
+
+@is_recruiter
+@is_kyc
+def AdminControl(request):
+    candidate = Candidates.objects.get(user=request.user)
+    company = Companies.objects.get(candidate=candidate)
+    context = {
+        'company':company
+    }
+    return render(request,'recruiters/admin_control.html',context)
 
 @is_recruiter
 @is_kyc
@@ -156,5 +186,9 @@ def Profile(request):
 @is_recruiter
 @is_kyc
 def EmployeeLifeCycle(request):
-    return HttpResponse("<h1>EmployeeLifeCycle management</h1>")
-
+    candidate = Candidates.objects.get(user=request.user)
+    company = Companies.objects.get(candidate=candidate)
+    context = {
+        'company':company
+    }
+    return render(request,'recruiters/employee_info.html',context)

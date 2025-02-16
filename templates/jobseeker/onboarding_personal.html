@@ -107,7 +107,7 @@
                         {% comment %} {% if onboarding.doj.value %}
                         <input type="date" id="" style="position: relative" class="" name="doj" value="{{ onboarding.doj.value|date:'Y-m-d'|default_if_none:'' }}" disabled>
                     {% else %} {% endcomment %}
-                    <input type="date" id="" style="position: relative" class="form-control" name="doj" value="{{ onboarding.doj.value|date:'Y-m-d'|default_if_none:'' }}" >
+                    <input type="date" id="" style="position: relative" class="form-control" name="doj" value="{{ onboarding.doj.value|date:'Y-m-d'|default_if_none:'' }}" required>
                     {% comment %} {% endif %}  {% endcomment %}
                     </td>
     

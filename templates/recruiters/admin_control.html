@@ -1,0 +1,287 @@
+
+{% extends "recruiters/layout.html" %}
+
+{% block title %}
+Admin Control
+{% endblock title %}
+{% load static %}
+{% block statics %}
+<link rel="stylesheet" href="{% static 'css/recruiters/post-left.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/post-right.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/post-filter-mobile.css' %}">
+{% comment %} <link rel="stylesheet" href="{% static 'css/recruiters/old/create-job.css' %}"> {% endcomment %}
+<style>
+
+</style>
+{% endblock statics %}
+
+
+{% block content %}
+
+            {% if messages %}
+            {% for message in messages %}
+              <div class='alert alert-{{ message.tags }}'>
+                <span class="closebtn">&times;</span>
+                  {{ message }}
+              </div>    
+            {% endfor %}
+          {% endif %}
+ 
+
+
+
+          <div class="r-right-down-main">
+            <div class="r-down-main">
+                <div class="list-main">
+
+                    <div class="list-right" style="width: 100%;">
+                        <div class="right-div">
+                            <div class="m-right-top">
+                                {% comment %} <button class="text buttons">+ Publish vacancy</button> {% endcomment %}
+                            </div>
+                            <div class="right-top">
+                                <div class="right-top-1" style="width: 50%;">
+                                    <div class="all-job" style="width: auto;">
+                                        <button class="buttons" style="padding: 8px 20px;margin: 0 20px;">Package details</button>
+                                    </div>
+                                    
+                                    <div class="draft"  style="width: auto;">
+                                        <button class="buttons" style="padding: 8px 20px;margin: 0 8px;">Subusers</button>
+                                    </div>
+                                </div>
+                                <div class="role-post-div">
+
+                                    {% comment %} <button class="role-post-text" style="background-color: unset;color: #141B5F;">Search..</button> {% endcomment %}
+                                        <input type="text" style="background-color: unset;color: #141B5F;border: #141B5F 1px solid;" class="role-post-text" placeholder="Subusers name..">
+
+                                    <div class="m-filter-div" id="m-filter-div" onclick="mobileView(true)">
+                                        <i class="fa-solid fa-arrow-down-wide-short"></i>
+                                        <p>Filters</p> 
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+                
+            </div>
+
+
+
+            </div>
+
+        <script src="{% static 'js/recruiters/post.js' %}"></script>
+    {% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {% block mobile_view %}
+    <div class="m1-filter-div" id="m1-filter-div">
+        <div class="m-list-left">
+                            
+            <div class="form">
+                <form method="post" action="#">
+                    <div class="filters-div">
+                        <i class="fa-solid fa-arrow-down-wide-short"></i>
+                        <h1>Filters</h1>
+                        <div class="x-mark" id="x-mark" onclick="mobileView(false)">
+                            <p class="X">X</p>
+                        </div>
+                    </div>
+                    
+                    <div class="input-div">
+                       <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
+
+                    </div>
+
+                    <div class="job-status-div">
+                        <div class="job-status-div-text">
+                            <p>Job Status</p>
+                            <i class="fa-solid fa-angle-down"></i>
+
+                        </div>
+                        <div class="checkbox-div">
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Active Jobs</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Expired Jobs</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Closed Jobs</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        
+
+                    </div>
+
+
+
+
+                    <div class="job-status-div-2">
+                        <div class="job-status-div-text">
+                            <p>Job Posted By</p>
+                            <i class="fa-solid fa-angle-down"></i>
+
+                        </div>
+                        <div class="input-div-down">
+                            <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
+                        </div>
+                        <div class="checkbox-div">
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Recruiter name</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Recruiter name</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Recruiter name</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        
+
+                    </div>
+
+
+
+
+                    <div class="job-status-div-3">
+                        <div class="job-status-div-text">
+                            <p>Job Tittle</p>
+                            <i class="fa-solid fa-angle-down"></i>
+
+                        </div>
+                        <div class="input-div-down">
+                            <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
+                        </div>
+                        <div class="checkbox-div">
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>App developer</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            
+                        </div>
+
+
+
+
+
+
+                        
+
+                    </div>
+
+
+
+                    
+
+                </form>
+
+            </div>
+            
+
+
+
+
+
+
+
+        </div>
+
+    </div>
+
+{% comment %} <script src="{% static 'js/jobseeker/profile.js' %}"></script> {% endcomment %}
+
+{% endblock mobile_view %}

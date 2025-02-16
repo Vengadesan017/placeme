@@ -41,7 +41,8 @@
     padding: 5px 10px;
     border-radius: 5px;
     display: none;
-    background-color: #fff;
+    /* background-color: #fff; */
+    /*background-color: #141B5F;*/
     border-radius: 10px;
     color: #555;
     border: #555 1px solid;
@@ -349,7 +350,7 @@
     height: auto;
     /* background-color: #141B5F; */
     width: 100%;
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -364,7 +365,7 @@
     color: #fff;
     width: 70%;
     /* display: flex; */
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     border-top-left-radius:5px ;
@@ -385,7 +386,7 @@
     color: #fff;
     width: 70%;
     /* display: flex; */
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     border-bottom-left-radius:5px ;

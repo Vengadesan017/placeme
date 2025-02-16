@@ -14,7 +14,7 @@ body{
 }
 .parent{
     display: flex;
-    min-height: 1500px;
+    min-height: 1000px;
     height: auto;
     background-color: #f4f5ff;
     /* background-color: rgb(167, 35, 35); */
@@ -32,7 +32,7 @@ body{
 }
 .r-right{
     /* background-color: blanchedalmond; */
-    min-height: 1800px;
+    min-height: 1000px;
     height: auto;
     transition: width 0.3s ease;
     width: 100%;
@@ -43,10 +43,10 @@ body{
     overflow-y: hidden;
 }
 .r-right-down{
-    /* background-color: #f4f5ff; */
+    background-color: #f4f5ff;
     /* min-height: 1200px; */
     height: auto;
-    overflow-y: hidden;
+    overflow: hidden;
     
 }
 
@@ -131,6 +131,7 @@ body{
     padding-left: 5px;
     margin-bottom: 10px;
     transition: all .5s;
+    background-color: #141b5f;
 }
 
 .box-1 a:hover{
@@ -187,7 +188,7 @@ body{
     justify-content: center;
     align-items: center;
     padding-right: 10px;
-    border: 1px solid rgb(0, 0, 0);
+    border: 1px solid #fff;
     border-radius: 5px;
     padding-left: 5px;
     background-color: #141b5f;
@@ -198,15 +199,15 @@ body{
 .box-1-hide a .fa-suitcase,.box-1-hide a .fa-id-card,.box-1-hide a .fa-users-gear,.box-1-hide a .fa-user-pen,.box-1-hide a .fa-building-user,.box-1-hide a .fa-magnifying-glass-location{
     font-size: 20px;
     padding-right: 2px;
-    color: rgb(0, 0, 0);
+    color: #fff;
     margin-left: 5px;
     
 }
 
 
 .nav-div-hide a:hover{
-    background-color: #fff;
-    color: #141b5f;
+
+    color: #ffbd03;
 
 }
 
@@ -225,7 +226,7 @@ body{
 
 
 .r-right-down-main{
-    position: absolute;
+    position: relative;
     top: 50px;
     min-height: 800px;
     height: auto;

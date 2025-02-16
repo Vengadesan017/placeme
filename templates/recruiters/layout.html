@@ -17,7 +17,6 @@
     <link rel="stylesheet" href="{% static 'css/recruiters/side-nav-3.css' %}" />
     <link rel="stylesheet" href="{% static 'css/recruiters/side-nav-4.css' %}" />
     <link rel="stylesheet" href="{% static 'css/recruiters/side-nav-5.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/recruiters/nav-info.css' %}" />
     <link rel="stylesheet" href="{% static 'css/recruiters/footer.css' %}" />
     <link rel="stylesheet" href="{% static 'css/error.css' %}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
@@ -30,6 +29,7 @@
     {% comment %} <script src="https://www.google.com/recaptcha/api.js" async defer></script> {% endcomment %}
   </head>
   <body>
+    <div class="overlay" id="overlay"></div>
     <div class="parent" id="parent">
         <div class="r-left">
             <nav class="left-nav">
@@ -40,13 +40,14 @@
                     <a href="#" class="active" id="open-menu"><i class="fa-solid fa-chevron-right"></i></a>
                 </div>
             </nav>
-          
+            
             <div class="left-down">
                 <div class="l-box-div">
+
                     <div class="box-1">
                         <a href="{% url 'recruiters:home' %}">
                             <div class="p">
-                                <i class="fa-solid fa-magnifying-glass-location"></i> <p>Open search</p>
+                                <i class="fa-solid fa-magnifying-glass-chart"  style="font-size: 18px;"></i> <p>Open search</p>
                             </div>
                             <i class="fa-solid fa-caret-right"></i>
                         </a>
@@ -54,7 +55,7 @@
                     </div>
                     <div class="box-1-hide">
                         <a href="{% url 'recruiters:home' %}">
-                            <i class="fa-solid fa-magnifying-glass-location"></i> 
+                            <i class="fa-solid fa-magnifying-glass-chart" style="font-size: 18px;"></i>
                         </a>
                     </div>
                     <div class="box-1">
@@ -71,14 +72,8 @@
                             <i class="fa-solid fa-suitcase"></i> 
                         </a>
                     </div>
-
-
-
-
-                    
-
                     <div class="box-1">
-                        <a href="{% url 'recruiters:home' %}">
+                        <a href="{% url 'recruiters:onboarding' %}">
                             <div class="p">
                                 <i class="fa-solid fa-building-user"></i> <p>On Boarding</p>
                             </div>
@@ -87,26 +82,28 @@
                         
                     </div>
                     <div class="box-1-hide">
-                        <a href="{% url 'recruiters:home' %}">
+                        <a href="{% url 'recruiters:onboarding' %}">
                             <i class="fa-solid fa-building-user"></i> 
                         </a>
                     </div>
+
                     <div class="box-1">
-                        <a href="{% url 'recruiters:home' %}">
+                        <a href="{% url 'recruiters:vacancy' %}">
                             <div class="p">
-                                <i class="fa-solid fa-users-gear"></i> <p>Vacancy</p>
+                                <i class="fa-solid fa-clipboard-list" style="font-size: 18px;"></i> <p>Vacancy</p>
                             </div>
                             <i class="fa-solid fa-caret-right"></i>
                         </a>
                         
                     </div>
                     <div class="box-1-hide">
-                        <a href="{% url 'recruiters:home' %}">
-                            <i class="fa-solid fa-users-gear"></i> 
+                        <a href="{% url 'recruiters:vacancy' %}">
+                            <i class="fa-solid fa-clipboard-list"></i> 
                         </a>
                     </div>
+
                     <div class="box-1">
-                        <a href="{% url 'recruiters:home' %}">
+                        <a href="{% url 'recruiters:admin_control' %}">
                             <div class="p">
                                 <i class="fa-solid fa-user-pen"></i> <p>Admin control</p>
                             </div>
@@ -115,12 +112,12 @@
                         
                     </div>
                     <div class="box-1-hide">
-                        <a href="{% url 'recruiters:home' %}">
+                        <a href="{% url 'recruiters:admin_control' %}">
                             <i class="fa-solid fa-user-pen"></i> 
                         </a>
                     </div>
                     <div class="box-1">
-                        <a href="#">
+                        <a href="{% url 'recruiters:employee_info' %}">
                             <div class="p">
                                 <i class="fa-regular fa-id-card"></i> <p>Empolyee info</p>  
                             </div>
@@ -129,16 +126,29 @@
                         
                     </div>
                     <div class="box-1-hide">
-                        <a href="#">
+                        <a href="{% url 'recruiters:employee_info' %}">
                             <i class="fa-regular fa-id-card"></i>
                         </a>
                     </div> 
+
+
+
+
+
+
+
+
+
 
                     
                 </div>
                 
             </div>
         </div>
+
+
+
+
         <div class="r-right">
             <header class="header">
                 <div class="navbar">
@@ -190,7 +200,7 @@
                                             <i class="fa-solid fa-angle-down"></i>
                                         </div>
 
-                                        <i class="fa-solid fa-xmark" style="display: none;" id="mobile-menu-close"></i>
+                                        <i class="fa-solid fa-xmark" id="mobile-menu-close" style="display: none;"></i>
                                     </a>
                                 </li>
                             </div>
@@ -200,11 +210,14 @@
                     </nav>
                 </div>
             </header>
+
+
+
             <div class="r-right-down">
                 <div class="r-right-menu" id="mobile-menu-box">
                     <div class="box-1-menu">
                         <a href="#">
-                            <p>Recruiter Company name</p>
+                            <p>Admin : {{company.company_name}}</p>
                         </a>
                     </div>
                     <div class="box-2-menu">
@@ -220,89 +233,91 @@
                     </div>
                 </div>
                 
-              
 
                 {% block content %}
 
                 {% endblock %}
+                <footer class="about">
+                    <div class="about-main">
+                        <div class="company">
+                           <div class="content">
+                                <div class="company-text">
+                                    <p>Company</p>
+                                    <div class="bar"></div>
+                                </div>
+                                <div class="company-text-1">  
+                                    <a>
+                                        About Us
+                                    </a>
+                                    <a>Terms & condition</a>
+                                    <a>Privacy Policy</a>
+                                    <a>Affiliate program</a>
+
+                                </div>
+                           </div> 
+                        </div>
+                        <div class="help">
+                            <div class="content">
+                                <div class="company-text">
+                                    <p>Get Help</p>
+                                    <div class="bar"></div>
+                                </div>
+                                <div class="company-text-1">  
+                                    <a>
+                                        FAQ
+                                    </a>
+                                    <a>Terms & condition</a>
+                                    <a>Report</a>
+
+                                </div>
+                           </div>
+                        </div>
+                        <div class="shop">
+                            <div class="content">
+                                <div class="company-text">
+                                    <p>Our service</p>
+                                    <div class="bar"></div>
+                                </div>
+                                <div class="company-text-1">  
+                                    <a>Job seeking
+                                    </a>
+                                    <a>Smart Searching</a>
+                                    <a>Hiring Process</a>
+                                    <a>Employee payroll</a>
+
+                                </div>
+                           </div>
+                        </div>
+                        <div class="follow">
+                            <div class="content">
+                                <div class="company-text-last">
+                                    <p>Follow us</p>
+                                    <div class="bar"></div>
+                                </div>
+                                <div class="company-text-1-last">  
+                                    <a>
+                                        <i class="fa-brands fa-facebook-f"></i>
+                                    </a>
+                                    <a><i class="fa-brands fa-x-twitter"></i></a>
+                                    <a><i class="fa-brands fa-instagram"></i></a>
+                                    <a><i class="fa-brands fa-linkedin-in"></i></a>
+
+                                </div>
+                           </div>
+                            
+                        </div>
+
+                    </div>
+                    <div class="last-para">
+                        <p>&copy 2025 Placenow Private Limited. All right reserved </p>
+                    </div>
+                </footer>
+                <!-- content endding -->
             </div>
-            <footer class="footer">
-                <div class="about-main">
-                    <div class="company">
-                       <div class="content">
-                            <div class="company-text">
-                                <p>Company</p>
-                                <div class="bar"></div>
-                            </div>
-                            <div class="company-text-1">  
-                                <a>
-                                    About Us
-                                </a>
-                                <a>Terms & condition</a>
-                                <a>Privacy Policy</a>
-                                <a>Affiliate program</a>
-
-                            </div>
-                       </div> 
-                    </div>
-                    <div class="help">
-                        <div class="content">
-                            <div class="company-text">
-                                <p>Get Help</p>
-                                <div class="bar"></div>
-                            </div>
-                            <div class="company-text-1">  
-                                <a>
-                                    FAQ
-                                </a>
-                                <a>Terms & condition</a>
-                                <a>Report</a>
-
-                            </div>
-                       </div>
-                    </div>
-                    <div class="shop">
-                        <div class="content">
-                            <div class="company-text">
-                                <p>Our service</p>
-                                <div class="bar"></div>
-                            </div>
-                            <div class="company-text-1">  
-                                <a>Job seeking
-                                </a>
-                                <a>Smart Searching</a>
-                                <a>Hiring Process</a>
-                                <a>Employee payroll</a>
-
-                            </div>
-                       </div>
-                    </div>
-                    <div class="follow">
-                        <div class="content">
-                            <div class="company-text-last">
-                                <p>Follow us</p>
-                                <div class="bar"></div>
-                            </div>
-                            <div class="company-text-1-last">  
-                                <a>
-                                    <i class="fa-brands fa-facebook-f"></i>
-                                </a>
-                                <a><i class="fa-brands fa-x-twitter"></i></a>
-                                <a><i class="fa-brands fa-instagram"></i></a>
-                                <a><i class="fa-brands fa-linkedin-in"></i></a>
-
-                            </div>
-                       </div>
-                        
-                    </div>
-
-                </div>
-                <div class="last-para">
-                    <p>&copy 2025 Placenow Private Limited. All right reserved </p>
-                </div>
-            </footer>
-          </div>
+                    
         </div>
+        
+    </div>
 
     {% block mobile_view %}
 

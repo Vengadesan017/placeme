@@ -104,6 +104,10 @@ border: #FFBD03;
                         {% for message in messages %}
                           <div class='alert alert-{{ message.tags }}'>
                             <span class="closebtn">&times;</span>
+                            {% comment %} <script>
+                                let text ="Microsoft"; 
+                                document.getElementById("demo").innerHTML = text.replace("Microsoft", "W3Schools");
+                            </script> {% endcomment %}
                               {{ message }}
                           </div>    
                         {% endfor %}

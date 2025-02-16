@@ -1,11 +1,12 @@
 
-.footer{
+.about{
     width: 100%;
     min-height: 150px;
     height: auto;
     background-color: #141B5F;
-    position: inherit;
-    bottom: 0px;
+    /* position: inherit; */
+    /* bottom: 0px; */
+    margin-top: 70px;
 }
 .about-main{
     width: 100%;
@@ -127,10 +128,10 @@
     color: #fff;
     font-size: 18px;
     transition: all .5s;
-    cursor: pointer;
+    cursor: default;
 }
 
-.company-text-1 a,.company-text p{
+.company-text-1 a{
     color: white;
     transition: all .5s;
     cursor: pointer;
@@ -138,9 +139,9 @@
 .company-text-1 a:hover{
     color: #ffbd03;
 }
-.company-text p:hover,.company-text-last p:hover{
+/*.company-text p:hover,.company-text-last p:hover{
     color: #ffbd03;
-}
+}*/
 
 .last-para{
     height: 50px;

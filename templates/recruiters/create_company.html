@@ -73,6 +73,21 @@ Create Account for your company
 
             <div class="email-div">
                 <div class="email-name">
+                    <p>State<span>*</span></p>
+                    <select name="state" class="admin-input">
+                        <option value="Tamil nadu">Tamil nadu</option>
+                        <option value="Kerala">Kerala</option>
+                        <option value="Karnataka">Karnataka</option>
+                    </select>
+    
+                </div>
+                <div class="website">
+                    <p>City<span>*</span></p>
+                    <input type="text" name="city" value="{{ createForm.initial.city|default_if_none:'' }}" class="admin-input" placeholder="City name" required/>
+                </div>
+            </div>
+            <div class="email-div">
+                <div class="email-name">
                     <p>Permanent Address<span>*</span></p>
                     <input type="text" name="permanent_address" value="{{ createForm.initial.permanent_address|default_if_none:'' }}" class="admin-input" placeholder="Registered address" required/> 
                 </div>
@@ -81,7 +96,7 @@ Create Account for your company
                     <input type="text" name="communication_address" value="{{ createForm.initial.communication_address|default_if_none:'' }}" class="admin-input" placeholder="Communication address" required/>
                 </div>
             </div>
-            <div class="admin-div">
+            {% comment %} <div class="admin-div">
                 <div class="admin-name">
                     <p >Business Type</p>
                     <select name="business_type" class="admin-input">
@@ -161,7 +176,7 @@ Create Account for your company
                 </div>
                     
                 
-            </div>
+            </div> {% endcomment %}
             <div class="btn-div">
                 <button type="sibmit" name="create_company" class="btn" >Create Account</button>
             </div>

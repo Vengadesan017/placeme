@@ -103,7 +103,7 @@
         margin-bottom: 10px;
         transition: all .5s;
     }
-    .box-1-hide a .fa-suitcase,.box-1-hide a .fa-id-card,.box-1-hide a .fa-users-gear,.box-1-hide a .fa-user-pen,.box-1-hide a .fa-building-user,.box-1-hide a .fa-magnifying-glass-location{
+    .box-1-hide a i{
         font-size: 22px;
         padding-right: 2px;
         color: #fff;
@@ -250,7 +250,7 @@
         background-color: #141b5f;
         margin-bottom: 10px;
     }
-    .box-1-hide a .fa-suitcase,.box-1-hide a .fa-id-card,.box-1-hide a .fa-users-gear,.box-1-hide a .fa-user-pen,.box-1-hide a .fa-building-user,.box-1-hide a .fa-magnifying-glass-location{
+    .box-1-hide a i{
         font-size: 22px;
         padding-right: 2px;
         color: #fff;
