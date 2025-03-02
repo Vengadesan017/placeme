@@ -135,3 +135,8 @@ form {
     /* Slightly larger text for the button */
   }
 }
+
+
+.home-ads{
+  min-height: 370px;
+}

@@ -14,6 +14,8 @@ urlpatterns = [
     path('bookmark/',views.Bookmark,name='bookmark'),
     path('status/<str:page>',views.Status,name='status'),
     path('onboarding/<int:onboarding_id>/<str:page>',views.OnboardingCandidate,name='onboarding'),
-
+    
+    # API
+    path('api/search/',views.ApiSearch,name='api-search'),
 
 ]

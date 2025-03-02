@@ -1,6 +1,9 @@
+body{
+  background-color: #E1E4FF;
+}
 .container {
   height: 100%;
-  background-color: #c0c5f2;
+  /* background-color: #c0c5f2; */
   scroll-behavior: smooth;
 }
 
@@ -12,7 +15,7 @@
 
 }
 
-.company {
+.company-in-job {
   background-color: white;
   margin: 20px 100px;
   min-width: 700px;

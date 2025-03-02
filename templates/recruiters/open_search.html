@@ -9,9 +9,73 @@ Open search
 <link rel="stylesheet" href="{% static 'css/recruiters/post-left.css' %}">
 <link rel="stylesheet" href="{% static 'css/recruiters/post-right.css' %}">
 <link rel="stylesheet" href="{% static 'css/recruiters/post-filter-mobile.css' %}">
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% comment %} <link rel="stylesheet" href="{% static 'css/recruiters/old/create-job.css' %}"> {% endcomment %}
 <style>
+    .r-down-main{
+        width: 100%;
+        padding:unset;
+    }
+    .r-right-down-main{
+        left: 0;
+    }
+    .right-top{
+        width:unset;
+        margin:20px;
+        box-shadow: unset;
+    }
 
+    {% comment %} for recommandation {% endcomment %}
+
+        /* Main container styling */
+        .search-container {
+            max-width: 600px;
+            margin: 20px auto;
+            position: relative;
+        }
+    
+        /* Search input styling */
+        .search-container input[type="text"] {
+            width: 100%;
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    
+        /* Recommendation dropdown styling */
+        .recommendation-box {
+            position: absolute;
+            top: 28%;
+            left: 30%;
+            width: auto;
+            max-width: 300px;
+            height: auto;
+            max-height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-height: 300px;
+            overflow: auto;
+            z-index: 1000;
+            display: none; /* Initially hidden */
+        }
+    
+        /* Recommendation item styling */
+        .recommendation-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+        }
+    
+        .recommendation-item:hover {
+            background-color: #f0f0f0;
+        }
+        form {
+            margin-top: unset;
+        }
 </style>
 {% endblock statics %}
 
@@ -30,15 +94,15 @@ Open search
 
 
 
-          <div class="r-right-down-main">
+          <div class="r-right-down-main" style="padding: unset;padding-top: 0px;">
             <div class="r-down-main">
                 <div class="list-main">
 
-                    <div class="list-right" style="width: 100%;">
+                    <div class="list-right" style="width: 100%; padding:unset;">
                         <div class="right-div">
-                            <div class="m-right-top">
-                                {% comment %} <button class="text buttons">+ Publish vacancy</button> {% endcomment %}
-                            </div>
+                            {% comment %} <div class="m-right-top">
+                              <button class="text buttons">+ Publish vacancy</button> 
+                            </div> {% endcomment %}
                             <div class="right-top">
                                 <div class="right-top-1" style="width: 50%;">
                                     <div class="all-job" style="width: auto;">
@@ -51,8 +115,8 @@ Open search
                                 </div>
                                 <div class="role-post-div">
 
-                                    {% comment %} <button class="role-post-text" style="background-color: unset;color: #141B5F;">Search..</button> {% endcomment %}
-                                        <input type="text" style="background-color: unset;color: #141B5F;border: #141B5F 1px solid;" class="role-post-text" placeholder="Search....">
+
+                                        {% comment %} <input type="text" style="background-color: unset;color: #141B5F;border: #141B5F 1px solid;" class="role-post-text" placeholder="Search...."> {% endcomment %}
 
                                     <div class="m-filter-div" id="m-filter-div" onclick="mobileView(true)">
                                         <i class="fa-solid fa-arrow-down-wide-short"></i>
@@ -60,9 +124,39 @@ Open search
                                     </div>
                                     
                                 </div>
+                            </div> 
+
+
+                            {% comment %} search field from candidate pages {% endcomment %}
+                            <form method="get" action="{% url 'recruiters:keyword_search' %}" class="home-form">
+                            <div class="search-section">
+                                <div class="search-bar">
+                             
+                                        <input type="text" name="q" placeholder="Key Skills / Designtion" id="searchInput" autocomplete="off" required="">
+                                        <div class="recommendation-box" id="recommendationBox">
+                            
+                                            {% for jobs_title in jobs_titles %}
+                                            <div class="recommendation-item">
+                                            <span>{{jobs_title}}</span>
+                                            </div>
+                                            {% endfor %}
+                                                <div class="recommendation-item">
+                                                <span>web dev</span>
+                                                </div>
+                                                
+                                                <div class="recommendation-item">
+                                                <span>web</span>
+                                                </div>
+                                                
+                            
+                                        </div>
+                                        <div class="divider"></div> <!-- Divider -->
+                                        <input type="text" name="p" placeholder="Work Location / Remote">
+                                        <button>Search Candidates</button>
+                            
+                                </div>
                             </div>
-
-
+                            </form>
 
 
 
@@ -283,5 +377,58 @@ Open search
     </div>
 
 {% comment %} <script src="{% static 'js/jobseeker/profile.js' %}"></script> {% endcomment %}
+
+<script>
+    // Get elements
+    const searchInput = document.getElementById("searchInput");
+    const recommendationBox = document.getElementById("recommendationBox");
+    const recommendationItems = Array.from(recommendationBox.getElementsByClassName("recommendation-item"));
+
+    // Show recommendations on focus
+    searchInput.addEventListener("focus", () => {
+        if (searchInput.value) {
+            filterRecommendations(searchInput.value);
+        }
+        recommendationBox.style.display = "block";
+    });
+
+    // Hide recommendations when clicking outside the input or box
+    document.addEventListener("click", (event) => {
+        if (!searchInput.contains(event.target) && !recommendationBox.contains(event.target)) {
+            recommendationBox.style.display = "none";
+        }
+    });
+
+    // Filter recommendations based on input
+    searchInput.addEventListener("input", () => {
+        filterRecommendations(searchInput.value);
+    });
+
+    function filterRecommendations(query) {
+        const lowerCaseQuery = query.toLowerCase();
+        let hasVisibleItems = false;
+
+        recommendationItems.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(lowerCaseQuery)) {
+                item.style.display = "flex"; // Show matching items
+                hasVisibleItems = true;
+            } else {
+                item.style.display = "none"; // Hide non-matching items
+            }
+        });
+
+        // Show or hide the recommendation box based on whether there are visible items
+        recommendationBox.style.display = hasVisibleItems ? "block" : "none";
+    }
+    
+    recommendationItems.forEach(item => {
+        item.addEventListener("click", () => {
+            searchInput.value = item.textContent.trim(); // Set input value to clicked item
+            recommendationBox.style.display = "none"; // Hide recommendation box
+        });
+    });
+</script>
+
 
 {% endblock mobile_view %}

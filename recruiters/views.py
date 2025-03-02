@@ -99,10 +99,24 @@ def CompleteKYC(request):
 def OpenSearch(request):
     candidate = Candidates.objects.get(user=request.user)
     company = Companies.objects.get(candidate=candidate)
+    # jobs_titles = Candidates.objects.values_list('de', flat=True).distinct()
+    # context = {
+    #     'jobs_titles': jobs_titles,
+    # }
     context = {
         'company':company
     }
     return render(request,'recruiters/open_search.html',context)
+
+@is_recruiter
+@is_kyc
+def KeywordSearch(request):
+    candidate = Candidates.objects.get(user=request.user)
+    company = Companies.objects.get(candidate=candidate)
+    context = {
+        'company':company
+    }
+    return render(request,'recruiters/keyword_search.html',context)
 
 @is_recruiter
 @is_kyc

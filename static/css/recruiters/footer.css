@@ -125,12 +125,14 @@
     background-color: #ffbd03;
 }
 .company-text p, .company-text-last p{
-    color: #fff;
+    color: #fff; 
     font-size: 18px;
     transition: all .5s;
     cursor: default;
 }
-
+.last-para p{
+    color: #fff;
+}
 .company-text-1 a{
     color: white;
     transition: all .5s;
@@ -149,7 +151,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* background-color: bisque; */
+    background-color: inherit;
     color: white;
     text-align: center;
     border-top: 2px gray solid;

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'job_seekers',
     'recruiters',
     'administrator',
+    'rest_framework',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -122,6 +123,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/

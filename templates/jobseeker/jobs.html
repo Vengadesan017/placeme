@@ -7,25 +7,153 @@ Job Result {{ keyword1 }}
 {% block statics %}
 <link rel="stylesheet" href="{% static 'css/jobs.css' %}">
 <script src="{% static "js/jobseeker/jobs.js" %}" defer></script>
+<script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('jobSearchForm');
+        const resultsDiv = document.getElementById('job-details');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const jobTitle = document.getElementById('jobTitle').value.trim();
+            const location = document.getElementById('location').value.trim();  // Location input
+
+            if (!jobTitle) {  
+                resultsDiv.innerHTML = "<p>Please enter a job title.</p>";
+                return;
+            }
+    
+            try {   
+                // Construct API URL dynamically
+                let apiUrl = `/api/search/?q=${encodeURIComponent(jobTitle)}`;
+                if (location) {
+                    apiUrl += `&p=${encodeURIComponent(location)}`;
+                }
+
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error(`Error fetching jobs: ${response.status}`);
+    
+                const jobs = await response.json();
+    
+                resultsDiv.innerHTML = jobs.length > 0 ? 
+                    jobs.map(job => `
+            <a href="/job/?r=${ job.slug }" target="_blank" class="job-description">
+                <div class="job-card">
+                    <div class="job-header">
+                        <div>
+                            <h2>${ job.title }</h2>
+                            <p class="company-name">{{ job.company.company_name }}</p>
+                        </div>
+                        {% if job in applied %}
+                        <div onclick="window.location='./../status/applied';" class="view-job">View status</div>
+                        {% elif login %}
+
+                        {% else  %}
+                        <div class="apply-job">Apply</div>               
+                        {% endif%}
+                    </div>
+            
+                    <div class="job-details">
+                        <p class="details-row">
+                            <span><i class="fas fa-map-marker-alt"></i>
+                                ${ job.location_id}
+                            </span>
+                            <span><i class="fa fa-briefcase"></i>
+                                ${job.min_experience !== job.max_experience ? `${job.min_experience} - ${job.max_experience}` : job.max_experience} Years
+
+                                </span>
+                          </p>
+                          <p class="details-row">
+                            <span><i class="fas fa-clock"></i>${ job.employment_type }</span>
+                            <span><i class="fa fa-indian-rupee-sign"></i>${ job.salary }/Month</span>
+                            <span><i class="fa fa-graduation-cap"></i>${ job.qualifications }</span>
+                            <span><i class="fa fa-laptop"></i>
+                                {%if job.is_onsite %}
+                                Onsite
+                            {% endif %}
+                            {%if job.is_work_from_home %}
+                                {%if job.is_onsite%}
+                                   ,
+                                {% endif %}
+                                Work from Home
+                            {% endif %}
+                            {%if job.is_hybrid %}
+                                {%if job.is_work_from_home %}
+                                    , 
+                                {% endif %}
+                                Hybrid
+                            {% endif %}                            
+                            </span>
+                          </p>
+                        <div class="skills">
+                            {% comment %} {% if skills_list %}
+                            {% for skill in skills_list %}
+                            {% if skill %}
+                                <span class="key-skills">${ skill }</span>
+                            {% else %}
+                            {% endif%}
+                            {% endfor %}
+                            {% else %}
+                                <span class="key-skills">No skills provided</span>
+                            {% endif %} {% endcomment %}
+
+                            <span class="key-skills">${ job.skills }</span>
+                            <span class="key-skills">CSS</span>
+                            <span class="key-skills">Java Script</span>
+                            <span class="key-skills">Django</span>
+                        </div>
+                        <p3 class="description">
+                            ${ job.description }
+                        </p3>
+                    </div>
+            
+                    <div class="job-footer">
+                        <span>${ job.posted_date } ago</span>
+                        <span>${ job.opening_count } Openings</span>
+                        <span>${ job.applied_count } Applied</span>
+                        <form method="POST" action="/bookmark/">
+                            {% csrf_token %}
+                            <input type="hidden" value="${ job.slug }" name="slug">
+                            <input type="checkbox" id="save${ job.job_id }" class="bookmark-checkbox" {% if job in bookmarks %} checked {% endif%} >
+                            <label for="save${ job.job_id }">
+                                <button type="submit" class="save_job" name="save_job"><i class="fas fa-bookmark bookmark-icon"></i><span class="save-text">{% if job in bookmarks %}Saved{% else  %}Save{% endif%}<span></button>
+                                
+                            </label>
+                        </form>
+                        
+                    </div>
+                </div>
+                </a>
+                    `).join('') 
+                    : "<p>No jobs found for the given title.</p>";
+    
+            } catch (error) {
+                console.error("Error fetching jobs:", error);
+                resultsDiv.innerHTML = "<p>Something went wrong. Please try again later.</p>";
+            }
+        });
+    });
+    
+
+</Script>
 {% endblock statics %}
 
 {% block content %}
 
 <div class="search-section">
     <div class="search-bar">
-        <form method="get" class="search-form" action="{% url 'job_seeker:search' %}">  
-            <input type="text" name="q" placeholder="Jobs title / company / Skills" value="{{ keyword1 }}" required>
+        <form method="get" id="jobSearchForm" class="search-form" action="{% url 'job_seeker:search' %}">  
+            <input type="text" name="q" id="jobTitle" placeholder="Jobs title / company / Skills" value="{{ keyword1 }}" required>
             <div class="divider"></div> 
-            <input type="text" name="p" placeholder="Location / remote" value="{{ keyword2 }}">
+            <input type="text" name="p" id="location"  placeholder="Location / remote" value="{{ keyword2 }}">
             <button type="submit" class="search-button" value="Search">Search</button>
         </form>
     </div>
 </div>
 <div class="container">
-
-    {% if search %}
-        <strong>Search your dream job</strong>         
-    {% elif page_obj %}
+   
+    {% if page_obj %}
 
     <div class="filter-container">
         <form method="POST" action="#">
@@ -167,7 +295,7 @@ Job Result {{ keyword1 }}
         
     </div>
 
-    <div class="job-container">
+    <div class="job-container" id="job-details">
 
         {% if messages %}
         {% for message in messages %}
@@ -192,7 +320,13 @@ Job Result {{ keyword1 }}
                             <h2>{{ job.title }}</h2>
                             <p class="company-name">{{ job.company.company_name }}</p>
                         </div>
-                        <div class="company-logo"></div>
+                        {% if job in applied %}
+                        <div onclick="window.location='{% url 'job_seeker:status' page='applied' %}';" class="view-job">View status</div>
+                        {% elif login %}
+
+                        {% else  %}
+                        <div class="apply-job">Apply</div>               
+                        {% endif%}
                     </div>
             
                     <div class="job-details">
@@ -259,7 +393,7 @@ Job Result {{ keyword1 }}
                         <form method="POST" action="/bookmark/">
                             {% csrf_token %}
                             <input type="hidden" value="{{ job.slug }}" name="slug">
-                            <input type="checkbox" id="save{{ job.job_id }}" class="bookmark-checkbox" {% if job in bookmarks %} checked{% endif%}>
+                            <input type="checkbox" id="save{{ job.job_id }}" class="bookmark-checkbox" {% if job in bookmarks %} checked {% endif%} >
                             <label for="save{{ job.job_id }}">
                                 <button type="submit" class="save_job" name="save_job"><i class="fas fa-bookmark bookmark-icon"></i><span class="save-text">{% if job in bookmarks %}Saved{% else  %}Save{% endif%}<span></button>
                                 
@@ -298,7 +432,16 @@ Job Result {{ keyword1 }}
     </div>
 
     {% else %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class='alert alert-{{ message.tags }}'>
+            <span class="closebtn">&times;</span>
+            {{ message }}
+        </div>    
+        {% endfor %}
+    {% endif %}    
     <strong>No results found.</strong>  <!-- Display this message if no jobs are found -->
+
     {% endif %}
 </div>
 

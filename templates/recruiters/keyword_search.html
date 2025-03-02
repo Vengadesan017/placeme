@@ -1,0 +1,585 @@
+
+{% extends "recruiters/layout.html" %}
+
+{% block title %}
+Job vacancy post
+{% endblock title %}
+{% load static %}
+{% block statics %}
+<link rel="stylesheet" href="{% static 'css/recruiters/post-left.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/post-right.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/post-filter-mobile.css' %}">
+<link rel="stylesheet" href="{% static 'css/jobs.css' %}">
+{% comment %} <link rel="stylesheet" href="{% static 'css/recruiters/old/create-job.css' %}"> {% endcomment %}
+<style>
+.r-down-main{
+    background-color: #f4f5ff;
+}
+.kyc-card{
+    background-color: #fff;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    padding: 20px 20px;
+    margin-bottom: 20px;
+}
+</style>
+{% endblock statics %}
+
+
+{% block content %}
+
+            {% if messages %}
+            {% for message in messages %}
+              <div class='alert alert-{{ message.tags }}'>
+                <span class="closebtn">&times;</span>
+                  {{ message }}
+              </div>    
+            {% endfor %}
+          {% endif %}
+ 
+
+
+
+          <div class="r-right-down-main">
+            <div class="r-down-main">
+                <div class="list-main">
+                    <div class="list-left">
+                        
+                        <div class="form">
+                            <form method="post" action="#">
+                                <div class="filters-div">
+                                    <i class="fa-solid fa-arrow-down-wide-short"></i>
+                                    <h1>Filters</h1>
+                                </div>
+                                <div class="input-div">
+                                   <input type="text" class="input" placeholder="Search by Post Title,Job Id,Recruiter name..."/> 
+
+                                </div>
+
+                                <div class="job-status-div">
+                                    <div class="job-status-div-text">
+                                        <p>Job Status</p>
+
+
+                                    </div>
+                                    <div class="checkbox-div">
+                                        <div class="checkbox-1">
+                                            <div class="checkbox-1-1">
+                                               <input type="checkbox" class="input-check"/>
+                                               <p>Active Jobs</p> 
+                                            </div>
+                                            <div class="checkbox-1-count">
+                                                <p>1</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="checkbox-1">
+                                            <div class="checkbox-1-1">
+                                               <input type="checkbox" class="input-check"/>
+                                               <p>Expired Jobs</p> 
+                                            </div>
+                                            <div class="checkbox-1-count">
+                                                <p>1</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="checkbox-1">
+                                            <div class="checkbox-1-1">
+                                               <input type="checkbox" class="input-check"/>
+                                               <p>Closed Jobs</p> 
+                                            </div>
+                                            <div class="checkbox-1-count">
+                                                <p>2</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+                                    
+
+                                </div>
+
+
+
+
+                                <div class="job-status-div-2">
+                                    <div class="job-status-div-text">
+                                        <p>Job Posted By</p>
+
+                                    </div>
+                                    <div class="input-div-down">
+                                        <input type="text" class="input" placeholder="Search by Recruiter name"/> 
+                                    </div>
+                                    <div class="checkbox-div">
+                                        <div class="checkbox-1">
+                                            <div class="checkbox-1-1">
+                                               <input type="checkbox" class="input-check"/>
+                                               <p>Recruiter name</p> 
+                                            </div>
+                                            <div class="checkbox-1-count">
+                                                <p>1</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="checkbox-1">
+                                            <div class="checkbox-1-1">
+                                               <input type="checkbox" class="input-check"/>
+                                               <p>Recruiter name</p> 
+                                            </div>
+                                            <div class="checkbox-1-count">
+                                                <p>1</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="checkbox-1">
+                                            <div class="checkbox-1-1">
+                                               <input type="checkbox" class="input-check"/>
+                                               <p>Recruiter name</p> 
+                                            </div>
+                                            <div class="checkbox-1-count">
+                                                <p>2</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+                                    
+
+                                </div>
+
+
+
+
+                                <div class="job-status-div-3">
+                                    <div class="job-status-div-text">
+                                        <p>Job Tittle</p>
+
+
+                                    </div>
+                                    <div class="input-div-down">
+                                        <input type="text" class="input" placeholder="Search by job title"/> 
+                                    </div>
+                                    <div class="checkbox-div">
+                                        <div class="checkbox-1">
+                                            <div class="checkbox-1-1">
+                                               <input type="checkbox" class="input-check"/>
+                                               <p>App developer</p> 
+                                            </div>
+                                            <div class="checkbox-1-count">
+                                                <p>1</p>
+                                            </div>
+                                        </div>
+
+                                        
+                                    </div>
+
+
+
+
+
+
+                                    
+
+                                </div>
+
+
+
+                                
+
+                            </form>
+
+                        </div>
+                        
+
+
+
+
+
+
+
+                    </div>
+                    <div class="list-right">
+                        <div class="right-div">
+                            <div class="m-right-top">
+                                <button class="text buttons">+ Publish vacancy</button>
+                            </div>
+
+                                <div class="search-bar">
+                                    <form method="get" id="jobSearchForm" class="search-form" action="/search/">  
+                                        <input type="text" name="q" id="jobTitle" placeholder="Jobs title / company / Skills" value="web" required="">
+                                        <div class="divider"></div> 
+                                        <input type="text" name="p" id="location" placeholder="Location / remote" value="">
+                                        <button type="submit" class="search-button" value="Search">Search</button>
+                                    </form>
+                                </div>
+
+
+
+
+
+                            <div class="right-middle">
+                                <div class="select">
+                                    {% comment %} <input type="checkbox" class="check"/>
+                                    <p>Select All</p> {% endcomment %}
+                                </div>
+                                <select class="post-date-clicking">
+                                    <option>Posted date: newest</option>
+                                    <option>Posted date: oldest</option>
+                                    <option>Job title: A - Z</option>
+                                    <option>Job title: Z - A</option>
+                                </select>
+
+                            </div>
+
+
+
+
+                            <div class="right-box-1">
+                                <div class="right-box-1-content">
+                                    <div class="c-box-1">
+                                        <div class="support">
+                                            <div class="input-text">
+                                                {% comment %} <input type="checkbox" class="check"/> {% endcomment %}
+                                                <div class="c-1-text">
+                                                    <p class="text-1">Support Engineer</p>
+                                                    <p class="text-2">Ahmedabad</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="Expired">
+                                            <p>Expired</p>
+                                            <i class="fa-regular fa-clock"></i>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="c-box-2">
+                                        <div class="num-1">
+                                            <p class="num">7</p>
+                                            <p class="num-text">Viewed</p>
+                                        </div>
+                                        <div class="num-2">
+                                            <p class="num">7</p>
+                                            <p class="num-text">Action</p>
+                                        </div>
+                                        <div class="num-3">
+                                            <p class="num">54</p>
+                                            <p class="num-text">Applied</p>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="c-box-3">
+                                        <div class="Report">
+                                            <p>Report</p>
+                                            <i class="fa-solid fa-ellipsis-vertical" id="c-3-show"></i>
+                                        </div>
+                                        <div class="c-3-postion" id="c-3-post">
+                                            <div class="c-3-postion-1">
+                                                <a>Preview Post</a>
+                                            </div>
+                                            <div class="c-3-postion-2">
+                                                <a>Close vacancy</a>
+                                            </div>
+                                        </div>
+                                        <div class="date">
+                                            <p>Post By Me:20 Jan 2025</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hightlight">
+                                    <p class="one">The job posting has expired would you like to .</p>
+                                    <p></p>
+
+                                    <p class="underline two">Repost it </p><p></p>
+                                    <p class="three">. or </p><p></p>
+                                    <p class="underline four"> . Closed it ?</p>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+                            <div class="right-box-1">
+                                <div class="right-box-1-content">
+                                    <div class="c-box-1">
+                                        <div class="support">
+                                            <div class="input-text">
+                                                {% comment %} <input type="checkbox" class="check"/> {% endcomment %}
+                                                <div class="c-1-text">
+                                                    <p class="text-1">Support Engineer</p>
+                                                    <p class="text-2">Ahmedabad</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="Expired">
+                                            <p>Expired</p>
+                                            <i class="fa-regular fa-clock"></i>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="c-box-2">
+                                        <div class="num-1">
+                                            <p class="num">7</p>
+                                            <p class="num-text">Viewed</p>
+                                        </div>
+                                        <div class="num-2">
+                                            <p class="num">7</p>
+                                            <p class="num-text">Action</p>
+                                        </div>
+                                        <div class="num-3">
+                                            <p class="num">54</p>
+                                            <p class="num-text">Applied</p>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="c-box-3">
+                                        <div class="Report">
+                                            <p>Report</p>
+                                            <i class="fa-solid fa-ellipsis-vertical" id="c-3-show"></i>
+                                        </div>
+                                        <div class="c-3-postion" id="c-3-post">
+                                            <div class="c-3-postion-1">
+                                                <a>Preview Post</a>
+                                            </div>
+                                            <div class="c-3-postion-2">
+                                                <a>Close vacancy</a>
+                                            </div>
+                                        </div>
+                                        <div class="date">
+                                            <p>Post By Me:20 Jan 2025</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hightlight">
+                                    <p class="one">The job posting has expired would you like to .</p>
+                                    <p></p>
+
+                                    <p class="underline two">Repost it </p><p></p>
+                                    <p class="three">. or </p><p></p>
+                                    <p class="underline four"> . Closed it ?</p>
+                                </div>
+                            </div>
+
+                            
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+                
+            </div>
+
+
+
+            </div>
+
+        <script src="{% static 'js/recruiters/post.js' %}"></script>
+    {% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {% block mobile_view %}
+    <div class="m1-filter-div" id="m1-filter-div">
+        <div class="m-list-left">
+                            
+            <div class="form">
+                <form method="post" action="#">
+                    <div class="filters-div">
+                        <i class="fa-solid fa-arrow-down-wide-short"></i>
+                        <h1>Filters</h1>
+                        <div class="x-mark" id="x-mark" onclick="mobileView(false)">
+                            <p class="X">X</p>
+                        </div>
+                    </div>
+                    
+                    <div class="input-div">
+                       <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
+
+                    </div>
+
+                    <div class="job-status-div">
+                        <div class="job-status-div-text">
+                            <p>Job Status</p>
+                            <i class="fa-solid fa-angle-down"></i>
+
+                        </div>
+                        <div class="checkbox-div">
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Active Jobs</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Expired Jobs</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Closed Jobs</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        
+
+                    </div>
+
+
+
+
+                    <div class="job-status-div-2">
+                        <div class="job-status-div-text">
+                            <p>Job Posted By</p>
+                            <i class="fa-solid fa-angle-down"></i>
+
+                        </div>
+                        <div class="input-div-down">
+                            <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
+                        </div>
+                        <div class="checkbox-div">
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Recruiter name</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Recruiter name</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Recruiter name</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        
+
+                    </div>
+
+
+
+
+                    <div class="job-status-div-3">
+                        <div class="job-status-div-text">
+                            <p>Job Tittle</p>
+                            <i class="fa-solid fa-angle-down"></i>
+
+                        </div>
+                        <div class="input-div-down">
+                            <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
+                        </div>
+                        <div class="checkbox-div">
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>App developer</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            
+                        </div>
+
+
+
+
+
+
+                        
+
+                    </div>
+
+
+
+                    
+
+                </form>
+
+            </div>
+            
+
+
+
+
+
+
+
+        </div>
+
+    </div>
+
+{% comment %} <script src="{% static 'js/jobseeker/profile.js' %}"></script> {% endcomment %}
+
+{% endblock mobile_view %}

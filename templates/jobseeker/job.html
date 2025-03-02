@@ -26,7 +26,7 @@
 {% block content %}
 
 <div class="container">     
-    <div class="company">
+    <div class="company-in-job">
         {% if messages %}
         {% for message in messages %}
           <div class='alert alert-{{ message.tags }}'>
@@ -140,7 +140,7 @@
                     </ul>
                 </section>
                 <hr class="divider">
-                <section class="about" id="about-company">
+                <section class="about-in-job" id="about-company">
                     <h3>About {{ job.company.company_name }}</h3>
                     <p>
                         {{ job.company.about }}

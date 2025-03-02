@@ -136,7 +136,11 @@
                             <div class="right-rec-box-width">
                         {% if not job_status.rejected_at and job_status.accepted_at and not job_status.onboarding_at%}                            
                         <div class="button" style="display: flex;justify-content: space-around;position: relative;bottom: 20px;">
-                                <a href="{% url 'job_seeker:onboarding' onboarding_id="1" page="personal" %}" class="">Click here to process Onboarding</a>
+                            {% if onboarding_id %}
+                            <a href="{% url 'job_seeker:onboarding' onboarding_id=onboarding_id page="personal" %}" class="">Click here to process Onboarding</a>
+                            {% else%}
+                            <a href="#" class="" disabled>Waiting for Recruiter Approval</a>
+                            {% endif %}
                         </div>
                         {% endif %}
                     </div>

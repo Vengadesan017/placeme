@@ -298,34 +298,7 @@ nav {
 
 }
 
-
-footer {
-  /* background-color: #f0f0f0; */
-  padding: 20px;
-  text-align: center;
-  font-size: 14px;
-  margin-top: auto;
-  /* Pushes the footer to the bottom */
-}
-
-footer .footer-content {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-footer .footer-content a {
-  color: #000;
-  text-decoration: none;
-}
-
-
-footer span {
-  color: #000;
-}
+/*  */
 
 /*add home logo*/
 .fa-house,
