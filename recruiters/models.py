@@ -145,6 +145,7 @@ class Jobs(models.Model):
     max_experience = models.IntegerField(blank=True, null=True)
     salary = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     posted_date = models.DateTimeField(default=timezone.now)
+    refreshed_date = models.DateTimeField(default=timezone.now)
     last_date_to_apply = models.DateTimeField(blank=True, null=True)
     opening_count = models.IntegerField(blank=True, null=True)
     views = models.IntegerField(default=0)

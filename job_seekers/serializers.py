@@ -36,6 +36,7 @@ class JobsCardSerializer(serializers.ModelSerializer):
         'salary',
         # 'get_time_since_posted',
         'last_date_to_apply',
+        'refreshed_date',
         'opening_count',
         'views',
         'applied_count',

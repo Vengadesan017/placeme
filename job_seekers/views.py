@@ -249,19 +249,69 @@ def Search(request):
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticatedOrReadOnly])
 def ApiSearch(request):
-    job_title = request.GET.get('q', '')
-    location = request.GET.get('location', '')
+    try:
+        keyword1 = request.GET.get('q', '')
+        keyword2 = request.GET.get('p', '')        
+        page_number = request.GET.get('page', 1)
+        jobs = search_job(request,keyword1,keyword2,page_number)
+        if not jobs:
+            context = {
+                'page_obj': False
+            }
+            return render(request, 'jobseeker/jobs.html', context)
+        
+        # Apply filter
+        if request.method == "POST":
+            if 'filter_jobs' in request.POST:
+                jobs = apply_filter_in_job(request,jobs)
 
-    jobs = Jobs.objects.all()
-    
-    if job_title:
-        jobs = jobs.filter(title__icontains=job_title)
-    
-    if location:
-        jobs = jobs.filter(location__location__icontains=location)
-    
-    serializer = JobsCardSerializer(jobs, many=True)
-    return Response(serializer.data)
+        # Bookmaked jobs
+        if request.user.is_authenticated:
+            candidate = Candidates.objects.get(user=request.user)
+            bookmarked_job_ids = Bookmarks.objects.filter(candidate=candidate).values_list('job_id', flat=True)
+            bookmarks = jobs.filter(job_id__in=bookmarked_job_ids)
+            
+            applied_job_ids = JobApplications.objects.filter(candidate=candidate).values_list('job_id',flat=True)
+            applied = jobs.filter(job_id__in=applied_job_ids)
+        else:
+            bookmarks = False  
+            applied = False  
+
+        # Pagination
+        paginator = Paginator(jobs, 10)  # Show 20 jobs per page
+        page_obj = paginator.get_page(page_number)
+
+        # Filter
+        filters = get_filter_from_job(jobs)
+
+        context = {
+            'page_obj': page_obj,
+            'keyword1': keyword1,
+            'keyword2': keyword2,
+            'filters' : filters,
+            'bookmarks' : bookmarks,
+            'applied' : applied
+        }
+        serializer = JobsCardSerializer(page_obj, many=True)
+        api_response = {
+            'jobs': serializer.data,  # Serialized job list
+            'keyword1': keyword1,
+            'keyword2': keyword2,
+            'filters': filters,
+            'bookmarks': list(bookmarks.values_list('job_id', flat=True)) if bookmarks else [],
+            'applied': list(applied.values_list('job_id', flat=True)) if applied else [],
+            'pagination': {
+                'current_page': page_obj.number,
+                'total_pages': paginator.num_pages,
+                'has_next': page_obj.has_next(),
+                'has_previous': page_obj.has_previous(),
+            }
+        }
+        return Response(api_response)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
+
+
 
 def Job(request):
     try:

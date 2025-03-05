@@ -135,18 +135,11 @@ Open search
                                         <input type="text" name="q" placeholder="Key Skills / Designtion" id="searchInput" autocomplete="off" required="">
                                         <div class="recommendation-box" id="recommendationBox">
                             
-                                            {% for jobs_title in jobs_titles %}
+                                            {% for title in titles %}
                                             <div class="recommendation-item">
-                                            <span>{{jobs_title}}</span>
+                                            <span>{{title}}</span>
                                             </div>
                                             {% endfor %}
-                                                <div class="recommendation-item">
-                                                <span>web dev</span>
-                                                </div>
-                                                
-                                                <div class="recommendation-item">
-                                                <span>web</span>
-                                                </div>
                                                 
                             
                                         </div>

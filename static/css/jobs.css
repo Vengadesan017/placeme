@@ -400,9 +400,20 @@ button:hover {
   margin-bottom: 8px;
 }
 
-.details-row span {
-  min-width: none;
-  max-width: 200px;
+.details-row-2 span {
+  min-width: unset;
+  max-width: 50%;
+  /* Optional: Limit the maximum width */
+  white-space: nowrap;
+  /* Prevent text from wrapping */
+  overflow: hidden;
+  /* Hide overflowing text */
+  text-overflow: ellipsis;
+  /* Show ellipsis for overflowing text */
+}
+.details-row-4 span {
+  min-width: unset;
+  max-width: 25%;
   /* Optional: Limit the maximum width */
   white-space: nowrap;
   /* Prevent text from wrapping */

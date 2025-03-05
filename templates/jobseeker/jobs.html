@@ -34,10 +34,10 @@ Job Result {{ keyword1 }}
                 const response = await fetch(apiUrl);
                 if (!response.ok) throw new Error(`Error fetching jobs: ${response.status}`);
     
-                const jobs = await response.json();
+                const apiResposeData = await response.json();
     
-                resultsDiv.innerHTML = jobs.length > 0 ? 
-                    jobs.map(job => `
+                resultsDiv.innerHTML = apiResposeData.jobs.length > 0 ? 
+                apiResposeData.jobs.map(job => `
             <a href="/job/?r=${ job.slug }" target="_blank" class="job-description">
                 <div class="job-card">
                     <div class="job-header">
@@ -57,60 +57,38 @@ Job Result {{ keyword1 }}
                     <div class="job-details">
                         <p class="details-row">
                             <span><i class="fas fa-map-marker-alt"></i>
-                                ${ job.location_id}
+                                ${ job.location_id.length != 0 ? job.location_id : 'Not disclosed'}
                             </span>
                             <span><i class="fa fa-briefcase"></i>
-                                ${job.min_experience !== job.max_experience ? `${job.min_experience} - ${job.max_experience}` : job.max_experience} Years
+                                ${job.min_experience !== job.max_experience ? `${job.min_experience!== null?job.min_experience:'Not disclosed'} - ${job.max_experience!== null?job.max_experience:'Not disclosed'}` : job.max_experience !== null?job.max_experience:'Not disclosed'} Years
 
                                 </span>
                           </p>
                           <p class="details-row">
-                            <span><i class="fas fa-clock"></i>${ job.employment_type }</span>
-                            <span><i class="fa fa-indian-rupee-sign"></i>${ job.salary }/Month</span>
-                            <span><i class="fa fa-graduation-cap"></i>${ job.qualifications }</span>
-                            <span><i class="fa fa-laptop"></i>
-                                {%if job.is_onsite %}
-                                Onsite
-                            {% endif %}
-                            {%if job.is_work_from_home %}
-                                {%if job.is_onsite%}
-                                   ,
-                                {% endif %}
-                                Work from Home
-                            {% endif %}
-                            {%if job.is_hybrid %}
-                                {%if job.is_work_from_home %}
-                                    , 
-                                {% endif %}
-                                Hybrid
-                            {% endif %}                            
+                            <span><i class="fas fa-clock"></i>${ job.employment_type != null ? job.employment_type : 'Not disclosed' }</span>
+                            <span><i class="fa fa-indian-rupee-sign"></i><span class="salary" data-salary="${ job.salary }"></span></span>
+                            <span><i class="fa fa-graduation-cap"></i>${ job.qualifications.length != 0 ? job.qualifications : 'Not disclosed' }</span>
+                            <span><i class="fa fa-laptop"></i>  
+                            <span class="work-type"
+                                data-onsite="${ job.is_onsite}"
+                                data-wfh="${ job.is_work_from_home}"
+                                data-hybrid="${ job.is_hybrid}"
+                            ></span>                        
                             </span>
                           </p>
-                        <div class="skills">
-                            {% comment %} {% if skills_list %}
-                            {% for skill in skills_list %}
-                            {% if skill %}
-                                <span class="key-skills">${ skill }</span>
-                            {% else %}
-                            {% endif%}
-                            {% endfor %}
-                            {% else %}
-                                <span class="key-skills">No skills provided</span>
-                            {% endif %} {% endcomment %}
-
-                            <span class="key-skills">${ job.skills }</span>
-                            <span class="key-skills">CSS</span>
-                            <span class="key-skills">Java Script</span>
-                            <span class="key-skills">Django</span>
+                        <div class="skills skills-container" data-skills="${job.skills}">
                         </div>
+                        
+
                         <p3 class="description">
                             ${ job.description }
                         </p3>
                     </div>
             
                     <div class="job-footer">
-                        <span>${ job.posted_date } ago</span>
-                        <span>${ job.opening_count } Openings</span>
+                        <span class="time-since">${ timeSince(job.refreshed_date) }</span>
+
+                        <span>${ job.opening_count !== null ? job.opening_count : '' } Openings</span>
                         <span>${ job.applied_count } Applied</span>
                         <form method="POST" action="/bookmark/">
                             {% csrf_token %}
@@ -126,13 +104,125 @@ Job Result {{ keyword1 }}
                 </div>
                 </a>
                     `).join('') 
-                    : "<p>No jobs found for the given title.</p>";
+                    : "<p>No jobs found for the given title.</p>";      
+
+                    workTypeFunc();
+                    keyskills();
+                    salaryInLPA();
     
             } catch (error) {
                 console.error("Error fetching jobs:", error);
                 resultsDiv.innerHTML = "<p>Something went wrong. Please try again later.</p>";
             }
         });
+    });
+    
+
+    {% comment %} for function in for jobs cards posted date{% endcomment %}
+    function timeSince(postedDate) {
+        let postedTime = new Date(postedDate);
+        let now = new Date();
+        let seconds = Math.floor((now - postedTime) / 1000);
+
+        let intervals = {
+            "year": 31536000,
+            "month": 2592000,
+            "week": 604800,
+            "day": 86400,
+            "hour": 3600,
+            "minute": 60,
+        };
+    
+        for (let [unit, value] of Object.entries(intervals)) {
+            let interval = Math.floor(seconds / value);
+            if (interval >= 1) {
+                return `${interval} ${unit}${interval !== 1 ? "s" : ""} ago`;
+            }
+        }
+        return "Just now";
+    }
+
+    function updateTimeSince() {
+        document.querySelectorAll(".time-since").forEach(span => {
+            let postedDate = span.getAttribute("data-posted-date");
+            if (postedDate) {
+                span.innerText = timeSince(postedDate);
+            }
+        });
+    }
+
+
+    {% comment %} work type {% endcomment %}
+
+    function workTypeFunc() {
+        document.querySelectorAll(".work-type").forEach(span => {
+            let isOnsite = span.getAttribute("data-onsite") === "true";
+            let isWFH = span.getAttribute("data-wfh") === "true";
+            let isHybrid = span.getAttribute("data-hybrid") === "true";
+    
+            let workTypes = [];
+            if (isOnsite) workTypes.push("Onsite");
+            if (isWFH) workTypes.push("Work from Home");
+            if (isHybrid) workTypes.push("Hybrid");
+            if(workTypes.length !== 0){
+                span.innerText = workTypes.join(", ");
+            }
+            else{
+                span.innerText = `Not disclosed`
+            }
+
+        });
+    }
+
+    
+
+    {% comment %} skills {% endcomment %}
+    function keyskills() {
+
+        document.querySelectorAll(".skills-container").forEach(skillsContainer => {
+            let skillsString = skillsContainer.getAttribute("data-skills"); // Get the string from data attribute
+
+        
+            if (skillsString) {
+                let skillsArray = skillsString.split(","); // Convert to array
+                skillsArray.forEach(skill => {
+                    let skillSpan = document.createElement("span");
+                    skillSpan.className = "key-skills";
+                    skillSpan.innerText = skill.trim(); // Remove extra spaces
+                    skillsContainer.appendChild(skillSpan);
+                });
+            } else {
+                let noSkillSpan = document.createElement("span");
+                noSkillSpan.className = "key-skills";
+                noSkillSpan.innerText = "No skills provided";
+                skillsContainer.appendChild(noSkillSpan);
+            }
+        });
+
+    }
+
+    {% comment %} Salary {% endcomment %}
+    function salaryInLPA(){
+        document.querySelectorAll(".salary").forEach(salarySpan => {
+            let salary = salarySpan.getAttribute("data-salary");
+
+            if (salary && salary!="None" && salary != "null") {
+                let salaryLPA = parseFloat(salary) / 100000; // Convert to LPA
+                let formattedSalary = salaryLPA % 1 === 0 ? salaryLPA.toFixed(0) : salaryLPA.toFixed(1); // Remove .00, keep .5
+    
+                salarySpan.innerHTML = `${formattedSalary} LPA`;
+            }
+            else{
+                salarySpan.innerHTML = `Not disclosed`;
+            }
+        });
+    }
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        updateTimeSince();
+        workTypeFunc();
+        keyskills();
+        salaryInLPA();
     });
     
 
@@ -330,66 +420,41 @@ Job Result {{ keyword1 }}
                     </div>
             
                     <div class="job-details">
-                        <p class="details-row">
+                        <p class="details-row details-row-2">
                             <span><i class="fas fa-map-marker-alt"></i>
                                 {{ job.location_id.all|join:", " }}
                             </span>
                             <span><i class="fa fa-briefcase"></i>
                                 {% if job.min_experience != job.max_experience %}
-                                {{ job.min_experience|floatformat:0 }} - {{ job.max_experience|floatformat:0 }} Years
+                                {{ job.min_experience|default_if_none:"Not disclosed"|floatformat:0 }} - {{ job.max_experience|default_if_none:"Not disclosed"|floatformat:0 }} Years
                                 {% else %}
-                                    {{ job.max_experience|floatformat:0 }} Years
+                                    {{ job.max_experience|default_if_none:"Not disclosed"|floatformat:0 }} Years
                                 {% endif%}
                                 </span>
                           </p>
-                          <p class="details-row">
-                            <span><i class="fas fa-clock"></i>{{ job.employment_type }}</span>
-                            <span><i class="fa fa-indian-rupee-sign"></i>{{ job.salary|floatformat:0 }}/Month</span>
-                            <span><i class="fa fa-graduation-cap"></i>{{ job.qualifications.all|join:", " }}</span>
-                            <span><i class="fa fa-laptop"></i>
-                                {%if job.is_onsite %}
-                                Onsite
-                            {% endif %}
-                            {%if job.is_work_from_home %}
-                                {%if job.is_onsite%}
-                                   ,
-                                {% endif %}
-                                Work from Home
-                            {% endif %}
-                            {%if job.is_hybrid %}
-                                {%if job.is_work_from_home %}
-                                    , 
-                                {% endif %}
-                                Hybrid
-                            {% endif %}                            
-                            </span>
+                          <p class="details-row details-row-4">
+                            <span><i class="fas fa-clock"></i>{{ job.employment_type|default_if_none:"Not disclosed" }}</span>
+                            <span><i class="fa fa-indian-rupee-sign"></i><span class="salary" data-salary="{{ job.salary }}"></span></span>
+                            <span><i class="fa fa-graduation-cap"></i>{{ job.qualifications.all|default_if_none:"Not disclosed"|join:", " }}</span>
+                            <span><i class="fa fa-laptop"></i>  
+                                <span class="work-type"
+                                    data-onsite="{{ job.is_onsite|yesno:'true,false' }}"
+                                    data-wfh="{{ job.is_work_from_home|yesno:'true,false' }}"
+                                    data-hybrid="{{ job.is_hybrid|yesno:'true,false' }}"
+                                ></span>                        
+                                </span>
+    
                           </p>
-                        <div class="skills">
-                            {% comment %} {% if skills_list %}
-                            {% for skill in skills_list %}
-                            {% if skill %}
-                                <span class="key-skills">{{ skill }}</span>
-                            {% else %}
-                            {% endif%}
-                            {% endfor %}
-                            {% else %}
-                                <span class="key-skills">No skills provided</span>
-                            {% endif %} {% endcomment %}
-
-                            <span class="key-skills">{{ job.skills }}</span>
-                            <span class="key-skills">CSS</span>
-                            <span class="key-skills">Java Script</span>
-                            <span class="key-skills">Django</span>
-                        </div>
+                          <div class="skills skills-container" data-skills="{{job.skills}}"></div>
                         <p3 class="description">
                             {{ job.description }}
                         </p3>
                     </div>
             
                     <div class="job-footer">
-                        <span>{{ job.posted_date|timesince }} ago</span>
-                        <span>{{ job.opening_count }} Openings</span>
-                        <span>{{ job.applied_count }} Applied</span>
+                        <span class="time-since" data-posted-date="{{ job.refreshed_date|date:'c' }}"></span>
+                        <span>{{ job.opening_count|default_if_none:"Not disclosed" }} Openings</span>
+                        <span>{{ job.applied_count|default_if_none:"Not disclosed" }} Applied</span>
                         <form method="POST" action="/bookmark/">
                             {% csrf_token %}
                             <input type="hidden" value="{{ job.slug }}" name="slug">
