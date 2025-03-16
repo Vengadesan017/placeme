@@ -11,10 +11,11 @@ Job vacancy post
 <link rel="stylesheet" href="{% static 'css/recruiters/post-filter-mobile.css' %}">
 <link rel="stylesheet" href="{% static 'css/jobs.css' %}">
 {% comment %} <link rel="stylesheet" href="{% static 'css/recruiters/old/create-job.css' %}"> {% endcomment %}
+
+<script src="{% static 'js/recruiters/post.js' %}" defer></script>
+<script src="{% static 'js/jobseeker/search-bar-recommandation.js' %}" defer></script>
 <style>
-.r-down-main{
-    background-color: #f4f5ff;
-}
+
 .kyc-card{
     background-color: #fff;
     width: 100%;
@@ -43,11 +44,92 @@ Job vacancy post
 }
 .form{
     border: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
 }
 .job-card{
     margin-bottom: 20px;
 }
+
+
+{% comment %} from open search {% endcomment %}
+
+.r-down-main{
+    width: 100%;
+    padding:unset;
+}
+.r-right-down-main{
+    left: 0;
+}
+.right-top{
+    width:unset;
+    margin:20px;
+    box-shadow: unset;
+}
+
+{% comment %} for recommandation {% endcomment %}
+
+    /* Main container styling */
+    .search-container {
+        max-width: 600px;
+        margin: 20px auto;
+        position: relative;
+    }
+
+    /* Search input styling */
+    .search-container input[type="text"]{
+        width: 100%;
+        padding: 10px 15px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+
+    }
+    .search-bar input[type="text"] {
+        padding: 20px 0 20px 20px;
+        width: 150px;
+    }
+    .min-exp , .max-exp {
+    border: none;
+    outline: none;
+    padding: 20px 0;
+    border-radius: 50px;
+    font-size: medium;
+     width: 135px; 
+     color: #555;
+    }
+    /* Recommendation dropdown styling */
+    .recommendation-box {
+        position: absolute;
+        top: 10%;
+        left: 30%;
+        width: auto;
+        max-width: 300px;
+        height: auto;
+        max-height: 300px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-height: 300px;
+        overflow: auto;
+        z-index: 1000;
+        display: none; /* Initially hidden */
+    }
+
+    /* Recommendation item styling */
+    .recommendation-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .recommendation-item:hover {
+        background-color: #f0f0f0;
+    }
+    form {
+        margin-top: unset;
+    }
 </style>
 {% endblock statics %}
 
@@ -77,7 +159,7 @@ Job vacancy post
                                     <i class="fa-solid fa-arrow-down-wide-short"></i>
                                     <h1>Filters</h1>
                                 </div>
-                                    <button name="filter_jobs" type="submit" class="filter-button">Filter</button>
+                                    {% comment %} <button name="filter_jobs" type="submit" class="filter-button">Filter</button> {% endcomment %}
 
                                 <div class="job-status-div">
                                     <div class="job-status-div-text">
@@ -229,12 +311,46 @@ Job vacancy post
                             </div>
 
                                 <div class="search-bar">
-                                    <form method="get" action="{% url 'recruiters:keyword_search' %}" id="jobSearchForm" class="search-form">  
+                                    <form method="get" action="{% url 'recruiters:find_candidates' %}" id="jobSearchForm" class="search-form">  
                                         
-                                        <input type="text" name="q" id="jobTitle" placeholder="Jobs title / company / Skills" value="web" required="">
-                                        <div class="divider"></div> 
-                                        <input type="text" name="p" id="location" placeholder="Location / remote" value="">
-                                        <button type="submit" class="search-button" value="Search">Search</button>
+                                        <input type="text" name="q" placeholder="Key Skills / Roles" id="searchInput" autocomplete="off" required="">
+                                        <div class="recommendation-box" id="recommendationBox">
+                            
+                                            {% for title in titles %}
+                                            <div class="recommendation-item">
+                                            <span>{{title}}</span>
+                                            </div>
+                                            {% endfor %}
+                                                
+                            
+                                        </div>
+                                        <div class="divider"></div> <!-- Divider -->
+                                        <input type="text" name="p" placeholder="Location">
+                                        <div class="divider"></div> <!-- Divider -->
+                                        <select class="min-exp">
+                                            <option>Min Exprience</option>
+                                            <option>0</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>5</option>
+                                            <option>10</option>
+                                            <option>15</option>
+                                            <option>20+</option>
+                                        </select>
+                                        <div class="divider"></div> <!-- Divider -->
+                                        <select class="max-exp">
+                                            <option>Max Exprience</option>
+                                            <option>0</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>5</option>
+                                            <option>10</option>
+                                            <option>15</option>
+                                            <option>20+</option>
+                                        </select>
+                                        <button type="submit" class="search-button">Search</button>
                                     </form>
                                 </div>
 
@@ -339,7 +455,7 @@ Job vacancy post
         </div>
         
         {% comment %} <div onclick="window.location='/status/applied';" class="apply-job">View</div> {% endcomment %}
-        <div onclick="window.location='/status/applied';" class="apply-job">View</div>
+        <div onclick="#" class="apply-job">View</div>
         
     </div>
 
@@ -409,7 +525,7 @@ Job vacancy post
         </div>
         
         {% comment %} <div onclick="window.location='/status/applied';" class="apply-job">View</div> {% endcomment %}
-        <div onclick="window.location='/status/applied';" class="apply-job">View</div>
+        <div onclick="#" class="apply-job">View</div>
         
     </div>
 
@@ -550,7 +666,7 @@ Job vacancy post
 
             </div>
 
-        <script src="{% static 'js/recruiters/post.js' %}"></script>
+
     {% endblock content %}
 
 
@@ -738,7 +854,5 @@ Job vacancy post
         </div>
 
     </div>
-
-{% comment %} <script src="{% static 'js/jobseeker/profile.js' %}"></script> {% endcomment %}
 
 {% endblock mobile_view %}

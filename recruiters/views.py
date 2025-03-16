@@ -108,13 +108,27 @@ def OpenSearch(request):
 
 @is_recruiter
 @is_kyc
-def KeywordSearch(request):
+def AdvanceSearch(request):
     candidate = Candidates.objects.get(user=request.user)
     company = Companies.objects.get(candidate=candidate)
+    candidate_titles = Candidates.objects.values_list('present_designation', flat=True).distinct()
     context = {
+        'titles': candidate_titles,
         'company':company
     }
-    return render(request,'recruiters/keyword_search.html',context)
+    return render(request,'recruiters/advance_search.html',context)
+
+@is_recruiter
+@is_kyc
+def FindCondidates(request):
+    candidate = Candidates.objects.get(user=request.user)
+    company = Companies.objects.get(candidate=candidate)
+    candidate_titles = Candidates.objects.values_list('present_designation', flat=True).distinct()
+    context = {
+        'titles': candidate_titles,
+        'company':company
+    }
+    return render(request,'recruiters/find_candidates.html',context)
 
 @is_recruiter
 @is_kyc

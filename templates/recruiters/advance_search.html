@@ -1,0 +1,849 @@
+
+{% extends "recruiters/layout.html" %}
+
+{% block title %}
+Open search
+{% endblock title %}
+{% load static %}
+{% block statics %}
+<link rel="stylesheet" href="{% static 'css/recruiters/post-left.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/post-right.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/post-filter-mobile.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/advance-search-mul-keyword.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/advance-search.css' %}">
+{% comment %} <link rel="stylesheet" href="{% static 'css/home.css' %}"> {% endcomment %}
+{% comment %} <link rel="stylesheet" href="{% static 'css/recruiters/old/create-job.css' %}"> {% endcomment %}
+
+<script src="{% static 'js/recruiters/post.js' %}"></script>
+<script src="{% static 'js/recruiters/advance-search.js' %}"></script>
+<script src="{% static 'js/recruiters/advance-search-mul-keyword.js' %}"></script>
+<script src="{% static 'js/recruiters/post.js' %}"></script>
+{% comment %} <script src="{% static 'js/jobseeker/search-bar-recommandation.js' %}" defer></script>  {% endcomment %}
+<style>
+    form {
+        margin-top: unset;
+        width: 100%;
+    }
+</style>
+{% endblock statics %}
+
+
+{% block content %}
+
+            {% if messages %}
+            {% for message in messages %}
+              <div class='alert alert-{{ message.tags }}'>
+                <span class="closebtn">&times;</span>
+                  {{ message }}
+              </div>    
+            {% endfor %}
+          {% endif %}
+ 
+
+
+          <div class="r-right-down-main">
+            <div class="r-down-main">
+                <!-- <div class="list-main">
+
+                    <div class="list-right" style="width: 100%;">
+                        <div class="right-div">
+                            <div class="m-right-top">
+                                
+                            </div>
+                            <div class="right-top">
+                                <div class="right-top-1" style="width: 50%;">
+                                    <div class="all-job" style="width: auto;">
+                                        <button class="buttons" style="padding: 8px 20px;margin: 0 20px;">Package details</button>
+                                    </div>
+                                    
+                                    <div class="draft" style="width: auto;">
+                                        <button class="buttons" style="padding: 8px 20px;margin: 0 8px;">Subusers</button>
+                                    </div>
+                                </div>
+                                <div class="role-post-div">
+
+                                    
+                                        <input type="text" style="background-color: unset;color: #141B5F;border: #141B5F 1px solid;" class="role-post-text" placeholder="Subusers name..">
+
+                                    <div class="m-filter-div" id="m-filter-div" onclick="mobileView(true)">
+                                        <i class="fa-solid fa-arrow-down-wide-short"></i>
+                                        <p>Filters</p> 
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            
+                        </div>
+                    </div>
+
+                </div> -->
+
+
+                <main class="diversity-main">
+                    <section class="navigation-header">
+                        <div class="navigation-header-1">
+                                <a class="navigation-header-1-1" href="{% url 'recruiters:home' %}">Keyword Search</a>
+                                <a class="navigation-header-1-1 active" href="{% url 'recruiters:advance_search' %}">Advance Search</a>
+                        </div>
+                        <div class="navigation-header-2">
+                            <div class="navigation-header-input-div">
+                                <input type="text" placeholder="Search"/>
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </div>
+                            
+                        </div>
+                    </section>
+                    <form method="get" action="{% url 'recruiters:find_candidates' %}" class="home-form">
+                    <section class="diversity-body">
+                        <div class="search-cadidate">
+                            <div class="search-cadidate-div">
+                                <p>Search Cadidate</p>
+                                <!-- <i class="fa-regular fa-circle-down"></i> -->
+                                <!-- <i class="fa-solid fa-caret-right"></i>   -->
+                                
+                            </div>
+                        </div>
+                        <div class="search-cadidate-body">
+                            <div class="search-cadidate-keyboard">
+                                <p>Keywords</p>
+                                
+                                <div class="search-container">
+                                    <input type="text" id="skill-input" placeholder="Type a skills">
+                                    <div id="suggestion-box" class="suggestion-box"></div>
+                                    <div id="selected-skills" class="selected-skills"></div>
+                                </div>
+
+                                
+
+                                <div class="search-cadidate-mark">
+                                    <input type="checkbox" />
+                                    <p>Mark all keywords are mandatory</p>
+                                </div>
+                                
+                                <!-- <div class="search-cadidate-skill">
+                                    <div class="add-keywords">
+                                        
+                                            <p >+</p>
+                                            <label>Add keyWords</label>
+                                        
+                                    </div>
+                                    <div class="shows-skills" id="selected-skills"></div>
+                                    <div class="add-skill">
+                                        <p >+</p>
+                                        <label>Add Skill</label>
+                                    </div>
+                                </div> -->
+                            </div>
+                            <div class="search-cadidate-exprience">
+                                <p>Experience</p>
+                                <div class="search-cadidate-exprience-1">
+                                    <div class="search-cadidate-exprience-1-1">
+                                        <select class="select-option">
+                                            <option>Min Experience</option>
+                                            <option>0</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>5</option>
+                                            <option>7</option>
+                                            <option>10</option>
+                                            <option>15</option>
+                                            <option>20</option>
+                                            <option>20+</option>
+                                        </select>
+                                        <p>to</p>
+                                    </div>
+                                    <div class="search-cadidate-exprience-1-1">
+                                        <select class="select-option">
+                                            <option>Max Experience</option>
+                                            <option>0</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>5</option>
+                                            <option>7</option>
+                                            <option>10</option>
+                                            <option>15</option>
+                                            <option>20</option>
+                                            <option>20+</option>
+                                        </select>
+                                        <p>years</p>
+                                    </div>
+
+
+                                </div>
+                                
+                            </div>
+
+                            <div class="search-cadidate-exprience">
+                                <p>Current Annual Salary</p>
+                                <div class="search-cadidate-exprience-1">
+                                    <div class="search-cadidate-exprience-1-1">
+                                        <div class="search-cadidate-exprience-1-1-input">
+                                            <p>INR</p>
+                                            <input type="text"/>
+                                        </div>
+                                        
+                                        <p>to</p>
+                                    </div>
+                                    <div class="search-cadidate-exprience-1-1">
+                                        <div class="search-cadidate-exprience-1-1-input">
+                                            <p>INR</p>
+                                            <input type="text"/>
+                                        </div>
+                                    
+                                            <select class="select">
+                                                <option>LPA</option>
+
+                                            </select>
+
+                                        
+                                            
+                                        
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="search-cadidate-keyboard">
+                                <p>Current Location of Candidate</p>
+                                <input type="text" />
+                                
+
+                                <div class="search-cadidate-mark">
+                                    <input type="checkbox" />
+                                    <p>Include Candidate Who perfers to relocate to above Location</p>
+                                </div>
+                            </div>
+                            <div class="search-cadidate-keyboard">
+                                <p>Preferred Location</p>
+                                <input type="text" />
+                                
+
+                                <div class="search-cadidate-mark">
+                                    <input type="checkbox" />
+                                    <p>Include Candidate Who perfers to relocate to above Location</p>
+                                </div>
+                            </div>
+                            <div class="search-cadidate-keyboard">
+                                <p>Languages</p>
+                                
+                                <div class="search-container">
+                                    <input type="text" id="language-input" placeholder="Type a Languages">
+                                    <div id="suggestion-language" class="suggestion-box"></div>
+                                    <div id="selected-language" class="selected-skills"></div>
+                                </div>
+                                
+
+                                <div class="search-cadidate-mark">
+                                    <input type="checkbox" />
+                                    <p>Mark all Languages mandatory</p>
+                                </div>
+
+                                <!-- <div class="search-cadidate-skill">
+                                    <div class="add-keywords">
+                                        <p >+</p>
+                                        <label>Tamil</label>
+                                    </div>
+                                    <div class="add-skill">
+                                        <p >+</p>
+                                        <label>English</label>
+                                    </div>
+                                </div> -->
+                            </div>
+
+                            <div class="employement-candidate">
+                                <div class="employement-candidate-div"  id="open-fa-caret-right">
+                                    <p>Employement Details</p>
+                                    <!-- <i class="fa-regular fa-circle-down"></i> -->
+                                    <i class="fa-solid fa-caret-right" ></i>  
+                                    
+                                </div> 
+                                <div class="Employement-body" id="employement-body">
+
+                                    <div class="search-cadidate-keyboard">
+                                        <p>Designation</p>
+                                        
+                                        <div class="search-container">
+                                            <input type="text" id="Designation-input" placeholder="Type a Designation">
+                                            <div id="Designation-suggestion-box" class="suggestion-box"></div>
+                                            <div id="Designation-selected-skills" class="selected-skills"></div>
+                                        </div>
+        
+                                        
+        
+                                        <div class="search-cadidate-mark">
+                                            <input type="checkbox" />
+                                            <p>Mark all Designation are mandatory</p>
+                                        </div>
+                                        
+                                        <!-- <div class="search-cadidate-skill">
+                                            <div class="add-keywords">
+                                                
+                                                    <p >+</p>
+                                                    <label>Add keyWords</label>
+                                                
+                                            </div>
+                                            <div class="shows-skills" id="selected-skills"></div>
+                                            <div class="add-skill">
+                                                <p >+</p>
+                                                <label>Add Skill</label>
+                                            </div>
+                                        </div> -->
+                                    </div>
+
+
+
+                                    <div class="search-cadidate-keyboard">
+                                        <p>Company</p>
+                                        
+                                        <div class="search-container">
+                                            <input type="text" id="company-input" placeholder="Type a Company">
+                                            <div id="company-suggestion-box" class="suggestion-box"></div>
+                                            <div id="company-selected-skills" class="selected-skills"></div>
+                                        </div>
+        
+                                        
+        
+                                        <div class="search-cadidate-mark">
+                                            <input type="checkbox" />
+                                            <p>mark all company are mandatory</p>
+                                        </div>
+                                        
+                                       
+                                    </div>
+
+
+                                <p>Notifice Period</p>
+                                <div class="Notifice-select-candidate-div">
+                                    <div class="select-candidate">
+                                        1-15 days
+                                    </div>
+                                    <div class="select-candidate">
+                                        1 month
+                                    </div>
+                                    <div class="select-candidate">
+                                        2 months
+                                    </div>
+                                    <div class="select-candidate">
+                                        3 months
+                                    </div>
+                                    <div class="select-candidate">
+                                        3 months Above
+                                    </div>
+                                    <div class="select-candidate">
+                                        Not mentioned
+                                    </div>
+                                    <div class="select-candidate">
+                                        Currently in notice period
+                                    </div>
+                                </div>
+
+                                </div>
+
+
+                                
+
+
+
+                                    
+                            </div>
+
+                            
+
+                            <div class="employement-candidate">
+                                <div class="employement-candidate-div" id="open-education">
+                                    <p>Education Details</p>
+                                    <i class="fa-solid fa-caret-right"></i>  
+                                </div> 
+                                <div class="Employement-body" id="education-body">
+                                    <p>Education Level</p>
+                                    <div class="select-candidate-div">
+                                        <div class="select-candidate-edu">10th</div>
+                                        <div class="select-candidate-edu">12th</div>
+                                        <div class="select-candidate-edu">UG</div>
+                                        <div class="select-candidate-edu">PG</div>
+                                        <div class="select-candidate-edu">Diplomo</div>
+                                        <div class="select-candidate-edu">PHD</div>
+                                    </div>
+                            
+                                    <div class="education-option">
+                                        <div class="tenth">
+                                            <p>10th</p>
+                                            <div class="search-container">
+                                                <input type="text" id="tenth-input" placeholder="Type a 10th board">
+                                                <div id="tenth-suggestion-box" class="suggestion-box"></div>
+                                                <div id="tenth-selected-skills" class="selected-skills"></div>
+                                            </div>
+                                        </div>
+                                        <div class="twelfth">
+                                            <p>12th</p>
+                                            <div class="search-container">
+                                                <input type="text" id="twelfth-input" placeholder="Type 12th board">
+                                                <div id="twelfth-suggestion-box" class="suggestion-box"></div>
+                                                <div id="twelfth-selected-skills" class="selected-skills"></div>
+                                            </div>
+                                        </div>
+                                        <div class="ug">
+                                            <p>UG</p>
+                                            <div class="search-container">
+                                                <input type="text" id="ug-input" placeholder="Type UG Degree">
+                                                <div id="ud-suggestion-box" class="suggestion-box"></div>
+                                                <div id="ug-selected-skills" class="selected-skills"></div>
+                                            </div>
+                                        </div>
+                                        <div class="pg">
+                                            <p>PG</p>
+                                            <div class="search-container">
+                                                <input type="text" id="pg-input" placeholder="Type PG Degree">
+                                                <div id="pg-suggestion-box" class="suggestion-box"></div>
+                                                <div id="pg-selected-skills" class="selected-skills"></div>
+                                            </div>
+                                        </div>
+                                        <div class="diplomo">
+                                            <p>Diplomo</p>
+                                            <div class="search-container">
+                                                <input type="text" id="diplomo-input" placeholder="Type Diplomo Degree">
+                                                <div id="diplomo-suggestion-box" class="suggestion-box"></div>
+                                                <div id="diplomo-selected-skills" class="selected-skills"></div>
+                                            </div>
+                                        </div>
+                                        <div class="phd">
+                                            <p>PhD</p>
+                                            <div class="search-container">
+                                                <input type="text" id="phd-input" placeholder="Type PhD Degree">
+                                                <div id="phd-suggestion-box" class="suggestion-box"></div>
+                                                <div id="phd-selected-skills" class="selected-skills"></div>
+                                            </div>
+                                        </div>       
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="employement-candidate">
+                                <div class="employement-candidate-div"  id="open-diversity">
+                                    <p>Diversity Details</p>
+                                    <!-- <i class="fa-regular fa-circle-down"></i> -->
+                                    <i class="fa-solid fa-caret-right" ></i>  
+                                    
+                                </div> 
+                                <div class="Employement-body" id="diversity-body">
+                                    <p>Gender</p>
+                                    <div class="gender-select-candidate-div">
+                                        <div class="select-candidate">
+                                            male
+                                        </div>
+                                        <div class="select-candidate">
+                                            female
+                                        </div>
+                                        <div class="select-candidate">
+                                            others
+                                        </div>
+                                    </div>
+
+
+                                    <div class="search-cadidate-mark">
+                                        <input type="checkbox" />
+                                        <p class="search-cadidate-mark-p">Include Physically Changed</p>
+                                    </div>
+
+
+                                    <div class="search-cadidate-exprience">
+                                        <p>Age</p>
+                                        <div class="search-cadidate-exprience-1">
+                                            <div class="search-cadidate-exprience-1-1">
+                                                <select class="select-option">
+                                                    <option>Min. age</option>
+                                                    <option>18</option>
+                                                    <option>19</option>
+                                                    <option>20</option>
+                                                    <option>22</option>
+                                                    <option>23</option>
+                                                    <option>24</option>
+                                                    <option>25</option>
+                                                    <option>26</option>
+                                                    <option>27</option>
+                                                    <option>28</option>
+                                                    <option>29</option>
+                                                    <option>30</option>
+                                                </select>
+                                                <p>to</p>
+                                            </div>
+                                            <div class="search-cadidate-exprience-1-1">
+                                                <select class="select-option">
+                                                <option>Max. age</option>
+                                                <option>18</option>
+                                                <option>19</option>
+                                                <option>20</option>
+                                                <option>22</option>
+                                                <option>23</option>
+                                                <option>24</option>
+                                                <option>25</option>
+                                                <option>26</option>
+                                                <option>27</option>
+                                                <option>28</option>
+                                                <option>29</option>
+                                                <option>30</option>
+                                            </select>
+                                            </div>
+        
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="employement-candidate">
+                                <div class="employement-candidate-div"  id="open-additional">
+                                    <p>Additional Detials</p>
+                                    <!-- <i class="fa-regular fa-circle-down"></i> -->
+                                    <i class="fa-solid fa-caret-right" ></i>  
+                                    
+                                </div>
+                                <div class="Employement-body" id="additional-body">
+
+                                    <p>Verified</p>
+                                    <div class="verification-select-candidate-div">
+                                        <div class="select-candidate">
+                                            E-mail
+                                        </div>
+                                        <div class="select-candidate">
+                                            Phone
+                                        </div>
+                                    </div> 
+                                    
+                                    
+                                    <p>Resume Attached</p>
+                                    <div class="resume-select-candidate-div">
+                                        <div class="select-candidate">
+                                            Must
+                                        </div>
+                                        <div class="select-candidate">
+                                            Not need
+                                        </div>
+                                        
+                                    </div> 
+                                    <div class="search-cadidate-exprience">
+                                        <p>Activity</p>
+                                        <div class="search-cadidate-exprience-1">
+                                            <div class="search-cadidate-exprience-1-1">
+                                                <select class="select-option">
+                                                    <option>Last Active</option>
+                                                    <option>One day ago</option>
+                                                    <option>Three days ago</option>
+                                                    <option>Five days ago</option>
+                                                    <option>One week ago</option>
+                                                    <option>Two weeks ago</option>
+                                                    <option>One month ago</option>
+                                                    <option>Three months ago</option>
+                                                    <option>Five months ago</option>
+                                                    <option>Nine months ago</option>
+                                                    <option>One year ago</option>
+                                                    <option>More then one year ago</option>
+
+                                                </select>
+                                                <!-- <p>to</p> -->
+                                            </div>
+                                            <div class="search-cadidate-exprience-1-1">
+                                                <select class="select-option">
+                                                <option>Last Profile Update</option>
+                                                <option>One day ago</option>
+                                                <option>Three days ago</option>
+                                                <option>Five days ago</option>
+                                                <option>One week ago</option>
+                                                <option>Two weeks ago</option>
+                                                <option>One month ago</option>
+                                                <option>Three months ago</option>
+                                                <option>Five months ago</option>
+                                                <option>Nine months ago</option>
+                                                <option>One year ago</option>
+                                                <option>More then one year ago</option>
+                                            </select>
+                                            </div>
+        
+                                        </div>
+                                        
+                                    </div>
+
+                                </div>
+                            </div> 
+
+
+                            <div class="search-cadidate-btn">
+                                <button type="submit">Search Cadidate</button>
+                                
+                            </div>
+                        </div>
+                    </section>
+                    </form>
+                </main>
+
+
+
+                
+            </div>
+
+
+
+            </div>
+    {% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {% block mobile_view %}
+    <div class="m1-filter-div" id="m1-filter-div">
+        <div class="m-list-left">
+                            
+            <div class="form">
+                <form method="post" action="#">
+                    <div class="filters-div">
+                        <i class="fa-solid fa-arrow-down-wide-short"></i>
+                        <h1>Filters</h1>
+                        <div class="x-mark" id="x-mark" onclick="mobileView(false)">
+                            <p class="X">X</p>
+                        </div>
+                    </div>
+                    
+                    <div class="input-div">
+                       <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
+
+                    </div>
+
+                    <div class="job-status-div">
+                        <div class="job-status-div-text">
+                            <p>Job Status</p>
+                            <i class="fa-solid fa-angle-down"></i>
+
+                        </div>
+                        <div class="checkbox-div">
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Active Jobs</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Expired Jobs</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Closed Jobs</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        
+
+                    </div>
+
+
+
+
+                    <div class="job-status-div-2">
+                        <div class="job-status-div-text">
+                            <p>Job Posted By</p>
+                            <i class="fa-solid fa-angle-down"></i>
+
+                        </div>
+                        <div class="input-div-down">
+                            <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
+                        </div>
+                        <div class="checkbox-div">
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Recruiter name</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Recruiter name</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Recruiter name</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        
+
+                    </div>
+
+
+
+
+                    <div class="job-status-div-3">
+                        <div class="job-status-div-text">
+                            <p>Job Tittle</p>
+                            <i class="fa-solid fa-angle-down"></i>
+
+                        </div>
+                        <div class="input-div-down">
+                            <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
+                        </div>
+                        <div class="checkbox-div">
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>App developer</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            
+                        </div>
+
+
+
+
+
+
+                        
+
+                    </div>
+
+
+
+                    
+
+                </form>
+
+            </div>
+            
+
+
+
+
+
+
+
+        </div>
+
+    </div>
+
+{% comment %} <script src="{% static 'js/jobseeker/profile.js' %}"></script> {% endcomment %}
+{% comment %} 
+<script>
+    // Get elements
+    const searchInput = document.getElementById("searchInput");
+    const recommendationBox = document.getElementById("recommendationBox");
+    const recommendationItems = Array.from(recommendationBox.getElementsByClassName("recommendation-item"));
+
+    // Show recommendations on focus
+    searchInput.addEventListener("focus", () => {
+        if (searchInput.value) {
+            filterRecommendations(searchInput.value);
+        }
+        recommendationBox.style.display = "block";
+    });
+
+    // Hide recommendations when clicking outside the input or box
+    document.addEventListener("click", (event) => {
+        if (!searchInput.contains(event.target) && !recommendationBox.contains(event.target)) {
+            recommendationBox.style.display = "none";
+        }
+    });
+
+    // Filter recommendations based on input
+    searchInput.addEventListener("input", () => {
+        filterRecommendations(searchInput.value);
+    });
+
+    function filterRecommendations(query) {
+        const lowerCaseQuery = query.toLowerCase();
+        let hasVisibleItems = false;
+
+        recommendationItems.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(lowerCaseQuery)) {
+                item.style.display = "flex"; // Show matching items
+                hasVisibleItems = true;
+            } else {
+                item.style.display = "none"; // Hide non-matching items
+            }
+        });
+
+        // Show or hide the recommendation box based on whether there are visible items
+        recommendationBox.style.display = hasVisibleItems ? "block" : "none";
+    }
+    
+    recommendationItems.forEach(item => {
+        item.addEventListener("click", () => {
+            searchInput.value = item.textContent.trim(); // Set input value to clicked item
+            recommendationBox.style.display = "none"; // Hide recommendation box
+        });
+    });
+</script> {% endcomment %}
+
+
+{% endblock mobile_view %}

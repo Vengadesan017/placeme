@@ -17,9 +17,9 @@ body{
 
 .company-in-job {
   background-color: white;
-  margin: 20px 100px;
-  min-width: 700px;
-  width: 80%;
+  margin: 20px auto;
+  min-width: unset;
+  width: 90%;
   padding: 35px;
   border-radius: 8px;
   overflow-x: auto;
@@ -69,25 +69,7 @@ h5 {
 }
 
 
-@media screen and (max-width: 768px) {
-  .apply-button {
-    position: relative;
-    display: block;
-    margin-top: 20px;
-    width: 100%;
-    padding: 12px 0;
-    text-align: center;
-    margin-bottom: 10px;
-  }
 
-  .company-details {
-    text-align: center;
-  }
-
-  h5 {
-    margin-bottom: 10px;
-  }
-}
 
 
 .info {
@@ -166,46 +148,7 @@ h5 {
   text-align: center;
 }
 
-/* RESPONSIVE DESIGN - For smaller screens (mobile view) */
-@media screen and (max-width: 768px) {
-  .role-details {
-    flex-direction: column;
-    /* Stack items vertically on mobile */
-    align-items: flex-start;
-    text-align: left;
-  }
 
-  .icon-item,
-  .data {
-    width: 100%;
-    /* Take full width on mobile */
-    margin-bottom: 15px;
-  }
-
-  .icon-item li,
-  .data li {
-    text-align: left;
-  }
-}
-
-/* ADDITIONAL STYLING FOR VERY SMALL SCREENS */
-@media screen and (max-width: 480px) {
-  .Role {
-    padding: 15px;
-    margin: 10px;
-  }
-
-  .icon-item li,
-  .data li {
-    font-size: 12px;
-    /* Slightly smaller font on very small screens */
-  }
-
-  .icon-item,
-  .data {
-    margin-bottom: 10px;
-  }
-}
 
 h2,
 h3 {
@@ -281,4 +224,76 @@ h3 {
   padding: 12px;
   background-color: #141b5f;
   color: #fff;
+}
+
+@media screen and (max-width: 768px) {
+
+  .apply-button {
+    position: relative;
+    display: block;
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px 0;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .company-info {
+    text-align: center;
+  }
+
+  h5 {
+    margin-bottom: 10px;
+  }
+}
+
+/* RESPONSIVE DESIGN - For smaller screens (mobile view) */
+@media screen and (max-width: 768px) {
+
+  .role-details {
+    flex-direction: column;
+    /* Stack items vertically on mobile */
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .icon-item,
+  .data {
+    width: 100%;
+    /* Take full width on mobile */
+    margin-bottom: 15px;
+  }
+
+  .icon-item li,
+  .data li {
+    text-align: left;
+  }
+}
+
+/* ADDITIONAL STYLING FOR VERY SMALL SCREENS */
+@media screen and (max-width: 480px) {
+  .company-in-job{
+
+    margin: 0px auto;
+    min-width: unset;
+    width: 90%;
+    padding: 20px 10px;
+    border-radius: 8px;
+    overflow-x: auto;
+  }  
+  .Role {
+    padding: 15px;
+    margin: 10px;
+  }
+
+  .icon-item li,
+  .data li {
+    font-size: 12px;
+    /* Slightly smaller font on very small screens */
+  }
+
+  .icon-item,
+  .data {
+    margin-bottom: 10px;
+  }
 }

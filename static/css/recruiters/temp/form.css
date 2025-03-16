@@ -1,0 +1,40 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    
+}
+body {
+      font-family: sans-serif;
+      
+}
+.r-right-down-main{
+    /* position: absolute;
+    top: 50px; */
+    margin-top: 50px;
+    min-height: 800px;
+    height: auto;
+    width: 100%;
+    left: 1px;
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+    /* background-color: aqua; */
+}
+.r-down-main{
+    
+    
+    right: 50px;
+    
+    height: auto;
+    width: 96%;
+    /* background-color: bisque; */
+    /* background-color: #c64b4b; */
+    border-radius: 10px;
+    padding-top: 20px;
+    /* padding-right: 30px; */
+    
+    /* padding-left: 20px; */
+    
+}

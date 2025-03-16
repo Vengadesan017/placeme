@@ -98,9 +98,9 @@ nav ul li a:before {
   display: none;
 }
 
-.item.active {
+/* .item.active {
   display: block;
-}
+} */
 
 /* Navbar Toggle */
 .toggle {
@@ -342,4 +342,17 @@ nav {
   justify-content: center;
   align-items: center;
   margin-left: 12px;
+}
+
+.item.open {
+  display: block;
+}
+
+.button a {
+  padding: 9px 18px;
+  background: #141b5f;
+  /* border: 1px #141b5f solid; */
+  color: #fff;
+  border-radius: 50em;
+  transition: all .5s;
 }

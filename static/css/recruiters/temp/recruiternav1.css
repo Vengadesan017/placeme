@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  
+}
+body {
+    font-family: sans-serif;
+    
+}
+
+.navbar{
+    position: fixed;
+    top: 0;
+    /* max-width: 1280px; */
+    width: 100%;
+    z-index: 3;
+     
+}
+nav {
+    background: #fff;
+/*    padding: 5px 20px;*/
+}
+ul {
+    list-style-type: none;
+}
+a{
+    color: #000000;
+    text-decoration: none;
+}
+nav ul li a,
+nav ul li a:after,
+nav ul li a:before {
+  transition: all .5s;
+}
+.logo a:hover {
+    text-decoration-color: #FFBD03;
+    width: 100%;
+}
+.logo a:hover {
+    text-decoration: none;
+}
+.item.active a {
+    font-weight: bold;
+    color: #FFBD03; 
+    /* text-shadow: 1px 1px 1px #FFBD03; 141b5f*/
+}
+.menu li {
+    
+    /* padding: 6px 6px; */
+    white-space: wrap;
+}
+.logo a,
+.toggle a {
+  font-size: 16px;
+}
+
+
+.menu{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 1180px;
+    /* changes------------------ */
+    /* min-width: 1280px;  */
+    /* width: 100%; */
+    padding-right: 10px;
+    height: auto;
+    
+}
+.logo-div{
+    /* background-color: #FFBD03; */
+    min-height: 50px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 10px; 
+}
+.last-div{
+    /* background-color: #444; */
+    min-height: 50px;
+    height: auto;
+    display: flex;
+     
+}
+.fa-bell{
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+    padding-right: 2px;
+    
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+}
+.item-div{
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: #FFBD03; */
+    border-left: 2px solid #999999;
+    padding-left: 25px;
+    padding-right: 25px;
+    
+}
+.item-div-1{
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: #FFBD03; */
+    
+    padding-left: 25px;
+    padding-right: 25px;
+    
+}
+.item a{
+    font-size: 15px;
+}
+.logo a{
+    font-size: 18px;
+}
+
+  

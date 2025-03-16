@@ -1,0 +1,561 @@
+.diversity-main{
+    width: 100%;
+    /* background-color: blueviolet; */
+    display: flex;
+    flex-direction: column;
+    min-height: 100px;
+    height: auto;
+    align-items: center;
+}
+.navigation-header{
+    width: 100%;
+    min-height: 60px;
+    height: auto;
+    /* background-color: burlywood; */
+    background-color: #fff;
+    display: flex;
+    border-radius: 7px;
+    border: 1.5px solid black;
+
+}
+.navigation-header-1{
+    width: 50%;
+    height: auto;
+    display: flex;
+    /* background-color: cornflowerblue; */
+    align-items: center;
+    gap: 10px;
+    padding-left: 10px;
+}
+.navigation-header-1-1{
+    height: 40px;
+    width: 40%;
+    /* background-color: bisque; */
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    border-radius: 8px;
+    border: 0.5px solid black;
+}
+
+.navigation-header-1-2{
+    height: 40px;
+    width: 40%;
+    /* background-color: bisque; */
+    background-color:  #141B5F;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    border-radius: 8px;
+    border: 0.5px solid black; 
+}
+
+.navigation-header-2{
+    width: 50%;
+    height: auto;
+    display: flex;
+    /* background-color: rgb(243, 75, 133); */
+    justify-content: end;
+    align-items: center;
+    gap: 10px;
+    padding-right: 10px;
+}
+
+.navigation-header-2 .navigation-header-input-div{
+    height: 40px;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    /* background-color: #fff; */
+    background-color: #141B5F;
+    border-radius: 8px;
+    border: 1px solid black;
+}
+.navigation-header-input-div input{
+    height: 38px;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    border-radius: 10px;
+    
+    border: none;
+    padding-top: 2px;
+}
+.navigation-header-input-div input::placeholder{
+    font-size: 17px;
+}
+
+
+.navigation-header-input-div input:focus {
+    border: none; /* Removes border */
+    outline: none; /* Removes outline */
+    background-color: white; /* Keeps background */
+}
+
+.navigation-header-input-div i{
+    font-size: 17px;
+}
+
+.diversity-body{
+    margin-top: 20px;
+    width: 100%;
+    min-height: 60px;
+    height: auto;
+    /* background-color: burlywood; */
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    border-radius: 7px;
+    border: 1.5px solid black;
+    padding-left: 15px;
+}
+.search-cadidate{
+    width: 100%;
+    min-height: 60px;
+    height: auto;
+    /* background-color: burlywood; */
+    /* background-color: #811c1c; */
+    display: flex;
+    flex-direction: column; 
+}
+.search-cadidate-div{
+    width: 100%;
+    min-height: 40px;
+    height: auto;
+    /* background-color: burlywood; */
+    /* background-color: #811c1c; */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 20px; 
+}
+.search-cadidate-div p{
+    font-size: 18px;
+}
+.search-cadidate-div i{
+    font-size: 20px;
+    color: black;
+}
+.search-cadidate-body{
+    width: 100%;
+    min-height: 60px;
+    height: auto;
+    /* background-color: burlywood; */
+    /* background-color: #c8c652; */
+    display: flex;
+    flex-direction: column;
+    padding-right: 20px; 
+}
+.search-cadidate-keyboard{
+    width: 100%;
+
+    height: auto;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #999999;
+}
+.search-cadidate-keyboard p{
+    font-size: 16px;
+    color: #141B5F;
+    margin-bottom: 10px;
+}
+.search-cadidate-keyboard input{
+    height: 40px;
+    border-radius: 10px;
+    border: 0.5px solid #999999;
+    transition: all 0.3s ease;   /* Smooth transition for effects */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    
+}
+.search-cadidate-mark{
+    display: flex;
+    margin-top: 10px;
+    /* background-color: bisque; */
+    align-items: center;
+    
+    gap: 10px;
+}
+.search-cadidate-mark p{
+    margin-top: 10px;
+}
+.search-cadidate-skill{
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    /* background-color: rgb(167, 163, 157); */
+
+}
+.add-keywords{
+    
+    height: 30px;
+    display: flex;
+    align-items: center;
+    /* background-color: #971d1d; */
+    gap: 10px;
+}
+.add-keywords label{
+    font-size: 14px;
+}
+.add-keywords p{
+    font-size: 22px;
+    margin-top: 10px;
+}
+.add-skill{
+    height: 30px;
+    display: flex;
+    align-items: center;
+    /* background-color: #967979; */
+    gap: 10px;  
+}
+.add-skill p{
+    font-size: 20px;
+    margin-top: 10px;
+}
+.add-skill label{
+    font-size: 14px
+}
+.search-cadidate-exprience{
+    width: 100%;
+    min-height: 60px;
+    height: auto;
+    /* background-color: #bb9ddb; */
+    display: flex;
+    flex-direction: column;
+}
+.search-cadidate-exprience p{
+    font-size: 16px;
+    color: #141B5F;
+    margin-bottom: 5px;
+}
+.search-cadidate-exprience-1{
+    width: 100%;
+    
+    /* background-color: bisque; */
+    
+    min-height: 40px;
+    height: auto;
+    display: flex;
+    margin-bottom: 5px;
+}
+.search-cadidate-exprience-1-1{
+    width: 30%;
+    
+    /* background-color: bisque; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 40px;
+    height: auto;
+    margin-right: 20px;
+    gap: 10px;
+}
+.search-cadidate-exprience-1-1 input{
+    height: 40px;
+    width: 80%;
+    border-radius: 10px;
+    border: 0.5px solid  #999999;
+}
+
+
+.employement-candidate{
+    width: 100%;
+    min-height: 60px;
+    height: auto;
+    /* background-color: #555555; */
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    border-bottom: 1px solid #999999;
+
+}
+.employement-candidate-div{
+    width: 100%;
+    min-height: 40px;
+    height: auto;
+    /* background-color: burlywood; */
+    /* background-color: #811c1c; */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 20px;
+}
+.employement-candidate-div p{
+    font-size: 18px;
+    padding: 20px;
+    color: #555555;
+}
+.employement-candidate-div i{
+    font-size: 20px;
+    color: #555555;
+}
+.Employement-body{
+    width: 100%;
+    height: 200px;
+    background-color: aqua;
+    display: none;
+    flex-direction: column;
+}
+
+.select{
+    border: none;
+    font-size: 16px;
+    color: #555555;
+    
+}
+
+.search-cadidate-exprience-1-1-input{
+    height: 40px;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 8px;
+    border: 1px solid black;
+}
+.search-cadidate-exprience-1-1-input p{
+    width: 20%;
+    font-size: 17px;
+    margin-left: 14px;
+    margin-top: 5px;
+    border-right: 0.5px solid black;
+}
+.search-cadidate-exprience-1-1-input input{
+    height: 38px;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    border-radius: 10px;
+    padding-left: 5px;
+    border: none;
+    padding-top: 2px;
+}
+.search-cadidate-exprience-1-1-input input:focus{
+    border: none; /* Removes border */
+    outline: none; /* Removes outline */
+    background-color: white; /* Keeps background */
+}
+.admin-input{
+    width: 90%;
+    height: 40px;
+    border-radius: 10px;
+    border: 0.5px solid #999999;
+    padding-left: 10px;
+    /*background-color: #f0f4f8;  */
+    /* Light background color */
+    transition: all 0.3s ease;   /* Smooth transition for effects */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for elevation */
+}
+
+.select-candidate-div{
+    min-height: 40px;
+    height: auto;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    /* background-color: #FFBD03; */
+    justify-content: space-evenly;
+}
+.Employement-body p{
+    font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+.select-candidate{
+    height: 40px;
+    padding-left: 8px;
+    padding-right: 8px;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.select-candidate.active {
+    background-color: #ff7f00; /* Highlight color */
+    color: white;
+    border-color: #ff7f00;
+}
+
+.search-cadidate-btn{
+    height: 100px;
+    /* background-color: #c8c652; */
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+.search-cadidate-btn button{
+    padding: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 8px;
+    background-color: #FFBD03;
+    border: 0.5px solid black;
+}
+
+
+
+@media (min-width : 850px) and (max-width : 1200px) {
+    .navigation-header-1-1{
+        width: 50%;
+        
+    }
+    .navigation-header-1-2{
+        width: 50%;
+        
+    }
+
+    .navigation-header-2 .navigation-header-input-div{
+
+        width: 70%;
+        
+    }
+    .navigation-header-input-div input{
+        
+        width: 83%;
+        
+    }
+    .search-cadidate-exprience-1-1-input p{
+        width: 30%;
+        font-size: 14px;
+        margin-left: 5px;
+        margin-right: 15px;
+    
+    }
+
+}
+
+@media (min-width : 550px) and (max-width : 849px) {
+    .navigation-header-1-1{
+        width: 50%;
+        padding-left: 5px;
+    }
+    .navigation-header-1-1 p{
+        font-size: 13px;
+        
+    }
+    .navigation-header-1-2{
+        width: 50%;
+        padding-left: 5px;
+    }
+    .navigation-header-1-2 p{
+        font-size: 13px;
+        
+    }
+
+    .navigation-header-2 .navigation-header-input-div{
+
+        width: 70%;
+        
+    }
+    .navigation-header-input-div input{
+        
+        width: 83%;
+        
+    }
+
+    .search-cadidate-exprience-1-1{
+        width: 40%;
+        
+        /* background-color: bisque; */
+    }
+    .search-cadidate-exprience-1-1-input p{
+        width: 30%;
+        font-size: 14px;
+        margin-left: 5px;
+        margin-right: 15px;
+    
+    }
+
+}
+
+@media (min-width : 550px) and (max-width : 650px){
+    .select-candidate{
+        font-size: 13px;
+    }
+} 
+
+
+
+@media (min-width : 400px) and (max-width : 550px){
+    .navigation-header-1{
+        width: 50%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        background-color: #141B5F;
+        padding-left: 5px;
+        padding-top: 4px;
+        padding-bottom: 4px;
+    }
+    .navigation-header-2{
+        width: 50%;
+        height: auto;
+        display: flex;
+        /* background-color: rgb(243, 75, 133); */
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        padding-right: 5px;
+    }
+    .navigation-header-2 .navigation-header-input-div{
+        
+        width: 100%;
+        background-color: #555555;
+       
+    }
+    .navigation-header-input-div input{
+        
+        width: 100%;
+        
+        
+    }
+    .navigation-header-1-1{
+        width: 100%;
+        padding-left: 5px;
+    }
+    .navigation-header-1-1 p{
+        font-size: 13px;
+        
+    }
+    .navigation-header-1-2{
+        width: 100%;
+        padding-left: 5px;
+    }
+    .navigation-header-1-2 p{
+        font-size: 13px;
+        
+    }
+
+    .navigation-header-2 .navigation-header-input-div{
+
+        width: 70%;
+        
+    }
+    .navigation-header-input-div input{
+        
+        width: 83%;
+        
+    }
+
+    .search-cadidate-exprience-1-1{
+        width: 40%;
+        
+        /* background-color: bisque; */
+    }
+    .search-cadidate-exprience-1-1-input p{
+        width: 30%;
+        font-size: 14px;
+        margin-left: 5px;
+        margin-right: 15px;
+    
+    }
+}

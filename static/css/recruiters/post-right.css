@@ -96,10 +96,17 @@
     /* background-color: rgb(148, 148, 226); */
     color: white;
     width: 50%;
-    
+    cursor: active;
     justify-content: center;
     align-items: center;
-    border-left: 1px solid black; 
+}
+    
+
+.divider-top-bar{
+    width: 1px;
+    height: 70%;
+    background: #555;
+
 }
 .draft .buttons{
     font-size: 16px;
@@ -111,7 +118,12 @@
     border: #141B5F 1px solid;
     cursor: pointer;
 }
+a.buttons.active{
 
+    background-color: #141B5F;
+    color: #fff;
+
+}
 .role-post-div{
     display: flex;
     margin-right: 20px;

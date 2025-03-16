@@ -5,10 +5,10 @@ document.addEventListener("DOMContentLoaded", function () {
         // Toggle the active class on the menu items
         var items = document.querySelectorAll(".item");
         items.forEach(function (item) {
-            item.classList.toggle("active");
+            item.classList.toggle("open");
         });
 
         // Toggle the active class on the menu icon
-        this.classList.toggle("active");
+        this.classList.toggle("open");
     });
 });

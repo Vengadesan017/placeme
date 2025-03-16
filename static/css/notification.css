@@ -1,0 +1,111 @@
+
+.scroll-bg{
+   position: fixed;
+   top: 60px;
+   right: 2%;
+   /*background-color: blue;*/
+   background-color: rgb(255, 255, 255);
+   width: 400px;
+   display: none;
+   flex-direction: row;
+   border-radius: 15px;
+   
+   padding-bottom: 10px;
+   
+   z-index: 10;
+   transition: all .5s;
+   box-shadow: 0px 0px 10px 0px #555;
+}
+.scroll-div{
+    width: 400px;
+    /*background-color: rgb(57, 182, 53);*/
+    height: 400px;
+    overflow: auto;
+   
+   
+
+}
+.scroll-div:hover{
+    overflow-y: auto;
+}
+.scroll-object{
+    
+    font-size: 14px;
+    height: auto;
+    /*background-color: burlywood;*/
+    padding-bottom: 10px;
+    border-bottom: 2px solid gray;
+    display: flex;
+    flex-direction: row;
+    padding-left: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    
+}
+
+.name{
+    width: 100%;
+}
+.name h2{
+    font-size: 16px;
+    font-weight: 500;
+}
+.new{
+    width: 30%;
+    align-items: center;
+    /*background-color: brown;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.new p{
+    padding: 1px 13px;
+    border: 2px solid #141b5f;
+    border-radius: 25px;
+    color: #141b5f;
+    font-size: 14px;
+    cursor: pointer ;
+    transition:     all .5s;
+}
+
+.new p:hover{
+    background-color:   #141b5f;
+    color:  #FFF;
+}
+#item:hover .scroll-bg{
+    display: flex;
+}
+
+
+/* style for scroll bar*/
+::-webkit-scrollbar{
+    width: 10px;
+}
+
+::-webkit-scrollbar-track{
+    background-color: #d1e5ff;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb{
+   background: linear-gradient(to right, #9DAAF2, #141b5f, #141b5f, #141b5f, #141b5f, #141b5f, #9DAAF2);
+   border-radius: 4px;
+   
+}
+
+.scroll-object:hover{
+    background-color: #E1E4FF;
+    z-index: 1;
+}
+
+span.badge {
+    position: relative;
+    top: -8px;
+    right: 5px;
+    padding: 3px 6px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: sans-serif;
+}
