@@ -31,7 +31,7 @@ def path_by_user_id(user_id: int):
 #     file.seek(0)
 
 def validate_file_size(file):
-    max_size = 200 * 1024  # 200KB limit
+    max_size = 1024 * 1024  # 1MB limit
     if file.size > max_size:
         raise ValidationError("File size must be under 200KB.")
 
@@ -250,6 +250,13 @@ class JobApplications(models.Model):
     onboarding_at = models.DateTimeField(blank=True, null=True)    
     rejected_at = models.DateTimeField(blank=True, null=True)    
     hired_at = models.DateTimeField(blank=True, null=True)    
+    viewed_by = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='viewed_by', null=True, blank=True)
+    shortlisted_by = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='shortlisted_by', null=True, blank=True)
+    interview_by = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='interview_by', null=True, blank=True)
+    selected_by = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='viewselected_byed_by', null=True, blank=True)
+    offered_by = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='offered_by', null=True, blank=True)
+    onboarded_by = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='onboarded_by', null=True, blank=True)
+    hired_by = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='hired_by', null=True, blank=True)
     
     def __str__(self):
         return f'{self.candidate.user.email} - {self.status}'

@@ -23,11 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-t8ovx6ha2tj2hhamki83z2^z2_7!#x24=hr-a19xv0_ztdrkcz'
 
-# SECURITY WARNING: don't run with debug turned on in production! https://4156-103-163-248-75.ngrok-free.app/
+# SECURITY WARNING: don't run with debug turned on in production! https://f6f4-103-88-77-143.ngrok-free.app/
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost','4156-103-163-248-75.ngrok-free.app']
-CSRF_TRUSTED_ORIGINS = ['https://4156-103-163-248-75.ngrok-free.app']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost','f6f4-103-88-77-143.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://f6f4-103-88-77-143.ngrok-free.app']
 
 # ALLOWED_HOSTS = []
 

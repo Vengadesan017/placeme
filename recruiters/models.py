@@ -1,14 +1,17 @@
 from django.db import models
 from django.utils import timezone
 from django.core.validators import EmailValidator
-from django.contrib.auth import get_user_model
+# from django.contrib.auth import get_user_model
 import hashlib
 import datetime
 from django.utils.text import slugify
 from credentials.models import Users
 from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
-# from job_seekers.model import Candidates
+# from job_seekers.models import Candidates
+
+from django.db import transaction
+from django.db.models import Max
 
 def path_by_user_id(user_id: int):
     user_id_int = user_id + 100000000
@@ -26,7 +29,7 @@ def path_by_user_id(user_id: int):
 
 
 def validate_file_size(file):
-    max_size = 200 * 1024  # 200KB limit
+    max_size = 1024 * 1024  # 1 MB limit
     if file.size > max_size:
         raise ValidationError("File size must be under 200KB.")
 
@@ -36,6 +39,13 @@ def upload_company_kyc_doc(instance, filename):
     # Generate path based on email and timestamp
     # return 'UsersDF/{0}/personal/Profile_Pic_{1}_{2}'.format(user_path(),timestamp,filename)
     return 'CompaniesDF/{0}/kyc/{1}'.format(Company_path,filename)
+
+def upload_offerleters(instance, filename):
+    Company_path = path_by_user_id(instance.company_id)    
+    # timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
+    # Generate path based on email and timestamp
+    # return 'UsersDF/{0}/personal/Profile_Pic_{1}_{2}'.format(user_path(),timestamp,filename)
+    return 'CompaniesDF/{0}/offer_letters/{1}'.format(Company_path,filename)
 
 
 class Companies(models.Model):
@@ -189,17 +199,38 @@ class Jobs(models.Model):
         return self.title
 
 
-class SubUserAccess(models.Model):
-    subuser_access_id = models.AutoField(primary_key=True)
-    company = models.ForeignKey('recruiters.Companies', on_delete=models.CASCADE, related_name='subusers_company', null=True, blank=True)
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='subuser_access', null=True, blank=True)
-    can_post_jobs = models.BooleanField(default=False)
-    can_edit_jobs = models.BooleanField(default=False)
-    can_view_applicants = models.BooleanField(default=False)
-
+class OfferLetters(models.Model):
+    offers_id = models.AutoField(primary_key=True)
+    company = models.ForeignKey('recruiters.Companies', on_delete=models.CASCADE, related_name='company_offer', null=True, blank=True)
+    application = models.ForeignKey('job_seekers.JobApplications', on_delete=models.CASCADE, related_name='application_offer', null=True, blank=True)
+    offer_letter = models.FileField(upload_to=upload_offerleters, null=True, blank=True, validators=[
+            FileExtensionValidator(allowed_extensions=['pdf']),
+            validate_file_size
+        ]
+    )
+    is_view = models.BooleanField(default=False)
+    is_accepted = models.BooleanField(default=False)
+    accepted_at = models.DateTimeField(blank=True,null=True)
+    generated_at = models.DateTimeField(auto_now_add=True)
+    generated_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='generate_offer', null=True, blank=True)
+    approve_at = models.DateTimeField(blank=True,null=True)
+    approve_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='approve_offer', null=True, blank=True)    
 
     def __str__(self):
-        return f"{self.user.email} - {self.company.company_name} Access"
+        return f"{self.company} - {self.offer_letter}"
+
+
+# class SubUserAccess(models.Model):
+#     subuser_access_id = models.AutoField(primary_key=True)
+#     company = models.ForeignKey('recruiters.Companies', on_delete=models.CASCADE, related_name='subusers_company', null=True, blank=True)
+#     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='subuser_access', null=True, blank=True)
+#     can_post_jobs = models.BooleanField(default=False)
+#     can_edit_jobs = models.BooleanField(default=False)
+#     can_view_applicants = models.BooleanField(default=False)
+
+
+#     def __str__(self):
+#         return f"{self.user.email} - {self.company.company_name} Access"
 
 
 class BookmarkCandidates(models.Model): # change all the column
@@ -228,7 +259,7 @@ class Commands(models.Model):
 
 class UserLog(models.Model):
     log_id = models.AutoField(primary_key=True)
-    sub_user = models.ForeignKey(Users, on_delete=models.CASCADE,related_name='subusers_logs',blank=True, null=True)
+    sub_user = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE,related_name='subusers_logs',blank=True, null=True)
     company = models.ForeignKey('recruiters.Companies', on_delete=models.CASCADE, null=True, blank=True)
     action = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
@@ -267,7 +298,7 @@ class Locations(models.Model):
     location = models.CharField(max_length=255)
     pincode = models.IntegerField(null=True, blank=True)
     district = models.ForeignKey(DistrictForLoc, related_name="locations", on_delete=models.CASCADE, null=True, blank=True)
-    created_by = models.ForeignKey(Users, related_name='location_by', on_delete=models.CASCADE, null=True, blank=True)
+    created_by = models.ForeignKey('job_seekers.Candidates', related_name='location_by', on_delete=models.CASCADE, null=True, blank=True)
     is_verified = models.BooleanField(default=False)
 
     def __str__(self):
@@ -282,7 +313,7 @@ class Benefits(models.Model):
     benefits_id = models.AutoField(primary_key=True)
     benefit = models.CharField(max_length=255)
     # description = models.TextField(blank=True, null=True)
-    Created_by = models.ForeignKey(Users,on_delete=models.CASCADE, related_name='benefit_by',null=True,blank=True)
+    Created_by = models.ForeignKey('job_seekers.Candidates',on_delete=models.CASCADE, related_name='benefit_by',null=True,blank=True)
     is_verified = models.BooleanField(default=False)
     def __str__(self):
         return self.benefit
@@ -296,13 +327,13 @@ class Benefits(models.Model):
 #         jobs = ', '.join([job_id.slug for job_id in self.job_id.all()])
 #         return f'Jobs: {jobs}'
 # =====================================Benefits End========================================================
-# =====================================Job Role title End========================================================
+# =====================================Job Role title Begin========================================================
 
 
 class JobTitle(models.Model):
     job_title_id = models.AutoField(primary_key=True)
     job_title = models.CharField(max_length=200)
-    created_by = models.ForeignKey(Users, related_name='job_title_by', on_delete=models.CASCADE, null=True, blank=True)
+    created_by = models.ForeignKey('job_seekers.Candidates', related_name='job_title_by', on_delete=models.CASCADE, null=True, blank=True)
     is_verified = models.BooleanField(default=False)   
 
     def __str__(self):
@@ -318,16 +349,166 @@ class JobTitle(models.Model):
 #         return self.title
 
 # =====================================Job Role title End========================================================
-# =====================================Job Qualifications End========================================================
+# =====================================Job Qualifications Begin========================================================
 
 
 class Qualifications(models.Model):
     qualification_id = models.AutoField(primary_key=True)
     qualification = models.CharField(max_length=200)
-    created_by = models.ForeignKey(Users, related_name='job_qualification_by', on_delete=models.CASCADE, null=True, blank=True)
+    created_by = models.ForeignKey('job_seekers.Candidates', related_name='job_qualification_by', on_delete=models.CASCADE, null=True, blank=True)
     is_verified = models.BooleanField(default=False)   
 
     def __str__(self):
         return f"{self.qualification}"
     
 # =====================================Job Qualifications End========================================================
+# =====================================Position Manager Begin========================================================
+
+
+class Positions(models.Model):
+    position_id = models.AutoField(primary_key=True)
+    company = models.ForeignKey(Companies, on_delete=models.CASCADE)
+    position_title = models.CharField(max_length=255)
+    position_code = models.PositiveIntegerField(blank=True,null=True) 
+    # status  = models.CharField(max_length=100, choices=[  # need to change
+    #     ('Full-time', 'Hiring-Needed'),
+    #     ('Open', 'Open'),
+    #     ('Close', 'Close')
+
+    # ], blank=True, null=True)
+    description = models.TextField(null=True, blank=True)
+    remarks = models.CharField(max_length=255,blank=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='create_position', null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
+    upadted_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_position', null=True, blank=True)    
+    deadline = models.DateTimeField(blank=True,null=True)
+    is_open = models.BooleanField(default=True)
+
+    class Meta:
+        unique_together = ('company', 'position_code')  # Ensures no duplicate serial numbers for each company
+
+    def __str__(self):
+        return f"{self.position_title} - {self.position_code} ({self.company.company_name})"
+
+    def save(self, *args, **kwargs):
+        if not self.position_code:
+            # Use a transaction to ensure atomic operation and prevent race conditions
+            with transaction.atomic():
+                # # Find the maximum serial_number for the company and increment by 1
+                # last_position = PositionManager.objects.filter(company=self.company).aggregate(Max('position_code'))
+                # max_serial_number = last_position['position_code__max']
+                last_position = Positions.objects.filter(company=self.company).order_by('-position_code').values_list('position_code', flat=True).first()
+                self.position_code = last_position + 1 if last_position else 101
+                
+                # Save the new PositionManager instance
+                super(Positions, self).save(*args, **kwargs)
+
+        else:
+            super(Positions, self).save(*args, **kwargs)
+
+class HireRequests(models.Model):
+    hire_request_id = models.AutoField(primary_key=True)
+    company = models.ForeignKey(Companies, on_delete=models.CASCADE)
+    position = models.ForeignKey(Positions, on_delete=models.CASCADE)
+    hire_request_code = models.PositiveIntegerField(blank=True,null=True)  # generate and validate
+    # status  = models.CharField(max_length=100, choices=[  # need to change
+    #     ('Open', 'Open'),
+    #     ('Close', 'Close')
+
+    # ], blank=True, null=True)
+    employee_id = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='employee_in_hirerequest', null=True, blank=True)
+    hire_date = models.DateTimeField(null=True, blank=True)
+    leave_date = models.DateTimeField(null=True, blank=True)
+    remarks = models.CharField(max_length=255,blank=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='create_hire_request', null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True,blank=True,null=True)
+    upadted_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_hire_request', null=True, blank=True)    
+    deadline = models.DateTimeField(blank=True,null=True)
+    is_open = models.BooleanField(default=True)
+
+    class Meta:
+        unique_together = ('company', 'hire_request_code')
+
+    def __str__(self):
+        return f"{self.hire_request_code} - {self.position.position_title} ({self.company.company_name})"
+
+    def save(self, *args, **kwargs):
+        if not self.hire_request_code:
+            # Use a transaction to ensure atomic operation and prevent race conditions
+            with transaction.atomic():
+                # # Find the maximum serial_number for the company and increment by 1
+                # last_position = PositionManager.objects.filter(company=self.company).aggregate(Max('hire_request_code'))
+                # max_serial_number = last_position['hire_request_code__max']
+                # last_position = PositionManager.objects.filter(company=self.company).order_by('-serial_number').values_list('').first()
+                # self.hire_request_code = max_serial_number + 1 if max_serial_number else 1
+                last_position = HireRequests.objects.filter(company=self.company).order_by('-hire_request_code').values_list('hire_request_code', flat=True).first()
+                self.hire_request_code = last_position + 1 if last_position else 3001
+                
+                # Save the new PositionManager instance
+                super(HireRequests, self).save(*args, **kwargs)
+
+        else:
+            super(HireRequests, self).save(*args, **kwargs)
+
+
+
+class EmployeePositionManager(models.Model):
+    employee_position_id = models.AutoField(primary_key=True)
+    position = models.ForeignKey(Positions, on_delete=models.CASCADE)
+    employee_id = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='employee_in_position_manager', null=True, blank=True)
+    hire_date = models.DateTimeField(null=True, blank=True)
+    leave_date = models.DateTimeField(null=True, blank=True)
+    remarks = models.CharField(max_length=255,blank=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='map_position', null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    upadted_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_map_position', null=True, blank=True)    
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        unique_together = ('position', 'employee_id')
+
+    def __str__(self):
+        return f"{self.position} ({self.employee_id})"
+
+
+# =====================================Position Manager End========================================================
+# =====================================Admin Control Begin========================================================
+class SubUsers(models.Model):
+    subuser_id = models.AutoField(primary_key=True)
+    company = models.ForeignKey(Companies, on_delete=models.PROTECT, related_name='recruiters_company', null=True, blank=True) 
+    user = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='recruiters_subuser', null=True, blank=True) 
+    is_recruiter = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
+    is_payroll_maker = models.BooleanField(default=False)
+    is_payroll_checker = models.BooleanField(default=False)
+    remarks = models.CharField(max_length=255,blank=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='create_subusers', null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    upadted_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_subuser', null=True, blank=True)    
+    is_active = models.BooleanField(default=True)
+
+
+    def __str__(self):
+        return f"{self.company} ({self.user.user.email})"
+
+    def save(self, *args, **kwargs):
+        is_new = self._state.adding  
+        super().save(*args, **kwargs)  # First, save the SubUser
+        if is_new and self.user:
+            try:
+
+                credentials_user = self.user.user
+                credentials_user.is_recruiter = True
+                credentials_user.save()
+            except AttributeError:
+                pass  # Or log an error if relation doesn't exist
+                print(f"Error at give recuiter access to {self.user.user.email}")
+
+
+# =====================================Admin Control End========================================================
+
+

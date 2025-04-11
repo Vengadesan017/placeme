@@ -162,7 +162,7 @@ def SignupPage(request):
                                         if user.is_recruiter:
                                             return redirect("recruiters:home")
                                         else:
-                                            return redirect("jobseeks:home")
+                                            return redirect("job_seeker:home")
                                         return redirect('job_seeker:profile')
                                     
    
