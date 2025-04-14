@@ -2,8 +2,12 @@ from functools import wraps
 from django.shortcuts import redirect,render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import user_passes_test,login_required
-from .forms import CreateCompanyForm, CreateCompanyKYCForm
-from .models import Companies
+from django.db.models import Prefetch
+from django.db.models import Subquery,OuterRef
+from django.db.models import Case, When, Value, F
+from django.db.models import IntegerField
+from .forms import CreateCompanyForm, CreateCompanyKYCForm, CreatePosition, CreateHireRequest
+from .models import Companies,Positions,HireRequests
 from job_seekers.models import Candidates
 from django.contrib import messages
 
@@ -142,13 +146,96 @@ def OfferingOnboaring(request):
 
 @is_recruiter
 @is_kyc
-def Vacancy(request):
-    candidate = Candidates.objects.get(user=request.user)
-    company = Companies.objects.get(candidate=candidate)
-    context = {
-        'company':company
-    }
-    return render(request,'recruiters/vacancy.html',context)
+def PositionManager(request):
+    try:
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+        if request.method == 'POST':
+            if 'create_position' in request.POST:
+                position_count = request.POST.get('count')
+                position_title = request.POST.get('position_title')
+                try:
+                    position_count = int(position_count)
+                    if position_count <= 0:
+                        position_count = 1
+                except ValueError:
+                    position_count = 1
+
+                for i in range(min(position_count,20)):
+                    create_position_form = CreatePosition(request.POST)
+                    if create_position_form.is_valid():
+                        create_position_form.save(company=company,created_by=candidate)
+                    else:
+                        messages.error(request, create_position_form.errors)
+
+                messages.info(request, f"{position_count} new position for {position_title} role was successfully created")
+                messages.info(request, f"Let's create the hire request to create the job post")
+                return redirect('recruiters:position_manager')
+
+            if 'create_hire_request' in request.POST:
+                # position_count = request.POST.get('count')
+                position_title = request.POST.get('position')
+
+                create_HR_form = CreateHireRequest(request.POST)
+                if create_HR_form.is_valid():
+                    create_HR_form.save(company=company,created_by=candidate)
+                    messages.info(request, f"New Hire Request was successfully created. Let's create the job post to hire Candidates")
+                else:
+                    messages.error(request, create_HR_form.errors)
+
+                return redirect('recruiters:position_manager')
+
+        
+        """
+        Loading the data and forms
+        """
+        positions = Positions.objects.filter(company=company).prefetch_related('hirerequests_set') 
+        # positions = Positions.objects.filter(company=company) \
+        #     .prefetch_related(
+        #         Prefetch('hirerequests_set', queryset=HireRequests.objects.filter(company=company).order_by('employee_id'))
+        #     )
+        # for position in positions:
+        #     print("//////",position)
+        #     for hire_request in position.hirerequests_set.all():
+        #         print("======>",hire_request)
+
+        # positions = Positions.objects.annotate(
+        #     hire_request_id=Subquery(
+        #         HireRequests.objects.filter(position=OuterRef('pk')).values('id')[:1]
+        #     )
+        # )
+                
+        # for position in positions:
+        #     print(position.title, position.hire_request_id if position.hire_request_id else "None") 
+
+        # Querying HireRequests and ordering them according to the specified logic
+        hire_requests = HireRequests.objects.filter(company=company) \
+            .annotate(
+            # Create a custom field to sort by `employee_id` being null or not
+            employee_id_null=Case(
+                When(employee_id__isnull=True, then=Value(0)),
+                default=Value(1),
+                output_field=IntegerField()
+                )
+            ) \
+            .order_by('employee_id_null', 'deadline') 
+
+        excluded_position_ids = hire_requests.values_list('position_id', flat=True)
+        positions = Positions.objects.filter(company=company) \
+            .exclude(position_id__in=excluded_position_ids)
+
+        create_hire_request = CreateHireRequest(company=company)
+    
+                
+        context = {
+            'company':company,
+            'positions':positions,
+            'hire_requests':hire_requests,
+            'create_hire_request':create_hire_request
+        }
+        return render(request,'recruiters/position_manager.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
 
 @is_recruiter
 @is_kyc

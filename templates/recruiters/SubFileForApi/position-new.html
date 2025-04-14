@@ -1,0 +1,81 @@
+
+<div class="modal" id="newPositionModel">
+    <div class="modal-dialog">
+        <form method="post" action="#">
+            {% csrf_token %}
+        <div class="modal-content">
+    
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h3 class="modal-title">Create new position</h3>
+            <button type="button" class="btn-close" id="closeNewPositionModel"><i class='fas fa-times edit'></i></button>
+        </div>
+    
+        <!-- Modal Body -->
+        <div class="modal-body">
+        <div class="margin20">
+        <div class="">
+
+            <table class="modal-table">
+                <tr> 
+                    <td><b>Position Name</b></td>
+                    <td><input type="text" id="" name="position_title"  required></td>
+                </tr>
+                <tr> 
+                    <td><b>How many position</b></td>
+                    <td><input type="number" id="" name="count" min="1" max="20" value="1" required></td>
+                </tr>
+                <tr> 
+                    <td><b>Description</b></td>
+                    <td><input type="text" id="" name="description" value=""></td>
+                </tr>
+                <tr>
+                    <td><b>Message to recuiters</b></td>
+                    <td><input type="text" id="" name="remark" value=""></td>
+                </tr>
+            </table>
+
+        </div>
+        </div>
+        </div>
+    
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+            <button type="submit" name="create_position" class="model-btn-save" id="">Save</button>
+        </div>
+    
+        </div>
+    </form>
+    </div>
+    </div>
+
+<script type="text/javascript">
+
+    // Get modal and close button elements==========Personal=============
+    var modal = document.getElementById("newPositionModel");
+    var openButton = document.getElementById("openNewPositionModel");
+    var closeButton = document.getElementById("closeNewPositionModel");
+    {% comment %} var closeFooterButton = document.getElementById("closeModalFooterButton"); {% endcomment %}
+    
+    // Function to open modal
+    openButton.onclick = function() {
+        modal.style.display = "block";
+    };
+    
+    // Function to close modal
+    closeButton.onclick = function() {
+        modal.style.display = "none";
+    };
+    
+    {% comment %} // Close modal with footer button
+    closeFooterButton.onclick = function() {
+        modal.style.display = "none";
+    }; {% endcomment %}
+    
+    // Close the modal when clicking outside of it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+        modal.style.display = "none";
+        }
+    };
+    </script>

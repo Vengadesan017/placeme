@@ -1,4 +1,4 @@
-.left {
+/* .left {
     height: 1500px;
     width: 40%;
     padding-right: 20px;
@@ -7,7 +7,7 @@
     position: relative;
     z-index: 1;
     white-space: nowrap;
-}
+} */
 
 .right-insert {
     /*background-color: #ee0d0d;*/
@@ -214,7 +214,7 @@
 
 .right-rec-box-scroll {
     /*background-color: #0a354e;*/
-    height: 1000px;
+    /* height: 1000px; */
     margin-right: 20px;
     margin-top: 5px;
 }

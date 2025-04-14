@@ -1,0 +1,586 @@
+
+{% extends "recruiters/layout.html" %}
+
+{% block title %}
+Job Vacancy 
+{% endblock title %}
+{% load static %}
+{% block statics %}
+<link rel="stylesheet" href="{% static 'css/recruiters/post-left.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/post-right.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/post-filter-mobile.css' %}">
+
+<link rel="stylesheet" href="{% static 'css/recruiters/table.css' %}">
+
+<link rel="stylesheet" href="{% static 'css/model.css' %}">
+{% comment %} <link rel="stylesheet" href="{% static 'css/recruiters/old/create-job.css' %}"> {% endcomment %}
+
+<script src="{% static 'js/recruiters/post.js' %}" defer></script>
+<script src="{% static 'js/recruiters/table.js' %}" defer></script>
+<style>
+
+
+/* new dropdown button  */
+.dropbtn {
+
+    
+    background-color: #141b5f;
+    color: #ffffff;    
+    color: white;
+    padding: 2px 13px;
+    font-size: 24px;
+    border: none;
+    border-radius: 6px;
+    transition: all .5s;
+  }
+  
+  .dropdown {
+    position: relative;
+    display: block;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0px;
+    background-color: #f1f1f1;
+    width: 300px;
+  
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    width: fit-content;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .dropdown-content a:hover {background-color: #ddd;}
+  
+  .dropdown:hover .dropdown-content {display: block;}
+  
+  .dropdown:hover .dropbtn {background-color: #ffbd03;}
+
+  
+
+ .count-card{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 15px;
+    font-size: 14px;
+    color: #fff;
+    background: #141b5f;
+    border: none;
+
+    transition: all 0.3s;
+    border-radius: 50px;
+    margin: 2px 16px 2px 0px;
+    text-decoration: none;
+ } 
+</style>
+{% endblock statics %}
+
+
+{% block content %}
+
+            {% if messages %}
+            {% for message in messages %}
+              <div class='alert alert-{{ message.tags }}' style="position: relative; top:70px;">
+                <span class="closebtn">&times;</span>
+                  {{ message }}
+              </div>    
+            {% endfor %}
+          {% endif %}
+ 
+
+
+
+          <div class="r-right-down-main">
+            <div class="r-down-main">
+                <div class="list-main">
+                    <div class="list-left">
+                        
+                        <div class="form">
+                            <form method="post" action="#">
+                                <div class="filters-div">
+                                    <i class="fa-solid fa-arrow-down-wide-short"></i>
+                                    <h1>Filters</h1>
+                                </div>
+                                <div class="input-div">
+                                   <input type="text" class="input" placeholder="Hire request, HR ID.."/> 
+
+                                </div>
+
+                                <div class="job-status-div">
+                                    <div class="job-status-div-text">
+                                        <p>Hire Request</p>
+
+
+                                    </div>
+                                    <div class="checkbox-div">
+                                        <div class="checkbox-1">
+                                            <div class="checkbox-1-1">
+                                               <input type="checkbox" class="input-check"/>
+                                               <p>Web developer</p> 
+                                            </div>
+                                            <div class="checkbox-1-count"><p>103</p>
+                                                <i class="fa-solid fa-angle-down" id="job-open"></i>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="show-info-div" id="show-info-div">
+                                            <div class="checkbox-1">
+                                                <div class="checkbox-1-1">
+                                                   <input type="checkbox" class="input-check"/>
+                                                   <p>Backend developer</p> 
+                                                </div>
+                                                <div class="checkbox-1-count">
+                                                    <p>1001</p>
+                                                </div>
+                                            </div> 
+
+                                            <div class="checkbox-1">
+                                                <div class="checkbox-1-1">
+                                                   <input type="checkbox" class="input-check"/>
+                                                   <p>FrontEnd developer</p> 
+                                                </div>
+                                                <div class="checkbox-1-count">
+                                                    <p>1002</p>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+
+                                        <div class="checkbox-1">
+                                            <div class="checkbox-1-1">
+                                               <input type="checkbox" class="input-check"/>
+                                               <p>SQL Administrator</p> 
+                                            </div>
+                                            <div class="checkbox-1-count">
+                                                <p>101</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="checkbox-1">
+                                            <div class="checkbox-1-1">
+                                               <input type="checkbox" class="input-check"/>
+                                               <p>Cloud Engineer</p> 
+                                            </div>
+                                            <div class="checkbox-1-count">
+                                                <p>102</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+                                    
+
+                                </div>
+
+
+
+
+                               
+
+
+
+
+                                
+
+
+
+                                
+
+                            </form>
+
+                        </div>
+                        
+
+
+
+
+
+
+
+                    </div>
+                    <div class="list-right-table">
+                        <div class="right-div-table">
+                            <div class="new-hire-request-search">
+                                <div class="new-hire-request-parent">
+
+                                        <select class="new-hire-request-div" name="" id="">
+                                            <option value="All Hire Request">All Hire Request</option>
+                                            <option value="New Hire Request">New Hire Request</option>
+                                            <option value="Opened Hire Request">Opened Hire Request</option>
+                                            <option value="Closed Hire Request">Closed Hire Request</option>
+                                        </select>
+
+                                    <div class="dev-text">
+                                        <p>web Developer , support Engineer</p>
+
+                                    </div>
+                                    <div class="checkbox-1-table">
+                                        {% comment %} <div class="checkbox-1-1-table">
+                                           <input type="checkbox" class="input-check"/>
+                                           <p>select All</p> 
+                                        </div>
+                                        <div class="checkbox-1-count-table">
+                                            <button>Delete</button>
+                                        </div> {% endcomment %}
+                                        <div class="count-card">Opened Position 3 / 5</div>
+                                        <div class="count-card">Opened Hire request 3 / 5</div>
+                                    </div>
+                                </div>
+                                
+
+
+                                <div class="new-hire-request-parent">
+                                    
+                                    <div class="navigation-header-input-div-table">
+                                        <input type="text" placeholder="Search" id="book-description-input"/>
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    </div>
+                                    <div class="input-count-btn">
+                                        <div class="input-count-div">
+                                            {% comment %} <p id="char-count">0/500 char</p> {% endcomment %}
+                                        </div>
+                                            <div class="dropdown">
+                                                <button class="dropbtn">+</button>
+                                                <div class="dropdown-content">
+                                                  <a href="#" id="openNewPositionModel">New Position</a>
+                                                  <a href="#" id="openNewHireRequest">New Hire Request</a>
+                                                </div>
+                                              </div>
+
+
+                                    </div>
+                                </div>
+
+                                
+                            </div>
+
+
+                            
+                            <div class="table-container">
+                                {% if positions or hire_requests %}
+                                <table class="recruiters-table">
+                                  <thead>
+                                    <tr>
+                                      <th  class="recruiters-th">Hire Request</th>
+                                      <th  class="recruiters-th">Position</th>
+                                      <th  class="recruiters-th">Created Date</th>
+                                      <th  class="recruiters-th">Deadline</th>
+                                      <th  class="recruiters-th">Status</th>
+                                      <th  class="recruiters-th">Description</th>
+                                      {% comment %} <th  class="recruiters-th">Action</th> {% endcomment %}
+                                    </tr>
+                                  </thead>
+                                  <tbody id="table-body">
+                                    {% for position in positions %}
+                                    <tr>
+                                      <td  class="recruiters-td">
+                                        <div class="checkbox-container">
+                                          <input type="checkbox" id="checkbox-2">
+                                          <a href="#">
+                                            <div class="major"></div>
+                                            <div class="minor"></div>
+                                          </div>
+                                        </a>
+                                      </td>
+                                      <td  class="recruiters-td">
+                                        <a href="#">
+                                            <div class="major">{{position.position_title}}</div>
+                                            <div class="minor">{{position.position_code}}</div>
+                                        </a>
+                                        </div>
+                                      </td>
+                                      <td  class="recruiters-td"></td>
+                                      <td  class="recruiters-td"></td>
+                                      <td  class="recruiters-td"></td>
+                                      <td class="recruiters-td description" onclick="toggleDescription(this)">
+                                        {{position.description}}
+                                      </td>
+
+                                     {% comment %}   <td  class="recruiters-td">
+                                        <a href="#" class="action-btn edit-btn">Edit</a>
+                                        <a href="#" class="action-btn delete-btn">Delete</a>
+                                      </td> {% endcomment %}
+                                    </tr>
+                                    {% endfor %}
+                                    {% for hire_request in hire_requests %}
+                                    <tr>
+                                      <td  class="recruiters-td">
+                                        <div class="checkbox-container">
+                                          <input type="checkbox" id="checkbox-2">
+                                          <a href="#">
+                                              <div class="major">{{hire_request.position.position_title}}</div>
+                                              <div class="minor">{{hire_request.hire_request_code}}</div>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td  class="recruiters-td">
+                                        <a href="#">
+                                            <div class="major">{{hire_request.position.position_title}}</div>
+                                            <div class="minor">{{hire_request.position.position_code}}</div>
+                                        </a>
+                                        </div>
+                                      </td>
+                                      <td  class="recruiters-td">{{hire_request.created_at|date}}</td>
+                                      <td  class="recruiters-td">{{hire_request.deadline|date}}</td>
+                                      <td  class="recruiters-td">
+                                        {% if hire_request.is_open %}
+                                            Hiring Needed
+                                        {% else%}
+                                            Closed
+                                        {% endif%}
+
+                                      </td>
+                                      <td class="recruiters-td description" onclick="toggleDescription(this)">
+                                        {{hire_request.position.description}}
+                                        </td>
+                                      {% comment %} 
+
+                                      <td  class="recruiters-td">
+                                        <a href="#" class="action-btn edit-btn">Edit</a>
+                                        <a href="#" class="action-btn delete-btn">Delete</a>
+                                      </td> {% endcomment %}
+                                    </tr>
+                                    {% endfor %}
+
+
+                                  </tbody>
+                                </table>
+                                {% else %}
+                                <h2><center>Sorry No records found!</center><h2>
+                                <h3><center>Lets create Position and generate the hire request to post the job vacancy post</center><h3>
+                                {% endif %}
+                            </div>
+
+
+
+
+
+
+                            
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+                
+            </div>
+
+
+
+            </div>
+
+
+    {% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {% block mobile_view %}
+    <div class="m1-filter-div" id="m1-filter-div">
+        <div class="m-list-left">
+                            
+            <div class="form">
+                <form method="post" action="#">
+                    <div class="filters-div">
+                        <i class="fa-solid fa-arrow-down-wide-short"></i>
+                        <h1>Filters</h1>
+                        <div class="x-mark" id="x-mark" onclick="mobileView(false)">
+                            <p class="X">X</p>
+                        </div>
+                    </div>
+                    
+                    <div class="input-div">
+                       <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
+
+                    </div>
+
+                    <div class="job-status-div">
+                        <div class="job-status-div-text">
+                            <p>Job Status</p>
+                            <i class="fa-solid fa-angle-down"></i>
+
+                        </div>
+                        <div class="checkbox-div">
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Active Jobs</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Expired Jobs</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Closed Jobs</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        
+
+                    </div>
+
+
+
+
+                    <div class="job-status-div-2">
+                        <div class="job-status-div-text">
+                            <p>Job Posted By</p>
+                            <i class="fa-solid fa-angle-down"></i>
+
+                        </div>
+                        <div class="input-div-down">
+                            <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
+                        </div>
+                        <div class="checkbox-div">
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Recruiter name</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Recruiter name</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Recruiter name</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        
+
+                    </div>
+
+
+
+
+                    <div class="job-status-div-3">
+                        <div class="job-status-div-text">
+                            <p>Job Tittle</p>
+                            <i class="fa-solid fa-angle-down"></i>
+
+                        </div>
+                        <div class="input-div-down">
+                            <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
+                        </div>
+                        <div class="checkbox-div">
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>App developer</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            
+                        </div>
+
+
+
+
+
+
+                        
+
+                    </div>
+
+
+
+                    
+
+                </form>
+
+            </div>
+            
+
+
+
+
+
+
+
+        </div>
+
+    </div>
+
+    {% include "recruiters/SubFileForApi/position-new.html" %}
+    {% include "recruiters/SubFileForApi/position-new-hire-request.html" %}
+
+    
+<script src="{% static 'js/recruiters/position-manager.js' %}"></script>
+
+{% endblock mobile_view %}

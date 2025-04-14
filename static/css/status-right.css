@@ -1,5 +1,6 @@
 .right {
-    height: 1500px;
+    /* min-height: 700px; */
+    height: auto;
     width: 65%;
     /*background-color: aquamarine;*/
     border-top-right-radius: 15px;
@@ -118,7 +119,8 @@
 
 .right-dev-info {
     /*background-color: bisque;*/
-    height: 1300px;
+    /* min-height: 700px; */
+    height: auto;
     margin-left: 15px;
     z-index: 1;
 
@@ -127,7 +129,8 @@
 
 .right-insert {
     /*background-color: red;*/
-    height: 1500px;
+    /* min-height: 700px; */
+    height: auto;
     background-color: #FFFFFF;
     border-top-right-radius: 15px;
 

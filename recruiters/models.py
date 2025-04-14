@@ -382,14 +382,15 @@ class Positions(models.Model):
     created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='create_position', null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
     upadted_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_position', null=True, blank=True)    
-    deadline = models.DateTimeField(blank=True,null=True)
+    deadline = models.DateTimeField(blank=True,null=True)   # not needed
     is_open = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ('company', 'position_code')  # Ensures no duplicate serial numbers for each company
 
     def __str__(self):
-        return f"{self.position_title} - {self.position_code} ({self.company.company_name})"
+        return f"{self.position_title} - {self.position_code}"
 
     def save(self, *args, **kwargs):
         if not self.position_code:
@@ -399,7 +400,7 @@ class Positions(models.Model):
                 # last_position = PositionManager.objects.filter(company=self.company).aggregate(Max('position_code'))
                 # max_serial_number = last_position['position_code__max']
                 last_position = Positions.objects.filter(company=self.company).order_by('-position_code').values_list('position_code', flat=True).first()
-                self.position_code = last_position + 1 if last_position else 101
+                self.position_code = last_position + 1 if last_position else 1001
                 
                 # Save the new PositionManager instance
                 super(Positions, self).save(*args, **kwargs)
@@ -427,6 +428,7 @@ class HireRequests(models.Model):
     upadted_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_hire_request', null=True, blank=True)    
     deadline = models.DateTimeField(blank=True,null=True)
     is_open = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ('company', 'hire_request_code')
@@ -444,7 +446,8 @@ class HireRequests(models.Model):
                 # last_position = PositionManager.objects.filter(company=self.company).order_by('-serial_number').values_list('').first()
                 # self.hire_request_code = max_serial_number + 1 if max_serial_number else 1
                 last_position = HireRequests.objects.filter(company=self.company).order_by('-hire_request_code').values_list('hire_request_code', flat=True).first()
-                self.hire_request_code = last_position + 1 if last_position else 3001
+                self.hire_request_code = last_position + 1 if last_position else 5001
+                self.is_open= True
                 
                 # Save the new PositionManager instance
                 super(HireRequests, self).save(*args, **kwargs)
@@ -454,9 +457,10 @@ class HireRequests(models.Model):
 
 
 
-class EmployeePositionManager(models.Model):
+class EmployeePositionManager(models.Model):  # not needed merge to hire request
     employee_position_id = models.AutoField(primary_key=True)
     position = models.ForeignKey(Positions, on_delete=models.CASCADE)
+    hire_request = models.ForeignKey(HireRequests, on_delete=models.CASCADE,blank=True,null=True)
     employee_id = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='employee_in_position_manager', null=True, blank=True)
     hire_date = models.DateTimeField(null=True, blank=True)
     leave_date = models.DateTimeField(null=True, blank=True)
@@ -467,8 +471,7 @@ class EmployeePositionManager(models.Model):
     upadted_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_map_position', null=True, blank=True)    
     is_active = models.BooleanField(default=True)
 
-    class Meta:
-        unique_together = ('position', 'employee_id')
+
 
     def __str__(self):
         return f"{self.position} ({self.employee_id})"

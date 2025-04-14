@@ -245,6 +245,10 @@ h3 {
   h5 {
     margin-bottom: 10px;
   }
+  .company-details {
+    position: relative;
+    text-align: center;
+  }
 }
 
 /* RESPONSIVE DESIGN - For smaller screens (mobile view) */
@@ -267,6 +271,10 @@ h3 {
   .icon-item li,
   .data li {
     text-align: left;
+  }
+  .company-details {
+    position: relative;
+    text-align: center;
   }
 }
 
@@ -295,5 +303,9 @@ h3 {
   .icon-item,
   .data {
     margin-bottom: 10px;
+  }
+  .company-details {
+    position: relative;
+    text-align: center;
   }
 }

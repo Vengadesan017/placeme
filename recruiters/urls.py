@@ -19,6 +19,6 @@ urlpatterns = [
 
 
     path('onboarding/',views.OfferingOnboaring,name='onboarding'),
-    path('vacancy/',views.Vacancy,name='vacancy'),
+    path('position-manager/',views.PositionManager,name='position_manager'),
     path('admin-control/',views.AdminControl,name='admin_control'),
 ]

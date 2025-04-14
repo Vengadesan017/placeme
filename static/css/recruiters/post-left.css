@@ -84,9 +84,9 @@
     min-height: 800px;
     height: auto;
     /* background-color: brown; */
-    width: 30%;
-    padding-left: 10px;
-    padding-right: 10px;
+    width: 25%;
+    /* padding-left: 10px;
+    padding-right: 10px; */
     padding-top: 10px;
     display: flex;
     justify-content: center;

@@ -3,15 +3,14 @@ body {
 }
 
 .all-menu {
-    margin-left: 140px;
-    margin-right: 20px;
+    margin: auto;
 
     background-color: rgb(255, 255, 255);
-    width: 1210px;
+    width: 90%;
     border-radius: 15px;
     margin-top: 80px;
     position: sticky;
-    top: 54px;
+    top: 62px;
     border-bottom: 4px solid #141B5F;
     z-index: 5;
 }
@@ -70,11 +69,12 @@ body {
     background-color: black;
 }*/
 .dev-list {
-    height: 1500px;
-    width: 1210px;
+    min-height: 700px;
+    height: auto;
+    width: 90%;
     background-color: rgb(255, 255, 255);
-    margin-left: 140px;
-    margin-right: 70px;
+    margin: auto;
+
     margin-top: 20px;
     border-radius: 15px;
     display: flex;
@@ -84,16 +84,16 @@ body {
 }
 
 .left {
-    height: 1500px;
-    width: 35%;
-    padding-right: 20px;
-    border-top-left-radius: 15px;
+    min-height: 700px;
+    height: auto;
+    width: 35%;    border-top-left-radius: 15px;
     border-right: 2px solid #999;
     position: relative;
     z-index: 0;
     white-space: nowrap;
 
 }
+
 
 /*box all*/
 .dev-detail-1 {
@@ -199,7 +199,9 @@ body {
     z-index: -1;
 
 }
-
+.left > div:first-child{
+    border-top-left-radius: inherit;
+}
 .dev-detail-2.active {
     background-color: bisque;
 }
@@ -328,156 +330,92 @@ body {
 
 
 
-
 /*responsive design*/
 /*iphone SE*/
 @media all and (min-width:375px) {
-
-    .save,
-    .applied,
-    .offer {
+    .save ,.applied,.offer{
         font-size: 12px;
-
+      
     }
-
+    
 }
-
 /*iphone XR*/
 @media all and (min-width:414px) {
-
-    .save,
-    .applied,
-    .offer {
+    .save,.applied,.offer{
         font-size: 14px;
     }
 }
-
 /*iphone 12 pro*/
 @media all and (min-width:390px) {
-
-    .save,
-    .applied,
-    .offer {
+    .save,.applied,.offer{
         font-size: 13px;
     }
 }
-
 /*samsung galaxy s8+*/
 @media screen and (min-width:360px) {
-
-    .save,
-    .applied,
-    .offer {
+    .save,.applied,.offer{
         font-size: 12px;
     }
 }
-
 /*samsung galaxy s20 ultra*/
 @media screen and (min-width:412px) {
-
-    .save,
-    .applied,
-    .offer {
+    .save,.applied,.offer{
         font-size: 14px;
     }
 }
-
 /*samsung galaxy s20 ultra*/
 @media screen and (min-width:768px) {
-
-    .save,
-    .applied,
-    .offer {
+    .save,.applied,.offer{
         font-size: 24px;
     }
 }
-
 @media screen and (min-width:786px) {
-
-    .save,
-    .applied,
-    .offer {
+    .save,.applied,.offer{
         font-size: 28px;
     }
 }
-
 @media screen and (min-width:820px) {
-
-    .save,
-    .applied,
-    .offer {
+    .save,.applied,.offer{
         font-size: 30px;
     }
 }
-
 @media screen and (min-width:1024px) {
-
-    .save,
-    .applied,
-    .offer {
+    .save,.applied,.offer{
         font-size: 20px;
     }
 }
-
 @media screen and (min-width:912px) {
-
-    .save,
-    .applied,
-    .offer {
+    .save,.applied,.offer{
         font-size: 28px;
     }
 }
-
 @media screen and (min-width:540px) {
-
-    .save,
-    .applied,
-    .offer {
+    .save,.applied,.offer{
         font-size: 20px;
     }
 }
-
 @media screen and (min-width:344px) {
-
-    .save,
-    .applied,
-    .offer {
+    .save,.applied,.offer{
         font-size: 10px;
     }
 }
-
 @media screen and (min-width:853px) {
-
-    .save,
-    .applied,
-    .offer {
+    .save,.applied,.offer{
         font-size: 20px;
     }
 }
-
 @media screen and (min-width:412px) {
-
-    .save,
-    .applied,
-    .offer {
+    .save,.applied,.offer{
         font-size: 14px;
     }
 }
-
 @media screen and (min-width:1024px) {
-
-    .save,
-    .applied,
-    .offer {
+    .save,.applied,.offer{
         font-size: 18px;
     }
 }
-
 @media screen and (min-width:1280px) {
-
-    .save,
-    .applied,
-    .offer {
+    .save,.applied,.offer{
         font-size: 18px;
     }
 }

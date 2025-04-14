@@ -1,0 +1,86 @@
+
+<div class="modal" id="newHireRequest">
+    <div class="modal-dialog">
+        <form method="post" action="#">
+            {% csrf_token %}
+        <div class="modal-content">
+    
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h3 class="modal-title">Create new Hire Request</h3>
+            <button type="button" class="btn-close" id="closeNewHireRequest"><i class='fas fa-times edit'></i></button>
+        </div>
+    
+        <!-- Modal Body -->
+        <div class="modal-body">
+        <div class="margin20">
+        <div class="">
+
+            <table class="modal-table">
+                <tr> 
+                    <td><b>For which Position</b></td>
+                    <td>
+
+                        <select name="position" id="id_type_id">
+                            <option value="">Select Position</option>
+                            {% for option in create_hire_request.fields.position.queryset %}
+                                <option value="{{ option.pk }}">
+                                    {{ option }}
+                                </option>
+                                {% empty %}
+                                <option disabled>No open positions available</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr> 
+                    <td><b>Deadline</b></td>
+                    <td><input type="date" id="" name="deadline" min="1" value="2" required></td>
+                </tr>
+
+            </table>
+
+        </div>
+        </div>
+        </div>
+    
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+            <button type="submit" name="create_hire_request" class="model-btn-save" id="">Save</button>
+        </div>
+    
+        </div>
+    </form>
+    </div>
+    </div>
+
+<script type="text/javascript">
+
+    // Get modal and close button elements==========Personal=============
+    var HRmodal = document.getElementById("newHireRequest");
+    var HRopenButton = document.getElementById("openNewHireRequest");
+    var HRcloseButton = document.getElementById("closeNewHireRequest");
+    {% comment %} var closeFooterButton = document.getElementById("closeModalFooterButton"); {% endcomment %}
+    
+    // Function to open modal
+    HRopenButton.onclick = function() {
+        HRmodal.style.display = "block";
+    };
+    
+    // Function to close modal
+    HRcloseButton.onclick = function() {
+        HRmodal.style.display = "none";
+    };
+    
+    {% comment %} // Close modal with footer button
+    closeFooterButton.onclick = function() {
+        modal.style.display = "none";
+    }; {% endcomment %}
+    
+    // Close the modal when clicking outside of it
+    window.onclick = function(event) {
+        if (event.target == HRmodal) {
+            HRmodal.style.display = "none";
+        }
+    };
+    </script>

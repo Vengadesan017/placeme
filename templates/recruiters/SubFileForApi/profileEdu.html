@@ -1,0 +1,297 @@
+
+    <!-- The Modal for ==========educational add===================== -->
+    <div class="modal" id="EduModal">
+        <div class="modal-dialog">
+            <form method="post" action="#">
+                {% csrf_token %}
+            <div class="modal-content">
+        
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 class="modal-title">Add new education detail</h3>
+                <button type="button" class="btn-close" id="closeEduModalButton"><i class='fas fa-times edit'></i></button>
+            </div>
+        
+            <!-- Modal Body -->
+            <div class="modal-body">
+            <div class="margin20">
+            <div class="">
+                <table class="modal-table">
+                    <tr> 
+                        <td><b>Education Level</b></td>
+                        <td>
+                            <select name="edu_id" id="id_edu_id">
+                                <option value="">Select Education Level</option>
+                                {% for option in level %}
+                                    <option value="{{ option }}">
+                                        {{ option }}
+                                    </option>
+                                {% endfor %}
+                            </select>            
+                        </td>
+                    </tr>
+                    <tr> 
+                        <td><b>Branch</b></td>
+                        <td>
+                            <select name="edu_id" id="id_edu_id">
+                                <option value="">Select Brance</option>
+                                {% for option in course %}
+                                    <option value="{{ option }}">
+                                        {{ option }}
+                                    </option>
+                                {% endfor %}
+                            </select>            
+                    </td>
+                    </tr>
+                    <tr> 
+                        <td><b>Degree</b></td>
+                        <td>
+                            <select name="edu_id" id="id_edu_id">
+                                <option value="">Select Degree</option>
+                                {% for option in new_education.fields.edu_id.queryset %}
+                                    <option value="{{ option.pk }}" {% if option.pk == new_education.initial.edu_id %}selected{% endif %}>
+                                        {{ option }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+            
+                        </td>
+                    </tr>
+                    <tr> 
+                        <td><b>Institute Name</b></td>
+                        <td>
+                            <input type="text" name="institute" id="id_institute" value="{{ new_education.initial.institute|default_if_none:'' }}" placeholder="Enter your institude name" /></td>
+                    </tr>
+                    <tr> 
+                        <td><b>Education Type</b></td>
+                        <td>
+                            <select name="type_id" id="id_type_id">
+                                <option value="">Select Education Type</option>
+                                {% for option in new_education.fields.type_id.queryset %}
+                                    <option value="{{ option.pk }}" {% if option.pk == new_education.initial.type_id %}selected{% endif %}>
+                                        {{ option }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr> 
+                        <td><b>Passing Year</b></td>
+                        <td>
+                            <select id="id_year_of_passing" name="year_of_passing">
+                                <option value="">Select Passing out Year</option>
+                                {% for i in years%}
+                                <option value="{{ i }}">{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr> 
+                        <td><b>Grade or Percentage</b></td>
+                        <td><input type="text" name="score" id="id_score" value="{{ new_education.initial.score|default_if_none:'' }}" placeholder="Enter Grade like 7.1/10 or Percentage like 78.2%" /></td>
+                    </tr>
+                    {% comment %} <tr> 
+                        <td><b>Doc</b></td>
+                        <td><input type="text" id="city" name="city" value="{{ candidate.city|default_if_none:'' }}"></td>
+                    </tr> {% endcomment %}
+
+                </table>
+
+            </div>
+            </div>
+            </div>
+        
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="submit" name="profile_education_create" class="model-btn-save" id="">Save</button>
+            </div>
+        
+            </div>
+        </form>
+        </div>
+        </div>
+
+
+        
+<script type="text/javascript" >
+// Get modal and close button elements==========Personal=============
+var Emodal = document.getElementById("EduModal");
+var EopenButton = document.getElementById("openEduModalButton");
+var EcloseButton = document.getElementById("closeEduModalButton");
+{% comment %} var closeFooterButton = document.getElementById("closeModalFooterButton"); {% endcomment %}
+
+// Function to open modal
+EopenButton.onclick = function() {
+  Emodal.style.display = "block";
+};
+
+// Function to close modal
+EcloseButton.onclick = function() {
+  Emodal.style.display = "none";
+};
+
+{% comment %} // Close modal with footer button
+closeFooterButton.onclick = function() {
+  modal.style.display = "none";
+}; {% endcomment %}
+
+// Close the modal when clicking outside of it
+window.onclick = function(event) {
+  if (event.target == Emodal) {
+    Emodal.style.display = "none";
+  }
+};
+
+
+  </script>
+
+
+
+{% comment %} 
+
+    <!-- The Modal for ==========educational Edit===================== -->
+    <div class="modal" id="EduEditModal">
+        <div class="modal-dialog">
+            <form method="post" action="#">
+                {% csrf_token %}
+            <div class="modal-content">
+        
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 class="modal-title">Edit education details</h3>
+                <button type="button" class="btn-close" id="closeEduEditModalButton"><i class='fas fa-times edit'></i></button>
+            </div>
+        
+            <!-- Modal Body -->
+            <div class="modal-body">
+            <div class="margin20">
+            <div class="">
+                
+                    <div class="education">
+                        <div class="education-name2">
+    
+                            {% if education %}
+                            {% for edu in education %}
+                            <div class="education-name2-1">
+                                <div class="education-name2-1-col">
+                                    <h4>{{edu.institute|default_if_none:''}}</h4>
+                                    <p>{{edu.edu_id|default_if_none:''}}</p>
+                                    <p >{{edu.year_of_passing|default_if_none:''}} | {{edu.type_id|default_if_none:''}}</p>
+
+                                </div>
+                                <div class="employement-date-div">
+                                    <form method="POST" action="#">
+                                        {% csrf_token %}
+                                    <button value="{{ forloop.counter }}" type="submit" name="SelectEducation"><i class='fa-solid fa-pencil'></i></Button>
+                                    </form>
+                                </div>
+                                {% comment %} <div class="education-name2-1-date">
+                                    <p>{{edu.year_of_passing}}</p>
+                                    <p>{{edu.type_id}}</p>
+                                </div> {% endcomment %}
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <div class="education-name2-1">
+                                <div class="education-name2-1-col">
+                                    <a href="#" id="openEduModalButton">Add</a>
+    
+                                </div>
+                            </div>
+                            {% endif %}
+    
+                        </div>             
+                    </div>
+                <table class="modal-table">
+
+                    {% if educationEdit %}
+                        {{ educationEdit }}
+                    {% endif %}
+                    <tr> 
+                        <td><b>Education Level</b></td>
+                        <td><input type="text" id="firstname" name="first_name" value="{{ candidate.first_name|default_if_none:'' }}" required></td>
+                    </tr>
+                    <tr> 
+                        <td><b>Branch</b></td>
+                        <td><input type="text" id="lastname" name="last_name" value="{{ candidate.last_name|default_if_none:'' }}" required></td>
+                    </tr>
+                    <tr> 
+                        <td><b>Degree</b></td>
+                        <td><input type="text" id="email" name="email" value="{{ candidate.user.email|default_if_none:'' }}" disabled></td>
+                    </tr>
+                    <tr> 
+                        <td><b>Institute Name</b></td>
+                        <td><input type="text" id="no" name="no" value="{{ candidate.user.mobile_no|default_if_none:'' }}" disabled></td>
+                    </tr>
+                    <tr> 
+                        <td><b>Education Type</b></td>
+                        <td>
+                            {% if candidate.dob %}
+                                <input type="date" id="dob" name="dob" value="{{ candidate.dob|date:'Y-m-d'|default_if_none:'' }}" disabled>
+                            {% else %}
+                            <input type="date" id="dob" name="dob" value="{{ candidate.dob|date:'Y-m-d'|default_if_none:'' }}" >
+                            {% endif %}   
+                        </td>
+                    </tr>
+                    <tr> 
+                        <td><b>Passing Year</b></td>
+                        <td><input type="text" id="country" name="country" value="{{ candidate.country|default_if_none:'' }}"></td>
+                    </tr>
+                    <tr> 
+                        <td><b>Score</b></td>
+                        <td><input type="text" id="state" name="state" value="{{ candidate.state|default_if_none:'' }}"></td>
+                    </tr>
+                    {% comment %} <tr> 
+                        <td><b>Doc</b></td>
+                        <td><input type="text" id="city" name="city" value="{{ candidate.city|default_if_none:'' }}"></td>
+                    </tr> {% endcomment %}
+
+                </table>
+
+            </div>
+            </div>
+            </div>
+        
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="submit" class="model-btn-save" id="">Save</button>
+            </div>
+        
+            </div>
+        </form>
+        </div>
+        </div>
+
+
+
+<script type="text/javascript" >
+// Get modal and close button elements==========Personal=============
+var EEmodal = document.getElementById("EduEditModal");
+var EEopenButton = document.getElementById("openEduEditModalButton");
+var EEcloseButton = document.getElementById("closeEduEditModalButton");
+{% comment %} var closeFooterButton = document.getElementById("closeModalFooterButton"); {% endcomment %}
+
+// Function to open modal
+EEopenButton.onclick = function() {
+  EEmodal.style.display = "block";
+};
+
+// Function to close modal
+EEcloseButton.onclick = function() {
+  EEmodal.style.display = "none";
+};
+
+{% comment %} // Close modal with footer button
+closeFooterButton.onclick = function() {
+  modal.style.display = "none";
+}; {% endcomment %}
+
+// Close the modal when clicking outside of it
+window.onclick = function(event) {
+  if (event.target == EEmodal) {
+    EEmodal.style.display = "none";
+  }
+};
+
+
+  </script> {% endcomment %}
