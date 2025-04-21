@@ -1,14 +1,14 @@
 
 <div class="modal" id="newHireRequest">
     <div class="modal-dialog">
-        <form method="post" action="#">
+        <form method="post" action="#" id="create-new-hire-request-id">
             {% csrf_token %}
         <div class="modal-content">
     
         <!-- Modal Header -->
         <div class="modal-header">
             <h3 class="modal-title">Create new Hire Request</h3>
-            <button type="button" class="btn-close" id="closeNewHireRequest"><i class='fas fa-times edit'></i></button>
+            <button type="button" class="btn-close close-modal-btn" id="#"><i class='fas fa-times edit'></i></button>
         </div>
     
         <!-- Modal Body -->
@@ -18,7 +18,7 @@
 
             <table class="modal-table">
                 <tr> 
-                    <td><b>For which Position</b></td>
+                    <td><b>For which Position</b><button onclick="logSelected()">Get Selected Values</button></td>
                     <td>
 
                         <select name="position" id="id_type_id">
@@ -53,34 +53,3 @@
     </form>
     </div>
     </div>
-
-<script type="text/javascript">
-
-    // Get modal and close button elements==========Personal=============
-    var HRmodal = document.getElementById("newHireRequest");
-    var HRopenButton = document.getElementById("openNewHireRequest");
-    var HRcloseButton = document.getElementById("closeNewHireRequest");
-    {% comment %} var closeFooterButton = document.getElementById("closeModalFooterButton"); {% endcomment %}
-    
-    // Function to open modal
-    HRopenButton.onclick = function() {
-        HRmodal.style.display = "block";
-    };
-    
-    // Function to close modal
-    HRcloseButton.onclick = function() {
-        HRmodal.style.display = "none";
-    };
-    
-    {% comment %} // Close modal with footer button
-    closeFooterButton.onclick = function() {
-        modal.style.display = "none";
-    }; {% endcomment %}
-    
-    // Close the modal when clicking outside of it
-    window.onclick = function(event) {
-        if (event.target == HRmodal) {
-            HRmodal.style.display = "none";
-        }
-    };
-    </script>

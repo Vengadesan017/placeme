@@ -1,0 +1,349 @@
+
+@media (min-width:900px) and (max-width:1300px){
+    .company-div p{
+        font-size: 16px;
+        width: 23%;
+    }
+    .company-input{
+        width: 77%;
+    }
+    .admin-name p {
+        font-size: 16px;
+    }
+    .admin-role p{
+        font-size: 16px;
+    }
+    .email-name p{
+        font-size: 16px;
+    }
+    .website p{
+        font-size: 16px;
+    }
+    
+    .about-p-div p{
+        font-size: 16px;
+    }
+    .admin-name-last{
+        width: 60%;
+    }
+    .admin-name-last p{
+        width: 50%;
+    }
+    .admin-input-last{
+        width: 50%;
+        padding-left: 20px;
+    }
+    .company-div-last p{
+        font-size: 16px;
+        width: 23%;
+    }
+    .company-input-last{
+        width: 77%;
+    }
+}
+
+@media (min-width:580px) and (max-width:899px){
+    .info-list{
+        margin-left: 20px;
+    }
+    .r-down-main{
+        padding-right: 20px;
+        background-color: #fff;
+        
+    }
+    .company-div p{
+        font-size: 16px;
+        width: 30%;
+    }
+    .company-input{
+        width: 70%;
+    }
+    .admin-name p {
+        font-size: 16px;
+    }
+    .admin-role p{
+        font-size: 16px;
+    }
+    
+    .email-name p{
+        font-size: 16px;
+        width: 50%;
+    }
+    .website p{
+        font-size: 15px;
+        width: 50%;
+    }
+    .admin-input-sel{
+        width: 50%;
+    }
+    
+    
+    .admin-name-last{
+        width: 80%;
+    }
+    .admin-name-last p{
+        width: 50%;
+        font-size: 16px;
+    }
+    .admin-input-last{
+        width: 50%;
+        padding-left: 20px;
+    }
+    .textarea-div{
+        width: 70%;
+    }
+    .about-p-div{
+        width: 30%;
+    }
+    .about-p-div p{
+        font-size: 16px;
+        
+    }
+    .company-div-last p{
+        font-size: 16px;
+        width: 30%;
+    }
+    .company-input-last{
+        width: 70%;
+    }
+}
+@media (min-width:375px) and (max-width:579px){
+    .r-right{
+        min-height: 1550px;
+        height: auto;
+    }
+    .r-down-main{
+        padding-right: 10px;
+        background-color: #fff;
+    }
+    .info-list{
+        margin-left: 10px;
+        
+    }
+    .admin-div{
+        display: block;
+        height: 150px;
+    }
+    .admin-name{
+        width: 100%;
+        height: 75px;
+    }
+    .admin-name p{
+        width: 40%;
+        font-size: 16px;
+    }
+    .admin-role{
+        width: 100%;
+        height: 75px;
+        /* background-color: aqua; */
+        padding-left: 0;
+    }
+    .admin-role p{
+        width: 40%;
+        /* background-color: bisque; */
+        font-size: 16px;
+    }
+    .admin-input{
+        width: 60%;
+    }
+
+
+    .company-input{
+        width: 50%;
+    }
+    .company-div p{
+        width: 50%;
+        font-size: 16px;
+    }
+    .company-input-last{
+        width: 50%;
+    }
+    .company-div-last p{
+        width: 50%;
+        font-size: 16px;
+    }
+    .email-div{
+        display: block;
+        height: 160px;
+    }
+    .email-name{
+        width: 100%;
+        height: 80px;
+    }
+    .website{
+        width: 100%;
+        height: 80px;
+        padding-left: 0;
+    }
+    .email-name p{
+        font-size: 16px;
+    }
+    .website p{
+        font-size: 16px;
+    }
+    .about{
+        display: block;
+    }
+    .about-p-div{
+        width: 100%;
+        height: 20px;
+    }
+    .textarea-div{
+        width: 100%;
+        height: 300px;
+    }
+    .about-p-div p{
+        font-size: 16px;
+    }
+    .textarea-div textarea{
+        margin: 0;
+        margin-top: 10px;
+    }
+    .admin-div-last{
+        display: block;
+        height: 80px;
+        
+    }
+    .admin-name-last{
+        width: 100%;
+        height: 80px;
+        justify-content: center;
+    }
+    .admin-name-last p{
+        width: 50%;
+        font-size: 16px;
+    }
+    .admin-input-last{
+        width: 50%;
+    }
+}
+
+
+@media (min-width:320px) and (max-width:374px){
+    .r-right{
+        min-height: 1500px;
+        height: auto;
+    }
+    .r-down-main{
+        padding-right: 10px;
+        background-color: #fff;
+    }
+    .info-list{
+        margin-left: 10px;
+        
+    }
+    .admin-div{
+        display: block;
+        height: 150px;
+    }
+    .admin-name{
+        width: 100%;
+        height: 75px;
+    }
+    .admin-name p{
+        width: 40%;
+        font-size: 16px;
+    }
+    .admin-role{
+        width: 100%;
+        height: 75px;
+        /* background-color: aqua; */
+        padding-left: 0;
+    }
+    .admin-role p{
+        width: 40%;
+        /* background-color: bisque; */
+        font-size: 16px;
+    }
+    .admin-input{
+        width: 60%;
+    }
+
+
+    .company-input{
+        width: 50%;
+    }
+    .company-div p{
+        width: 50%;
+        font-size: 16px;
+    }
+    .company-div-last{
+        display: block;
+        height: 80px;
+        justify-content: space-evenly;
+    }
+    .company-input-last{
+        width: 100%;
+        
+    }
+    .company-div-last p{
+        width: 100%;
+        font-size: 16px;
+        height: 20px;
+        margin-bottom: 3px;
+    }
+    .email-div{
+        display: block;
+        height: 160px;
+    }
+    .email-name{
+        width: 100%;
+        height: 80px;
+    }
+    .website{
+        width: 100%;
+        height: 80px;
+        padding-left: 0;
+    }
+    .email-name p{
+        font-size: 16px;
+        width: 50%;
+    }
+    .website p{
+        font-size: 16px;
+        width: 50%;
+    }
+    .admin-input-sel{
+        width: 50%;
+    }
+    .about{
+        display: block;
+    }
+    .about-p-div{
+        width: 100%;
+        height: 20px;
+    }
+    .textarea-div{
+        width: 100%;
+        height: 300px;
+    }
+    .about-p-div p{
+        font-size: 16px;
+    }
+    .textarea-div textarea{
+        margin: 0;
+        margin-top: 10px;
+    }
+    .admin-div-last{
+        display: block;
+        height: 80px;
+        
+    }
+    .admin-name-last{
+        display: block;
+        height: 80px;
+        justify-content: center;
+        width: 100%;
+    }
+    .admin-name-last p{
+        width: 100%;
+        font-size: 16px;
+        height: 20px;
+        margin-bottom: 3px;
+        margin-top: 10px;
+    }
+    .admin-input-last{
+        width: 100%;
+        
+    }
+}

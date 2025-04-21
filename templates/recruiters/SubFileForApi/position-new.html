@@ -1,14 +1,14 @@
 
 <div class="modal" id="newPositionModel">
     <div class="modal-dialog">
-        <form method="post" action="#">
+        <form method="post" action="#" id="create-new-position-id">
             {% csrf_token %}
         <div class="modal-content">
     
         <!-- Modal Header -->
         <div class="modal-header">
             <h3 class="modal-title">Create new position</h3>
-            <button type="button" class="btn-close" id="closeNewPositionModel"><i class='fas fa-times edit'></i></button>
+            <button type="button" class="btn-close close-modal-btn" id="#"><i class='fas fa-times edit'></i></button>
         </div>
     
         <!-- Modal Body -->
@@ -49,33 +49,3 @@
     </div>
     </div>
 
-<script type="text/javascript">
-
-    // Get modal and close button elements==========Personal=============
-    var modal = document.getElementById("newPositionModel");
-    var openButton = document.getElementById("openNewPositionModel");
-    var closeButton = document.getElementById("closeNewPositionModel");
-    {% comment %} var closeFooterButton = document.getElementById("closeModalFooterButton"); {% endcomment %}
-    
-    // Function to open modal
-    openButton.onclick = function() {
-        modal.style.display = "block";
-    };
-    
-    // Function to close modal
-    closeButton.onclick = function() {
-        modal.style.display = "none";
-    };
-    
-    {% comment %} // Close modal with footer button
-    closeFooterButton.onclick = function() {
-        modal.style.display = "none";
-    }; {% endcomment %}
-    
-    // Close the modal when clicking outside of it
-    window.onclick = function(event) {
-        if (event.target == modal) {
-        modal.style.display = "none";
-        }
-    };
-    </script>

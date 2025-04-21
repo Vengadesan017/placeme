@@ -9,10 +9,28 @@ Admin Control
 <link rel="stylesheet" href="{% static 'css/recruiters/post-left.css' %}">
 <link rel="stylesheet" href="{% static 'css/recruiters/post-right.css' %}">
 <link rel="stylesheet" href="{% static 'css/recruiters/post-filter-mobile.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/admin_table.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/admin_ribbon.css' %}">
 {% comment %} <link rel="stylesheet" href="{% static 'css/recruiters/old/create-job.css' %}"> {% endcomment %}
 <script src="{% static 'js/recruiters/post.js' %}"></script>
 <style>
-
+  *{
+    font-size: 14px;
+}
+.INR{
+    font-family: cursive;
+}
+.r-down-main {
+right: 50px;
+height: auto;
+width: 100%;
+padding-right: 10px;
+/* background-color: bisque; */
+/* background-color: #fff; */
+border-radius: 10px;
+/* padding-top: 20px; */
+/* padding-left: 20px; */
+}
 </style>
 {% endblock statics %}
 
@@ -29,58 +47,155 @@ Admin Control
           {% endif %}
  
 
-
-
           <div class="r-right-down-main">
             <div class="r-down-main">
                 <div class="list-main">
-
-                    <div class="list-right" style="width: 100%;">
-                        <div class="right-div">
-                            <div class="m-right-top">
-                                {% comment %} <button class="text buttons">+ Publish vacancy</button> {% endcomment %}
-                            </div>
-                            <div class="right-top">
-                                <div class="right-top-1" style="width: 50%;">
-                                    <div class="all-job" style="width: auto;">
-                                        <button class="buttons" style="padding: 8px 20px;margin: 0 20px;">Package details</button>
-                                    </div>
-                                    
-                                    <div class="draft"  style="width: auto;">
-                                        <button class="buttons" style="padding: 8px 20px;margin: 0 8px;">Subusers</button>
-                                    </div>
+                    <!-- <div class="list-left">
+                        
+                        <div class="form">
+                            <form method="post" action="#">
+                                <div class="filters-div">
+                                    <i class="fa-solid fa-arrow-down-wide-short"></i>
+                                    <h1>Filters</h1>
                                 </div>
-                                <div class="role-post-div">
+                                <div class="input-div">
+                                   <input type="text" class="input" placeholder="Search by Post Title,Job Id,Recruiter name..."/> 
 
-                                    {% comment %} <button class="role-post-text" style="background-color: unset;color: #141B5F;">Search..</button> {% endcomment %}
-                                        <input type="text" style="background-color: unset;color: #141B5F;border: #141B5F 1px solid;" class="role-post-text" placeholder="Subusers name..">
-
-                                    <div class="m-filter-div" id="m-filter-div" onclick="mobileView(true)">
-                                        <i class="fa-solid fa-arrow-down-wide-short"></i>
-                                        <p>Filters</p> 
-                                    </div>
-                                    
                                 </div>
-                            </div>
+
+                                <div class="job-status-div">
+                                    <div class="job-status-div-text">
+                                        <p>Hire Request</p>
+
+
+                                    </div>
+                                    <div class="checkbox-div">
+                                        <div class="checkbox-1">
+                                            <div class="checkbox-1-1">
+                                               <input type="checkbox" class="input-check"/>
+                                               <p>Active Jobs</p> 
+                                            </div>
+                                            <div class="checkbox-1-count">
+                                                <i class="fa-solid fa-angle-down" id="job-open"></i>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="show-info-div" id="show-info-div">
+                                            <div class="checkbox-1">
+                                                <div class="checkbox-1-1">
+                                                   <input type="checkbox" class="input-check"/>
+                                                   <p>Active Jobs</p> 
+                                                </div>
+                                                <div class="checkbox-1-count">
+                                                    <i class="fa-solid fa-angle-down"></i>
+                                                </div>
+                                            </div> 
+
+                                            <div class="checkbox-1">
+                                                <div class="checkbox-1-1">
+                                                   <input type="checkbox" class="input-check"/>
+                                                   <p>Expired Jobs</p> 
+                                                </div>
+                                                <div class="checkbox-1-count">
+                                                    <p>1</p>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+
+                                        <div class="checkbox-1">
+                                            <div class="checkbox-1-1">
+                                               <input type="checkbox" class="input-check"/>
+                                               <p>Expired Jobs</p> 
+                                            </div>
+                                            <div class="checkbox-1-count">
+                                                <p>1</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="checkbox-1">
+                                            <div class="checkbox-1-1">
+                                               <input type="checkbox" class="input-check"/>
+                                               <p>Closed Jobs</p> 
+                                            </div>
+                                            <div class="checkbox-1-count">
+                                                <p>2</p>
+                                            </div>
+                                        </div>
+                                    </div>
 
 
 
 
 
 
+                                    
+
+                                </div>
 
 
 
 
+                               
 
 
 
 
+                                
 
 
 
-                            
+                                
+
+                            </form>
+
                         </div>
+                        
+
+
+
+
+
+
+
+                    </div> -->
+                    <div class="list-right-table"> 
+                        <section class="navigation-header" style="margin-bottom: 15px;">
+                            <div class="navigation-header-1">
+                                    <a class="navigation-header-1-1 {% if request.resolver_match.kwargs.page == 'package' %}active{% endif %}" href="{% url 'recruiters:admin_control' page="package" %}">Package Details</a>
+                                    <a class="navigation-header-1-1 {% if request.resolver_match.kwargs.page == 'subuser' %}active{% endif %}" href="{% url 'recruiters:admin_control' page="subuser" %}">Sub Users</a>
+                                    <a class="navigation-header-1-1 {% if request.resolver_match.kwargs.page == 'activity' %}active{% endif %}" href="{% url 'recruiters:admin_control' page="activity" %}">Activities</a>
+                            </div>
+                            <div class="navigation-header-2">
+                                <div class="navigation-header-input-div">
+                                    <input type="text" placeholder="Search">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </div>
+                                
+                            </div>
+                        </section>
+
+                        {% if page == "package" %}
+                        {% include "recruiters/admin_control_package.html" %}                                
+                        {% elif page == "subuser" %}
+                        {% include "recruiters/admin_control_subuser.html" %}                               
+                        {% elif page == "activity" %}
+                        {% include "recruiters/admin_control_activity.html" %}                                                          
+                        {% else %}
+                        <section class="dev-list" id="#">
+                        <h2>Invalid page</h2>                            
+                        </section>
+                
+                        {% endif %}
+
+
+
+
+
+
+
                     </div>
 
                 </div>
@@ -93,7 +208,6 @@ Admin Control
 
 
             </div>
-
 
     {% endblock content %}
 

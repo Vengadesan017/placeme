@@ -2,18 +2,29 @@
 {% extends "recruiters/layout.html" %}
 
 {% block title %}
-Offer candidate and onboard them
+Job vacancy post
 {% endblock title %}
 {% load static %}
 {% block statics %}
 <link rel="stylesheet" href="{% static 'css/recruiters/post-left.css' %}">
 <link rel="stylesheet" href="{% static 'css/recruiters/post-right.css' %}">
 <link rel="stylesheet" href="{% static 'css/recruiters/post-filter-mobile.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/post-create-form-input.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/post-create-form-input-res.css' %}">
 {% comment %} <link rel="stylesheet" href="{% static 'css/recruiters/old/create-job.css' %}"> {% endcomment %}
 
-<script src="{% static 'js/recruiters/post.js' %}"></script>
+<script src="{% static 'js/recruiters/post.js' %}" defer></script>
+<script src="{% static 'js/recruiters/word-count.js' %}" defer></script>
 <style>
 
+.kyc-card{
+    background-color: #fff;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    padding: 20px 20px;
+    margin-bottom: 20px;
+}
 </style>
 {% endblock statics %}
 
@@ -34,62 +45,135 @@ Offer candidate and onboard them
 
           <div class="r-right-down-main">
             <div class="r-down-main">
-                <div class="list-main">
-
-                    <div class="list-right" style="width: 100%;">
-                        <div class="right-div">
-                            <div class="m-right-top">
-                                {% comment %} <button class="text buttons">+ Publish vacancy</button> {% endcomment %}
-                            </div>
-                            <div class="right-top">
-                                <div class="right-top-1" style="width: 50%;">
-                                    <div class="all-job" style="width: auto;">
-                                        <button class="buttons" style="padding: 8px 20px;margin: 0 20px;">Offered Candidates</button>
-                                    </div>
-                                    
-                                    <div class="draft"  style="width: auto;">
-                                        <button class="buttons" style="padding: 8px 20px;margin: 0 8px;">Onboaring Candidates</button>
-                                    </div>
-                                </div>
-                                <div class="role-post-div">
-
-                                    {% comment %} <button class="role-post-text" style="background-color: unset;color: #141B5F;">Search..</button> {% endcomment %}
-                                        <input type="Search" style="background-color: unset;color: #141B5F;border: #141B5F 1px solid;" class="role-post-text" placeholder="Job post ID / candidate name">
-
-                                    <div class="m-filter-div" id="m-filter-div" onclick="mobileView(true)">
-                                        <i class="fa-solid fa-arrow-down-wide-short"></i>
-                                        <p>Filters</p> 
-                                    </div>
-                                    
-                                </div>
-                            </div>
+            <div class="create-form-contrainer">
+                <div class="account-div">
+                    <p class="account">Create new job post</p>
+                </div>
+                <div class="info-list">
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                            
+                    <div class="admin-div">
+                        <div class="admin-name">
+                            <p >Job Title <span>*</span></p>
+                            <input class="admin-input" placeholder="Enter Admin name" required/> 
                         </div>
+                        <div class="admin-role">
+                            <p>Work Mode </p>
+                            <input class="admin-input" placeholder="onsite / remote / hybrid" required/>
+                        </div>
+    
                     </div>
 
+
+                    <div class="company-div">
+                        <p >Job Location <span>*</span></p>
+                        <input class="company-input" placeholder="Chennai-Tamil Nadu, Bengaluru-Karnataka" required/>
+                    </div>
+
+
+                    <div class="email-div">
+                        <div class="email-name">
+                            <p >Job type <span>*</span></p>
+                            <select class="admin-input-sel">
+                                <option>Full-time / Part-time</option>
+                                <option>Java Programming</option>
+                                <option>Python</option>
+                                <option>Data Analyst</option>
+                            </select> 
+                        </div>
+                        <div class="website">
+                            <p>Shift <span>*</span></p>
+                            <select class="admin-input-sel">
+                                <option>Fixed (day or night)</option>
+                                <option >Java Programming</option>
+                                <option >Python</option>
+                                <option >Data Analyst</option>
+                            </select>
+                        </div>
+    
+    
+                    </div>
+
+                    <div class="company-div">
+                        <p >Qualifications <span>*</span></p>
+                        <input class="company-input" placeholder="Any CS / BE in Cse" required/>
+                    </div>
+
+                    <div class="admin-div">
+                        <div class="admin-name">
+                            <p >Exprience <span>*</span></p>
+                            <input class="admin-input" placeholder="Enter Admin name" required/> 
+                        </div>
+                        <div class="admin-role">
+                            <p>To </p>
+                            <input class="admin-input" placeholder="onsite / remote / hybrid" required/>
+                        </div>
+    
+                    </div>
+
+
+                    <div class="email-div">
+                        <div class="email-name">
+                            <p >Salary <span>*</span></p>
+                            <select class="admin-input-sel">
+                                <option>3 LPA</option>
+                                <option>Java Programming</option>
+                                <option>Python</option>
+                                <option>Data Analyst</option>
+                            </select> 
+                        </div>
+                        <div class="website">
+                            <p>Openin Count <span>*</span></p>
+                            <select class="admin-input-sel">
+                                <option>20</option>
+                                <option >Java Programming</option>
+                                <option >Python</option>
+                                <option >Data Analyst</option>
+                            </select>
+                        </div>
+    
+    
+                    </div>
+
+
+
+                    <div class="description">
+                        <div class="about-p-div">
+                            <p>Job Description <span>*</span></p>
+                        </div>
+                        <div class="textarea-div">
+                            <textarea placeholder="short Description" id="count-words"></textarea>
+                            <p id="char-count">0/200 chart</p>
+                        </div>
+
+                    </div>
+
+
+
+
+                    <div class="company-div-last">
+                        <p >Employee benifits <span>*</span></p>
+                        <input class="company-input-last" placeholder="" required/>
+                    </div>
+
+                    <div class="admin-div-last">
+                        <div class="admin-name-last">
+                            <p >Last date to apply <span>*</span></p>
+                            <input class="admin-input-last" placeholder="Enter Admin name" required/> 
+                        </div>
+                        
+    
+                    </div>
+
+                    <div class="btn-div">
+                        <button class="btn" >Create Account</button>
+                    </div>
+
+
+
                 </div>
-
-
-
-                
             </div>
+        </div>
 
 
 
@@ -283,5 +367,6 @@ Offer candidate and onboard them
         </div>
 
     </div>
+
 
 {% endblock mobile_view %}

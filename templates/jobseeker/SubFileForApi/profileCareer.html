@@ -9,7 +9,7 @@
         <!-- Modal Header -->
         <div class="modal-header">
             <h3 class="modal-title">Edit your Career Info</h3>
-            <button type="button" class="btn-close" id="closeCareerModalButton"><i class='fas fa-times edit'></i></button>
+            <button type="button" class="btn-close close-modal-btn" id="closeCareerModalButton"><i class='fas fa-times edit'></i></button>
         </div>
     
         <!-- Modal Body -->
@@ -60,34 +60,3 @@
     </form>
     </div>
     </div>
-
-<script type="text/javascript">
-
-    // Get modal and close button elements==========Personal=============
-    var Cmodal = document.getElementById("CareerModal");
-    var CopenButton = document.getElementById("openCareerModalButton");
-    var CcloseButton = document.getElementById("closeCareerModalButton");
-    {% comment %} var closeFooterButton = document.getElementById("closeModalFooterButton"); {% endcomment %}
-    
-    // Function to open modal
-    CopenButton.onclick = function() {
-        Cmodal.style.display = "block";
-    };
-    
-    // Function to close modal
-    CcloseButton.onclick = function() {
-        Cmodal.style.display = "none";
-    };
-    
-    {% comment %} // Close modal with footer button
-    closeFooterButton.onclick = function() {
-        modal.style.display = "none";
-    }; {% endcomment %}
-    
-    // Close the modal when clicking outside of it
-    window.onclick = function(event) {
-        if (event.target == modal) {
-        Cmodal.style.display = "none";
-        }
-    };
-    </script>

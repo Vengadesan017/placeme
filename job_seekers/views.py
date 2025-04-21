@@ -11,6 +11,8 @@ from django.db.models import Count, Case, When, Q
 from functools import wraps
 from .services import apply_filter_in_job,get_filter_from_job,search_job
 from .serializers import JobsCardSerializer
+from django.views.decorators.csrf import csrf_exempt
+
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -202,8 +204,12 @@ def Search(request):
     try:
         keyword1 = request.GET.get('q', '')
         keyword2 = request.GET.get('p', '')        
-        page_number = request.GET.get('page', 1)
-        jobs = search_job(request,keyword1,keyword2,page_number)
+        page_number = request.GET.get('page', 2)
+        if request.user.is_authenticated:
+            candidate = Candidates.objects.get(user=request.user)
+        else:
+            candidate = False
+        jobs = search_job(request,keyword1,keyword2,page_number,candidate)
         if not jobs:
             context = {
                 'page_obj': False
@@ -215,32 +221,18 @@ def Search(request):
             if 'filter_jobs' in request.POST:
                 jobs = apply_filter_in_job(request,jobs)
 
-        # Bookmaked jobs
-        if request.user.is_authenticated:
-            candidate = Candidates.objects.get(user=request.user)
-            bookmarked_job_ids = Bookmarks.objects.filter(candidate=candidate).values_list('job_id', flat=True)
-            bookmarks = jobs.filter(job_id__in=bookmarked_job_ids)
-            
-            applied_job_ids = JobApplications.objects.filter(candidate=candidate).values_list('job_id',flat=True)
-            applied = jobs.filter(job_id__in=applied_job_ids)
-        else:
-            bookmarks = False  
-            applied = False  
-
-        # Pagination
-        paginator = Paginator(jobs, 10)  # Show 20 jobs per page
+        # Apply Pagination
+        paginator = Paginator(jobs, 1)  # Show 20 jobs per page
         page_obj = paginator.get_page(page_number)
 
-        # Filter
+        # Get Filter data to show in side bar
         filters = get_filter_from_job(jobs)
 
         context = {
             'page_obj': page_obj,
             'keyword1': keyword1,
             'keyword2': keyword2,
-            'filters' : filters,
-            'bookmarks' : bookmarks,
-            'applied' : applied
+            'filters' : filters
         }
         return render(request, 'jobseeker/jobs.html', context)
     except Exception as e:
@@ -252,57 +244,40 @@ def ApiSearch(request):
     try:
         keyword1 = request.GET.get('q', '')
         keyword2 = request.GET.get('p', '')        
-        page_number = request.GET.get('page', 1)
-        jobs = search_job(request,keyword1,keyword2,page_number)
+        page_number = request.GET.get('page', 2)
+        candidate = Candidates.objects.get(user=request.user)
+        jobs = search_job(request,keyword1,keyword2,page_number,candidate)
         if not jobs:
-            context = {
-                'page_obj': False
-            }
-            return render(request, 'jobseeker/jobs.html', context)
+            return Response({'jobs': JobsCardSerializer([], many=True).data})
+
         
         # Apply filter
         if request.method == "POST":
             if 'filter_jobs' in request.POST:
                 jobs = apply_filter_in_job(request,jobs)
 
-        # Bookmaked jobs
-        if request.user.is_authenticated:
-            candidate = Candidates.objects.get(user=request.user)
-            bookmarked_job_ids = Bookmarks.objects.filter(candidate=candidate).values_list('job_id', flat=True)
-            bookmarks = jobs.filter(job_id__in=bookmarked_job_ids)
-            
-            applied_job_ids = JobApplications.objects.filter(candidate=candidate).values_list('job_id',flat=True)
-            applied = jobs.filter(job_id__in=applied_job_ids)
-        else:
-            bookmarks = False  
-            applied = False  
+
 
         # Pagination
-        paginator = Paginator(jobs, 10)  # Show 20 jobs per page
+        paginator = Paginator(jobs, 1)  # Show 20 jobs per page
         page_obj = paginator.get_page(page_number)
 
         # Filter
         filters = get_filter_from_job(jobs)
 
-        context = {
-            'page_obj': page_obj,
-            'keyword1': keyword1,
-            'keyword2': keyword2,
-            'filters' : filters,
-            'bookmarks' : bookmarks,
-            'applied' : applied
-        }
+
         serializer = JobsCardSerializer(page_obj, many=True)
         api_response = {
             'jobs': serializer.data,  # Serialized job list
             'keyword1': keyword1,
             'keyword2': keyword2,
             'filters': filters,
-            'bookmarks': list(bookmarks.values_list('job_id', flat=True)) if bookmarks else [],
-            'applied': list(applied.values_list('job_id', flat=True)) if applied else [],
             'pagination': {
-                'current_page': page_obj.number,
+                'page_from': page_obj.start_index(),
+                'page_to': page_obj.end_index(),
+                'page_of': page_obj.paginator.count,
                 'total_pages': paginator.num_pages,
+                'current_pages': page_obj.number,
                 'has_next': page_obj.has_next(),
                 'has_previous': page_obj.has_previous(),
             }
@@ -370,7 +345,8 @@ def Apply(request):
         return redirect('job_seeker:home')
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
-    
+
+@csrf_exempt
 @login_required
 def Bookmark(request):
     try:
@@ -384,13 +360,14 @@ def Bookmark(request):
                 if exist:
                     exist.delete()
                     messages.info(request, f'Job unsaved successfully')
+                    candidate.increment_bookmarks_count(False)
                 elif candidate.bookmarks_count <15:
                     b = Bookmarks.objects.create(
                         candidate=candidate,
                         job=job
                     )
                     if b:
-                        candidate.increment_bookmarks_count()
+                        candidate.increment_bookmarks_count(True)
                         messages.info(request, f'Job saved successfully')
                     else:
                         messages.info(request, f'Not able to save the job')

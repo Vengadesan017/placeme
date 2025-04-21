@@ -1,24 +1,66 @@
-from .models import Jobs
+from .models import Jobs, JobApplications, Bookmarks
+# from recruiters.models import Jobs
 # from .serializers import JobSerializer
 from django.db.models import Count, Case, When, Q
+from django.db.models import OuterRef, Exists
 from django.contrib import messages
 
-def search_job(request,keyword1=None,keyword2=None,page_number=None):
-    # Basic keyword search
-    if keyword1 and keyword2:
-        # jobs = Jobs.objects.filter(title__icontains=keyword1, location__icontains=keyword2)
-        jobs = Jobs.objects.filter(
-            title__icontains=keyword1,
-            location_id__location__icontains=keyword2  # Filtering based on the location field
+def search_job(request,keyword1=None,keyword2=None,page_number=None,candidate=None):
+
+    if candidate:
+        # Get user bookamrks and saved applications
+        job_application_exists = JobApplications.objects.filter(
+            candidate=candidate,
+            job=OuterRef('pk')
         )
-        if not jobs.exists():
-            messages.warning(request, "No job vacancy matches your desired location")
-            jobs = Jobs.objects.filter(title__icontains=keyword1)        
-    elif keyword1:
-        jobs = Jobs.objects.filter(title__icontains=keyword1)
+        bookmarks_exists = Bookmarks.objects.filter(
+            candidate=candidate,
+            job=OuterRef('pk')
+        )
+        # Basic keyword search with annotation
+        if keyword1 and keyword2:
+            # jobs = Jobs.objects.filter(title__icontains=keyword1, location__icontains=keyword2)
+            jobs = Jobs.objects.annotate(
+            is_applied=Exists(job_application_exists),
+            is_saved=Exists(bookmarks_exists)
+            ).filter(
+                title__icontains=keyword1,
+                location_id__location__icontains=keyword2  # Filtering based on the location field
+            )
+            if not jobs.exists():
+                messages.warning(request, "No job vacancy matches your desired location")
+                jobs = Jobs.objects.annotate(
+                    is_applied=Exists(job_application_exists),
+                    is_saved=Exists(bookmarks_exists)
+                ).filter(
+                    title__icontains=keyword1
+                )        
+        elif keyword1:
+            jobs = Jobs.objects.annotate(
+                is_applied=Exists(job_application_exists),
+                is_saved=Exists(bookmarks_exists)
+            ).filter(
+                title__icontains=keyword1
+            )
+        else :
+            return False
+
     else :
-        return False
-    
+        # Basic keyword search without annotation
+        if keyword1 and keyword2:
+            # jobs = Jobs.objects.filter(title__icontains=keyword1, location__icontains=keyword2)
+            jobs = Jobs.objects.filter(
+                title__icontains=keyword1,
+                location_id__location__icontains=keyword2  # Filtering based on the location field
+            )
+            if not jobs.exists():
+                messages.warning(request, "No job vacancy matches your desired location")
+                jobs = Jobs.objects.filter(title__icontains=keyword1)        
+        elif keyword1:
+            jobs = Jobs.objects.filter(title__icontains=keyword1)
+        else :
+            return False
+
     if jobs.exists():
         # ORDER THE JOB POST
         jobs = jobs.order_by('-posted_date')

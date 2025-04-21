@@ -144,8 +144,11 @@ class Candidates(models.Model):
 
         self.save()     
         return True   
-    def increment_bookmarks_count(self):
-        self.bookmarks_count += 1
+    def increment_bookmarks_count(self,increase):
+        if increase:
+            self.bookmarks_count += 1
+        else:
+            self.bookmarks_count -= 1
         self.save()
     def __str__(self):
         return f'{self.first_name} ({self.user.email})'

@@ -105,7 +105,7 @@
                     <div class="info-name1">
                         <!-- mod -->
                         <div class="name-div">
-                            <h1 id="userName">{{ candidate.first_name }} {{ candidate.last_name }} <a href="#" id="openPersonalModalButton"> <i class='fa-solid fa-pencil'></i></a></h1>
+                            <h1 id="userName">{{ candidate.first_name }} {{ candidate.last_name }} <a href="#" class="open-modal-btn" data-modal-id="PersonalModal" > <i class='fa-solid fa-pencil'></i></a></h1>
                             
                         </div>
                         <div class="detial-div-name">
@@ -136,7 +136,7 @@
                                             {% if candidate.gender %}
                                                 {{ candidate.gender }}
                                             {% else %}
-                                            <a href="#" id="openPersonalModalButtong">Add Gender</a>
+                                            <a href="#" class="open-modal-btn" data-modal-id="PersonalModal" >Add Gender</a>
                                             {% endif %}
                                         </p>
                                     </div>
@@ -148,7 +148,7 @@
                                             {% if candidate.dob %}
                                                 {{ candidate.dob|date:'d-m-Y' }}
                                             {% else %}
-                                            <a href="#" id="openPersonalModalButton">Add DOB</a>
+                                            <a href="#" class="open-modal-btn" data-modal-id="PersonalModal" >Add DOB</a>
                                             {% endif %}
 
                                         </p>
@@ -161,7 +161,7 @@
                                         {% if candidate.work_status %}
                                             {{ candidate.work_status|default_if_none:'' }}
                                         {% else %}
-                                        <a href="#" id="openPersonalModalButton">Add Status</a>
+                                        <a href="#" class="open-modal-btn" data-modal-id="PersonalModal" >Add Status</a>
                                         {% endif %}
                                     </div>
                                 </li>
@@ -196,7 +196,7 @@
                                             {% if candidate.city and candidate.state and candidate.country %}
                                             {{ candidate.city }}, {{ candidate.state }}, {{ candidate.country }}
                                             {% else %}
-                                            <a href="#" id="openPersonalModalButton">Add Location</a>
+                                            <a href="#" class="open-modal-btn" data-modal-id="PersonalModal" >Add Location</a>
                                             {% endif %}
                                         </p>
                                     </div>
@@ -246,8 +246,8 @@
                     <div class="education-name1">
                         <h2>Education</h2>
                         <div class="add-div">
-                            <a href="#" id="openEduModalButton">Add</a>
-                            <i id="openEduEditModalButton" class="fa-solid fa-pen-to-square"></i>
+                            <a href="#" class="open-modal-btn" data-modal-id="EduModal" >Add</a>
+                            <i id="openEduEditModalButton" class="fa-solid fa-pen-to-square open-modal-btn" data-modal-id="EduEditModal"></i>
                         </div>
                     </div>
                     <div class="education-name2">
@@ -272,7 +272,7 @@
                         {% else %}
                         <div class="education-name2-1">
                             <div class="education-name2-1-col">
-                                <a href="#" id="openEduModalButton">Add</a>
+                                <a href="#" class="open-modal-btn" data-modal-id="EduModal" >Add</a>
 
                             </div>
                         </div>
@@ -284,7 +284,7 @@
                     <div class="key-headline">
                         <h4>Key Skills</h4>
                         <div class="key-add-div">
-                            <a href="#" id="openSkillEditModalButton">Add</a>
+                            <a href="#" class="open-modal-btn" data-modal-id="SkillsModal" >Add</a>
                             <i class="fa-solid fa-pen-to-square"></i>
                         </div>
                     </div>
@@ -323,7 +323,7 @@
                     <div class="Perference-heading">
                         <h4>Preference</h4>
                         <div class="Perference-add-div">
-                            <a href="#" id="openPreferModalButton">Add</a>
+                            <a href="#" class="open-modal-btn" data-modal-id="PreferModal" >Add</a>
                             <i class="fa-solid fa-pen-to-square"></i>
                         </div>
                     </div>
@@ -355,7 +355,7 @@
                                     {% endfor %}
                                     </tbody>
                                     {% else %}
-                                            <a href="#" id="openEduModalButton">Add</a>
+                                            <a href="#" class="open-modal-btn" data-modal-id="PreferModal" >Add</a>
                                     {% endif %}
 
                                 </table>
@@ -381,7 +381,7 @@
                                     <p class="Preferred-text">{{loc}}</p> 
                                 {% endfor %}
                                 {% else %}
-                                        <a href="#" id="openEduModalButton">Add</a>
+                                        <a href="#" class="open-modal-btn" data-modal-id="PreferModal" >Add</a>
                                 {% endif %}
 
                             </div>
@@ -401,7 +401,7 @@
                     <div class="employement-heading">
                         <h4>Employement</h4>
                         <div class="employement-add-div">
-                            <a href="#" id="openEmpModalButton">Add</a>
+                            <a href="#" class="open-modal-btn" data-modal-id="EmpModal" >Add</a>
                             <i class="fa-solid fa-pen-to-square"></i>
                         </div>
                     </div>
@@ -422,7 +422,7 @@
                     {% else %}
                     <div class="education-name2-1">
                         <div class="education-name2-1-col">
-                            <a href="#" id="openEduModalButton">Add</a>
+                            <a href="#" class="open-modal-btn" data-modal-id="EmpModal" >Add</a>
 
                         </div>
                     </div>
@@ -438,7 +438,7 @@
                     <div class="internship-heading">
                         <h4>Internship</h4>
                         <div class="internship-add-div">
-                            <a href="#" id="openInternModalButton">Add</a>
+                            <a href="#" class="open-modal-btn" data-modal-id="InternModal" >Add</a>
                             <i class="fa-solid fa-pen-to-square"></i>
                         </div>
                     </div>
@@ -458,7 +458,7 @@
                     {% else %}
                     <div class="education-name2-1">
                         <div class="education-name2-1-col">
-                            <a href="#" id="openEduModalButton">Add</a>
+                            <a href="#" class="open-modal-btn" data-modal-id="InternModal" >Add</a>
 
                         </div>
                     </div>
@@ -468,7 +468,7 @@
                     <div class="career-heading">
                         <h4>Career</h4>
                         <div class="career-add-div">
-                            <a href="#" id="openCareerModalButton">Add</a>
+                            <a href="#" class="open-modal-btn" data-modal-id="CareerModal" >Add</a>
                             <i class="fa-solid fa-pen-to-square"></i>
                         </div>
                     </div>

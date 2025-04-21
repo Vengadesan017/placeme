@@ -1,50 +1,78 @@
+const searchInput = document.getElementById("searchInput");
+const recommendationBox = document.getElementById("recommendationBox");
+const recommendationItems = Array.from(recommendationBox.getElementsByClassName("recommendation-item"));
 
-    // Get elements
-    const searchInput = document.getElementById("searchInput");
-    const recommendationBox = document.getElementById("recommendationBox");
-    const recommendationItems = Array.from(recommendationBox.getElementsByClassName("recommendation-item"));
+const locationInput = document.getElementById("locationInput");
+const locationRecommendationBox = document.getElementById("locationRecommendationBox");
+const locationItems = Array.from(locationRecommendationBox.getElementsByClassName("recommendation-item"));
 
-    // Show recommendations on focus
-    searchInput.addEventListener("focus", () => {
-        if (searchInput.value) {
-            filterRecommendations(searchInput.value);
-        }
-        recommendationBox.style.display = "block";
-    });
+const searchBar = document.querySelector(".search-bar");
 
-    // Hide recommendations when clicking outside the input or box
-    document.addEventListener("click", (event) => {
-        if (!searchInput.contains(event.target) && !recommendationBox.contains(event.target)) {
-            recommendationBox.style.display = "none";
-        }
-    });
-
-    // Filter recommendations based on input
-    searchInput.addEventListener("input", () => {
-        filterRecommendations(searchInput.value);
-    });
-
-    function filterRecommendations(query) {
-        const lowerCaseQuery = query.toLowerCase();
-        let hasVisibleItems = false;
-
-        recommendationItems.forEach(item => {
-            const text = item.textContent.toLowerCase();
-            if (text.includes(lowerCaseQuery)) {
-                item.style.display = "flex"; // Show matching items
-                hasVisibleItems = true;
-            } else {
-                item.style.display = "none"; // Hide non-matching items
-            }
-        });
-
-        // Show or hide the recommendation box based on whether there are visible items
-        recommendationBox.style.display = hasVisibleItems ? "block" : "none";
+document.addEventListener("click", (e) => {
+    if (!searchInput.contains(e.target) && !recommendationBox.contains(e.target)) {
+        recommendationBox.style.display = "none";
     }
-    
-    recommendationItems.forEach(item => {
-        item.addEventListener("click", () => {
-            searchInput.value = item.textContent.trim(); // Set input value to clicked item
-            recommendationBox.style.display = "none"; // Hide recommendation box
-        });
+    if (!locationInput.contains(e.target) && !locationRecommendationBox.contains(e.target)) {
+        locationRecommendationBox.style.display = "none";
+    }
+});
+
+searchInput.addEventListener("focus", () => {
+    filterRecommendations(searchInput.value);
+    showExtraInputsIfMobile();
+});
+
+searchInput.addEventListener("input", () => {
+    filterRecommendations(searchInput.value);
+    showExtraInputsIfMobile();
+});
+
+recommendationItems.forEach(item => {
+    item.addEventListener("click", () => {
+        searchInput.value = item.textContent.trim();
+        recommendationBox.style.display = "none";
     });
+});
+
+function filterRecommendations(query) {
+    const q = query.toLowerCase();
+    let visible = false;
+    recommendationItems.forEach(item => {
+        const match = item.textContent.toLowerCase().includes(q);
+        item.style.display = match ? "block" : "none";
+        if (match) visible = true;
+    });
+    recommendationBox.style.display = visible ? "block" : "none";
+}
+
+locationInput.addEventListener("focus", () => {
+    filterLocations(locationInput.value);
+});
+
+locationInput.addEventListener("input", () => {
+    filterLocations(locationInput.value);
+});
+
+locationItems.forEach(item => {
+    item.addEventListener("click", () => {
+        locationInput.value = item.textContent.trim();
+        locationRecommendationBox.style.display = "none";
+    });
+});
+
+function filterLocations(query) {
+    const q = query.toLowerCase();
+    let visible = false;
+    locationItems.forEach(item => {
+        const match = item.textContent.toLowerCase().includes(q);
+        item.style.display = match ? "block" : "none";
+        if (match) visible = true;
+    });
+    locationRecommendationBox.style.display = visible ? "block" : "none";
+}
+
+function showExtraInputsIfMobile() {
+    if (window.innerWidth <= 600) {
+        searchBar.classList.add("show-extra");
+    }
+}

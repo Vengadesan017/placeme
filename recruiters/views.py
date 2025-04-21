@@ -10,6 +10,16 @@ from .forms import CreateCompanyForm, CreateCompanyKYCForm, CreatePosition, Crea
 from .models import Companies,Positions,HireRequests
 from job_seekers.models import Candidates
 from django.contrib import messages
+from .serializers import HireRequestSerializer, PositionSerializer
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
+
+from django.http import JsonResponse
+from rest_framework.response import Response
 
 def is_recruiter(view_func):
     @wraps(view_func)
@@ -136,13 +146,13 @@ def FindCondidates(request):
 
 @is_recruiter
 @is_kyc
-def OfferingOnboaring(request):
+def HiringTracker(request):
     candidate = Candidates.objects.get(user=request.user)
     company = Companies.objects.get(candidate=candidate)
     context = {
         'company':company
     }
-    return render(request,'recruiters/offer_onboarding.html',context)
+    return render(request,'recruiters/hiring_tracker.html',context)
 
 @is_recruiter
 @is_kyc
@@ -166,24 +176,25 @@ def PositionManager(request):
                     if create_position_form.is_valid():
                         create_position_form.save(company=company,created_by=candidate)
                     else:
-                        messages.error(request, create_position_form.errors)
+                        return JsonResponse({'error': create_position_form.errors})
 
-                messages.info(request, f"{position_count} new position for {position_title} role was successfully created")
-                messages.info(request, f"Let's create the hire request to create the job post")
-                return redirect('recruiters:position_manager')
+                # messages.info(request, f"{position_count} new position for {position_title} role was successfully created")
+                # messages.info(request, f"Let's create the hire request to create the job post")
+                return JsonResponse({'info': f"{position_count} new position for {position_title} role was successfully created.Let's create the hire request to create the job post"})
 
             if 'create_hire_request' in request.POST:
                 # position_count = request.POST.get('count')
-                position_title = request.POST.get('position')
-
+                positions = request.POST.getlist('positions')
+                # position_title = request.POST.get('position')
+                print(positions)
                 create_HR_form = CreateHireRequest(request.POST)
                 if create_HR_form.is_valid():
                     create_HR_form.save(company=company,created_by=candidate)
-                    messages.info(request, f"New Hire Request was successfully created. Let's create the job post to hire Candidates")
-                else:
-                    messages.error(request, create_HR_form.errors)
+                    return JsonResponse({'info': "New Hire Request was successfully created. Let's create the job post to hire Candidates"})
 
-                return redirect('recruiters:position_manager')
+                else:
+                    return JsonResponse({'error': create_HR_form.errors})
+
 
         
         """
@@ -231,6 +242,7 @@ def PositionManager(request):
             'company':company,
             'positions':positions,
             'hire_requests':hire_requests,
+            'form':CreatePosition(),
             'create_hire_request':create_hire_request
         }
         return render(request,'recruiters/position_manager.html',context)
@@ -239,13 +251,58 @@ def PositionManager(request):
 
 @is_recruiter
 @is_kyc
-def AdminControl(request):
-    candidate = Candidates.objects.get(user=request.user)
-    company = Companies.objects.get(candidate=candidate)
-    context = {
-        'company':company
-    }
-    return render(request,'recruiters/admin_control.html',context)
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated]) 
+def APIPositionManager(request):
+
+
+    try:
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+
+        positions = Positions.objects.filter(company=company).prefetch_related('hirerequests_set') 
+
+        # Querying HireRequests and ordering them according to the specified logic
+        hire_requests = HireRequests.objects.filter(company=company) \
+            .annotate(
+            # Create a custom field to sort by `employee_id` being null or not
+            employee_id_null=Case(
+                When(employee_id__isnull=True, then=Value(0)),
+                default=Value(1),
+                output_field=IntegerField()
+                )
+            ) \
+            .order_by('employee_id_null', 'deadline') 
+
+        excluded_position_ids = hire_requests.values_list('position_id', flat=True)
+        positions = Positions.objects.filter(company=company) \
+            .exclude(position_id__in=excluded_position_ids)
+
+        # 3. Optional: get helper/form data
+        # create_hire_request = CreateHireRequest(company=company)
+
+        # 4. Serialize and return
+        return Response({
+            'hire_requests': HireRequestSerializer(hire_requests, many=True).data,
+            'positions': PositionSerializer(positions, many=True).data
+            # 'create_hire_request': create_hire_request
+        })
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
+        
+@is_recruiter
+@is_kyc
+def AdminControl(request,page):
+    try:
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+        context = {
+            'company':company,
+            'page':page
+        }
+        return render(request,'recruiters/admin_control.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
 
 @is_recruiter
 @is_kyc
@@ -274,6 +331,31 @@ def Post(request):
             'company':company
         }
         return render(request,'recruiters/post.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
+
+@is_recruiter
+@is_kyc
+def CreatePost(request):
+    try:
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+        # if request.method == "POST":
+        #     if 'upload_kyc' in request.POST:
+        #         form = CreateCompanyKYCForm(request.POST, request.FILES,instance=company)
+        #         if form.is_valid():
+        #             form.save()
+        #             messages.info(request,'Your KYC was successfully Registered.')
+        #             return redirect('recruiters:complete_kyc') 
+        #         else:
+        #             print("Form errors:", form.errors)
+        #             messages.error(request, 'Please enter the valid data')
+        # KYCForm = CreateCompanyKYCForm()
+        context = {
+            # 'KYCForm': KYCForm,
+            'company':company
+        }
+        return render(request,'recruiters/post_create.html',context)
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
 @is_recruiter

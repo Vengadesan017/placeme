@@ -9,7 +9,7 @@
             <!-- Modal Header -->
             <div class="modal-header">
                 <h3 class="modal-title">Add new education detail</h3>
-                <button type="button" class="btn-close" id="closeEduModalButton"><i class='fas fa-times edit'></i></button>
+                <button type="button" class="btn-close close-modal-btn" id="closeEduModalButton"><i class='fas fa-times edit'></i></button>
             </div>
         
             <!-- Modal Body -->
@@ -112,43 +112,6 @@
         </div>
 
 
-        
-<script type="text/javascript" >
-// Get modal and close button elements==========Personal=============
-var Emodal = document.getElementById("EduModal");
-var EopenButton = document.getElementById("openEduModalButton");
-var EcloseButton = document.getElementById("closeEduModalButton");
-{% comment %} var closeFooterButton = document.getElementById("closeModalFooterButton"); {% endcomment %}
-
-// Function to open modal
-EopenButton.onclick = function() {
-  Emodal.style.display = "block";
-};
-
-// Function to close modal
-EcloseButton.onclick = function() {
-  Emodal.style.display = "none";
-};
-
-{% comment %} // Close modal with footer button
-closeFooterButton.onclick = function() {
-  modal.style.display = "none";
-}; {% endcomment %}
-
-// Close the modal when clicking outside of it
-window.onclick = function(event) {
-  if (event.target == Emodal) {
-    Emodal.style.display = "none";
-  }
-};
-
-
-  </script>
-
-
-
-
-
     <!-- The Modal for ==========educational Edit===================== -->
     <div class="modal" id="EduEditModal">
         <div class="modal-dialog">
@@ -159,7 +122,7 @@ window.onclick = function(event) {
             <!-- Modal Header -->
             <div class="modal-header">
                 <h3 class="modal-title">Edit education details</h3>
-                <button type="button" class="btn-close" id="closeEduEditModalButton"><i class='fas fa-times edit'></i></button>
+                <button type="button" class="btn-close close-modal-btn" id="closeEduEditModalButton"><i class='fas fa-times edit'></i></button>
             </div>
         
             <!-- Modal Body -->
@@ -263,35 +226,3 @@ window.onclick = function(event) {
         </div>
 
 
-
-<script type="text/javascript" >
-// Get modal and close button elements==========Personal=============
-var EEmodal = document.getElementById("EduEditModal");
-var EEopenButton = document.getElementById("openEduEditModalButton");
-var EEcloseButton = document.getElementById("closeEduEditModalButton");
-{% comment %} var closeFooterButton = document.getElementById("closeModalFooterButton"); {% endcomment %}
-
-// Function to open modal
-EEopenButton.onclick = function() {
-  EEmodal.style.display = "block";
-};
-
-// Function to close modal
-EEcloseButton.onclick = function() {
-  EEmodal.style.display = "none";
-};
-
-{% comment %} // Close modal with footer button
-closeFooterButton.onclick = function() {
-  modal.style.display = "none";
-}; {% endcomment %}
-
-// Close the modal when clicking outside of it
-window.onclick = function(event) {
-  if (event.target == EEmodal) {
-    EEmodal.style.display = "none";
-  }
-};
-
-
-  </script>

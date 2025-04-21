@@ -109,7 +109,7 @@ form {
     /* Add some space between the stacked elements */
     padding: 10px 20px;
     /* Adjust padding for mobile */
-    background-color: none;
+    background-color: unset;
   }
 
   .search-bar input[type="text"] {
@@ -134,6 +134,12 @@ form {
     border-color: #000;
     /* Slightly larger text for the button */
   }
+  .search-bar button {
+    background-color: #FFBD03;
+    color: #000;
+
+}
+
 }
 
 

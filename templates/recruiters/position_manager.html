@@ -13,10 +13,13 @@ Job Vacancy
 <link rel="stylesheet" href="{% static 'css/recruiters/table.css' %}">
 
 <link rel="stylesheet" href="{% static 'css/model.css' %}">
+<link rel="stylesheet" href="{% static 'css/loading.css' %}">
 {% comment %} <link rel="stylesheet" href="{% static 'css/recruiters/old/create-job.css' %}"> {% endcomment %}
 
 <script src="{% static 'js/recruiters/post.js' %}" defer></script>
 <script src="{% static 'js/recruiters/table.js' %}" defer></script>
+<script src="{% static 'js/recruiters/post-form-submit.js' %}" defer></script>
+<script src="{% static 'js/loading.js' %}" defer></script>
 <style>
 
 
@@ -89,6 +92,13 @@ Job Vacancy
 
 {% block content %}
 
+            <div id="api-message" style="display: none;position: relative; top:70px;"></div>
+            <div id="loading-screen">
+              <div class="loader-wrapper">
+                <div class="loader"></div>
+                <span class="loading-text">Loading, please wait...</span>
+              </div>
+            </div>
             {% if messages %}
             {% for message in messages %}
               <div class='alert alert-{{ message.tags }}' style="position: relative; top:70px;">
@@ -249,7 +259,7 @@ Job Vacancy
                                 <div class="new-hire-request-parent">
                                     
                                     <div class="navigation-header-input-div-table">
-                                        <input type="text" placeholder="Search" id="book-description-input"/>
+                                        <input type="text" placeholder="Search" id="count-words"/>
                                         <i class="fa-solid fa-magnifying-glass"></i>
                                     </div>
                                     <div class="input-count-btn">
@@ -259,8 +269,8 @@ Job Vacancy
                                             <div class="dropdown">
                                                 <button class="dropbtn">+</button>
                                                 <div class="dropdown-content">
-                                                  <a href="#" id="openNewPositionModel">New Position</a>
-                                                  <a href="#" id="openNewHireRequest">New Hire Request</a>
+                                                  <a href="#" id="openNewPositionModel" class="open-modal-btn" data-modal-id="newPositionModel" >New Position</a>
+                                                  <a href="#" id="openNewHireRequest" class="open-modal-btn" data-modal-id="newHireRequest" >New Hire Request</a>
                                                 </div>
                                               </div>
 
@@ -271,8 +281,6 @@ Job Vacancy
                                 
                             </div>
 
-
-                            
                             <div class="table-container">
                                 {% if positions or hire_requests %}
                                 <table class="recruiters-table">
@@ -363,8 +371,24 @@ Job Vacancy
                                   </tbody>
                                 </table>
                                 {% else %}
-                                <h2><center>Sorry No records found!</center><h2>
-                                <h3><center>Lets create Position and generate the hire request to post the job vacancy post</center><h3>
+                                <table class="recruiters-table">
+                                  <thead>
+                                    <tr>
+                                      <th  class="recruiters-th">Hire Request</th>
+                                      <th  class="recruiters-th">Position</th>
+                                      <th  class="recruiters-th">Created Date</th>
+                                      <th  class="recruiters-th">Deadline</th>
+                                      <th  class="recruiters-th">Status</th>
+                                      <th  class="recruiters-th">Description</th>
+                                      {% comment %} <th  class="recruiters-th">Action</th> {% endcomment %}
+                                    </tr>
+                                  </thead>
+                                  <tbody id="table-body">
+
+                                    <tr><td colspan="6"><center>Sorry No records found!</center></td></tr>
+                                    <tr><td colspan="6"><center>Lets create Position and generate the hire request to post the job vacancy post</center></td></tr>
+                                  </tbody>
+                                </table>
                                 {% endif %}
                             </div>
 
@@ -582,5 +606,179 @@ Job Vacancy
 
     
 <script src="{% static 'js/recruiters/position-manager.js' %}"></script>
+<script src="{% static 'js/cookie/js.cookie.min.js' %}"></script>
+
+<script>
+  
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  handleFormSubmit('create-new-position-id');
+  handleFormSubmit('create-new-hire-request-id');
+});
+
+    {% comment %} 
+     {% endcomment %}
+
+
+
+     //
+
+     function formatDate(dateString) {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+    }
+///    
+
+
+function updatePositionDropdown(positions, selectId = 'id_type_id') {
+  const select = document.getElementById(selectId);
+  if (!select) return;
+
+  console.log("Updating position dropdown...");
+
+  // Enable multiple select and set size
+  select.multiple = true;
+  select.size = 6;
+
+  // Make it work without Ctrl key
+  select.addEventListener('mousedown', function (e) {
+    e.preventDefault();
+    const option = e.target;
+    if (option.tagName.toLowerCase() === 'option') {
+      option.selected = !option.selected;
+    }
+  });
+
+  // Clear current options
+  select.innerHTML = '';
+
+  // Optional: top disabled info line
+  const infoOption = document.createElement('option');
+  infoOption.disabled = true;
+  infoOption.textContent = 'Select one or more positions:';
+  select.appendChild(infoOption);
+
+  // Add position options
+  if (positions.length > 0) {
+    positions.forEach(position => {
+      const option = document.createElement('option');
+      option.value = position.position_id;
+      option.textContent = `${position.position_title} - ${position.position_code}`;
+      select.appendChild(option);
+    });
+  } else {
+    const emptyOption = document.createElement('option');
+    emptyOption.disabled = true;
+    emptyOption.textContent = 'No open positions available';
+    select.appendChild(emptyOption);
+  }
+}
+
+// Show selected values
+function logSelected() {
+  const selectedValues = Array.from(document.getElementById('id_type_id').selectedOptions)
+                              .map(opt => opt.value);
+  alert('Selected Position IDs: ' + selectedValues.join(', '));
+}
+
+// Initialize dropdown on load
+updatePositionDropdown(positions);  
+
+
+function getPositions(){
+    startLoading();
+     fetch('./../api/position-manager/')
+     .then(res => res.json())
+     .then(data => {
+       const tableBody = document.getElementById('table-body');
+       tableBody.innerHTML = ''; // clear existing rows
+   
+       const { positions, hire_requests } = data;
+       updatePositionDropdown(positions);
+       // Render positions
+       positions.forEach(position => {
+         const row = `
+           <tr>
+             <td class="recruiters-td">
+               <div class="checkbox-container">
+                 <input type="checkbox" id="checkbox-${position.position_id}">
+                 <a href="#">
+                   <div class="major"></div>
+                   <div class="minor"></div>
+                 </a>
+               </div>
+             </td>
+             <td class="recruiters-td">
+               <a href="#">
+                 <div class="major">${position.position_title}</div>
+                 <div class="minor">${position.position_code}</div>
+               </a>
+             </td>
+             <td class="recruiters-td"></td>
+             <td class="recruiters-td"></td>
+             <td class="recruiters-td"></td>
+             <td class="recruiters-td description" onclick="toggleDescription(this)">
+               ${position.description || ''}
+             </td>
+           </tr>
+         `;
+         tableBody.insertAdjacentHTML('beforeend', row);
+       });
+       // Render hire requests
+       hire_requests.forEach(hr => {
+
+         const row = `
+           <tr>
+             <td class="recruiters-td">
+               <div class="checkbox-container">
+                 <input type="checkbox" id="checkbox-${hr.hire_request_codes}">
+                 <a href="#">
+                   <div class="major">${hr.position.position_title}</div>
+                   <div class="minor">${hr.hire_request_code}</div>
+                 </a>
+               </div>
+             </td>
+             <td class="recruiters-td">
+               <a href="#">
+                 <div class="major">${hr.position.position_title}</div>
+                 <div class="minor">${hr.position.position_code}</div>
+               </a>
+             </td>
+             <td class="recruiters-td">${formatDate(hr.created_at)}</td>
+             <td class="recruiters-td">${formatDate(hr.deadline)}</td>
+             <td class="recruiters-td">
+               ${hr.is_open ? 'Hiring Needed' : 'Closed'}
+             </td>
+             <td class="recruiters-td description" onclick="toggleDescription(this)">
+               ${hr.position.description || ''}
+             </td>
+           </tr>
+         `;
+         tableBody.insertAdjacentHTML('beforeend', row);
+
+       });
+     })
+     .catch(error => console.error('Error loading table data:', error))
+     .finally(() => {
+      stopLoading();
+    });
+    }
+
+    getPositions();
+
+
+
+  
+</script>
+
+
+
+
 
 {% endblock mobile_view %}

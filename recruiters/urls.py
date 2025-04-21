@@ -14,11 +14,13 @@ urlpatterns = [
     path('create-user/',views.CreateUser,name='create_user'),
     path('applications/',views.Applications,name='applications'),
     path('post/',views.Post,name='post'),
+    path('create-post/',views.CreatePost,name='create_post'),
     path('users/',views.Users,name='users'),
     path('employee-info/',views.EmployeeLifeCycle,name='employee_info'),
 
 
-    path('onboarding/',views.OfferingOnboaring,name='onboarding'),
+    path('hiring-tracker/',views.HiringTracker,name='hiring_tracker'),
     path('position-manager/',views.PositionManager,name='position_manager'),
-    path('admin-control/',views.AdminControl,name='admin_control'),
+    path('api/position-manager/',views.APIPositionManager,name='api_position_manager'),
+    path('admin-control/<str:page>',views.AdminControl,name='admin_control'),
 ]

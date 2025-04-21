@@ -11,6 +11,8 @@ class JobsCardSerializer(serializers.ModelSerializer):
     location_id = serializers.StringRelatedField(many=True)  #  Shows only location names
     qualifications = serializers.StringRelatedField(many=True) 
     company = serializers.StringRelatedField() 
+    is_applied = serializers.BooleanField(read_only=True)
+    is_saved = serializers.BooleanField(read_only=True)
     # time_since_posted = serializers.SerializerMethodField()
     class Meta:
         model = Jobs
@@ -29,6 +31,8 @@ class JobsCardSerializer(serializers.ModelSerializer):
         'is_onsite',
         'is_work_from_home',
         'is_hybrid',
+        'is_applied',
+        'is_saved',
         'skills', 
         'qualifications', 
         'min_experience', 

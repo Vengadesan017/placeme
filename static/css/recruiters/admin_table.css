@@ -1,0 +1,330 @@
+.show-info-div{
+    display: none;
+    flex-direction: column;
+    padding-left: 10px;
+    user-select: none;
+    border-bottom: 1px solid gray;
+    border-top: 1px solid gray;
+}
+.list-right-table{
+  min-height: 800px;
+  height: auto;
+  /* background-color: rgb(190, 137, 137); */
+  width: 95%;
+  margin: auto;
+  /* padding-left: 10px; */
+  /* padding-right: 10px; */
+  padding-top: 10px;
+}
+.right-div-table{
+    min-height: 800px;
+    height: auto;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+}
+.new-hire-request-search{
+    display: flex;
+    /* flex-direction: column; */
+    /* min-height: 80px; */
+    height: auto;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    
+    /* background: #bb4141; */
+}
+.new-hire-request-parent{
+    display: flex;
+    flex-direction: column;
+    /* min-height:  ; */
+    height: auto;
+    /* background-color: aqua; */
+    background-color: #fff;
+    width: 30%;
+}
+.new-hire-request-div{
+    display: flex;
+    width: 100%;
+    background-color: #fff;
+    min-height: 35px;
+    height: auto;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 5px;
+    border: 1px solid grey;
+}
+
+.new-hire-request-div p{
+    font-size: 17px;
+    color: #141b5f;
+    font-weight: 500;
+}
+.new-hire-request-div i{
+    font-size: 22px;
+    color: #141b5f;
+}
+
+.dev-text{
+    min-height: 8px;
+    height: auto;
+    width: 100%;
+    padding-top: 3px;
+
+}
+
+.dev-text p{
+    font-size: 13px;
+    font-family: 'Poppins', sans-serif;
+    color: #999;
+}
+
+.checkbox-1-table{
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 20px;
+    width: 100%;
+    /* background-color: rgb(158, 123, 70); */
+    min-height: 20px;
+    height: auto;
+}
+.checkbox-1-1-table{
+    display: flex;
+    gap: 10px;
+    /* background-color: chocolate; */
+    
+    align-items: center;
+    width: 90%;
+}
+.checkbox-1-1-table p{
+    color: #555555;
+    font-size: 16px;
+}
+.checkbox-1-count-table{
+    display: flex;
+    justify-content: center;
+    
+    /* background-color: blueviolet; */
+    
+    align-items: center;
+    
+}
+.checkbox-1-count-table button{
+  width: 80px;
+  height: 20px;
+  padding: 18px 15px;
+  border-radius: 8px;
+  border: none;
+  background-color: red;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+.navigation-header-input-div-table{
+    min-height: 35px;
+    height: auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    /* background-color: #fff; */
+    /* background-color: #141B5F; */
+    border-radius: 8px;
+    border: 1px solid black;
+    margin-bottom: 5px;
+}
+
+.navigation-header-input-div-table input{
+    min-height: 33px;
+    height: auto;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    border-radius: 10px;
+    
+    border: none;
+    padding-top: 2px;
+}
+.navigation-header-input-div-table input::placeholder{
+    font-size: 17px;
+}
+
+
+.navigation-header-input-div-table input:focus {
+    border: none; /* Removes border */
+    outline: none; /* Removes outline */
+    background-color: white; /* Keeps background */
+}
+
+.navigation-header-input-div-table i{
+    font-size: 17px;
+}
+
+.input-count-btn{
+    display: flex;
+    justify-content: end;
+    min-height: 50px;
+    height: auto;
+    background-color:white;
+}
+.input-count-div{
+    display: flex;
+    justify-content: start;
+    width: 50%;
+    padding-top: 2px;
+
+}
+.input-count-div p{
+    
+    margin-right: 20px;
+    font-size: 12px;
+    color: #555;
+}
+
+.input-count-btn-div button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* width: 50px;
+    height: 50px; */
+    padding: 4px 13px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    background-color: #141b5f;
+    color: #ffffff;
+}
+
+
+
+
+
+
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden; /* if want scroll hide */
+    min-height: 90vh; /* if want scrool set max */
+    height: auto; /* if want scroll hide */
+    /* max-height: 98vh; */
+    background: #fff;
+    /* box-shadow: 0 0 10px #ccc; */
+    border-radius: 8px;
+    /* padding: 20px; */
+    margin-top: 10px;
+    user-select: none;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1000px;
+  }
+
+  th, td {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    /* vertical-align: top; */
+  }
+
+  th {
+    background: #f0f0f0;
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+  }
+
+  /* Row Hover Effect */
+  tbody tr:hover {
+    background: #f9f9f9;
+    transition: 0.3s;
+  }
+
+  /* Checkbox Styling */
+  .checkbox-container {
+    display: flex;
+    align-items: start;
+    gap: 10px;
+  }
+
+  .checkbox-container input {
+    margin-top: 5px;
+  }
+
+  /* Major and Minor Text Styling */
+  .major {
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .minor {
+    font-size: 12px;
+    color: #555;
+  }
+
+  /* Action Buttons */
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 15px;
+    font-size: 14px;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+    border-radius: 4px;
+    margin: 2px;
+    text-decoration: none;
+  }
+
+  .edit-btn {
+    background: #28a745;
+  }
+
+  .edit-btn:hover {
+    background: #218838;
+  }
+
+  .delete-btn {
+    background: #dc3545;
+  }
+
+  .delete-btn:hover {
+    background: #c82333;
+  }
+
+  /* Expandable Description */
+  .description {
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    transition: all 0.3s;
+  }
+
+  .expanded {
+    white-space: normal;
+    max-width: 100%;
+  }
+
+  /* Scrollbar */
+  .table-container {
+    overflow-x: auto;
+  }
+
+  table th, table td {
+    white-space: nowrap;
+  }
