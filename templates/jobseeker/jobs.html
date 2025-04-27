@@ -225,17 +225,22 @@ Job Result {{ keyword1 }}
                                 ></span>                        
                                 </span>
     
-                          </p>
-                          <div class="skills skills-container" data-skills="{{job.skills}}"></div>
-                        <p3 class="description">
-                            {{ job.description }}
-                        </p3>
+                          </p>                             
+                          <div class="skills skills-container" data-skills="{{job.skills.all|join:','}}"></div>
+                          {% comment %} <div class="skills skills-container" data-skills="{{job.skills}}"></div> {% endcomment %}
+                        {% comment %} <p class="description">
+                            {{ job.description|escape }}
+                        </p> {% endcomment %}
                     </div>
             
                     <div class="job-footer">
                         <span class="time-since" data-posted-date="{{ job.refreshed_date|date:'c' }}"></span>
+                        {% if job.opening_count > 0 %}
                         <span>{{ job.opening_count|default_if_none:"Not disclosed" }} Openings</span>
+                        {% endif %}
+                        {% if job.applied_count > 10 %}
                         <span>{{ job.applied_count|default_if_none:"Not disclosed" }} Applied</span>
+                        {% endif %}    
                         <form method="POST" action="/bookmark/">
                             {% csrf_token %}
                             <input type="hidden" value="{{ job.slug }}" name="slug">

@@ -1,14 +1,15 @@
 from functools import wraps
 from django.shortcuts import redirect,render
+from django.urls import reverse
 from django.http import HttpResponse
 from django.contrib.auth.decorators import user_passes_test,login_required
 from django.db.models import Prefetch
 from django.db.models import Subquery,OuterRef
 from django.db.models import Case, When, Value, F
 from django.db.models import IntegerField
-from .forms import CreateCompanyForm, CreateCompanyKYCForm, CreatePosition, CreateHireRequest
-from .models import Companies,Positions,HireRequests
-from job_seekers.models import Candidates
+from .forms import CreateCompanyForm, CreateCompanyKYCForm, CreatePosition, CreateHireRequest, CreateJobs
+from .models import Companies, Positions, HireRequests, Qualifications, Locations, Benefits, Jobs
+from job_seekers.models import Candidates, Skills
 from django.contrib import messages
 from .serializers import HireRequestSerializer, PositionSerializer
 
@@ -183,17 +184,51 @@ def PositionManager(request):
                 return JsonResponse({'info': f"{position_count} new position for {position_title} role was successfully created.Let's create the hire request to create the job post"})
 
             if 'create_hire_request' in request.POST:
-                # position_count = request.POST.get('count')
-                positions = request.POST.getlist('positions')
-                # position_title = request.POST.get('position')
-                print(positions)
-                create_HR_form = CreateHireRequest(request.POST)
-                if create_HR_form.is_valid():
-                    create_HR_form.save(company=company,created_by=candidate)
-                    return JsonResponse({'info': "New Hire Request was successfully created. Let's create the job post to hire Candidates"})
+                selected_positions = request.POST.get('position', '')
 
-                else:
-                    return JsonResponse({'error': create_HR_form.errors})
+                # Fallback to legacy support if position_id is submitted directly
+                if not selected_positions:
+                    position_id = request.POST.get('position')
+                    if position_id:
+                        selected_positions = position_id
+
+                position_ids = selected_positions.split(',') if selected_positions else []
+
+                if not position_ids:
+                    return JsonResponse({'error': 'No positions selected'}, status=400)
+
+                created_requests = []
+
+                for position_id in position_ids:
+                    # Clone the POST data and inject the position_id
+                    mutable_post = request.POST.copy()
+                    mutable_post['position'] = position_id
+    
+                    create_HR_form = CreateHireRequest(mutable_post)
+                    if create_HR_form.is_valid():
+                        hire_request = create_HR_form.save(company=company, created_by=candidate)
+                        created_requests.append(hire_request.hire_request_id)
+                    else:
+                        return JsonResponse({
+                            'error': f'Invalid data for position {position_id}',
+                            'form_errors': create_HR_form.errors
+                        }, status=400)
+
+                return JsonResponse({
+                    'info': f"{len(created_requests)} Hire Request(s) created successfully.",
+                    'created_ids': created_requests
+                })
+                # # position_count = request.POST.get('count')
+                # positions = request.POST.getlist('positions')
+                # # position_title = request.POST.get('position')
+                # print(positions)
+                # create_HR_form = CreateHireRequest(request.POST)
+                # if create_HR_form.is_valid():
+                #     create_HR_form.save(company=company,created_by=candidate)
+                #     return JsonResponse({'info': "New Hire Request was successfully created. Let's create the job post to hire Candidates"})
+
+                # else:
+                #     return JsonResponse({'error': create_HR_form.errors})
 
 
         
@@ -315,6 +350,7 @@ def Post(request):
     try:
         candidate = Candidates.objects.get(user=request.user)
         company = Companies.objects.get(candidate=candidate)
+        posts = Jobs.objects.filter(company=company, is_draft=False).order_by('-created_at')
         # if request.method == "POST":
         #     if 'upload_kyc' in request.POST:
         #         form = CreateCompanyKYCForm(request.POST, request.FILES,instance=company)
@@ -328,9 +364,37 @@ def Post(request):
         # KYCForm = CreateCompanyKYCForm()
         context = {
             # 'KYCForm': KYCForm,
-            'company':company
+            'company':company,
+            'posts':posts
         }
         return render(request,'recruiters/post.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
+
+@is_recruiter
+@is_kyc
+def PostDraft(request):
+    try:
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+        posts = Jobs.objects.filter(company=company, is_draft=True).order_by('-created_at')
+        # if request.method == "POST":
+        #     if 'upload_kyc' in request.POST:
+        #         form = CreateCompanyKYCForm(request.POST, request.FILES,instance=company)
+        #         if form.is_valid():
+        #             form.save()
+        #             messages.info(request,'Your KYC was successfully Registered.')
+        #             return redirect('recruiters:complete_kyc') 
+        #         else:
+        #             print("Form errors:", form.errors)
+        #             messages.error(request, 'Please enter the valid data')
+        # KYCForm = CreateCompanyKYCForm()
+        context = {
+            # 'KYCForm': KYCForm,
+            'company':company,
+            'posts':posts
+        }
+        return render(request,'recruiters/post_draft.html',context)
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
 
@@ -340,20 +404,83 @@ def CreatePost(request):
     try:
         candidate = Candidates.objects.get(user=request.user)
         company = Companies.objects.get(candidate=candidate)
-        # if request.method == "POST":
-        #     if 'upload_kyc' in request.POST:
-        #         form = CreateCompanyKYCForm(request.POST, request.FILES,instance=company)
-        #         if form.is_valid():
-        #             form.save()
-        #             messages.info(request,'Your KYC was successfully Registered.')
-        #             return redirect('recruiters:complete_kyc') 
-        #         else:
-        #             print("Form errors:", form.errors)
-        #             messages.error(request, 'Please enter the valid data')
-        # KYCForm = CreateCompanyKYCForm()
+        
+        if request.method == 'POST':
+            form = CreateJobs(request.POST, company = company)
+            if form.is_valid():
+                job = form.save(commit=False,company=company,created_by=candidate)
+                
+                action = request.POST.get('action')
+                if action == 'draft':
+                    job.is_draft = True
+                elif action == 'publish':
+                    job.is_draft = False
+                    
+                job.save()  
+
+                # # Handle the dynamic qualifications and skills
+                # new_qualifications = request.POST.getlist('new_qualifications')  # Get the new qualifications from POST
+                # new_locations = request.POST.getlist('new_locations')  # Get the new skills from POST
+                # new_skills = request.POST.getlist('new_skills')  # Get the new skills from POST
+                # new_benefits = request.POST.getlist('new_benefits')  # Get the new skills from POST
+
+                # # Handle new qualifications
+                # for qual_name in new_qualifications:
+                #     try:
+                #         qualification, created = Qualifications.objects.get_or_create(qualification=qual_name, created_by = candidate)
+                #         job.qualifications.add(qualification)  # Add the qualification to the job
+                #     except Exception as e:
+                #         messages.error(request, f"Error saving qualification '{qual_name}': {str(e)} but post is created with out Qualifications")
+                #         return redirect('recruiters:create_post')
+
+                # # Handle new location
+                # for location_name in new_locations:
+                #     try:
+                #         location, created = Locations.objects.get_or_create(location=location_name, created_by = candidate)
+                #         job.location_id.add(location)  # Add the location to the job
+                #     except Exception as e:
+                #         messages.error(request, f"Error saving Location '{location_name}': {str(e)} but post is created with out location")
+                #         return redirect('recruiters:create_post')
+                    
+                # # Handle new benefits
+                # for benefit_name in new_benefits:
+                #     try:
+                #         benefit, created = Benefits.objects.get_or_create(benefit=benefit_name, created_by = candidate)
+                #         job.benefit_id.add(benefit)  # Add the benefits to the job
+                #     except Exception as e:
+                #         messages.error(request, f"Error saving benefit '{benefit_name}': {str(e)} but post is created with out benefits")
+                #         return redirect('recruiters:create_post')
+                # # Handle new skills
+                # for skill_name in new_skills:
+                #     try:
+                #         skill, created = Skills.objects.get_or_create(skill=skill_name, created_by = candidate)
+                #         job.skills.add(skill)  # Add the skill to the job
+                #     except Exception as e:
+                #         messages.error(request, f"Error saving skill '{skill_name}': {str(e)} but post is created with out key skills")
+                #         return redirect('recruiters:create_post')
+
+                # # Now save any other many-to-many relationships through the form
+                form.save_m2m()
+
+                if action == 'draft':
+                    messages.info(request, "Saved as Draft.")
+                    return redirect('recruiters:post_draft')
+                elif action == 'publish':
+                    messages.info(request, "Job Published.")
+                    return redirect('recruiters:post')
+                else:
+                    messages.error(request, "Job post did't able to save")
+                    # redirect('recruiters:create_post')
+                # messages.info(request, "Saved as Draft." if action == 'draft' else "Job Published.")
+                # return redirect(f"{reverse('job_seeker:job')}?r={job.slug}")
+                
+            else:
+                messages.error(request,form.errors)
+                return redirect('recruiters:create_post')
         context = {
             # 'KYCForm': KYCForm,
-            'company':company
+            'company':company,
+            'form' : CreateJobs(request.POST or None, company=company)
         }
         return render(request,'recruiters/post_create.html',context)
     except Exception as e:

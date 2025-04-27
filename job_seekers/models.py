@@ -411,7 +411,12 @@ class EducationMap(models.Model):
 
 
     def __str__(self):
-        return f'{self.candidate.first_name} complete {self.edu_id.name} as {self.type_id.edu_type}'
+        if self.candidate.first_name and self.edu_id.name and self.type_id.edu_type:
+            # return f'{self.candidate.first_name} complete {self.edu_id.name} as {self.type_id.edu_type}'
+            return "hello"
+        else:
+            return f'{self.edu_map_id}'
+
 
 # =====================================EducationName Map End========================================================
 # =====================================Locations begin========================================================

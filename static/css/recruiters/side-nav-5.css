@@ -566,3 +566,13 @@
     
     
   }
+
+
+  .box-1-hide a.active,.box-1 a.active{
+    border: #fff;
+    background-color: #fff; 
+
+    p,i{
+    color: #141b5f;
+    }
+}

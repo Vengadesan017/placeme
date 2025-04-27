@@ -155,11 +155,11 @@ h3 {
   color: #333;
 }
 
-p,
+/* p,
 ul {
   color: #555;
   line-height: 1.6;
-}
+} */
 
 /* Section Titles */
 h3 {
@@ -308,4 +308,9 @@ h3 {
     position: relative;
     text-align: center;
   }
+}
+
+.scroll section p, .benefits ul {
+  padding: 0 20px;
+  /* background-color: #9990a2; */
 }

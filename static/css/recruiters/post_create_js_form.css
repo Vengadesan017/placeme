@@ -1,0 +1,90 @@
+.multi-select-container {
+    width: inherit;
+    width: 80%;
+    margin: 10px 0 10px 0;
+    font-family: sans-serif;
+    position: relative;
+  }
+  
+  .selected-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .tag {
+  
+    padding: 4px 8px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+      height: 38px;
+      border-radius: 50px;
+      background-color: #FFBD03;
+      color: #000000;
+      border-color: #FFBD03;
+  }
+  
+  .tag button {
+    margin-left: 5px;
+    background: transparent;
+    color: #000;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .search-input {
+    width: 100%;
+  }
+  
+  .dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1051;
+  }
+  
+  .dropdown-item {
+    padding: 6px;
+    cursor: pointer;
+  }
+  
+  .dropdown-item:hover {
+    background: #f0f0f0;
+  }
+
+/* Hide the real checkbox */
+.custom-checkbox {
+display: none;
+}
+
+/* Style the label normally */
+.checkbox-label {
+height: 38px;
+min-width: 90px;
+width: fit-content;
+padding: 0 18px;
+background-color: #fff;
+display: flex;
+justify-content: center;
+align-items: center;
+border: 1px solid gray;
+border-radius: 50px;
+cursor: pointer;
+margin: 3px 15px;
+transition: 0.3s;
+
+}
+
+/* Style the label when checkbox is checked */
+.custom-checkbox:checked + label {
+background-color: #FFBD03;
+color: #000000;
+border-color: #FFBD03;
+}

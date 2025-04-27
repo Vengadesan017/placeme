@@ -10,6 +10,7 @@ class JobsCardSerializer(serializers.ModelSerializer):
     # location_id = LocationSerializer(many=True)  #  Nested serializer for detailed output
     location_id = serializers.StringRelatedField(many=True)  #  Shows only location names
     qualifications = serializers.StringRelatedField(many=True) 
+    skills = serializers.StringRelatedField(many=True) 
     company = serializers.StringRelatedField() 
     is_applied = serializers.BooleanField(read_only=True)
     is_saved = serializers.BooleanField(read_only=True)
@@ -38,6 +39,7 @@ class JobsCardSerializer(serializers.ModelSerializer):
         'min_experience', 
         'max_experience', 
         'salary',
+        'salary_type',
         # 'get_time_since_posted',
         'last_date_to_apply',
         'refreshed_date',

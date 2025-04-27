@@ -14,9 +14,10 @@ urlpatterns = [
     path('create-user/',views.CreateUser,name='create_user'),
     path('applications/',views.Applications,name='applications'),
     path('post/',views.Post,name='post'),
+    path('post/draft/',views.PostDraft,name='post_draft'),
     path('create-post/',views.CreatePost,name='create_post'),
     path('users/',views.Users,name='users'),
-    path('employee-info/',views.EmployeeLifeCycle,name='employee_info'),
+    path('employees/',views.EmployeeLifeCycle,name='employees'),
 
 
     path('hiring-tracker/',views.HiringTracker,name='hiring_tracker'),

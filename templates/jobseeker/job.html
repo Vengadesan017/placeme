@@ -19,6 +19,22 @@
         color:#fff;
     }
 
+
+    .show-description-as-pure-html h1,
+.show-description-as-pure-html h2,
+.show-description-as-pure-html h3,
+.show-description-as-pure-html p,
+.show-description-as-pure-html ul,
+.show-description-as-pure-html ol,
+.show-description-as-pure-html li,
+.show-description-as-pure-html a,
+.show-description-as-pure-html strong,
+.show-description-as-pure-html em,
+.show-description-as-pure-html u {
+    all: revert; /* resets inherited styles */
+    margin: unset;
+}
+
 </style>
 {% endblock statics %}
 
@@ -72,15 +88,23 @@
                                 {{ job.location_id.all|join:", " }}
 
                             </li>
-                            <li><i class="fas fa-indian-rupee-sign"></i>{{ job.salary|floatformat:0 }}/Month</li>
+                            <li><i class="fas fa-indian-rupee-sign"></i>{{ job.salary|floatformat:0 }} {{ job.salary_type }}</li>
                             <li><i class="fas fa-calendar-alt"></i> {{ job.refreshed_date|timesince }} ago</li>
                           </ul>
                           
                           <!-- Second Row: Salary, Experience, Qualification -->
                           <ul class="data">
                             <li><i class="fas fa-clock"></i>{{ job.employment_type }}</li>
-                            <li><i class="fas fa-briefcase"></i>{{ job.required_experience|floatformat:0 }} Years</li>
-                            <li><i class="fas fa-eye"></i>{{ job.views }} viewed</li>
+                            <li><i class="fas fa-briefcase"></i>
+                                {% if job.min_experience != job.max_experience %}
+                                {{ job.min_experience|default_if_none:"Not disclosed"|floatformat:0 }} - {{ job.max_experience|default_if_none:"Not disclosed"|floatformat:0 }} Years
+                                {% else %}
+                                    {{ job.max_experience|default_if_none:"Not disclosed"|floatformat:0 }} Years
+                                {% endif%}
+                            </li>
+                            {% if job.opening_count > 0 %}
+                            <li><i class="fas fa-eye"></i>{{ job.opening_count }} Openings</li>
+                            {% endif%}
                           </ul>
                           
                           <!-- Third Row: Date, Viewed, Applied -->
@@ -103,7 +127,9 @@
                             {% endif %}
                             </li>
                             <li><i class="fas fa-graduation-cap"></i>{{ job.qualifications.all|join:", " }}</li>
-                            <li><i class="fas fa-paper-plane"></i>{{ job.applied_count }} Applied</li>
+                            {% if job.applied_count > 10 %}
+                            <li><i class="fas fa-paper-plane"></i>{{ job.applied_count }} Applicants</li>
+                            {% endif%}
                           </ul>
                         </div>
                       </section>
@@ -112,14 +138,18 @@
                 <hr class="divider">
                 <section id="description">
                     <h3>Description</h3>
-                    <p>{{ job.description }}</p>
+                    <div class="show-description-as-pure-html">
+
+                        <p>{{ job.description|safe }}</p>
+                    </div>
             </section>
                 <hr class="divider">                
                 <section class="responsibilities" id="key-skills">
                     <h3>Key Skills</h3>
                     <div class="skills">
-                        {% if skills_list %}
-                        {% for skill in skills_list %}
+
+                        {% if job.skills.all %}
+                        {% for skill in job.skills.all %}
                         {% if skill %}
                           <span>{{ skill }}</span>
                         {% else %}

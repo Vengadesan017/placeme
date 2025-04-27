@@ -18,19 +18,11 @@
 
             <table class="modal-table">
                 <tr> 
-                    <td><b>For which Position</b><button onclick="logSelected()">Get Selected Values</button></td>
+                    <td><b>For which Position</b></td>
                     <td>
-
-                        <select name="position" id="id_type_id">
-                            <option value="">Select Position</option>
-                            {% for option in create_hire_request.fields.position.queryset %}
-                                <option value="{{ option.pk }}">
-                                    {{ option }}
-                                </option>
-                                {% empty %}
-                                <option disabled>No open positions available</option>
-                            {% endfor %}
-                        </select>
+                        <input type="hidden" name="position" id="selected_positions_input" />
+                        <div id="position-wrapper" class="multi-select-container"></div>
+                        
                     </td>
                 </tr>
                 <tr> 

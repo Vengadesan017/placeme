@@ -206,10 +206,10 @@ Job vacancy post
                             </div>
                             <div class="right-top">
                                 <div class="right-top-1">
-                                    <div class="all-job">
+                                    <div class="draft">
                                         <a href="{% url 'recruiters:post' %}" class="buttons">All Jobs</a>
                                     </div>
-                                    <div class="draft">
+                                    <div class="all-job">
                                         <a class="buttons" href={% url 'recruiters:post_draft' %}>Draft</a>
                                     </div>
                                 </div>
@@ -244,6 +244,7 @@ Job vacancy post
                             </div>
 
 
+
                             {% if posts %}
                                 {% for post in posts %}
                             <div class="right-box-1">
@@ -258,14 +259,9 @@ Job vacancy post
                                                 </div>
                                             </div>
                                         </div>
-                                        {% if post.is_active %}
-                                        <div class="Expired-1">
-                                            <p>Active</p>
-                                            <i class="fa-regular fa-clock"></i>
-                                        </div>
-                                        {% else%}
+                                        {% if post.is_draft %}
                                         <div class="Expired">
-                                            <p>In Active</p>
+                                            <p>Draft</p>
                                             <i class="fa-regular fa-clock"></i>
                                         </div>
                                         {% endif %}
@@ -290,16 +286,16 @@ Job vacancy post
 
                                     <div class="c-box-3">
                                         <div class="Report">
-                                            <p>Refresh</p>
+                                            <p>Edit</p>
                                             <i class="fa-solid fa-ellipsis-vertical" id="c-3-show"></i>
                                         </div>
                                         <div class="c-3-postion" id="c-3-post">
                                             <a href="/job/?r={{ post.slug }}" class="c-3-postion-1">
                                                 Link
                                             </a>
-                                            <div class="c-3-postion-2">
+                                            {% comment %} <div class="c-3-postion-2">
                                                 <a>Close vacancy</a>
-                                            </div>
+                                            </div> {% endcomment %}
 
                                         </div>
                                         <div class="date">
@@ -308,14 +304,14 @@ Job vacancy post
                                         </div>
                                     </div>
                                 </div>
-                                <div class="hightlight">
+                                {% comment %} <div class="hightlight">
                                     <p class="one">The job posting has expired would you like to .</p>
                                     <p></p>
 
                                     <p class="underline two">Repost it </p><p></p>
                                     <p class="three">. or </p><p></p>
                                     <p class="underline four"> . Closed it ?</p>
-                                </div>
+                                </div> {% endcomment %}
                             </div>
 
                             {% endfor %}

@@ -45,7 +45,7 @@
 @media (min-width: 622px) and (max-width:999px){
     .r-down-main{
         padding-right: 0px;
-        background-color:#f4f5ff ;
+        /* background-color:#f4f5ff ; */
     }
     .list-main{
         display: flex;

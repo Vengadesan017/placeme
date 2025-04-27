@@ -11,10 +11,32 @@ Job vacancy post
 <link rel="stylesheet" href="{% static 'css/recruiters/post-filter-mobile.css' %}">
 <link rel="stylesheet" href="{% static 'css/recruiters/post-create-form-input.css' %}">
 <link rel="stylesheet" href="{% static 'css/recruiters/post-create-form-input-res.css' %}">
-{% comment %} <link rel="stylesheet" href="{% static 'css/recruiters/old/create-job.css' %}"> {% endcomment %}
+<link rel="stylesheet" href="{% static 'css/job.css' %}">
+<link rel="stylesheet" href="{% static 'css/model.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/post_create_js_form.css' %}">
 
 <script src="{% static 'js/recruiters/post.js' %}" defer></script>
-<script src="{% static 'js/recruiters/word-count.js' %}" defer></script>
+<script src="{% static 'js/recruiters/post_create_js_form.js' %}" defer></script>
+{% comment %} <script src="{% static 'js/recruiters/word-count.js' %}" defer></script> {% endcomment %}
+
+
+
+<style>
+    div#editor-container, .ql-toolbar {
+        width: 100%;
+    }
+
+
+    /* for modals  */
+    .container{
+        margin-top: unset;
+    }
+    .modal-body{
+        background-color: #E1E4FF;
+    }
+</style>
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.min.js"></script>
 <style>
 
 .kyc-card{
@@ -31,154 +53,271 @@ Job vacancy post
 
 {% block content %}
 
-            {% if messages %}
-            {% for message in messages %}
-              <div class='alert alert-{{ message.tags }}'>
-                <span class="closebtn">&times;</span>
-                  {{ message }}
-              </div>    
-            {% endfor %}
-          {% endif %}
+
  
 
 
 
           <div class="r-right-down-main">
             <div class="r-down-main">
-            <div class="create-form-contrainer">
-                <div class="account-div">
-                    <p class="account">Create new job post</p>
-                </div>
-                <div class="info-list">
-
-
-                    <div class="admin-div">
-                        <div class="admin-name">
-                            <p >Job Title <span>*</span></p>
-                            <input class="admin-input" placeholder="Enter Admin name" required/> 
-                        </div>
-                        <div class="admin-role">
-                            <p>Work Mode </p>
-                            <input class="admin-input" placeholder="onsite / remote / hybrid" required/>
-                        </div>
-    
+                <form method="POST" action="#" class="create-form-contrainer">
+                    {% csrf_token %}
+                    <div class="account-div">
+                        <p class="account">Create new job post</p>
                     </div>
+                    <div class="info-list">
+                
+                        <div class="company-div">
+                            <div class="admin-name">
+                                <p>Hire Request<span class="red-star">*</span></p>
+                                {{ form.hire_request}}
+                            </div>
 
+                        </div>
+                        <div class="company-div">
+                            <div class="admin-name">
+                                <p>Job Title <span class="red-star">*</span></p>
+                                <input class="admin-input" name="title" placeholder="Enter Job title" required /> 
+                            </div>
+                            <div class="admin-role">
+                                <p>Work Mode <span class="red-star">*</span></p>
+                                <p>
+                                    <input type="checkbox" class="custom-checkbox" name="is_onsite" id="is_onsite" />
+                                    <label for="is_onsite" class="checkbox-label">Onsite</label>
+                                </p>
+                                <p>
+                                    <input type="checkbox" class="custom-checkbox" name="is_work_from_home" id="is_work_from_home" />
+                                    <label for="is_work_from_home" class="checkbox-label">Remote</label>
+                                </p>
+                                <p>
+                                    <input type="checkbox" class="custom-checkbox" name="is_hybrid" id="is_hybrid" />
+                                    <label for="is_hybrid" class="checkbox-label">Hybrid</label>
+                                </p>
+                            </div>
+                        </div>
+                
+                        <div class="admin-div">
+                            <p>Job Location <span class="red-star">*</span></p>
+                            <!-- Locations -->
+                            <div class="multi-select-container" id="location-wrapper">
+                                <div class="selected-tags" id="selected-tags-location"></div>
+                                <input type="text" class="search-input admin-input-sel" id="search-location" placeholder="Search or add locations..." autocomplete="off">
+                                <div class="dropdown-list" id="dropdown-location"></div>
+                            </div>
 
-                    <div class="company-div">
-                        <p >Job Location <span>*</span></p>
-                        <input class="company-input" placeholder="Chennai-Tamil Nadu, Bengaluru-Karnataka" required/>
-                    </div>
-
-
-                    <div class="email-div">
-                        <div class="email-name">
-                            <p >Job type <span>*</span></p>
-                            <select class="admin-input-sel">
-                                <option>Full-time / Part-time</option>
-                                <option>Java Programming</option>
-                                <option>Python</option>
-                                <option>Data Analyst</option>
+                            <select class="company-input" id="multi-select-location" name="location_id" style="display: none;" multiple required>
+                                {% for loc in form.location_id.field.queryset %}
+                                    <option value="{{ loc.pk }}">{{ loc }}</option>
+                                {% endfor %} 
                             </select> 
                         </div>
-                        <div class="website">
-                            <p>Shift <span>*</span></p>
-                            <select class="admin-input-sel">
-                                <option>Fixed (day or night)</option>
-                                <option >Java Programming</option>
-                                <option >Python</option>
-                                <option >Data Analyst</option>
-                            </select>
-                        </div>
-    
-    
-                    </div>
+                
+                        <div class="company-div">
+                            <div class="email-name">
+                                <p>Job type <span class="red-star">*</span></p>
+                                <select class="admin-input-sel" name="employment_type" required>
+                                    <option value="Full-time">Full-time</option>
+                                    <option value="Part-time">Part-time</option>
+                                    <option value="Fixed-term">Fixed-term</option>
+                                    <option value="Internship">Internship</option>
+                                </select> 
+                            </div>
+                            <div class="website">
+                                <p>Shift <span class="red-star">*</span></p>
+                            
+                                <!-- Rotational Shift -->
+                                <p>
+                                    <input type="checkbox" class="custom-checkbox" name="is_rotational_shift" id="is_rotational_shift" />
+                                    <label for="is_rotational_shift" class="checkbox-label">Rotational</label>
+                                </p>
 
-                    <div class="company-div">
-                        <p >Qualifications <span>*</span></p>
-                        <input class="company-input" placeholder="Any CS / BE in Cse" required/>
-                    </div>
-
-                    <div class="admin-div">
-                        <div class="admin-name">
-                            <p >Exprience <span>*</span></p>
-                            <input class="admin-input" placeholder="Enter Admin name" required/> 
-                        </div>
-                        <div class="admin-role">
-                            <p>To </p>
-                            <input class="admin-input" placeholder="onsite / remote / hybrid" required/>
-                        </div>
-    
-                    </div>
-
-
-                    <div class="email-div">
-                        <div class="email-name">
-                            <p >Salary <span>*</span></p>
-                            <select class="admin-input-sel">
-                                <option>3 LPA</option>
-                                <option>Java Programming</option>
-                                <option>Python</option>
-                                <option>Data Analyst</option>
-                            </select> 
-                        </div>
-                        <div class="website">
-                            <p>Openin Count <span>*</span></p>
-                            <select class="admin-input-sel">
-                                <option>20</option>
-                                <option >Java Programming</option>
-                                <option >Python</option>
-                                <option >Data Analyst</option>
-                            </select>
-                        </div>
-    
-    
-                    </div>
-
-
-
-                    <div class="description">
-                        <div class="about-p-div">
-                            <p>Job Description <span>*</span></p>
-                        </div>
-                        <div class="textarea-div">
-                            <textarea placeholder="short Description" id="count-words"></textarea>
-                            <p id="char-count">0/200 chart</p>
-                        </div>
-
-                    </div>
-
-
-
-
-                    <div class="company-div-last">
-                        <p >Employee benifits <span>*</span></p>
-                        <input class="company-input-last" placeholder="" required/>
-                    </div>
-
-                    <div class="admin-div-last">
-                        <div class="admin-name-last">
-                            <p >Last date to apply <span>*</span></p>
-                            <input class="admin-input-last" placeholder="Enter Admin name" required/> 
-                        </div>
+                                <!-- Parent: Fixed Shift -->
+                                <p>
+                                    <input type="checkbox" class="custom-checkbox" name="is_fixed_shift" id="is_fixed_shift" />
+                                    <label for="is_fixed_shift" class="checkbox-label">Fixed</label>
+                                        <!-- Inline Children: Day / Night -->
+                                        <span id="child-fixed-shifts" style="display: none;">
+                                            <input type="checkbox" class="custom-checkbox" name="is_day_shift" id="is_day_shift" />
+                                            <label for="is_day_shift" class="checkbox-label">Day</label>
+                                            <input type="checkbox" class="custom-checkbox" name="is_night_shift" id="is_night_shift" />
+                                            <label for="is_night_shift" class="checkbox-label">Night</label>
+                                        </span>
+                                </p>
+                            
                         
-    
+                            
+                            </div>
+                            
+                        </div>
+                
+                        <div class="admin-div">
+                            <p>Qualifications <span class="red-star">*</span></p>
+                            <!-- Qualifications -->
+                            <div class="multi-select-container" id="qualifications-wrapper">
+                                <div class="selected-tags" id="selected-tags-qualifications"></div>
+                                <input type="text" class="search-input admin-input-sel" id="search-qualifications" placeholder="Search or add qualifications..." autocomplete="off">
+                                <div class="dropdown-list" id="dropdown-qualifications"></div>
+                            </div>
+                                 <select class="company-input" id="multi-select-qualifications" name="qualifications" multiple required style="display: none;">
+                                {% for q in form.qualifications.field.queryset %}
+                                    <option value="{{ q.pk }}">{{ q }}</option>
+                                {% endfor %}
+                            </select> 
+
+
+
+                        </div>
+                
+                        <div class="company-div">
+                            <div class="admin-name">
+                                <p>Experience <span class="red-star">*</span></p>
+                                <input class="admin-input" name="min_experience" type="number" placeholder="Min experience" min="0" required /> 
+                            </div>
+                            <div class="admin-role">
+                                <p>To</p>
+                                <input class="admin-input" name="max_experience" type="number" placeholder="Max experience" min="0" required />
+                            </div>
+                        </div>
+
+                        <div class="admin-div">
+                            <p>Key Skills <span class="red-star">*</span></p>
+                            <!-- Locations -->
+                            <div class="multi-select-container" id="skills-wrapper">
+                                <div class="selected-tags" id="selected-tags-skills"></div>
+                                <input type="text" class="search-input admin-input-sel" id="search-skills" placeholder="Search or add Key Skills..." autocomplete="off">
+                                <div class="dropdown-list" id="dropdown-skills"></div>
+                            </div>
+                             <select class="company-input" id="multi-select-skills" name="skills" style="display: none;" multiple required>
+                                {% for loc in form.skills.field.queryset %}
+                                    <option value="{{ loc.pk }}">{{ loc }}</option>
+                                {% endfor %}
+                            </select> 
+                        </div>
+
+                        <div class="company-div">
+                            <div class="email-name">
+                                <p>Salary <span class="red-star">*</span></p>
+                                <input class="admin-input-sel" name="salary" style="width: 45%;" type="number" step="0.01" min="0" placeholder="Enter salary in LPA" required />
+                                {{ form.salary_type }}
+                            </div>
+                            <div class="website">
+                                <p>Opening Count <span class="red-star">*</span></p>
+                                <input class="admin-input-sel" name="opening_count" type="number" min="1" required />
+                            </div>
+                        </div>
+                
+                        <div class="description">
+                            <div class="about-p-div">
+                                <p>Job Description <span class="red-star">*</span></p>
+                            </div>
+                            <div class="textarea-div">
+                                <input type="hidden" name="description" id="hidden-description" required>
+                                <div id="editor-container" style="height: 200px;"></div>
+                                <p id="char-count">0/200 characters</p>
+                            </div>
+                        </div>
+                
+                        <div class="admin-div">
+                            <p>Employee Benefits <span class="red-star">*</span></p>
+                             <select class="company-input-last" id="multi-select-benefits" name="benefit_id" style="display: none;"  multiple required>
+                                {% for b in form.benefit_id.field.queryset %}
+                                    <option value="{{ b.pk }}">{{ b }}</option>
+                                {% endfor %}
+                            </select> 
+                            <!-- Benefits -->
+                            <div class="multi-select-container" id="benefit-wrapper">
+                                <div class="selected-tags" id="selected-tags-benefits"></div>
+                                <input type="text" class="search-input admin-input-sel" id="search-benefits" placeholder="Search or add benefits..." autocomplete="off"> 
+                                <div class="dropdown-list" id="dropdown-benefits"></div>
+                            </div>
+                        </div>
+                        <div class="company-div">
+                            <div class="admin-name-last">
+                                <p>Last date to apply <span class="red-star">*</span></p>
+                                <input class="admin-input-last" name="last_date_to_apply" type="datetime-local" required />
+                            </div>
+                        </div>
+    <input type="hidden" name="new_qualifications" id="new-qualifications">
+    <input type="hidden" name="new_locations" id="new-locations">
+    <input type="hidden" name="new_skills" id="new-skills">
+    <input type="hidden" name="new_benefits" id="new-benefits">
+                
+                        <div class="btn-div">
+                            <button class="btn open-modal-btn" type="button" id="preview-btn" data-modal-id="previewNewJob">Preview</button>
+                            <button class="btn" type="submit" name="action" value="draft">Save as Draft</button>
+                            <button class="btn" type="submit" name="action" value="publish">Publish Job</button>
+                        </div>
                     </div>
-
-                    <div class="btn-div">
-                        <button class="btn" >Create Account</button>
-                    </div>
-
-
-
-                </div>
-            </div>
+                </form>
+                
+                
+                
         </div>
 
 
 
             </div>
 
+
+
+
+                <script>
+ 
+                    </script>
+                    
+                    
+
+                
+
+                
+
+
+
+            <script>
+               // <!-- Init Quill for description-->
+                var quill = new Quill('#editor-container', {
+                    theme: 'snow'
+                });
+                
+                const charCountDisplay = document.getElementById('char-count');
+                const hiddenInput = document.getElementById('hidden-description');
+                const maxLength = 200;
+                
+                quill.on('text-change', function () {
+                    const plainText = quill.getText().trim();
+                    const charCount = plainText.length;
+                    
+                    // Update character count display
+                    charCountDisplay.textContent = `${charCount}/${maxLength} characters`;
+                    charCountDisplay.style.color = charCount > maxLength ? 'red' : '#555';
+                    
+                    // Update hidden input with HTML content
+                    hiddenInput.value = quill.root.innerHTML;
+                });
+                
+                
+                
+               // dynamic fixedShift
+                document.addEventListener("DOMContentLoaded", function () {
+                    const fixedShift = document.getElementById("is_fixed_shift");
+                    const childShifts = document.getElementById("child-fixed-shifts");
+            
+                    // Show/hide child checkboxes based on parent
+                    fixedShift.addEventListener("change", function () {
+                        if (fixedShift.checked) {
+                            childShifts.style.display = "inline";
+                        } else {
+                            childShifts.style.display = "none";
+                            // Uncheck children when hidden (optional)
+                            document.getElementById("is_day_shift").checked = false;
+                            document.getElementById("is_night_shift").checked = false;
+                        }
+                    });
+                });
+
+            
+
+            </script>
 
     {% endblock content %}
 
@@ -368,5 +507,8 @@ Job vacancy post
 
     </div>
 
+
+
+    {% include "recruiters/SubFileForApi/post-new-preview.html" %}
 
 {% endblock mobile_view %}

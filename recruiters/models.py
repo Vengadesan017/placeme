@@ -149,18 +149,30 @@ class Jobs(models.Model):
     is_onsite = models.BooleanField(default=False)
     is_work_from_home = models.BooleanField(default=False)
     is_hybrid = models.BooleanField(default=False)
-    skills = models.TextField( null=True, blank=True)
+    skills = models.ManyToManyField('job_seekers.Skills', related_name='job_post_skills', blank=True)
     qualifications = models.ManyToManyField('recruiters.Qualifications', related_name='qualification_map')
+    hire_request = models.ForeignKey('recruiters.HireRequests', related_name='job_post_hire_request',on_delete=models.PROTECT, blank=True, null=True)
     min_experience = models.IntegerField(blank=True, null=True)
     max_experience = models.IntegerField(blank=True, null=True)
     salary = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    salary_type  = models.CharField(max_length=10, choices=[
+        ('CTC', 'CTC'),
+        ('Take home', 'Take home'),
+        ('Per year', 'Per year'),
+        ('Per month', 'Per month'),
+        ('Per hour', 'Per hour') 
+
+    ],default='CTC', blank=True, null=True)
     posted_date = models.DateTimeField(default=timezone.now)
     refreshed_date = models.DateTimeField(default=timezone.now)
     last_date_to_apply = models.DateTimeField(blank=True, null=True)
     opening_count = models.IntegerField(blank=True, null=True)
     views = models.IntegerField(default=0)
     applied_count = models.IntegerField(default=0)
-    is_active = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='create_job_post', null=True, blank=True)  
+    is_draft = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     is_post_verified = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
@@ -291,7 +303,12 @@ class DistrictForLoc(models.Model):
     state = models.ForeignKey(StateForLoc, related_name="districts", on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.name}, {self.state.name}, {self.state.country.name}"
+        if self.state.name and self.state.country.name:
+            return f"{self.name}, {self.state.name}, {self.state.country.name}"
+        elif self.state.name:
+            return f"{self.name}- {self.state.name}"
+        else :
+            return f"{self.name}"
 
 class Locations(models.Model):
     location_id = models.AutoField(primary_key=True)
@@ -302,10 +319,14 @@ class Locations(models.Model):
     is_verified = models.BooleanField(default=False)
 
     def __str__(self):
-        if self.location.lower()==self.district.name.lower():
-            return f'{self.location}'
+        if self.district:
+            if self.location.lower()==self.district.name.lower():
+                return f'{self.location}' 
+            else:
+                return f'{self.location} - {self.district.name}'
         else:
-            return f'{self.location} - {self.district.name}'
+            return f'{self.location}' 
+            
 
 # =====================================Location End========================================================
 # =====================================Benefits begin========================================================
@@ -434,6 +455,7 @@ class HireRequests(models.Model):
         unique_together = ('company', 'hire_request_code')
 
     def __str__(self):
+        return f"{self.position.position_title} - {self.hire_request_code}"
         return f"{self.hire_request_code} - {self.position.position_title} ({self.company.company_name})"
 
     def save(self, *args, **kwargs):

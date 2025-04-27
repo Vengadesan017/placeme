@@ -222,7 +222,7 @@ def Search(request):
                 jobs = apply_filter_in_job(request,jobs)
 
         # Apply Pagination
-        paginator = Paginator(jobs, 1)  # Show 20 jobs per page
+        paginator = Paginator(jobs, 10)  # Show 20 jobs per page
         page_obj = paginator.get_page(page_number)
 
         # Get Filter data to show in side bar
@@ -259,7 +259,7 @@ def ApiSearch(request):
 
 
         # Pagination
-        paginator = Paginator(jobs, 1)  # Show 20 jobs per page
+        paginator = Paginator(jobs, 10)  # Show 20 jobs per page
         page_obj = paginator.get_page(page_number)
 
         # Filter
@@ -304,10 +304,10 @@ def Job(request):
             login = False 
                 
 
-        skills_list = [skill.strip() for skill in job.skills.split(',')] if job.skills else []
+        # skills_list = [skill.strip() for skill in job.skills.split(',')] if job.skills else []
         context = {
             'job': job,
-            'skills_list':skills_list,
+            # 'skills_list':skills_list,
             'applied': applied,
             'login':login
         }

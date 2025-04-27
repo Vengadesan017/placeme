@@ -92,21 +92,7 @@ Job Vacancy
 
 {% block content %}
 
-            <div id="api-message" style="display: none;position: relative; top:70px;"></div>
-            <div id="loading-screen">
-              <div class="loader-wrapper">
-                <div class="loader"></div>
-                <span class="loading-text">Loading, please wait...</span>
-              </div>
-            </div>
-            {% if messages %}
-            {% for message in messages %}
-              <div class='alert alert-{{ message.tags }}' style="position: relative; top:70px;">
-                <span class="closebtn">&times;</span>
-                  {{ message }}
-              </div>    
-            {% endfor %}
-          {% endif %}
+
  
 
 
@@ -634,51 +620,115 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 ///    
+let selectedPositionIds = [];
 
+function updatePositionDropdown(positions, containerId = 'position-wrapper') {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
 
-function updatePositionDropdown(positions, selectId = 'id_type_id') {
-  const select = document.getElementById(selectId);
-  if (!select) return;
+  const tagsContainer = document.createElement('div');
+  tagsContainer.className = 'selected-tags';
 
-  console.log("Updating position dropdown...");
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'search-input';
+  input.placeholder = 'Search positions...';
 
-  // Enable multiple select and set size
-  select.multiple = true;
-  select.size = 6;
+  const dropdown = document.createElement('div');
+  dropdown.className = 'dropdown-list';
 
-  // Make it work without Ctrl key
-  select.addEventListener('mousedown', function (e) {
-    e.preventDefault();
-    const option = e.target;
-    if (option.tagName.toLowerCase() === 'option') {
-      option.selected = !option.selected;
+  container.appendChild(tagsContainer);
+  container.appendChild(input);
+  container.appendChild(dropdown);
+
+  function renderDropdown(query = '') {
+    dropdown.innerHTML = '';
+    const filtered = positions.filter(pos =>
+      `${pos.position_title} - ${pos.position_code}`.toLowerCase().includes(query.toLowerCase()) &&
+      !selectedPositionIds.includes(pos.position_id)
+    );
+
+    if (filtered.length === 0) {
+      const noItem = document.createElement('div');
+      noItem.className = 'dropdown-item';
+      noItem.textContent = 'No matches';
+      dropdown.appendChild(noItem);
+      return;
     }
+
+    filtered.forEach(pos => {
+      const item = document.createElement('div');
+      item.className = 'dropdown-item';
+      item.textContent = `${pos.position_title} - ${pos.position_code}`;
+      item.onclick = () => {
+        selectedPositionIds.push(pos.position_id);
+        renderTags();
+        input.value = '';
+        renderDropdown();
+      };
+      dropdown.appendChild(item);
+    });
+  }
+
+  function renderTags() {
+    tagsContainer.innerHTML = '';
+  
+    selectedPositionIds.forEach(id => {
+      const pos = positions.find(p => p.position_id === id);
+  
+      if (!pos) return; // 🔐 Safe check: skip if position not found
+  
+      const tag = document.createElement('div');
+      tag.className = 'tag';
+      tag.textContent = `${pos.position_title}`;
+  
+      const removeBtn = document.createElement('button');
+      removeBtn.textContent = '×';
+      removeBtn.onclick = () => {
+        selectedPositionIds = selectedPositionIds.filter(pid => pid !== id);
+        renderTags();
+        renderDropdown(input.value);
+      };
+  
+      tag.appendChild(removeBtn);
+      tagsContainer.appendChild(tag);
+    });
+  
+    // Update the hidden input
+    const hiddenInput = document.getElementById('selected_positions_input');
+    hiddenInput.value = selectedPositionIds.join(',');
+  }
+  
+  
+
+  input.addEventListener('input', () => {
+    renderDropdown(input.value);
   });
 
-  // Clear current options
-  select.innerHTML = '';
+  input.addEventListener('focus', () => {
+    renderDropdown(input.value);
+  });
 
-  // Optional: top disabled info line
-  const infoOption = document.createElement('option');
-  infoOption.disabled = true;
-  infoOption.textContent = 'Select one or more positions:';
-  select.appendChild(infoOption);
-
-  // Add position options
-  if (positions.length > 0) {
-    positions.forEach(position => {
-      const option = document.createElement('option');
-      option.value = position.position_id;
-      option.textContent = `${position.position_title} - ${position.position_code}`;
-      select.appendChild(option);
-    });
-  } else {
-    const emptyOption = document.createElement('option');
-    emptyOption.disabled = true;
-    emptyOption.textContent = 'No open positions available';
-    select.appendChild(emptyOption);
-  }
+  document.addEventListener('click', (e) => {
+    if (!container.contains(e.target)) {
+      dropdown.innerHTML = '';
+    }
+  });
 }
+
+function clearSelections() {
+  selectedPositionIds = [];
+  const hiddenInput = document.getElementById('selected_positions_input');
+  hiddenInput.value = '';
+
+}
+
+
+// This just shows what was selected
+function logSelected() {
+  alert('Selected Position IDs: ' + selectedPositionIds.join(', '));
+}
+
 
 // Show selected values
 function logSelected() {
@@ -688,11 +738,18 @@ function logSelected() {
 }
 
 // Initialize dropdown on load
-updatePositionDropdown(positions);  
+{% comment %} updatePositionDropdown(positions);   {% endcomment %}
 
 
 function getPositions(){
-    startLoading();
+
+      if (typeof window.startLoading === 'function') {
+        startLoading(); 
+    }
+    else{
+      console.log("startLoading is not found.. Till it not download from server.");
+    }
+
      fetch('./../api/position-manager/')
      .then(res => res.json())
      .then(data => {
@@ -716,7 +773,7 @@ function getPositions(){
              </td>
              <td class="recruiters-td">
                <a href="#">
-                 <div class="major">${position.position_title}</div>
+                 <div class="major">${position.position_code}</div>
                  <div class="minor">${position.position_code}</div>
                </a>
              </td>
@@ -766,8 +823,15 @@ function getPositions(){
      })
      .catch(error => console.error('Error loading table data:', error))
      .finally(() => {
-      stopLoading();
+          if (typeof window.stopLoading === 'function') {
+            stopLoading(); 
+        }
+        else{
+          console.log("stopLoading is not found.. Till it not download from server.");
+        }
     });
+
+    clearSelections()
     }
 
     getPositions();
@@ -779,6 +843,69 @@ function getPositions(){
 
 
 
+<style>
+.multi-select-container {
+  width: inherit;
+  margin: 10px 0 10px 0;
+  font-family: sans-serif;
+  position: relative;
+}
+
+.selected-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+.tag {
+
+  padding: 4px 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+    height: 38px;
+    border-radius: 50px;
+    background-color: #FFBD03;
+    color: #000000;
+    border-color: #FFBD03;
+}
+
+.tag button {
+  margin-left: 5px;
+  background: transparent;
+  color: #000;
+  border: none;
+  cursor: pointer;
+}
+
+.search-input {
+  width: 100%;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+.dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 1051;
+}
+
+.dropdown-item {
+  padding: 6px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: #f0f0f0;
+}
+</style>
 
 
 {% endblock mobile_view %}

@@ -61,7 +61,7 @@
                 <div class="l-box-div">
 
                     <div class="box-1">
-                        <a href="{% url 'recruiters:home' %}">
+                        <a href="{% url 'recruiters:home' %}" class="{% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'advance_search' %}active{% endif %}">
                             <div class="p">
                                 <i class="fa-solid fa-magnifying-glass-chart"  style="font-size: 18px;"></i> <p>Open search</p>
                             </div>
@@ -70,12 +70,12 @@
                         
                     </div>
                     <div class="box-1-hide">
-                        <a href="{% url 'recruiters:home' %}">
+                        <a href="{% url 'recruiters:home' %}" class="{% if request.resolver_match.url_name == 'home' or request.resolver_match.url_name == 'advance_search' %}active{% endif %}">
                             <i class="fa-solid fa-magnifying-glass-chart" style="font-size: 18px;"></i>
                         </a>
                     </div>
                     <div class="box-1">
-                        <a href="{% url 'recruiters:post' %}">
+                        <a href="{% url 'recruiters:post' %} " class="{% if request.resolver_match.url_name == 'post' or request.resolver_match.url_name == 'post_draft' %}active{% endif %}">
                             <div class="p">
                                 <i class="fa-solid fa-suitcase"></i> <p>Job posting</p> 
                             </div>
@@ -84,12 +84,12 @@
                         
                     </div>
                     <div class="box-1-hide">
-                        <a href="{% url 'recruiters:post' %}">
+                        <a href="{% url 'recruiters:post' %}" class="{% if request.resolver_match.url_name == 'post' or request.resolver_match.url_name == 'post_draft' %}active{% endif %}">
                             <i class="fa-solid fa-suitcase"></i> 
                         </a>
                     </div>
                     <div class="box-1">
-                        <a href="{% url 'recruiters:hiring_tracker' %}">
+                        <a href="{% url 'recruiters:hiring_tracker' %}" class="{% if request.resolver_match.url_name == 'hiring_tracker' %}active{% endif %}">
                             <div class="p">
                                 <i class="fa-solid fa-building-user"></i> <p>Hiring Tracker</p>
                             </div>
@@ -98,13 +98,13 @@
                         
                     </div>
                     <div class="box-1-hide">
-                        <a href="{% url 'recruiters:hiring_tracker' %}">
+                        <a href="{% url 'recruiters:hiring_tracker' %}" class="{% if request.resolver_match.url_name == 'hiring_tracker' %}active{% endif %}">
                             <i class="fa-solid fa-building-user"></i> 
                         </a>
                     </div>
 
                     <div class="box-1">
-                        <a href="{% url 'recruiters:position_manager' %}">
+                        <a href="{% url 'recruiters:position_manager' %}" class="{% if request.resolver_match.url_name == 'position_manager' %}active{% endif %}">
                             <div class="p">
                                 <i class="fa-solid fa-clipboard-list" style="font-size: 18px;"></i> <p>Position manager</p>
                             </div>
@@ -112,14 +112,14 @@
                         </a>
                         
                     </div>
-                    <div class="box-1-hide">
-                        <a href="{% url 'recruiters:position_manager' %}">
+                    <div class="box-1-hide"> 
+                        <a href="{% url 'recruiters:position_manager' %}" class="{% if request.resolver_match.url_name == 'position_manager' %}active{% endif %}">
                             <i class="fa-solid fa-clipboard-list"></i> 
                         </a>
                     </div>
 
                     <div class="box-1">
-                        <a href="{% url 'recruiters:admin_control' page='package' %}">
+                        <a href="{% url 'recruiters:admin_control' page='package' %}" class="{% if request.resolver_match.url_name == 'admin_control' %}active{% endif %}">
                             <div class="p">
                                 <i class="fa-solid fa-user-pen"></i> <p>Admin control</p>
                             </div>
@@ -128,12 +128,12 @@
                         
                     </div>
                     <div class="box-1-hide">
-                        <a href="{% url 'recruiters:admin_control' page='package' %}">
+                        <a href="{% url 'recruiters:admin_control' page='package' %}" class="{% if request.resolver_match.url_name == 'admin_control' %}active{% endif %}">
                             <i class="fa-solid fa-user-pen"></i> 
                         </a>
                     </div>
-                    <div class="box-1">
-                        <a href="{% url 'recruiters:employee_info' %}">
+                    <div class="box-1"> 
+                        <a href="{% url 'recruiters:employees' %}" class="{% if request.resolver_match.url_name == 'employees' %}active{% endif %}">
                             <div class="p">
                                 <i class="fa-regular fa-id-card"></i> <p>Empolyee</p>  
                             </div>
@@ -142,7 +142,7 @@
                         
                     </div>
                     <div class="box-1-hide">
-                        <a href="{% url 'recruiters:employee_info' %}">
+                        <a href="{% url 'recruiters:employees' %}" class="{% if request.resolver_match.url_name == 'employees'%}active{% endif %}">
                             <i class="fa-regular fa-id-card"></i>
                         </a>
                     </div> 
@@ -250,6 +250,24 @@
                 </div>
                 
 
+
+                <!--   js error handling, python error handling and loading field -->
+                    <div id="api-message" style="display: none;position: relative; top:70px;"></div>
+                    <div id="loading-screen">
+                    <div class="loader-wrapper">
+                        <div class="loader"></div>
+                        <span class="loading-text">Loading, please wait...</span>
+                    </div>
+                    </div>
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class='alert alert-{{ message.tags }}' style="position: relative; top:70px;">
+                        <span class="closebtn">&times;</span>
+                        {{ message }}
+                    </div>    
+                    {% endfor %}
+                {% endif %}
+                <!--   error -->
                 {% block content %}
 
                 {% endblock %}

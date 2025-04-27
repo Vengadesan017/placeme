@@ -17,14 +17,7 @@ Create Account for your company
             <p class="account">Create an employer account</p>
         </div>
         <div class="info-list">
-            {% if messages %}
-            {% for message in messages %}
-              <div class='alert alert-{{ message.tags }}'>
-                <span class="closebtn">&times;</span>
-                  {{ message }}
-              </div>    
-            {% endfor %}
-          {% endif %}
+
           <form method="POST" action="#">
             {% csrf_token %}
             <div class="admin-div">

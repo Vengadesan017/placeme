@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'recruiters',
     'administrator',
     'rest_framework',
+    'recruiters.load_data',  
 ]
 
 AUTHENTICATION_BACKENDS = [

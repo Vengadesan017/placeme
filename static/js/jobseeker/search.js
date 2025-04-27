@@ -72,16 +72,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     
 
-                    <p3 class="description">
-                        ${ job.description }
-                    </p3>
+
                 </div>
         
                 <div class="job-footer">
                     <span class="time-since">${ timeSince(job.refreshed_date) }</span>
 
                     <span>${ job.opening_count !== null ? job.opening_count : '' } Openings</span>
-                    <span>${ job.applied_count } Applied</span>
+                    <span>${ job.applied_count } Applicants</span>
                     <form method="POST" action="/bookmark/">
                         
                         <input type="hidden" value="${ job.slug }" name="slug">
