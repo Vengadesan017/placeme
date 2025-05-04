@@ -75,7 +75,7 @@
                         </a>
                     </div>
                     <div class="box-1">
-                        <a href="{% url 'recruiters:post' %} " class="{% if request.resolver_match.url_name == 'post' or request.resolver_match.url_name == 'post_draft' %}active{% endif %}">
+                        <a href="{% url 'recruiters:post' %} " class="{% if request.resolver_match.url_name == 'post' or request.resolver_match.url_name == 'post_draft' or request.resolver_match.url_name == 'create_post' %}active{% endif %}">
                             <div class="p">
                                 <i class="fa-solid fa-suitcase"></i> <p>Job posting</p> 
                             </div>
@@ -84,7 +84,7 @@
                         
                     </div>
                     <div class="box-1-hide">
-                        <a href="{% url 'recruiters:post' %}" class="{% if request.resolver_match.url_name == 'post' or request.resolver_match.url_name == 'post_draft' %}active{% endif %}">
+                        <a href="{% url 'recruiters:post' %}" class="{% if request.resolver_match.url_name == 'post' or request.resolver_match.url_name == 'post_draft' or request.resolver_match.url_name == 'create_post' %}active{% endif %}">
                             <i class="fa-solid fa-suitcase"></i> 
                         </a>
                     </div>

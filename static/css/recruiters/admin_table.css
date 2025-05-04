@@ -190,7 +190,7 @@
     color: #555;
 }
 
-.input-count-btn-div button{
+.input-count-btn-div a{
     display: flex;
     justify-content: center;
     align-items: center;

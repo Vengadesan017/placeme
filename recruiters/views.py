@@ -119,7 +119,7 @@ def OpenSearch(request):
         'titles': candidate_titles,
         'company':company
     }
-    return render(request,'recruiters/open_search.html',context)
+    return render(request,'recruiters/keyword_search.html',context)
 
 @is_recruiter
 @is_kyc
@@ -135,7 +135,7 @@ def AdvanceSearch(request):
 
 @is_recruiter
 @is_kyc
-def FindCondidates(request):
+def FindCandidates(request):
     candidate = Candidates.objects.get(user=request.user)
     company = Companies.objects.get(candidate=candidate)
     candidate_titles = Candidates.objects.values_list('present_designation', flat=True).distinct()
@@ -144,6 +144,18 @@ def FindCondidates(request):
         'company':company
     }
     return render(request,'recruiters/find_candidates.html',context)
+
+@is_recruiter
+@is_kyc
+def Candidate(request):
+    candidate = Candidates.objects.get(user=request.user)
+    company = Companies.objects.get(candidate=candidate)
+    candidate_titles = Candidates.objects.values_list('present_designation', flat=True).distinct()
+    context = {
+        'titles': candidate_titles,
+        'company':company
+    }
+    return render(request,'recruiters/candidate.html',context)
 
 @is_recruiter
 @is_kyc
@@ -336,6 +348,20 @@ def AdminControl(request,page):
             'page':page
         }
         return render(request,'recruiters/admin_control.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
+
+@is_recruiter
+@is_kyc
+def AllPackages(request):
+    try:
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+        context = {
+            'company':company,
+
+        }
+        return render(request,'recruiters/admin_control_all_packages.html',context)
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
 

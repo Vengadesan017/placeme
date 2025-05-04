@@ -71,14 +71,7 @@ Waiting for KYC verification
                 {% endif%}
             </div>
             <div class="info-list">
-                {% if messages %}
-                {% for message in messages %}
-                  <div class='alert alert-{{ message.tags }}'>
-                    <span class="closebtn">&times;</span>
-                      {{ message }}
-                  </div>    
-                {% endfor %}
-              {% endif %}
+
               {% if not company.kyc_uploaded_at %}
               <form method="POST" action="#" enctype="multipart/form-data">
                   {% csrf_token %}    

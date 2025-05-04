@@ -6,7 +6,8 @@ app_name = 'recruiters'
 urlpatterns = [
     path('', views.OpenSearch,name='home'),
     path('advance-search/', views.AdvanceSearch,name='advance_search'),
-    path('find-candidates/', views.FindCondidates,name='find_candidates'),
+    path('find-candidates/', views.FindCandidates,name='find_candidates'),
+    path('candidate/', views.Candidate,name='candidate'),
     path('create-company/',views.CreateCompany,name="create_company"),
     path('complete-kyc/',views.CompleteKYC,name="complete_kyc"),
     path('profile/',views.Profile,name='profile'),
@@ -24,4 +25,5 @@ urlpatterns = [
     path('position-manager/',views.PositionManager,name='position_manager'),
     path('api/position-manager/',views.APIPositionManager,name='api_position_manager'),
     path('admin-control/<str:page>',views.AdminControl,name='admin_control'),
+    path('all-packages/ ',views.AllPackages,name='all_packages'),
 ]

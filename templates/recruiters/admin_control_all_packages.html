@@ -1,0 +1,522 @@
+
+{% extends "recruiters/layout.html" %}
+
+{% block title %}
+Admin Control
+{% endblock title %}
+{% load static %}
+{% block statics %}
+<link rel="stylesheet" href="{% static 'css/recruiters/post-left.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/post-right.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/post-filter-mobile.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/admin_table.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/admin_ribbon.css' %}">
+{% comment %} <link rel="stylesheet" href="{% static 'css/recruiters/old/create-job.css' %}"> {% endcomment %}
+<script src="{% static 'js/recruiters/post.js' %}"></script>
+<style>
+  *{
+    font-size: 14px;
+}
+.INR{
+    font-family: cursive;
+}
+
+.right-card-container{
+    min-height: 500px;
+    height: auto;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+}
+{% comment %} .r-down-main {
+right: 50px;
+height: auto;
+width: 100%;
+padding-right: 10px;
+/* background-color: bisque; */
+/* background-color: #fff; */
+border-radius: 10px;
+/* padding-top: 20px; */
+/* padding-left: 20px; */
+} {% endcomment %}
+
+.package-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.outer-box {
+    float: left;
+    width: 300px;
+    margin: 20px;
+  }
+  
+  .package-inner-box {
+    list-style-type: none;
+    border: 1px solid #eee;
+    margin: 0;
+    padding: 0;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+  }
+  
+  .package-inner-box:hover {
+    box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2)
+  }
+  
+  .package-inner-box .header {
+    background-color: #141B5F;
+    color: white;
+    font-size: 25px;
+  }
+  
+  .package-inner-box li {
+    border-bottom: 1px solid #eee;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .package-inner-box .grey {
+    background-color: #eee;
+    font-size: 20px;
+  }
+  
+  .buy-button {
+    background-color: #ffbd03;
+    border: none;
+    color: #000;
+    padding: 10px 25px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+    transition: all .5s;
+  }
+  .buy-button:hover{
+    background-color: #141B5F;
+    color: #fff;
+  }
+  
+  @media only screen and (max-width: 600px) {
+
+  }
+</style>
+{% endblock statics %}
+
+
+{% block content %}
+
+ 
+
+          <div class="r-right-down-main">
+            <div class="r-down-main">
+                <div class="list-main">
+                    <!-- <div class="list-left">
+                        
+                        <div class="form">
+                            <form method="post" action="#">
+                                <div class="filters-div">
+                                    <i class="fa-solid fa-arrow-down-wide-short"></i>
+                                    <h1>Filters</h1>
+                                </div>
+                                <div class="input-div">
+                                   <input type="text" class="input" placeholder="Search by Post Title,Job Id,Recruiter name..."/> 
+
+                                </div>
+
+                                <div class="job-status-div">
+                                    <div class="job-status-div-text">
+                                        <p>Hire Request</p>
+
+
+                                    </div>
+                                    <div class="checkbox-div">
+                                        <div class="checkbox-1">
+                                            <div class="checkbox-1-1">
+                                               <input type="checkbox" class="input-check"/>
+                                               <p>Active Jobs</p> 
+                                            </div>
+                                            <div class="checkbox-1-count">
+                                                <i class="fa-solid fa-angle-down" id="job-open"></i>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="show-info-div" id="show-info-div">
+                                            <div class="checkbox-1">
+                                                <div class="checkbox-1-1">
+                                                   <input type="checkbox" class="input-check"/>
+                                                   <p>Active Jobs</p> 
+                                                </div>
+                                                <div class="checkbox-1-count">
+                                                    <i class="fa-solid fa-angle-down"></i>
+                                                </div>
+                                            </div> 
+
+                                            <div class="checkbox-1">
+                                                <div class="checkbox-1-1">
+                                                   <input type="checkbox" class="input-check"/>
+                                                   <p>Expired Jobs</p> 
+                                                </div>
+                                                <div class="checkbox-1-count">
+                                                    <p>1</p>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+
+                                        <div class="checkbox-1">
+                                            <div class="checkbox-1-1">
+                                               <input type="checkbox" class="input-check"/>
+                                               <p>Expired Jobs</p> 
+                                            </div>
+                                            <div class="checkbox-1-count">
+                                                <p>1</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="checkbox-1">
+                                            <div class="checkbox-1-1">
+                                               <input type="checkbox" class="input-check"/>
+                                               <p>Closed Jobs</p> 
+                                            </div>
+                                            <div class="checkbox-1-count">
+                                                <p>2</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+                                    
+
+                                </div>
+
+
+
+
+                               
+
+
+
+
+                                
+
+
+
+                                
+
+                            </form>
+
+                        </div>
+                        
+
+
+
+
+
+
+
+                    </div> -->
+                    <div class="list-right-table"> 
+                        {% comment %} <section class="navigation-header" style="margin-bottom: 15px;">
+                            <div class="navigation-header-1">
+                                    <a class="navigation-header-1-1 {% if request.resolver_match.kwargs.page == 'package' %}active{% endif %}" href="{% url 'recruiters:admin_control' page="package" %}">Package Details</a>
+                                    <a class="navigation-header-1-1 {% if request.resolver_match.kwargs.page == 'subuser' %}active{% endif %}" href="{% url 'recruiters:admin_control' page="subuser" %}">Sub Users</a>
+                                    <a class="navigation-header-1-1 {% if request.resolver_match.kwargs.page == 'activity' %}active{% endif %}" href="{% url 'recruiters:admin_control' page="activity" %}">Activities</a>
+                            </div>
+                            <div class="navigation-header-2">
+                                <div class="navigation-header-input-div">
+                                    <input type="text" placeholder="Search">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </div>
+                                
+                            </div>
+                        </section> {% endcomment %}
+
+
+                        <div class="right-card-container">
+                            <div class="package-container">
+
+                                <div class="outer-box">
+                                    <ul class="package-inner-box">
+                                      <li class="header">Basic</li>
+                                      <li class="grey"><span class="INR">&#8377;</span> 1000</li>
+                                      <li>10 Job posting</li>
+                                      <li>100 CV Downloads</li>
+                                      <li>2 Subusers</li>
+                                      <li class="grey"><a href="#" class="buy-button">Buy</a></li>
+                                    </ul>
+                                  </div>
+                              
+                                  <div class="outer-box">
+                                    <ul class="package-inner-box">
+                                      <li class="header">Premium</li>
+                                      <li class="grey"><span class="INR">&#8377;</span> 5000</li>
+                                      <li>100 Job posting</li>
+                                      <li>500 CV Downloads</li>
+                                      <li>3 Subusers</li>
+                                      <li class="grey"><a href="#" class="buy-button">Buy</a></li>
+                                    </ul>
+                                  </div>
+                           
+                                  <div class="outer-box">
+                                    <ul class="package-inner-box">
+                                      <li class="header">Job Posting</li>
+                                      <li class="grey"><span class="INR">&#8377;</span> 1000</li>
+                                      <li>50 Job posting</li>
+                                      <li>0 CV Downloads</li>
+                                      <li>2 Subusers</li>
+                                      <li class="grey"><a href="#" class="buy-button">Buy</a></li>
+                                    </ul>
+                                  </div>
+
+                                  <div class="outer-box">
+                                    <ul class="package-inner-box">
+                                      <li class="header">Open Search</li>
+                                      <li class="grey"><span class="INR">&#8377;</span> 1000</li>
+                                      <li>0 Job posting</li>
+                                      <li>200 CV Downloads</li>
+                                      <li>2 Subusers</li>
+                                      <li class="grey"><a href="#" class="buy-button">Buy</a></li>
+                                    </ul>
+                                  </div>
+                                  <div class="outer-box">
+                                    <ul class="package-inner-box">
+                                      <li class="header">Job Posting Pro</li>
+                                      <li class="grey"><span class="INR">&#8377;</span> 1500</li>
+                                      <li>100 Job posting</li>
+                                      <li>0 CV Downloads</li>
+                                      <li>2 Subusers</li>
+                                      <li class="grey"><a href="#" class="buy-button">Buy</a></li>
+                                    </ul>
+                                  </div>
+
+                                  <div class="outer-box">
+                                    <ul class="package-inner-box">
+                                      <li class="header">Open Search Pro</li>
+                                      <li class="grey"><span class="INR">&#8377;</span> 1500</li>
+                                      <li>0 Job posting</li>
+                                      <li>300 CV Downloads</li>
+                                      <li>2 Subusers</li>
+                                      <li class="grey"><a href="#" class="buy-button">Buy</a></li>
+                                    </ul>
+                                  </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                    </div>
+
+                </div>
+
+
+
+                
+            </div>
+
+
+
+            </div>
+
+    {% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {% block mobile_view %}
+    <div class="m1-filter-div" id="m1-filter-div">
+        <div class="m-list-left">
+                            
+            <div class="form">
+                <form method="post" action="#">
+                    <div class="filters-div">
+                        <i class="fa-solid fa-arrow-down-wide-short"></i>
+                        <h1>Filters</h1>
+                        <div class="x-mark" id="x-mark" onclick="mobileView(false)">
+                            <p class="X">X</p>
+                        </div>
+                    </div>
+                    
+                    <div class="input-div">
+                       <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
+
+                    </div>
+
+                    <div class="job-status-div">
+                        <div class="job-status-div-text">
+                            <p>Job Status</p>
+                            <i class="fa-solid fa-angle-down"></i>
+
+                        </div>
+                        <div class="checkbox-div">
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Active Jobs</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Expired Jobs</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Closed Jobs</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        
+
+                    </div>
+
+
+
+
+                    <div class="job-status-div-2">
+                        <div class="job-status-div-text">
+                            <p>Job Posted By</p>
+                            <i class="fa-solid fa-angle-down"></i>
+
+                        </div>
+                        <div class="input-div-down">
+                            <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
+                        </div>
+                        <div class="checkbox-div">
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Recruiter name</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Recruiter name</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>Recruiter name</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        
+
+                    </div>
+
+
+
+
+                    <div class="job-status-div-3">
+                        <div class="job-status-div-text">
+                            <p>Job Tittle</p>
+                            <i class="fa-solid fa-angle-down"></i>
+
+                        </div>
+                        <div class="input-div-down">
+                            <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
+                        </div>
+                        <div class="checkbox-div">
+                            <div class="checkbox-1">
+                                <div class="checkbox-1-1">
+                                   <input type="checkbox" class="input-check"/>
+                                   <p>App developer</p> 
+                                </div>
+                                <div class="checkbox-1-count">
+                                    <p>1</p>
+                                </div>
+                            </div>
+
+                            
+                        </div>
+
+
+
+
+
+
+                        
+
+                    </div>
+
+
+
+                    
+
+                </form>
+
+            </div>
+            
+
+
+
+
+
+
+
+        </div>
+
+    </div>
+
+
+{% endblock mobile_view %}

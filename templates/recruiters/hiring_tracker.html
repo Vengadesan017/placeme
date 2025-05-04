@@ -335,9 +335,12 @@ Offer candidate and onboard them
 
                             <section class="navigation-header" style="margin-bottom: 15px;">
                                 <div class="navigation-header-1">
-                                        <a class="navigation-header-1-1 {% if request.resolver_match.kwargs.page == 'package' %}active{% endif %}" href="{% url 'recruiters:admin_control' page="package" %}">All candidates</a>
+                                        {% comment %} <a class="navigation-header-1-1 {% if request.resolver_match.kwargs.page == 'package' %}active{% endif %}" href="{% url 'recruiters:admin_control' page="package" %}">All candidates</a>
                                         <a class="navigation-header-1-1 {% if request.resolver_match.kwargs.page == 'subuser' %}active{% endif %}" href="{% url 'recruiters:admin_control' page="subuser" %}">Offered</a>
-                                        <a class="navigation-header-1-1 {% if request.resolver_match.kwargs.page == 'activity' %}active{% endif %}" href="{% url 'recruiters:admin_control' page="activity" %}">Onboarding</a>
+                                        <a class="navigation-header-1-1 {% if request.resolver_match.kwargs.page == 'activity' %}active{% endif %}" href="{% url 'recruiters:admin_control' page="activity" %}">Onboarding</a> {% endcomment %}
+                                        <a class="navigation-header-1-1 {% if request.resolver_match.url_name == 'hiring_tracker' %}active{% endif %}" href="{% url 'recruiters:hiring_tracker'  %}">All candidates</a>
+                                        <a class="navigation-header-1-1 {% if request.resolver_match.kwargs.page == 'subuser' %}active{% endif %}" href="{% url 'recruiters:hiring_tracker' %}">Offered</a>
+                                        <a class="navigation-header-1-1 {% if request.resolver_match.kwargs.page == 'activity' %}active{% endif %}" href="{% url 'recruiters:hiring_tracker' %}">Onboarding</a>
                                 </div>
                                 <div class="navigation-header-2">
                                     <div class="navigation-header-input-div">
