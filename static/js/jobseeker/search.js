@@ -1,36 +1,174 @@
+/**
+ * ===========================================================
+ * Job Search Page Scripts
+ * ===========================================================
+ * This script powers the dynamic job search UI including:
+ * 
+ * --> Collecting selected filters from checkboxes and sliders
+ * --> Building dynamic GET request URLs for job search API
+ * --> Fetching and rendering job listings based on filters
+ * --> Dynamically populating and updating filter options
+ * --> Debounced filtering to optimize performance
+ * --> Rendering pagination and user-interactive job cards
+ * --> Managing filter reset and UI re-binding
+ * 
+ * Main Functions:
+ * - getSelectedFilters()       → Collects all active filters
+ * - attachFilterListeners()    → Adds change listeners to filters
+ * - populateFilters()          → Dynamically renders filter options
+ * - renderJobs()               → Displays job cards and pagination
+ * - debounce()                 → Limits rapid fetch triggers
+ * - fetchJobs()                → Main fetch logic and UI update
+ * 
+ * Events:
+ * - DOMContentLoaded           → Attaches listeners on page load
+ * 
+ * Dependencies:
+ * - HTML structure (with correct class & ID usage)
+ * - CSS for rendering job cards & filters correctly
+ * - Server API endpoint at /api/search/
+ */
 
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('jobSearchForm');
-    const resultsDiv = document.getElementById('job-details');
 
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault();
+// Function to load the filter data in URL for get fetch call
+function getSelectedFilters() {
+    const params = new URLSearchParams();
 
-        const jobTitle = document.getElementById('jobTitle').value.trim();
-        const location = document.getElementById('location').value.trim();  // Location input
+    // Work Mode
+    document.querySelectorAll('input[name="work_mode"]:checked').forEach(el => {
+        params.append('work_mode', el.value);
+    });
 
-        if (!jobTitle) {  
-            resultsDiv.innerHTML = "<p>Please enter a job title.</p>";
-            return;
+    // Experience (single value from slider)
+    const experience = document.getElementById('experienceSlider').value;
+    if (experience !== "-1") {
+        params.append('experience', experience);
+    }
+
+    // Salary
+    document.querySelectorAll('input[name="salary"]:checked').forEach(el => {
+        params.append('salary', el.value);
+    });
+
+    // Organization Type
+    document.querySelectorAll('input[name="organization_type"]:checked').forEach(el => {
+        params.append('organization_type', el.value);
+    });
+
+    // Employment Type
+    document.querySelectorAll('input[name="employment_type"]:checked').forEach(el => {
+        params.append('employment_type', el.value);
+    });
+
+    // Qualification
+    document.querySelectorAll('input[name="qualification"]:checked').forEach(el => {
+        params.append('qualification', el.value);
+    });
+
+    // Industry Type
+    document.querySelectorAll('input[name="industry_type"]:checked').forEach(el => {
+        params.append('industry_type', el.value);
+    });
+
+    // Location from filter checkboxes
+    document.querySelectorAll('input[name="location"]:checked').forEach(el => {
+        params.append('location', el.value);
+    });
+
+    return params;
+}
+
+// Function to re-bind filter change events 
+//  used to call the fetch method when chances mad in filter option
+// and rebind when after the fetch call
+function attachFilterListeners() {
+    const filterInputs = document.querySelectorAll('.filter-container input[type="checkbox"], #experienceSlider');
+    filterInputs.forEach(input => {
+        input.addEventListener('change', () => {
+            console.log("Filter updated, fetching jobs...");
+            debouncedFetchJobs();
+        });
+    });
+}
+
+
+
+// Function For update the filter based on fetch call method ( After API call )
+function populateFilters(filters, experienceValue = "-1") {
+    const filterContainer = document.querySelector('.filter-container');
+
+    if (!filters || typeof filters !== 'object') {
+        console.warn("No filters data available.");
+        if (filterContainer) {
+            filterContainer.style.display = 'none';
+        }
+        return;
+    } else {
+        if (filterContainer) {
+            filterContainer.style.display = 'block';
+        }
+    }
+
+    const filterMap = {
+        work_mode: "moreWorOptions",
+        employment_type: "moreCatOptions",
+        salary: "moreSalOptions",
+        qualification: "moreEduOptions",
+        industry_type: "moreIndOptions",
+        organization_type: "moreComOptions",
+        location: "moreLocOptions"
+    };
+
+    for (const [filterKey, elementId] of Object.entries(filterMap)) {
+        const container = document.getElementById(elementId);
+        const filterData = filters[filterKey];
+
+        if (!container) continue;
+
+        const previouslySelected = new Set(
+            Array.from(container.querySelectorAll(`input[name="${filterKey}"]:checked`)).map(input => input.value)
+        );
+
+        container.innerHTML = ""; // Clear old options
+
+        if (filterData && typeof filterData === 'object') {
+            Object.entries(filterData).forEach(([label, count]) => {
+                if (count > 0) {
+                    const isChecked = previouslySelected.has(label) ? 'checked' : '';
+                    const checkbox = document.createElement("label");
+                    checkbox.innerHTML = `
+                        <input type="checkbox" name="${filterKey}" value="${label}" ${isChecked}>
+                        ${label} (${count})
+                    `;
+                    container.appendChild(checkbox);
+                }
+            });
+        }
+    }
+
+    // Restore experience value
+    const experienceSlider = document.getElementById('experienceSlider');
+    if (experienceSlider) {
+        const min = parseInt(experienceSlider.min, 10);
+        const value = parseInt(experienceValue, 10);
+        if (!isNaN(value) && value >= min) {
+            experienceSlider.value = value;
+        } else {
+            experienceSlider.value = min; // fallback to min if invalid
         }
 
-        try {   
-            // Construct API URL dynamically
-            let apiUrl = `/api/search/?q=${encodeURIComponent(jobTitle)}`;
-            if (location) {
-                apiUrl += `&p=${encodeURIComponent(location)}`;
-            }
+        experienceSlider.value = experienceValue;
+        updateExperienceLabel(experienceValue);
+    }
 
-            const response = await fetch(apiUrl);
-            if (!response.ok) throw new Error(`Error fetching jobs: ${response.status}`);
+    //  Re-attach listeners after dynamic filters are rendered
+    attachFilterListeners();
+}
 
-            const apiResposeData = await response.json();
 
-            if (apiResposeData.jobs.length === 0) {
-                resultsDiv.innerHTML = "<p>No jobs found.</p>";
-                return;
-            }
-            const jobsHTML = apiResposeData.jobs.map(job => `
+// Function for update the job cards with pagination
+function renderJobs(apiResposeData, resultsDiv ) {
+    const jobsHTML = apiResposeData.jobs.map(job => `
         <a href="/job/?r=${ job.slug }" target="_blank" class="job-description">
             <div class="job-card">
                 <div class="job-header">
@@ -47,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
         
                 <div class="job-details">
-                    <p class="details-row">
+                    <p class="details-row details-row-2">
                         <span><i class="fas fa-map-marker-alt"></i>
                             ${ job.location_id.length != 0 ? job.location_id : 'Not disclosed'}
                         </span>
@@ -55,8 +193,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             ${job.min_experience !== job.max_experience ? `${job.min_experience!== null?job.min_experience:'Not disclosed'} - ${job.max_experience!== null?job.max_experience:'Not disclosed'}` : job.max_experience !== null?job.max_experience:'Not disclosed'} Years
 
                             </span>
-                      </p>
-                      <p class="details-row">
+                    </p>
+                    <p class="details-row details-row-4">
                         <span><i class="fas fa-clock"></i>${ job.employment_type != null ? job.employment_type : 'Not disclosed' }</span>
                         <span><i class="fa fa-indian-rupee-sign"></i><span class="salary" data-salary="${ job.salary }"></span></span>
                         <span><i class="fa fa-graduation-cap"></i>${ job.qualifications.length != 0 ? job.qualifications : 'Not disclosed' }</span>
@@ -67,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             data-hybrid="${ job.is_hybrid}"
                         ></span>                        
                         </span>
-                      </p>
+                    </p>
                     <div class="skills skills-container" data-skills="${job.skills}">
                     </div>
                     
@@ -79,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="time-since">${ timeSince(job.refreshed_date) }</span>
 
                     <span>${ job.opening_count !== null ? job.opening_count : '' } Openings</span>
-                    <span>${ job.applied_count } Applicants</span>
+                    ${ job.applied_count > 10 ? `<span>${ job.applied_count } Applicants</span>` : '' }
                     <form method="POST" action="/bookmark/">
                         
                         <input type="hidden" value="${ job.slug }" name="slug">
@@ -94,13 +232,13 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             </a>
                 `).join('') 
-   
-//             // Build the pagination HTML
-//             const paginationHTML = apiResposeData.pagination.map(page => `
-//                 <button class="pagination-button" data-page="${page.number}">
-//                     ${page.number}
-//                 </button>
-//             `).join('');
+
+            //             // Build the pagination HTML
+            //             const paginationHTML = apiResposeData.pagination.map(page => `
+            //                 <button class="pagination-button" data-page="${page.number}">
+            //                     ${page.number}
+            //                 </button>
+            //             `).join('');
 
                 // Build pagination HTML using correct fields
                 const pagination = apiResposeData.pagination;
@@ -143,119 +281,285 @@ document.addEventListener('DOMContentLoaded', () => {
                 workTypeFunc();
                 keyskills();
                 salaryInLPA();
-
-
-        } catch (error) {
-            console.error("Error fetching jobs:", error);
-            resultsDiv.innerHTML = "<p>Something went wrong. Please try again later.</p>";
-        }
-    });
-});
-
-
-// for function in for jobs cards posted date
-function timeSince(postedDate) {
-    let postedTime = new Date(postedDate);
-    let now = new Date();
-    let seconds = Math.floor((now - postedTime) / 1000);
-
-    let intervals = {
-        "year": 31536000,
-        "month": 2592000,
-        "week": 604800,
-        "day": 86400,
-        "hour": 3600,
-        "minute": 60,
-    };
-
-    for (let [unit, value] of Object.entries(intervals)) {
-        let interval = Math.floor(seconds / value);
-        if (interval >= 1) {
-            return `${interval} ${unit}${interval !== 1 ? "s" : ""} ago`;
-        }
-    }
-    return "Just now";
-}
-
-function updateTimeSince() {
-    document.querySelectorAll(".time-since").forEach(span => {
-        let postedDate = span.getAttribute("data-posted-date"); 
-        if (postedDate) {
-            span.innerText = timeSince(postedDate);
-        }
-    });
-}
-
-
-// work type 
-
-function workTypeFunc() {
-    document.querySelectorAll(".work-type").forEach(span => {
-        let isOnsite = span.getAttribute("data-onsite") === "true";
-        let isWFH = span.getAttribute("data-wfh") === "true";
-        let isHybrid = span.getAttribute("data-hybrid") === "true";
-
-        let workTypes = [];
-        if (isOnsite) workTypes.push("Onsite");
-        if (isWFH) workTypes.push("Work from Home");
-        if (isHybrid) workTypes.push("Hybrid");
-        if(workTypes.length !== 0){
-            span.innerText = workTypes.join(", ");
-        }
-        else{
-            span.innerText = `Not disclosed`
-        }
-
-    });
-}
-
-
-
-// skills 
-function keyskills() {
-
-    document.querySelectorAll(".skills-container").forEach(skillsContainer => {
-        let skillsString = skillsContainer.getAttribute("data-skills"); // Get the string from data attribute
-
     
-        if (skillsString) {
-            let skillsArray = skillsString.split(","); // Convert to array
-            skillsArray.forEach(skill => {
-                let skillSpan = document.createElement("span");
-                skillSpan.className = "key-skills";
-                skillSpan.innerText = skill.trim(); // Remove extra spaces
-                skillsContainer.appendChild(skillSpan);
+}
+
+
+// remove the filter from the Browser URL
+function clearFiltersFromBrowser(){
+    // Remove all query parameters except 'p' and 'q'
+    const currentUrl = new URL(window.location.href);
+    const params = currentUrl.searchParams;
+
+    // Store values of 'p' and 'q'
+    const keepParams = ['q', 'p'];
+    const preservedValues = {};
+    keepParams.forEach(param => {
+        if (params.has(param)) {
+            preservedValues[param] = params.get(param);
+        }
+    });
+
+    // Clear all search params
+    currentUrl.search = '';
+
+    // Restore only 'p' and 'q'
+    for (const [key, value] of Object.entries(preservedValues)) {
+        currentUrl.searchParams.set(key, value);
+    }
+
+    // Update the browser URL
+    window.history.pushState({}, '', currentUrl.toString());
+}
+// Function for fetchJobs() only runs once after a small delay (e.g. 300 ms), 
+// even if multiple changes happen quickly
+function debounce(func, delay) {
+    let timeoutId;
+    return function (...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => func.apply(this, args), delay);
+    };
+}
+const debouncedFetchJobs = debounce(fetchJobs, 300);
+
+// fetch method to get the data from server 
+async function fetchJobs() {
+    const jobTitle = document.getElementById('jobTitle').value.trim();
+    const location = document.getElementById('location').value.trim();
+    const resultsDiv = document.getElementById('job-details');
+
+    if (!jobTitle) {
+        resultsDiv.innerHTML = "<p>Please enter a job title.</p>";
+        return;
+    }
+
+    try {
+        let apiUrl = `/api/search/?q=${encodeURIComponent(jobTitle)}`;
+        if (location) {
+            apiUrl += `&p=${encodeURIComponent(location)}`;
+        }
+
+        // Collect all selected filters
+        const filters = ['work_mode', 'employment_type', 'salary', 'qualification', 'industry_type', 'organization_type', 'location'];
+        filters.forEach(filter => {
+            document.querySelectorAll(`input[name="${filter}"]:checked`).forEach(checkbox => {
+                apiUrl += `&${filter}=${encodeURIComponent(checkbox.value)}`;
             });
+        });
+
+        // Add the experience filter value
+        const experienceSlider = document.getElementById('experienceSlider');
+        if (experienceSlider && experienceSlider.value !== "-1") {
+            apiUrl += `&experience=${encodeURIComponent(experienceSlider.value)}`;
+        }
+
+        // Update the browser URL
+        window.history.pushState({ path: apiUrl }, '', apiUrl.replace('/api', ''));
+
+        console.log("Fetching jobs with URL: ", apiUrl);
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error(`Error fetching jobs: ${response.status}`);
+
+        const apiResponseData = await response.json();
+
+        if (apiResponseData.jobs.length === 0) {
+            resultsDiv.innerHTML = "<p>No jobs found.</p>";
         } else {
-            let noSkillSpan = document.createElement("span");
-            noSkillSpan.className = "key-skills";
-            noSkillSpan.innerText = "No skills provided";
-            skillsContainer.appendChild(noSkillSpan);
+            renderJobs(apiResponseData, resultsDiv);
         }
-    });
 
+        // Pass the experience slider value so it can be restored
+        const sliderValue = experienceSlider ? experienceSlider.value : "-1";
+        populateFilters(apiResponseData.filters, sliderValue);
+
+    } catch (error) {
+        console.error("Error fetching jobs:", error);
+        resultsDiv.innerHTML = "<p>Something went wrong. Please try again later.</p>";
+    }
 }
 
-// Salary 
-function salaryInLPA(){
-    document.querySelectorAll(".salary").forEach(salarySpan => {
-        let salary = salarySpan.getAttribute("data-salary");
+// Initial setup after page load
+// Update event listeners for button and all filters action to call the fetch method
+document.addEventListener('DOMContentLoaded', () => {
+    const searchButton = document.querySelector('.search-button');
+    const clearButton = document.querySelector('.clear-filters-button');
+    const experienceSlider = document.getElementById('experienceSlider');
 
-        if (salary && salary!="None" && salary != "null") {
-            let salaryLPA = parseFloat(salary) / 100000; // Convert to LPA
-            let formattedSalary = salaryLPA % 1 === 0 ? salaryLPA.toFixed(0) : salaryLPA.toFixed(1); // Remove .00, keep .5
+    // Attach event to search button
+    if (searchButton) {
+        searchButton.addEventListener('click', fetchJobs);
+    }
 
-            salarySpan.innerHTML = `${formattedSalary} LPA`;
-        }
-        else{
-            salarySpan.innerHTML = `Not disclosed`;
-        }
-    });
-}
+    // Attach filter listeners (checkboxes and experience slider)
+    attachFilterListeners();
 
-document.addEventListener("DOMContentLoaded", function() {
-    updateTimeSince();
-    workTypeFunc();
-    keyskills();
-    salaryInLPA();
+    // Clear filters and trigger a fresh search
+    if (clearButton) {
+        clearButton.addEventListener('click', () => {
+            console.log("Clearing all filters...");
+
+            // Uncheck all filter checkboxes
+            document.querySelectorAll('.filter-container input[type="checkbox"]').forEach(input => {
+                input.checked = false;
+            });
+
+            // Reset experience slider
+            if (experienceSlider) {
+                experienceSlider.value = -1;
+                experienceSlider.setAttribute('data-prev', -1);
+                updateExperienceLabel(-1);
+            }
+
+            // Clear filter from browser URL bar
+            clearFiltersFromBrowser();
+
+            // Fetch jobs with cleared filters
+            debouncedFetchJobs();
+        });
+    }
 });
+
+
+
+
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+    // Fetch call using the button click event Only
+    // 
+    // 
+    // 
+    // 
+    // 
+    // 
+// Function to load the filter data in URL for get fetch call
+// function getSelectedFilters() {
+//     const params = new URLSearchParams();
+
+//     // Work Mode
+//     document.querySelectorAll('input[name="work_mode"]:checked').forEach(el => {
+//         params.append('work_mode', el.value);
+//     });
+
+//     // Experience (single value from slider)
+//     const experience = document.getElementById('experienceSlider').value;
+//     if (experience !== "-1") {
+//         params.append('experience', experience);
+//     }
+
+//     // Salary
+//     document.querySelectorAll('input[name="salary"]:checked').forEach(el => {
+//         params.append('salary', el.value);
+//     });
+
+//     // Organization Type
+//     document.querySelectorAll('input[name="organization_type"]:checked').forEach(el => {
+//         params.append('organization_type', el.value);
+//     });
+
+//     // Employment Type
+//     document.querySelectorAll('input[name="employment_type"]:checked').forEach(el => {
+//         params.append('employment_type', el.value);
+//     });
+
+//     // Qualification
+//     document.querySelectorAll('input[name="qualification"]:checked').forEach(el => {
+//         params.append('qualification', el.value);
+//     });
+
+//     // Industry Type
+//     document.querySelectorAll('input[name="industry_type"]:checked').forEach(el => {
+//         params.append('industry_type', el.value);
+//     });
+
+//     // Location from filter checkboxes
+//     document.querySelectorAll('input[name="location"]:checked').forEach(el => {
+//         params.append('location', el.value);
+//     });
+
+//     return params;
+// }
+
+// // Function to clear the filter data 
+// document.addEventListener('DOMContentLoaded', () => {
+//     const clearButton = document.querySelector('.clear-filters-button');
+
+//     clearButton.addEventListener('click', () => {
+//         // Uncheck all filter checkboxes
+//         document.querySelectorAll('.filter-container input[type="checkbox"]').forEach(input => {
+//             input.checked = false;
+//         });
+
+//         // Reset experience slider
+//         const experienceSlider = document.getElementById('experienceSlider');
+//         if (experienceSlider) {
+//             experienceSlider.value = -1;
+//             experienceSlider.setAttribute('data-prev', -1);
+//             updateExperienceLabel(-1); // Update label text
+//         }
+
+//         // Optionally, trigger a new search with no filters
+//         document.querySelector('.search-button').click();
+//     });
+// });
+// // Detect form submission and make the fetch call
+// document.addEventListener('DOMContentLoaded', () => {
+//     const searchButton = document.querySelector('.search-button');
+
+
+//     searchButton.addEventListener('click', async () => {
+
+//         const jobTitle = document.getElementById('jobTitle').value.trim();
+//         const location = document.getElementById('location').value.trim();  // Location input
+//         const resultsDiv = document.getElementById('job-details');
+//         if (!jobTitle) {  
+//             resultsDiv.innerHTML = "<p>Please enter a job title.</p>";
+//             return;
+//         }
+
+//         try {   
+//             // Base params
+//             const params = new URLSearchParams();
+//             params.append('q', jobTitle);
+//             if (location) params.append('p', location);
+
+//             // Add selected filter params
+//             const filterParams = getSelectedFilters();
+//             for (const [key, value] of filterParams.entries()) {
+//                 params.append(key, value);
+//             }
+//             // Construct API URL dynamically
+//             const apiUrl = `/api/search/?${params.toString()}`;
+
+//             // Update URL in browser bar
+//             const newUrl = `/search/?${params.toString()}`;
+//             window.history.pushState({ path: newUrl }, '', newUrl);
+
+//             const response = await fetch(apiUrl);
+//             if (!response.ok) throw new Error(`Error fetching jobs: ${response.status}`);
+
+//             const apiResposeData = await response.json();
+
+//             if (apiResposeData.jobs.length === 0) {
+//                 resultsDiv.innerHTML = "<p>No jobs found.</p>";
+//                 populateFilters(apiResposeData.filters);
+//                 return;
+//             }
+//             renderJobs(apiResposeData, resultsDiv );
+//             const experienceSlider = document.getElementById('experienceSlider');
+//             const previousExperienceValue = experienceSlider?.value || "-1";
+            
+//             populateFilters(apiResposeData.filters, previousExperienceValue);
+
+
+//         } catch (error) {
+//             console.error("Error fetching jobs:", error);
+//             resultsDiv.innerHTML = "<p>Something went wrong. Please try again later.</p>";
+//         }
+//     });
+// });

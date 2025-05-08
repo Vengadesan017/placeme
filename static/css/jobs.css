@@ -270,6 +270,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 /* Filter button */
 .filter-button {
+
   background-color: #141b5f;
   color: #ffffff;
   font-size: 16px;
@@ -279,8 +280,23 @@ input[type="range"]::-webkit-slider-thumb:hover {
   border: none;
   cursor: pointer;
   width: 100%;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.5s ease;
 }
+.filter-button:hover{
+  background-color: #ffbd03;
+  color: #000;
+}
+
+.clear-filters-button {
+  margin: 3px 0;
+  /* background-color: #ffbd03;
+  color: #000; */
+
+}
+/* .clear-filters-button:hover{
+  background-color: #141b5f;
+  color: #ffffff;
+} */
 
 button:hover {
   background-color: #141b5f;
@@ -402,7 +418,7 @@ button:hover {
 
 .details-row-2 span {
   min-width: unset;
-  max-width: 50%;
+  max-width: 75%;
   /* Optional: Limit the maximum width */
   white-space: nowrap;
   /* Prevent text from wrapping */

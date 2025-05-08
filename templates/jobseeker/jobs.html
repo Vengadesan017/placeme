@@ -16,12 +16,13 @@ Job Result {{ keyword1 }}
 
 <div class="search-section">
     <div class="search-bar">
-        <form method="get" id="jobSearchForm" class="search-form" action="{% url 'job_seeker:search' %}">  
+        <div class="search-form">  
             <input type="text" name="q" id="jobTitle" placeholder="Jobs title / company / Skills" value="{{ keyword1 }}" required>
             <div class="divider"></div> 
             <input type="text" name="p" id="location"  placeholder="Location / remote" value="{{ keyword2 }}">
-            <button type="submit" class="search-button" value="Search">Search</button>
-        </form>
+            <button type="button" class="search-button" value="Search">Search</button>
+        </div>
+
     </div>
 </div>
 <div class="container">
@@ -29,8 +30,8 @@ Job Result {{ keyword1 }}
     {% if page_obj %}
 
     <div class="filter-container">
-        <form method="POST" action="#">
-            {% csrf_token %}
+
+            {% comment %} {% csrf_token %} {% endcomment %}
             <h2>Filter Jobs</h2>
             <div class="filter-options">
         
@@ -85,7 +86,7 @@ Job Result {{ keyword1 }}
                     <div class="filter-scroll" id="moreComOptions">
                         {% for x in filters.organization_type.items %}
                             <label>
-                                <input type="checkbox" name="organization" value="{{x.0}}">
+                                <input type="checkbox" name="organization_type" value="{{x.0}}">
                                 {{x.0}} ({{x.1}})
                             </label>
                         {% endfor %}
@@ -161,10 +162,10 @@ Job Result {{ keyword1 }}
                 </div>
         
                 <!-- Filter Button -->
-                <button name="filter_jobs" type="submit" class="filter-button">Filter</button>
+                {% comment %} <button name="filter_jobs" type="button" class="search-button filter-button">Apply Filter</button> {% endcomment %}
+                <button type="button" class="clear-filters-button filter-button">Clear Filter</button>
             </div>
-        </form>
-        
+
         
     </div>
 

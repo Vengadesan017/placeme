@@ -216,10 +216,10 @@ def Search(request):
             }
             return render(request, 'jobseeker/jobs.html', context)
         
-        # Apply filter
-        if request.method == "POST":
-            if 'filter_jobs' in request.POST:
-                jobs = apply_filter_in_job(request,jobs)
+        # # Apply filter
+        # if request.method == "POST":
+        #     if 'filter_jobs' in request.POST:
+        #         jobs = apply_filter_in_job(request,jobs)
 
         # Apply Pagination
         paginator = Paginator(jobs, 10)  # Show 20 jobs per page
@@ -251,10 +251,10 @@ def ApiSearch(request):
             return Response({'jobs': JobsCardSerializer([], many=True).data})
 
         
-        # Apply filter
-        if request.method == "POST":
-            if 'filter_jobs' in request.POST:
-                jobs = apply_filter_in_job(request,jobs)
+        # # Apply filter
+        # if request.method == "POST":
+        #     if 'filter_jobs' in request.POST:
+        #         jobs = apply_filter_in_job(request,jobs)
 
 
 

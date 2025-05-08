@@ -62,8 +62,8 @@ def search_job(request,keyword1=None,keyword2=None,page_number=None,candidate=No
             return False
 
     if jobs.exists():
-        # ORDER THE JOB POST
-        jobs = jobs.order_by('-posted_date')
+        # ORDER THE JOB POST and apply the filter
+        jobs = apply_filter_in_job(request,jobs.order_by('-posted_date'))
     else:
         messages.error(request, "No Job found.. ")
     
@@ -72,15 +72,14 @@ def search_job(request,keyword1=None,keyword2=None,page_number=None,candidate=No
 
 def apply_filter_in_job(request,jobs):
     """ Apply the filter in jobs variable"""
-    
-    selected_work_modes = request.POST.getlist('work_mode')  
-    experience = request.POST.get('experience') 
-    salary = request.POST.getlist('salary')  
-    organization = request.POST.getlist('organization')  
-    employment_type = request.POST.getlist('employment_type')  
-    qualification = request.POST.getlist('qualification')  
-    industry_type = request.POST.getlist('industry_type')  
-    location = request.POST.getlist('location')  
+    selected_work_modes = request.GET.getlist('work_mode')  
+    experience = request.GET.get('experience') 
+    salary = request.GET.getlist('salary')  
+    organization = request.GET.getlist('organization_type')  
+    employment_type = request.GET.getlist('employment_type')  
+    qualification = request.GET.getlist('qualification')  
+    industry_type = request.GET.getlist('industry_type')  
+    location = request.GET.getlist('location')  
     query = Q()
     if selected_work_modes:
         # Add conditions dynamically based on selected work modes
@@ -91,8 +90,10 @@ def apply_filter_in_job(request,jobs):
         if 'Work From Home' in selected_work_modes:
             query &= Q(is_work_from_home=True)
         jobs = jobs.filter(query)
-    if int(experience) >= 0:
-        jobs = jobs.filter(min_experience__lte=experience, max_experience__gte=experience)
+    if experience and experience.isdigit():
+        experience = int(experience)
+        if experience >= 0:
+            jobs = jobs.filter(min_experience__lte=experience, max_experience__gte=experience)
     if salary:
         salary_ranges = {
             "0_3_LPA": (0, 300000),
@@ -130,7 +131,7 @@ def apply_filter_in_job(request,jobs):
     if location:
         jobs = jobs.filter(location_id__location__in=location)
     jobs = jobs.distinct()
-    
+    print(jobs)
     return jobs
 
 
@@ -187,11 +188,17 @@ def get_filter_from_job(jobs):
     for item in qualification_data:
         qualification_counts[item['qualifications__qualification']] = qualification_counts.get(item['qualifications__qualification'], 0) + item['count']
 
-    industry_counts = jobs.values('company__industry_type').annotate(count=Count('job_id'))
-    industry_data = {item['company__industry_type']: item['count'] for item in industry_counts if item['company__industry_type']}
+    industry_data = jobs.values('company__industry_type').annotate(count=Count('job_id'))
+    industry_counts = {}
+    for item in industry_data:
+        industry_counts[item['company__industry_type']] = industry_counts.get(item['company__industry_type'], 0) + item['count']
+    # industry_data = {item['company__industry_type']: item['count'] for item in industry_counts if item['company__industry_type']}
 
-    organization_counts = jobs.values('company__organization_type').annotate(count=Count('job_id'))
-    organization_data = {item['company__organization_type']: item['count'] for item in organization_counts if item['company__organization_type']}
+    organization_data = jobs.values('company__organization_type').annotate(count=Count('job_id'))
+    organization_counts = {}
+    for item in organization_data:
+        organization_counts[item['company__organization_type']] = organization_counts.get(item['company__organization_type'], 0) + item['count']
+    # organization_data = {item['company__organization_type']: item['count'] for item in organization_counts if item['company__organization_type']}
 
     filters = {
         'location':  location_data,
@@ -201,8 +208,8 @@ def get_filter_from_job(jobs):
         'fixed_shift':  fixed_shift_counts,
         'salary':  salary_counts,
         'experience':  experience_data,
-        'industry_type':  industry_data,
-        'organization_type':  organization_data,
+        'industry_type':  industry_counts,
+        'organization_type':  organization_counts,
         'qualification':  qualification_counts,
     }
     
