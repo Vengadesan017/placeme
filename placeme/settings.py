@@ -93,26 +93,26 @@ WSGI_APPLICATION = 'placeme.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'placeme_hrms',
-#         'USER': 'newuser',
-#         'PASSWORD': 'Str0ngP@ssw0rd!',
-#         'HOST': 'localhost',  
-#         'PORT': '3306',        
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'placeme_hrms',
-        'USER': 'root',
-        'PASSWORD': '123456',
+        'USER': 'newuser',
+        'PASSWORD': 'Str0ngP@ssw0rd!',
         'HOST': 'localhost',  
         'PORT': '3306',        
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'placeme_hrms',
+#         'USER': 'root',
+#         'PASSWORD': '123456',
+#         'HOST': 'localhost',  
+#         'PORT': '3306',        
+#     }
+# }
 
 
 
