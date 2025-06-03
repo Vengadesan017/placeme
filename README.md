@@ -1,6 +1,6 @@
 <div align="center">
 
-# PLACENow  
+# PlaceNow  
 *Empowering seamless connections between talent and opportunity.*
 
 ![last-commit](https://img.shields.io/github/last-commit/Vengadesan017/placeme?style=flat&logo=git&logoColor=white&color=0080ff)
