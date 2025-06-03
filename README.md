@@ -1,6 +1,6 @@
 <div align="center">
 
-# PLACEME  
+# PLACENow  
 *Empowering seamless connections between talent and opportunity.*
 
 ![last-commit](https://img.shields.io/github/last-commit/Vengadesan017/placeme?style=flat&logo=git&logoColor=white&color=0080ff)
@@ -36,9 +36,9 @@
 
 **Placeme** is a powerful recruitment platform built with Django, designed to streamline the hiring process for both job seekers and recruiters.
 
-### 🔍 Why Placeme?
+### 🔍 Why Placenow?
 
-Placeme revolutionizes recruitment management by offering a comprehensive suite of tools that enhance user experience and operational efficiency:
+Placenow revolutionizes recruitment management by offering a comprehensive suite of tools that enhance user experience and operational efficiency:
 
 - 🎯 **Django Integration:** Simplifies admin tasks and deployment
 - 🔍 **Robust Testing:** Ensures code quality and reliability
