@@ -2,8 +2,14 @@
 
 
     <div class="left">
-    
+
         {% if offered %}
+
+        <div class="buttons">
+            <a class="button active">All (0)</a>
+            <a class="button">Applied (0)</a>    
+            <button class="button">Recuiter action (0)</button>
+        </div>
         {% for job in offered %}
             <a href="{% url 'job_seeker:status' page='offered' id=job.id %}">
             <div class="dev-detail-2 {% if job_status == job %}active{% endif %}">
@@ -66,6 +72,11 @@
             </a>
             {% endfor %}
             {% else %}
+                <div class="buttons">
+                    <a class="button active">All (0)</a>
+                    <a class="button">Applied (0)</a>    
+                    <button class="button">Recuiter action (0)</button>
+                </div>
                 <a href="{% url 'job_seeker:home' %}">No data found. Click here to search.</a>
             {% endif%}
     

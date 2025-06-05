@@ -1,24 +1,19 @@
-body {
-    background-color: #eeeeff;
-}
-
 .all-menu {
     margin: auto;
-
+    box-shadow: 0 4px 8px rgba(0, 0, 0,0.1);
     background-color: rgb(255, 255, 255);
     width: 90%;
     border-radius: 15px;
     margin-top: 80px;
     position: sticky;
     top: 62px;
-    border-bottom: 4px solid #141B5F;
+    border: 1px solid #d0d0d0;
     z-index: 5;
 }
 
 .menu-item {
     display: flex;
     justify-content: space-evenly;
-
 
 }
 
@@ -37,7 +32,7 @@ body {
 .applied a,
 .offer a {
     color: #141B5F;
-    font-size: 18px;
+    font-weight: 500;
 }
 
 .save a:hover,
@@ -51,7 +46,8 @@ body {
 .applied a.active,
 .offer a.active {
     color: #FF8C00;
-
+    font-weight: 500;
+    /* font-size: 20px; */
 }
 
 .all-menu ul li a,
@@ -74,25 +70,45 @@ body {
     width: 90%;
     background-color: rgb(255, 255, 255);
     margin: auto;
-
     margin-top: 20px;
     border-radius: 15px;
     display: flex;
     white-space: nowrap;
-    box-shadow: #141B5F 0px 0px 6px 0px;
-
+    border: 1px solid #d0d0d0;
 }
 
 .left {
     min-height: 700px;
     height: auto;
-    width: 35%;    border-top-left-radius: 15px;
-    border-right: 2px solid #999;
+    width: 38%;   
+     border-top-left-radius: 15px;
+    border-right: 1px solid #d0d0d0;
     position: relative;
     z-index: 0;
     white-space: nowrap;
+    
+    .buttons{
+        height: fit-content;
+        width: 100%;
+        padding: 15px;
+    }
+    .button{
+        border: 1px solid #d0d0d0;
+        padding: 5px 10px;
+        border-radius: 20px;
+        background-color: #fff;
+        color: #555;
+    }
+    .button:hover {
+        background-color: #efefef;
+        transition: all 0.3s ;
+    }
+    .active{
+    background-color: #efefef;
+    }
 
 }
+
 
 
 /*box all*/
@@ -101,7 +117,7 @@ body {
     width: 100%;
     margin-left: 20px;
     margin-right: 25px;
-    border-bottom: 1.5px solid #999;
+    border-bottom: 1px solid #d0d0d0;
     margin-top: 10px;
     display: flex;
     flex-direction: row;
@@ -120,14 +136,16 @@ body {
 }
 
 .dev-name {
+    font-weight: 550;
     font-family: 'Poppins', sans-serif;
     white-space: nowrap;
+    font-size: 20px;
 }
 
 .company-name {
     font-weight: 600;
     color: #141B5F;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     white-space: nowrap;
 }
 
@@ -140,7 +158,6 @@ body {
     background-color: rgb(153, 153, 153);
     border-radius: 15px;
     white-space: nowrap;
-    margin-bottom: 10px;
 }
 
 .fa-circle-check {
@@ -153,7 +170,7 @@ body {
 }
 
 .application-saved {
-    color: black;
+    color: #555;
     white-space: nowrap;
 
 }
@@ -185,15 +202,15 @@ body {
 
 
 .dev-detail-2 {
-    height: 130px;
+    height: 160px;
     width: 100%;
 
-    border-bottom: 1.5px solid #999;
+    border-bottom: 1px solid #d0d0d0;
 
-    padding-top: 10px;
+    padding-top: 20px;
     display: flex;
     flex-direction: row;
-    padding-left: 20px;
+    padding-left: 22px;
     /* margin-right: 20px; */
     white-space: nowrap;
     z-index: -1;
@@ -203,7 +220,7 @@ body {
     border-top-left-radius: inherit;
 }
 .dev-detail-2.active {
-    background-color: bisque;
+background-color: #F0553711;
 }
 
 .dev-detail-2-inside {
@@ -216,16 +233,13 @@ body {
     white-space: nowrap;
 }
 
-.dev-name {
-    font-family: 'Poppins', sans-serif;
-    white-space: nowrap;
-}
+
 
 .company-name {
     font-weight: 600;
     font-size: 16px;
     color: #141B5F;
-    margin-bottom: 26px;
+    margin-bottom: 30px;
     white-space: nowrap;
 }
 
@@ -235,10 +249,11 @@ body {
     text-align: center;
     justify-content: space-evenly;
     width: fit-content;
-    background-color: #E6E6E6;
+    background-color: #fff;
+    border: 1px solid #d0d0d0;
     border-radius: 15px;
     white-space: nowrap;
-    padding: 2px 20px;
+    padding: 5px 20px;
 }
 
 .fa-circle-check {
@@ -258,9 +273,9 @@ body {
 }
 
 .application-saved {
-    color: black;
+    color: #555;
     white-space: nowrap;
-
+    font-size: 14px;
 }
 
 .dev-box2 {
@@ -272,11 +287,12 @@ body {
 .dev-box2-profile {
     height: 60px;
     width: 60px;
-    background-color: #D9D9D9;
+    background-color: #fff;
+    border: 1px solid #d0d0d0;
     margin-bottom: 20px;
     margin-left: 19px;
     /* margin-right: 70px; */
-    margin-top: 10px;
+    margin-top: 5px;
 }
 
 .dev-box2-a {
