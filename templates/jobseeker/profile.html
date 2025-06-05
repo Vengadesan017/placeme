@@ -22,12 +22,26 @@
         <div class="left-container">
             <div class="profile-pic">
                 <div class="pic-div">
-                    {% if doc.profile_picture %}
-                    <img src="{{doc.profile_picture}}" class="pic-photo" alt="profile pic" width="100%">
+{% comment %} {% with profile_pic=form.instance.profile_pic %}
+    {% if profile_pic %}
+        <img src="{{ profile_pic.url }}" class="pic-photo" alt="profile pic" width="100%">
+    {% else %}
+        <img src="{% static 'img/image.png' %}" class="pic-photo" alt="profile pic" width="100%">
+    {% endif %}
+{% endwith %} {% endcomment %}
+                    {% if candidate.profile_pic %}
+                    <img src="{{candidate.profile_pic.url }}" class="pic-photo" alt="profile pic" width="100%">
+                    <a href="{{ candidate.profile_pic.url }}" download>
+                        Download Profile Picture
+                    </a>
+                    <a href="{{ candidate.profile_pic.url }}">
+                        link
+                    </a>
                 {% else %}
                     <img src="{% static 'img/image.png' %}" class="pic-photo" alt="profile pic" width="100%">
                 {% endif %}
-                    <button class="btn">+</button>
+                    {% comment %} <button class="btn">+</button> {% endcomment %}
+                    <a href="#" class="open-modal-btn btn" data-modal-id="PictureModal" >+</a>
                 </div>
                 
             </div>
@@ -225,7 +239,8 @@
                                         <a class="resume-a2">
                                             <i class="fa-regular fa-file"><span class="add-resume">Add Resume</span> </i>
                                                                
-                                            <button class="upload-btn">Upload file</button>
+                                            {% comment %} <button class="upload-btn">Upload file</button> {% endcomment %}
+                                            <a href="#" class="open-modal-btn upload-btn" data-modal-id="ResumeModal" >Upload file</a>
                                         </a>
                                     </li>
                                 </ul>
@@ -520,6 +535,16 @@
         
     </div>
     
+        <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ resume.as_p }}
+        <button name="upload_resume" type="submit" class="">Upload</button>
+    </form>
+        <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ profile.as_p }}
+        <button name="upload_profile" type="submit" class="">Upload</button>
+    </form>
 </main>
 
 
@@ -541,6 +566,8 @@
         {% include "jobseeker/SubFileForApi/profileEmp.html" %}
         {% include "jobseeker/SubFileForApi/profileCareer.html" %}
         {% include "jobseeker/SubFileForApi/profileIntern.html" %}
+        {% include "jobseeker/SubFileForApi/profilePicture.html" %}
+        {% include "jobseeker/SubFileForApi/profileResume.html" %}
         
     <script src="{% static 'js/jobseeker/profile.js' %}"></script>
  

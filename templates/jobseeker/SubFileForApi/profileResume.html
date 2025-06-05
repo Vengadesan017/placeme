@@ -1,0 +1,40 @@
+
+<!-- The Modal for ==========personal Info===================== -->
+<div class="modal" id="ResumeModal">
+    <div class="modal-dialog">
+        <form method="post" action="#">
+            {% csrf_token %}
+        <div class="modal-content">
+    
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h3 class="modal-title">Upload Resume</h3>
+            <button type="button" class="btn-close close-modal-btn" id="closeResumeModalButton"><i class='fas fa-times edit'></i></button>
+        </div>
+    
+        <!-- Modal Body -->
+        <div class="modal-body">
+        <div class="margin20">
+        <div class="">
+
+            <table class="modal-table">
+                <tr> 
+                    <td><b>Resume</b></td>
+                    <td><input type="file" id="firstname" name="first_name" value="{{ candidate.first_name|default_if_none:'' }}" required></td>
+                </tr>
+
+            </table>
+
+        </div>
+        </div>
+        </div>
+    
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+            <button type="submit" name="profile_personal_edit" class="model-btn-save" id="">Save</button>
+        </div>
+    
+        </div>
+    </form>
+    </div>
+    </div>

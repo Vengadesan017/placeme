@@ -1,176 +1,191 @@
-{% extends "jobseeker/layout.html" %}
+{% extends 'jobseeker/layout.html' %}
 
 {% block title %}
-Job Result {{ keyword1 }}
-{% endblock title %}
+  Job Result {{ keyword1 }}
+{% endblock %}
 {% load static %}
 {% block statics %}
-<link rel="stylesheet" href="{% static 'css/jobs.css' %}">
-<script src="{% static "js/jobseeker/jobs.js" %}" defer></script>
-<script src="{% static "js/jobseeker/search.js" %}" defer></script>
-<script src="{% static "js/cookie/js.cookie.min.js" %}" defer></script>
+  <link rel="stylesheet" href="{% static 'css/jobs.css' %}" />
+  <script src="{% static 'js/jobseeker/jobs.js' %}" defer></script>
+  <script src="{% static 'js/jobseeker/search.js' %}" defer></script>
+  <script src="{% static 'js/cookie/js.cookie.min.js' %}" defer></script>
 
-{% endblock statics %}
-    
+  <link rel="stylesheet" href="{% static 'css/home-recommandation.css' %}">
+
+<script src="{% static 'js/jobseeker/recommandation-fetch.js' %}" defer></script>
+<script src="{% static 'js/jobseeker/recommandation.js' %}" defer></script>
+{% endblock %}
+
 {% block content %}
-
-<div class="search-section">
+  <div class="search-section">
     <div class="search-bar">
-        <div class="search-form">  
-            <input type="text" name="q" id="jobTitle" placeholder="Jobs title / company / Skills" value="{{ keyword1 }}" required>
-            <div class="divider"></div> 
-            <input type="text" name="p" id="location"  placeholder="Location / remote" value="{{ keyword2 }}">
-            <button type="button" class="search-button" value="Search">Search</button>
-        </div>
+      <div class="search-form">
 
-    </div>
-</div>
-<div class="container">
-   
-    {% if page_obj %}
+{% comment %} 
+need to use comman id 
 
-    <div class="filter-container">
+// searchInput   --   jobTitle
+// locationInput   --   location
+         {% endcomment %}
+        <input type="text" name="q" id="searchInput" autocomplete="off" placeholder="Jobs title / company / Skills" value="{{ keyword1 }}" required />
+            {% comment %} <input type="text" name='q' placeholder="Jobs title / company / Skills" id="jobTitle " value="{{ keyword1 }}" autocomplete="off" required> {% endcomment %}
+            <div class="recommendation-box" id="recommendationBox">
 
-            {% comment %} {% csrf_token %} {% endcomment %}
-            <h2>Filter Jobs</h2>
-            <div class="filter-options">
-        
-                <!-- Work Mode Filter -->
-                <div class="filter-group">
-                    <h4>Work Mode:</h4>
-                    <div class="filter-scroll" id="moreWorOptions">
-                        {% for x in filters.work_mode.items %}
-                        {% if x.1 != 0 %}
-                            <label>
-                                <input type="checkbox" name="work_mode" value="{{x.0}}">
-                                {{x.0}} ({{x.1}})
-                            </label>
-                        {% endif %}
-                        {% endfor %}
-                    </div>
-                    {% if filters.work_mode.items|length >= 4 %}
-                    <span id="viewMoreWor" class="view-more" onclick="toggleView('moreWorOptions', 'viewMoreWor')">View More</span>
-                    {% endif %}
-                </div>
-        
-                <!-- Experience Filter -->
-                <div class="filter-group">
-                    <h4>Experience (Years):</h4>
-                    <div class="slider-wrapper">
-                        <span id="experienceLabel" class="experience-label">Any</span>
-                        <input type="range" id="experienceSlider" min="-1" max="21" name="experience" value="-1" oninput="updateExperienceLabel(this.value)">
-                    </div>
-                </div>
-        
-                <!-- Salary Filter -->
-                <div class="filter-group">
-                    <h4>Salary:</h4>
-                    <div class="filter-scroll" id="moreSalOptions">
-                        {% for x in filters.salary.items %}
-                        {% comment %} {% if x.1 != 0 %} {% endcomment %}
-                        <label>
-                            <input type="checkbox" name="salary" value="{{x.0}}">
-                            {{x.0}} ({{x.1}})
-                        </label>
-                            {% comment %} {% endif %} {% endcomment %}
-                        {% endfor %}
-                    </div>
-                    {% if filters.salary.items|length >= 4 %}
-                        <span id="viewMoreSal" class="view-more" onclick="toggleView('moreSalOptions', 'viewMoreSal')">View More</span>
-                    {% endif %}
-                </div>
-        
-                <!-- Company Type Filter -->
-                <div class="filter-group">
-                    <h4>Company Type:</h4>
-                    <div class="filter-scroll" id="moreComOptions">
-                        {% for x in filters.organization_type.items %}
-                            <label>
-                                <input type="checkbox" name="organization_type" value="{{x.0}}">
-                                {{x.0}} ({{x.1}})
-                            </label>
-                        {% endfor %}
-                    </div>
-                    {% if filters.organization_type.items|length >= 4 %}
-                    <span id="viewMoreCom" class="view-more" onclick="toggleView('moreComOptions', 'viewMoreCom')">View More</span>
-                    {% endif %}
-                </div>
-                
-                <!-- Role Category Filter -->
-                <div class="filter-group">
-                    <h4>Employment type:</h4>
-                    <div class="filter-scroll" id="moreCatOptions">
-                        {% for x in filters.employment_type.items %}
-                            <label>
-                                <input type="checkbox" name="employment_type" value="{{x.0}}">
-                                {{x.0}} ({{x.1}})
-                            </label>
-                        {% endfor %}
-                    </div>
-                    {% if filters.employment_type.items|length >= 4 %}
-                    <span id="viewMoreCat" class="view-more" onclick="toggleView('moreCatOptions', 'viewMoreCat')">View More</span>
-                    {% endif %}
-                </div>
-                    
-                <!-- Education Filter -->
-                <div class="filter-group">
-                    <h4>Education:</h4>
-                    <div class="filter-scroll" id="moreEduOptions">
-                        {% for x in filters.qualification.items %}
-                            <label>
-                                <input type="checkbox" name="qualification" value="{{x.0}}">
-                                {{x.0}} ({{x.1}})
-                            </label>
-                        {% endfor %}
-                    </div>
-                    {% if filters.qualification.items|length >= 4 %}
-                    <span id="viewMoreEdu" class="view-more" onclick="toggleView('moreEduOptions', 'viewMoreEdu')">View More</span>
-                    {% endif %}
-                </div>
-        
-                <!-- Industry Type Filter -->
-                <div class="filter-group">
-                    <h4>Industry Type:</h4>
-                    <div class="filter-scroll" id="moreIndOptions">
-                        {% for x in filters.industry_type.items %}
-                            <label>
-                                <input type="checkbox" name="industry_type" value="{{x.0}}">
-                                {{x.0}} ({{x.1}})
-                            </label>
-                        {% endfor %}
-                    </div>
-                    {% if filters.industry_type.items|length >= 4 %}
-                    <span id="viewMoreInd" class="view-more" onclick="toggleView('moreIndOptions', 'viewMoreInd')">View More</span>
-                    {% endif %}
-                </div>
-        
-                <!-- Location Filter -->
-                <div class="filter-group">
-                    <h4>Location:</h4>
-                    <input type="text" class="filter-search" id="filterLocation" onkeyup="filterSearchLocation()" placeholder="Search for Locations..">
-                    <div class="filter-scroll" id="moreLocOptions">
-                        {% for x in filters.location.items %}
-                            <label>
-                                <input type="checkbox" name="location" value="{{x.0}}">
-                                {{x.0}} ({{x.1}})
-                            </label>
-                        {% endfor %}
-                    </div>
-                    {% if filters.location.items|length >= 4 %}
-                    <span id="viewMoreLoc" class="view-more" onclick="toggleView('moreLocOptions', 'viewMoreLoc')">View More</span>
-                    {% endif %}
-                </div>
-        
-                <!-- Filter Button -->
-                {% comment %} <button name="filter_jobs" type="button" class="search-button filter-button">Apply Filter</button> {% endcomment %}
-                <button type="button" class="clear-filters-button filter-button">Clear Filter</button>
             </div>
+        <div class="divider"></div>
+        <input type="text" name="p" id="locationInput" autocomplete="off" placeholder="Location / remote" value="{{ keyword2 }}" />
 
-        
+            {% comment %} <input type="text" name='p' id="location" autocomplete="off" placeholder="Location / remote"> {% endcomment %}
+            <div class="recommendation-box" id="locationRecommendationBox">
+                    
+                
+            </div>
+        <button type="button" class="search-button" value="Search">Search</button>
+      </div>
     </div>
+  </div>
+  <div class="container">
 
-    <div class="job-container" id="job-details">
+      <div class="filter-container">
+        {% comment %} {% csrf_token %} {% endcomment %}
+        <h2>Filter Jobs</h2>
+        <div class="filter-options">
+          <!-- Work Mode Filter -->
+          <div class="filter-group">
+            <h4>Work Mode:</h4>
+            <div class="filter-scroll" id="moreWorOptions">
+              {% for x in filters.work_mode.items %}
+                {% if x.1 != 0 %}
+                  <label>
+                    <input type="checkbox" name="work_mode" value="{{ x.0 }}" />
+                    {{ x.0 }} ({{ x.1 }})
+                  </label>
+                {% endif %}
+              {% endfor %}
+            </div>
+            {% if filters.work_mode.items|length >= 4 %}
+              <span id="viewMoreWor" class="view-more" onclick="toggleView('moreWorOptions', 'viewMoreWor')">View More</span>
+            {% endif %}
+          </div>
 
+          <!-- Experience Filter -->
+          <div class="filter-group">
+            <h4>Experience (Years):</h4>
+            <div class="slider-wrapper">
+              <span id="experienceLabel" class="experience-label">Any</span>
+              <input type="range" id="experienceSlider" min="-1" max="21" name="experience" value="-1" oninput="updateExperienceLabel(this.value)" />
+            </div>
+          </div>
+
+          <!-- Salary Filter -->
+          <div class="filter-group">
+            <h4>Salary:</h4>
+            <div class="filter-scroll" id="moreSalOptions">
+              {% for x in filters.salary.items %}
+                {% comment %} {% if x.1 != 0 %}
+                  {% endcomment %}
+                  <label>
+                    <input type="checkbox" name="salary" value="{{ x.0 }}" />
+                    {{ x.0 }} ({{ x.1 }})
+                  </label>
+                  {% comment %}
+                {% endif %} {% endcomment %}
+              {% endfor %}
+            </div>
+            {% if filters.salary.items|length >= 4 %}
+              <span id="viewMoreSal" class="view-more" onclick="toggleView('moreSalOptions', 'viewMoreSal')">View More</span>
+            {% endif %}
+          </div>
+
+          <!-- Company Type Filter -->
+          <div class="filter-group">
+            <h4>Company Type:</h4>
+            <div class="filter-scroll" id="moreComOptions">
+              {% for x in filters.organization_type.items %}
+                <label>
+                  <input type="checkbox" name="organization_type" value="{{ x.0 }}" />
+                  {{ x.0 }} ({{ x.1 }})
+                </label>
+              {% endfor %}
+            </div>
+            {% if filters.organization_type.items|length >= 4 %}
+              <span id="viewMoreCom" class="view-more" onclick="toggleView('moreComOptions', 'viewMoreCom')">View More</span>
+            {% endif %}
+          </div>
+
+          <!-- Role Category Filter -->
+          <div class="filter-group">
+            <h4>Employment type:</h4>
+            <div class="filter-scroll" id="moreCatOptions">
+              {% for x in filters.employment_type.items %}
+                <label>
+                  <input type="checkbox" name="employment_type" value="{{ x.0 }}" />
+                  {{ x.0 }} ({{ x.1 }})
+                </label>
+              {% endfor %}
+            </div>
+            {% if filters.employment_type.items|length >= 4 %}
+              <span id="viewMoreCat" class="view-more" onclick="toggleView('moreCatOptions', 'viewMoreCat')">View More</span>
+            {% endif %}
+          </div>
+
+          <!-- Education Filter -->
+          <div class="filter-group">
+            <h4>Education:</h4>
+            <div class="filter-scroll" id="moreEduOptions">
+              {% for x in filters.qualification.items %}
+                <label>
+                  <input type="checkbox" name="qualification" value="{{ x.0 }}" />
+                  {{ x.0 }} ({{ x.1 }})
+                </label>
+              {% endfor %}
+            </div>
+            {% if filters.qualification.items|length >= 4 %}
+              <span id="viewMoreEdu" class="view-more" onclick="toggleView('moreEduOptions', 'viewMoreEdu')">View More</span>
+            {% endif %}
+          </div>
+
+          <!-- Industry Type Filter -->
+          <div class="filter-group">
+            <h4>Industry Type:</h4>
+            <div class="filter-scroll" id="moreIndOptions">
+              {% for x in filters.industry_type.items %}
+                <label>
+                  <input type="checkbox" name="industry_type" value="{{ x.0 }}" />
+                  {{ x.0 }} ({{ x.1 }})
+                </label>
+              {% endfor %}
+            </div>
+            {% if filters.industry_type.items|length >= 4 %}
+              <span id="viewMoreInd" class="view-more" onclick="toggleView('moreIndOptions', 'viewMoreInd')">View More</span>
+            {% endif %}
+          </div>
+
+          <!-- Location Filter -->
+          <div class="filter-group">
+            <h4>Location:</h4>
+            <input type="text" class="filter-search" id="filterLocation" onkeyup="filterSearchLocation()" placeholder="Search for Locations.." />
+            <div class="filter-scroll" id="moreLocOptions">
+              {% for x in filters.location.items %}
+                <label>
+                  <input type="checkbox" name="location" value="{{ x.0 }}" />
+                  {{ x.0 }} ({{ x.1 }})
+                </label>
+              {% endfor %}
+            </div>
+            {% if filters.location.items|length >= 4 %}
+              <span id="viewMoreLoc" class="view-more" onclick="toggleView('moreLocOptions', 'viewMoreLoc')">View More</span>
+            {% endif %}
+          </div>
+
+          <!-- Filter Button -->
+          {% comment %} <button name="filter_jobs" type="button" class="search-button filter-button">Apply Filter</button> {% endcomment %}
+          <button type="button" class="clear-filters-button filter-button">Clear Filter</button>
+        </div>
+      </div>
+
+    {% if page_obj %}
+      <div class="job-container" id="job-details">
         {% if messages %}
         {% for message in messages %}
           <div class='alert alert-{{ message.tags }}'>
@@ -181,129 +196,103 @@ Job Result {{ keyword1 }}
       {% endif %}    
 
         {% if page_obj %}
-            <span class="total-jobs">
-                {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }} 
-                <strong>{{ keyword1 }}</strong> Jobs
-            </span>
+          <span class="total-jobs">
+            {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }}
+            <strong>{{ keyword1 }}</strong> Jobs
+          </span>
         {% endif %}
         {% for job in page_obj %}
-            <a href="/job/?r={{ job.slug }}" target="_blank" class="job-description">
-                <div class="job-card">
-                    <div class="job-header">
-                        <div>
-                            <h2>{{ job.title }}</h2>
-                            <p class="company-name">{{ job.company.company_name }}</p>
-                        </div>
-                        {% if job.is_applied %}
-                        <div onclick="window.location='{% url 'job_seeker:status' page='applied' %}';" class="view-job">View status</div>
-                        {% else  %}
-                        <div class="apply-job">Apply</div>               
-                        {% endif%}
-                    </div>
-            
-                    <div class="job-details">
-                        <p class="details-row details-row-2">
-                            <span><i class="fas fa-map-marker-alt"></i>
-                                {{ job.location_id.all|join:", " }}
-                            </span>
-                            <span><i class="fa fa-briefcase"></i>
-                                {% if job.min_experience != job.max_experience %}
-                                {{ job.min_experience|default_if_none:"Not disclosed"|floatformat:0 }} - {{ job.max_experience|default_if_none:"Not disclosed"|floatformat:0 }} Years
-                                {% else %}
-                                    {{ job.max_experience|default_if_none:"Not disclosed"|floatformat:0 }} Years
-                                {% endif%}
-                                </span>
-                          </p>
-                          <p class="details-row details-row-4">
-                            <span><i class="fas fa-clock"></i>{{ job.employment_type|default_if_none:"Not disclosed" }}</span>
-                            <span><i class="fa fa-indian-rupee-sign"></i><span class="salary" data-salary="{{ job.salary }}"></span></span>
-                            <span><i class="fa fa-graduation-cap"></i>{{ job.qualifications.all|default_if_none:"Not disclosed"|join:", " }}</span>
-                            <span><i class="fa fa-laptop"></i>  
-                                <span class="work-type"
-                                    data-onsite="{{ job.is_onsite|yesno:'true,false' }}"
-                                    data-wfh="{{ job.is_work_from_home|yesno:'true,false' }}"
-                                    data-hybrid="{{ job.is_hybrid|yesno:'true,false' }}"
-                                ></span>                        
-                                </span>
-    
-                          </p>                             
-                          <div class="skills skills-container" data-skills="{{job.skills.all|join:','}}"></div>
-                          {% comment %} <div class="skills skills-container" data-skills="{{job.skills}}"></div> {% endcomment %}
-                        {% comment %} <p class="description">
-                            {{ job.description|escape }}
-                        </p> {% endcomment %}
-                    </div>
-            
-                    <div class="job-footer">
-                        <span class="time-since" data-posted-date="{{ job.refreshed_date|date:'c' }}"></span>
-                        {% if job.opening_count > 0 %}
-                        <span>{{ job.opening_count|default_if_none:"Not disclosed" }} Openings</span>
-                        {% endif %}
-                        {% if job.applied_count > 10 %}
-                        <span>{{ job.applied_count|default_if_none:"Not disclosed" }} Applied</span>
-                        {% endif %}    
-                        <form method="POST" action="/bookmark/">
-                            {% csrf_token %}
-                            <input type="hidden" value="{{ job.slug }}" name="slug">
-                            <input type="checkbox" id="save" class="bookmark-checkbox" {% if job.is_saved %} checked {% endif%} >
-                            <label for="save">
-                                <button type="submit" class="save_job" name="save_job"><i class="fas fa-bookmark bookmark-icon"></i><span class="save-text">{% if job.is_saved %}Saved{% else  %}Save{% endif%}<span></button>
-                                
-                            </label>
-                        </form>
-                        
-                    </div>
+          <a href="/job/?r={{ job.slug }}" target="_blank" class="job-description">
+            <div class="job-card">
+              <div class="job-header">
+                <div>
+                  <h2>{{ job.title }}</h2>
+                  <p class="company-name">{{ job.company.company_name }}</p>
                 </div>
-                </a>
+                {% if job.is_applied %}
+                  <div onclick="window.location='{% url 'job_seeker:status' page='applied' %}';" class="view-job">View status</div>
+                {% else %}
+                  <div class="apply-job">View Job</div>
+                {% endif %}
+              </div>
 
+              <div class="job-details">
+                <p class="details-row details-row-2">
+                  <span>
+                    <i class="fas fa-map-marker-alt"></i>
+                    {{ job.location_id.all|join:', ' }}
+                  </span>
+                  <span>
+                    <i class="fa fa-briefcase"></i>
+                    {% if job.min_experience != job.max_experience %}
+                      {{ job.min_experience|default_if_none:'Not disclosed'|floatformat:0 }} - {{ job.max_experience|default_if_none:'Not disclosed'|floatformat:0 }} Years
+                    {% else %}
+                      {{ job.max_experience|default_if_none:'Not disclosed'|floatformat:0 }} Years
+                    {% endif %}
+                  </span>
+                </p>
+                <p class="details-row details-row-4">
+                  <span><i class="fas fa-clock"></i>{{ job.employment_type|default_if_none:'Not disclosed' }}</span>
+                  <span><i class="fa fa-indian-rupee-sign"></i><span class="salary" data-salary="{{ job.salary }}"></span></span>
+                  <span><i class="fa fa-graduation-cap"></i>{{ job.qualifications.all|default_if_none:'Not disclosed'|join:', ' }}</span>
+                  <span>
+                    <i class="fa fa-laptop"></i>
+                    <span class="work-type" data-onsite="{{ job.is_onsite|yesno:'true,false' }}" data-wfh="{{ job.is_work_from_home|yesno:'true,false' }}" data-hybrid="{{ job.is_hybrid|yesno:'true,false' }}"></span>
+                  </span>
+                </p>
+                <div class="skills skills-container" data-skills="{{ job.skills.all|join:',' }}"></div>
+                {% comment %} <div class="skills skills-container" data-skills="{{ job.skills }}"></div> {% endcomment %}
+                {% comment %} <p class="description">{{ job.description|escape }}</p> {% endcomment %}
+              </div>
+
+              <div class="job-footer">
+                <span class="time-since" data-posted-date="{{ job.refreshed_date|date:'c' }}"></span>
+                {% if job.opening_count > 0 %}
+                  <span>{{ job.opening_count|default_if_none:'Not disclosed' }} Openings</span>
+                {% endif %}
+                {% if job.applied_count > 10 %}
+                  <span>{{ job.applied_count|default_if_none:'Not disclosed' }} Applied</span>
+                {% endif %}
+                <form method="POST" action="/bookmark/">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{ job.slug }}" name="slug">
+                    <input type="checkbox" id="save" class="bookmark-checkbox" {% if job.is_saved %} checked {% endif%} >
+                    <label for="save">
+                    <button type="submit" class="save_job" name="save_job"><i class="fas fa-bookmark bookmark-icon"></i><span class="save-text">{% if job.is_saved %}Saved{% else  %}Save{% endif%}<span></button>
+                        
+                    </label>
+                </form>
+              </div>
+            </div>
+          </a>
         {% endfor %}
 
         <div class="pagination">
-            {% if page_obj.has_previous %}
-                <a href="?q={{ keyword1 }}&p={{ keyword2 }}&page={{ page_obj.previous_page_number }}">Previous</a>
+          {% if page_obj.has_previous %}
+            <a href="?q={{ keyword1 }}&p={{ keyword2 }}&page={{ page_obj.previous_page_number }}">Previous</a>
+          {% endif %}
+
+          {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+              <span class="current">{{ num }}</span>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+              <a href="?q={{ keyword1 }}&p={{ keyword2 }}&page={{ num }}">{{ num }}</a>
+            {% elif num == 1 or num == page_obj.paginator.num_pages %}
+              <a href="?q={{ keyword1 }}&p={{ keyword2 }}&page={{ num }}">{{ num }}</a>
+            {% elif num == page_obj.number|add:'-4' or num == page_obj.number|add:'4' %}
+              <span>...</span>
             {% endif %}
-        
-            {% for num in page_obj.paginator.page_range %}
-                {% if num == page_obj.number %}
-                    <span class="current">{{ num }}</span>
-                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                    <a href="?q={{ keyword1 }}&p={{ keyword2 }}&page={{ num }}">{{ num }}</a>
-                {% elif num == 1 or num == page_obj.paginator.num_pages %}
-                    <a href="?q={{ keyword1 }}&p={{ keyword2 }}&page={{ num }}">{{ num }}</a>
-                {% elif num == page_obj.number|add:'-4' or num == page_obj.number|add:'4' %}
-                    <span>...</span>
-                {% endif %}
-            {% endfor %}
-        
-            {% if page_obj.has_next %}
-                <a href="?q={{ keyword1 }}&p={{ keyword2 }}&page={{ page_obj.next_page_number }}" class="last">Next</a>
-            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+            <a href="?q={{ keyword1 }}&p={{ keyword2 }}&page={{ page_obj.next_page_number }}" class="last">Next</a>
+          {% endif %}
         </div>
-        
-        
-    </div>
-
+      </div>
     {% else %}
-        {% if messages %}
-        {% for message in messages %}
-        <div class='alert alert-{{ message.tags }}'>
-            <span class="closebtn">&times;</span>
-            {{ message }}
-        </div>    
-        {% endfor %}
-    {% endif %}    
-    <strong>No results found.</strong>  <!-- Display this message if no jobs are found -->
-
+      <div class="job-container" id="job-details">
+        <p>No jobs found.</p>
+      </div>
     {% endif %}
-</div>
-
-
-
-{% endblock content %}
-
-
-
-
-
-
-
+  </div>
+{% endblock %}

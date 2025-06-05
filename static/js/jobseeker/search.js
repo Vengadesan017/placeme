@@ -324,8 +324,8 @@ const debouncedFetchJobs = debounce(fetchJobs, 300);
 
 // fetch method to get the data from server 
 async function fetchJobs() {
-    const jobTitle = document.getElementById('jobTitle').value.trim();
-    const location = document.getElementById('location').value.trim();
+    const jobTitle = document.getElementById('searchInput').value.trim();
+    const location = document.getElementById('locationInput').value.trim();
     const resultsDiv = document.getElementById('job-details');
 
     if (!jobTitle) {

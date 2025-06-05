@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'recruiters',
     'administrator',
     'rest_framework',
-    'recruiters.load_data',  
+    'load_data',  
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -93,26 +93,26 @@ WSGI_APPLICATION = 'placeme.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'placeme_hrms',
-        'USER': 'newuser',
-        'PASSWORD': 'Str0ngP@ssw0rd!',
-        'HOST': 'localhost',  
-        'PORT': '3306',        
-    }
-}
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
 #         'NAME': 'placeme_hrms',
-#         'USER': 'root',
-#         'PASSWORD': '123456',
+#         'USER': 'newuser',
+#         'PASSWORD': 'Str0ngP@ssw0rd!',
 #         'HOST': 'localhost',  
 #         'PORT': '3306',        
 #     }
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'placenow_hrms',
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': 'localhost',  
+        'PORT': '3306',        
+    }
+}
 
 
 
@@ -156,6 +156,8 @@ USE_TZ = True
 # MEDIA settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -179,3 +181,61 @@ RATELIMIT_VIEW = 'credentials.views.ratelimited'
 
 RECAPTCHA_PUBLIC_KEY = '6LcVECMqAAAAAJPb8T00BvTJ9U4S6eUmca5gpwkh'
 RECAPTCHA_PRIVATE_KEY = '6LcVECMqAAAAAPBCj2P0GOUtBFDatYQYm7tpFUAg'
+
+
+# for allow Iframe to show offer letter
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+
+
+
+
+# Logger
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,  # Keep default loggers
+
+    'formatters': {
+        'verbose': {
+            'format': '[{asctime}] [{levelname}] [{name}] {message}',
+            'style': '{',
+        },
+    },
+
+    'handlers': {                      # Handler decides where to send log messages: a file, the console, an email, etc.
+        'file': {
+            'level': 'INFO',           # Handles INFO, WARNING, ERROR, CRITICAL # Accept DEBUG and above
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'app.log'),  # make sure `logs` folder exists
+            'formatter': 'verbose',
+        },
+    },
+
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',          # Logs messages INFO and above from Django system
+            'propagate': True,
+        },
+        'auth_logger': {
+            'handlers': ['file'],
+            'level': 'DEBUG',           # Logs everything from DEBUG and above
+            'propagate': False,
+        },
+        'job_seeker_logger': {
+            'handlers': ['file'],
+            'level': 'DEBUG',           # Logs everything from DEBUG and above
+            'propagate': False,
+        },
+        'recruiter_logger': {
+            'handlers': ['file'],
+            'level': 'DEBUG',           # Logs everything from DEBUG and above
+            'propagate': False,
+        },
+        'admin_logger': {
+            'handlers': ['file'],
+            'level': 'DEBUG',           # Logs everything from DEBUG and above
+            'propagate': False,
+        },
+    },
+}

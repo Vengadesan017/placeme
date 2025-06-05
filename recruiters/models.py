@@ -13,6 +13,23 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import Max
 
+EXPERIENCE_CHOICES = [
+    (0, "Fresher"),
+    (1, "1 year"),
+    (2, "2 years"),
+    (3, "3 years"),
+    (5, "5 years"),
+    (7, "7 years"),
+    (10, "10 years"),
+    (15, "15 years"),
+    (20, "20 years"),
+    (25, "25 years"),
+    (30, "30 years"),
+    (30, "35 years"),
+    (30, "40+ years"),
+]
+
+
 def path_by_user_id(user_id: int):
     user_id_int = user_id + 100000000
     revchar = ''
@@ -129,7 +146,7 @@ class Companies(models.Model):
 
 class Jobs(models.Model):
     job_id = models.AutoField(primary_key=True)
-    company = models.ForeignKey('recruiters.Companies', on_delete=models.CASCADE, related_name='jobs', null=True, blank=True)
+    company = models.ForeignKey('recruiters.Companies', on_delete=models.CASCADE, related_name='jobs',blank=True,null=True)
     title = models.CharField(max_length=255)
     location_id = models.ManyToManyField('recruiters.Locations', related_name='location_map_jlm')
     slug = models.SlugField(max_length=255, unique=True, blank=True)
@@ -150,10 +167,18 @@ class Jobs(models.Model):
     is_work_from_home = models.BooleanField(default=False)
     is_hybrid = models.BooleanField(default=False)
     skills = models.ManyToManyField('job_seekers.Skills', related_name='job_post_skills', blank=True)
-    qualifications = models.ManyToManyField('recruiters.Qualifications', related_name='qualification_map')
+    qualifications = models.ManyToManyField('job_seekers.SpecificationForEdu', related_name='qualification_map')
     hire_request = models.ForeignKey('recruiters.HireRequests', related_name='job_post_hire_request',on_delete=models.PROTECT, blank=True, null=True)
-    min_experience = models.IntegerField(blank=True, null=True)
-    max_experience = models.IntegerField(blank=True, null=True)
+    min_experience = models.IntegerField(
+        choices=EXPERIENCE_CHOICES,
+        blank=True,
+        null=True
+    )
+    max_experience = models.IntegerField(
+        choices=EXPERIENCE_CHOICES,
+        blank=True,
+        null=True
+    )
     salary = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     salary_type  = models.CharField(max_length=10, choices=[
         ('CTC', 'CTC'),
@@ -221,8 +246,9 @@ class OfferLetters(models.Model):
         ]
     )
     is_view = models.BooleanField(default=False)
-    is_accepted = models.BooleanField(default=False)
-    accepted_at = models.DateTimeField(blank=True,null=True)
+    viewed_at = models.DateTimeField(blank=True,null=True)
+    is_acknowledged = models.BooleanField(default=False)
+    response = models.CharField(max_length=255,blank=True,null=True)
     generated_at = models.DateTimeField(auto_now_add=True)
     generated_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='generate_offer', null=True, blank=True)
     approve_at = models.DateTimeField(blank=True,null=True)
@@ -327,7 +353,9 @@ class Locations(models.Model):
         else:
             return f'{self.location}' 
             
-
+    @property
+    def display_name(self):
+        return str(self)
 # =====================================Location End========================================================
 # =====================================Benefits begin========================================================
 class Benefits(models.Model):

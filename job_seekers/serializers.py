@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from recruiters.models import Jobs ,Companies
+from recruiters.models import Jobs ,Companies, Locations
 from django.utils.timesince import timesince
 
 # class LocationSerializer(serializers.ModelSerializer):
@@ -57,3 +57,35 @@ class JobsCardSerializer(serializers.ModelSerializer):
     #             )
     #     return value   
 
+
+
+class TitleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Jobs
+        fields = ['title']
+
+# class LocationSerializer(serializers.ModelSerializer):
+#     # id = serializers.IntegerField(source='location_id')
+#     name = serializers.CharField(source='location')
+#     name = serializers.CharField(source='display_name')  
+    
+#     class Meta:
+#         model = Locations
+#         fields = ['name']
+        
+# class LocationSerializer(serializers.ModelSerializer):
+#     id = serializers.IntegerField(source='location_id')
+#     name = serializers.CharField(source='location')
+#     name = serializers.CharField(source='display_name')  
+    
+#     class Meta:
+#         model = Locations
+#         fields = ['name']
+
+class LocationSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='display_name')
+    job_count = serializers.IntegerField()
+
+    class Meta:
+        model = Locations
+        fields = ['name', 'job_count']

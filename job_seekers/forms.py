@@ -177,3 +177,29 @@ class CandidateIntenshipUpdateForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance        
+    
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Candidates
+        fields = ['profile_pic']
+        
+    # def save(self, commit=True, candidate=None, user=None):
+    #     instance = super().save(commit=False)
+    #     if user and not instance.user:
+    #         instance.user = user
+    #     if commit:
+    #         instance.save()
+    #     return instance
+
+class ResumeForm(forms.ModelForm):
+    class Meta:
+        model = Candidates
+        fields = ['resume']
+        
+    def save(self, commit=True, candidate=None):
+        instance = super().save(commit=False)
+        if candidate:
+            instance.candidate = candidate
+        if commit:
+            instance.save()
+        return instance

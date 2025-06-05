@@ -11,9 +11,13 @@ Sigup page
   {% csrf_token %}
   <div class="slide-controls">
     <input type="radio" name="slide" id="login">
-    <input type="radio" name="slide" id="signup" checked>       
-    <a for="login" class="slide login" id="login-btn" href="{% url 'auth:login' %}">Login</a>
-    <a for="signup" class="slide signup white" id="signup-btn" href="{% url 'auth:signup' %}">Signup</a>
+    <input type="radio" name="slide" id="signup" checked>   
+    {% with request.GET.next|default:request.get_full_path as next_path %}
+        <a for="login" class="slide login" id="login-btn" href="{% url  'auth:login' %}?next={{ next_path|urlencode }}">Login</a>
+        <a for="signup" class="slide signup white" id="signup-btn" href="{% url 'auth:signup' %}?next={{ next_path|urlencode }}">Signup</a>
+    {% endwith %}    
+    {% comment %} <a for="login" class="slide login" id="login-btn" href="{% url 'auth:login' %}">Login</a>
+    <a for="signup" class="slide signup white" id="signup-btn" href="{% url 'auth:signup' %}">Signup</a> {% endcomment %}
     <div class="slider-tab"></div>
   </div>
   <div class="form-inner"> 
@@ -59,8 +63,13 @@ Sigup page
       <span>
         Already Have an Account?
       </span>
-    <p1 onclick="toggle()" class="pointer"> <a class="link-colour" href="{% url 'auth:login' %}">
-        login here</a>
+
+      
+    <p1 onclick="toggle()" class="pointer"> 
+    {% with request.GET.next|default:request.get_full_path as next_path %}
+        <a class="link-colour" href="{% url  'auth:login' %}?next={{ next_path|urlencode }}">Login here</a>
+    {% endwith %}  
+
     </p2>
     </p>
   </div>

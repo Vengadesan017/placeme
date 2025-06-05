@@ -1,6 +1,8 @@
 from django.utils.timezone import now
 from django import forms
-from recruiters.models import Locations , Companies, Jobs, Positions, HireRequests
+from recruiters.models import Locations , Companies, Jobs, Positions, HireRequests, Benefits
+from job_seekers.models import Skills, SpecificationForEdu
+from django.db.models import Count
 
 class CreateCompanyForm(forms.ModelForm):
     class Meta:
@@ -59,16 +61,15 @@ class CreateJobs(forms.ModelForm):
             'hire_request': forms.Select(attrs={
                 'class': 'admin-input-sel',
             }),
-            # 'location_id': forms.Select(attrs={
-            #     'class': 'company-input',
-            #     'id': 'multi-select-location',
-            #     'style': 'display: none;',
-            # }),
-            # 'benefit_id': forms.Select(attrs={
-            #     'class': 'company-input',
-            #     'id': 'multi-select-benefits',
-            #     'style': 'display: none;',
-            # }),
+            'min_experience': forms.Select(attrs={
+                'class': 'admin-input-sel'
+            }),
+            'max_experience': forms.Select(attrs={
+                'class': 'admin-input-sel'
+            }),
+            'employment_type': forms.Select(attrs={
+                'class': 'admin-input-sel'
+            }),
             # 'qualifications': forms.Select(attrs={
             #     'class': 'company-input',
             #     'id': 'multi-select-qualifications',
@@ -96,14 +97,45 @@ class CreateJobs(forms.ModelForm):
             ('', 'Select the salary type...')
         ] + [choice for choice in self.fields['salary_type'].choices if choice[0] != '']
 
+        self.fields['min_experience'].choices = [
+            ('', 'Min Experience')
+        ] + [choice for choice in self.fields['min_experience'].choices if choice[0] != '']
+
+        self.fields['max_experience'].choices = [
+            ('', 'Max Experience')
+        ] + [choice for choice in self.fields['max_experience'].choices if choice[0] != '']
+
+        self.fields['employment_type'].choices = [
+            ('', 'Select Job Type')
+        ] + [choice for choice in self.fields['employment_type'].choices if choice[0] != '']
+
         self.fields['hire_request'].choices = [
             ('', 'Select the Hire Request...')
         ] +[
             ('', 'Anonymous job Posting (Without hire request)')
         ] + [choice for choice in my_hire_request if choice[0] != '']
 
+        # # return only 10 frequntly used posts
+        # self.fields['location_id'].queryset = Locations.objects.annotate(
+        #     job_count=Count('location_map_jlm')
+        # ).order_by('-job_count')[:10]
+
+        # self.fields['skills'].queryset = Skills.objects.annotate(
+        #     job_count=Count('job_post_skills')
+        # ).order_by('-job_count')[:10]
+
+        # self.fields['qualifications'].queryset = SpecificationForEdu.objects.annotate(
+        #     job_count=Count('qualification_map')
+        # ).order_by('-job_count')[:10]
+
+        # self.fields['benefit_id'].queryset = Benefits.objects.annotate(
+        #     job_count=Count('benefit_map_jbm')
+        # ).order_by('-job_count')[:10]
+
     
     def save(self, commit=True, company=None,created_by=None):
+        print("==============")
+        print(commit, company,created_by)
         instance = super().save(commit=False)
         if company:
             instance.company = company

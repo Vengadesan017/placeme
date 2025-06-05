@@ -65,7 +65,7 @@
                 {% elif login %}
                     <button type="submit" name="apply-job" href="#" class="apply-button">Apply</button>
                 {% else %}
-                    <a type="submit" href="{% url 'auth:login' %}" class="apply-button">Login to Apply</a>
+                    <a type="submit" href="{% url 'auth:login' %}?next={{ request.get_full_path|urlencode }}" class="apply-button">Login to Apply</a>
                 {% endif %}
             </form>
                 <div class="company-info">

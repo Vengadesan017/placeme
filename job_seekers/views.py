@@ -1,44 +1,55 @@
-from django.core.paginator import Paginator
-from django.shortcuts import render, redirect
+from django.utils import timezone
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .models import Candidates, JobApplications, Onboarding, EducationMap , UserLanguages, UserLocations, LevelForEdu, CourseForEdu, Skills, Employment, Internship, Bookmarks, Familys, SpecificationForEdu ,EducationType 
-from recruiters.models import Jobs , Locations, Qualifications
-from credentials.models import Users
 from django.contrib.auth.decorators import login_required
-from .forms import CandidatePersonalUpdateForm, CandidateEducationUpdateForm, OnboardingCandidatePersonalForm, OnboardingPersonalForm ,CandidateLanguageUpdateForm, CandidateLocationUpdateForm, CandidateCareerUpdateForm, CandidateEmploymentUpdateForm, CandidateIntenshipUpdateForm, OnboardingFamilyForm
 from django.contrib import messages
-from django.db.models import Count, Case, When, Q
-from functools import wraps
-from .services import apply_filter_in_job,get_filter_from_job,search_job
-from .serializers import JobsCardSerializer
-from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Count, Case, When, Q, CharField
+from django.db.models.functions import Concat
+from django.db.models import Value as V, F
+from django.db import transaction
+from django.core.paginator import Paginator
+from django.core.files.storage import default_storage
 
+from credentials.models import Users
+from recruiters.models import Jobs , Locations, Qualifications , OfferLetters
+from .models import Candidates, JobApplications, Onboarding, EducationMap , UserLanguages,\
+    UserLocations, LevelForEdu, CourseForEdu, Skills, Employment, Internship, Bookmarks, \
+        Familys, SpecificationForEdu ,EducationType 
+from .forms import CandidatePersonalUpdateForm, CandidateEducationUpdateForm, OnboardingCandidatePersonalForm,\
+        OnboardingPersonalForm ,CandidateLanguageUpdateForm, CandidateLocationUpdateForm, CandidateCareerUpdateForm,\
+        CandidateEmploymentUpdateForm, CandidateIntenshipUpdateForm, OnboardingFamilyForm, \
+        ResumeForm, ProfileForm
+from .serializers import JobsCardSerializer, TitleSerializer, LocationSerializer
+from .services import apply_filter_in_job,get_filter_from_job,search_job
+from .decorators import is_onboarding
+
+from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework import permissions
 
-def is_onboarding(view_func):
-    @wraps(view_func)
-    def _wrapped_view(request, *args, **kwargs):
-        onboarding_id = kwargs.get("onboarding_id")
-        candidate = Candidates.objects.filter(user=request.user).first()
-        # print("1 ",candidate)
-        if candidate:
-            onboarding = Onboarding.objects.filter(candidate=candidate, Onbording_id=onboarding_id).first()
-            # print("2 ",onboarding)
-            if onboarding:
-                if onboarding.created_date and not onboarding.completed_date and not onboarding.closed:
-                    # print("3 ",onboarding)
-                    return view_func(request, *args, **kwargs)
-        messages.warning(request, "You do not have access to enter the onboarding page.")
-        return redirect('job_seeker:home')
-    return _wrapped_view
+
+from django.utils.http import url_has_allowed_host_and_scheme
+import logging
+
+logger = logging.getLogger('job_seeker_logger')
+
+# check the query num
+from django.db import connection, reset_queries
+import time
+
+
+
 
 def Home(request):
     try:
-        jobs_titles = Jobs.objects.values_list('title', flat=True).distinct()
+        jobs_titles = Jobs.objects.values_list('title', flat=True) \
+            .annotate(job_count=Count('title')) \
+            .order_by('-job_count')[:5]
+        # jobs_titles = Jobs.objects.values_list('title', flat=True).distinct()
         context = {
             'jobs_titles': jobs_titles,
         }
@@ -66,6 +77,34 @@ def Profile(request):
                 if form.is_valid():
                     form.save(candidate=candidate)
                     messages.info(request, 'Your New Education has been added successfully.')
+                    
+                else:
+                    print("Form errors:", form.errors)
+                    messages.error(request, 'Please enter the valid data.')
+            elif 'upload_resume' in request.POST:
+                form = ResumeForm(request.POST, request.FILES, instance= candidate)
+                if form.is_valid():
+                    form.save(candidate=candidate, user = request.user)
+                    messages.info(request, 'Your Resume Uploaded successfully')
+                    
+                else:
+                    print("Form errors:", form.errors)
+                    messages.error(request, 'Please enter the valid data.')
+            elif 'upload_profile' in request.POST:
+                form = ProfileForm(request.POST, request.FILES,instance=candidate)
+                if form.is_valid():
+                    candidate = form.save(commit=False)
+
+                    if 'profile_pic' in request.FILES:
+                        # Delete old profile picture
+                        if candidate.profile_pic and default_storage.exists(candidate.profile_pic.name):
+                            default_storage.delete(candidate.profile_pic.name)
+
+                        # Assign the new file
+                        candidate.profile_pic = request.FILES['profile_pic']
+
+                    candidate.save()
+                    messages.success(request, "Profile picture updated successfully.")
                     
                 else:
                     print("Form errors:", form.errors)
@@ -169,6 +208,8 @@ def Profile(request):
         new_language = CandidateLanguageUpdateForm()
         new_location = CandidateLocationUpdateForm()
         skills = Skills.objects.all()
+        profile = ProfileForm()
+        resume = ResumeForm()
         
 
         level = LevelForEdu.objects.all()
@@ -190,6 +231,8 @@ def Profile(request):
             'location': location,
             'new_language': new_language,
             'new_location': new_location,
+            'profile': profile,
+            'resume':resume,
             'level':level,
             'course':course,
             'years' :years,
@@ -238,55 +281,6 @@ def Search(request):
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
 
-@api_view(['GET'])
-@permission_classes([permissions.IsAuthenticatedOrReadOnly])
-def ApiSearch(request):
-    try:
-        keyword1 = request.GET.get('q', '')
-        keyword2 = request.GET.get('p', '')        
-        page_number = request.GET.get('page', 2)
-        candidate = Candidates.objects.get(user=request.user)
-        jobs = search_job(request,keyword1,keyword2,page_number,candidate)
-        if not jobs:
-            return Response({'jobs': JobsCardSerializer([], many=True).data})
-
-        
-        # # Apply filter
-        # if request.method == "POST":
-        #     if 'filter_jobs' in request.POST:
-        #         jobs = apply_filter_in_job(request,jobs)
-
-
-
-        # Pagination
-        paginator = Paginator(jobs, 10)  # Show 20 jobs per page
-        page_obj = paginator.get_page(page_number)
-
-        # Filter
-        filters = get_filter_from_job(jobs)
-
-
-        serializer = JobsCardSerializer(page_obj, many=True)
-        api_response = {
-            'jobs': serializer.data,  # Serialized job list
-            'keyword1': keyword1,
-            'keyword2': keyword2,
-            'filters': filters,
-            'pagination': {
-                'page_from': page_obj.start_index(),
-                'page_to': page_obj.end_index(),
-                'page_of': page_obj.paginator.count,
-                'total_pages': paginator.num_pages,
-                'current_pages': page_obj.number,
-                'has_next': page_obj.has_next(),
-                'has_previous': page_obj.has_previous(),
-            }
-        }
-        return Response(api_response)
-    except Exception as e:
-        return HttpResponse(f"An error occurred: {e}", status=500)
-
-
 
 def Job(request):
     try:
@@ -315,8 +309,6 @@ def Job(request):
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
 
-def MyJob(request):
-    return HttpResponse("<h1>You applied jobs are shown here</h1>")
 
 @login_required
 def Apply(request):
@@ -386,30 +378,36 @@ def Bookmark(request):
         return HttpResponse(f"An error occurred: {e}", status=500)
     
 @login_required
-def Status(request, page):
+def Status(request, page, id=None):
     try:
         candidate=Candidates.objects.get(user=request.user)
         applied_list = ['Applied' ,'Viewed' ,'Shortlisted' ,'Selected' ]
         offered_list = ['Selected', 'Offered', 'Accepted', 'Rejected' ,'Hired' ]
         job_status = False
         onboarding_id = False
-        if request.method == "POST":
-            if "view_appiled_status" in request.POST:
-                id = request.POST.get("id")
+        offer = False
+        # if request.method == "POST":
+        #     if "view_appiled_status" in request.POST:
+        #         id = request.POST.get("id")
+        #         job_status = JobApplications.objects.filter(id=id,candidate=candidate).first()
+
+        #     elif "view_offered_status" in request.POST:
+        #         id = request.POST.get("id")
+        #         job_status = JobApplications.objects.filter(id=id,candidate=candidate).first()
+        #         onboarding_id = Onboarding.objects.filter(candidate=candidate,job_post=job_status.id).values_list('Onbording_id').first()
+        if page and id:
+            if page == 'applied':
                 job_status = JobApplications.objects.filter(id=id,candidate=candidate).first()
 
-            elif "view_offered_status" in request.POST:
-                id = request.POST.get("id")
-                job_status = JobApplications.objects.filter(id=id,candidate=candidate).first()
-                onboarding_id = Onboarding.objects.filter(candidate=candidate,job_post=job_status.id).values_list('Onbording_id').first()
-
+            if page == 'offered' and job_status:
+                onboarding_id = Onboarding.objects.filter(candidate=candidate,job_post=job_status.id).values_list('Onbording_id',flat=True).first()
 
 
         bookmarks = Bookmarks.objects.filter(candidate=candidate).values_list('job')
         jobs = Jobs.objects.filter(job_id__in=bookmarks)
         job_applications = JobApplications.objects.filter(candidate=candidate)
-        applied = job_applications.filter(status__in=applied_list)
-        offered = job_applications.filter(status__in=offered_list)
+        applied = job_applications.filter(offered_at__isnull=True)
+        offered = job_applications.filter(offered_at__isnull=False)
 
 
         if not job_status:
@@ -421,17 +419,91 @@ def Status(request, page):
                 if offered.exists():
                     job_status = offered[0]
                     onboarding_id = Onboarding.objects.filter(candidate=candidate,job_post=job_status.id).values_list('Onbording_id').first()
+                    id = job_status.id
         if not onboarding_id:
             onboarding_id = False
         else:
             onboarding_id = onboarding_id[0]
-        print(onboarding_id)
+
+        # for offer letter
+        if job_status:
+            if page == 'offered' and job_status.offer_id :
+                # offer = get_object_or_404(OfferLetters, offers_id=job_status.offer_id)
+
+                # Mark as viewed if not yet
+                if not job_status.offer_id.is_view:
+                    job_status.offer_id.is_view = True
+                    job_status.offer_id.viewed_at = timezone.now()
+                    job_status.offer_id.save()
+
+        if request.method == "POST":
+            job_application_id = request.POST.get('application_id')
+            offer_letter_id = request.POST.get('offer_id')
+            response_message = request.POST.get('response', '')
+            acknowledgment = request.POST.get('acknowledgment') == 'on'
+            accept = 'accept' in request.POST
+            decline = 'decline' in request.POST
+
+            # Ensure both exist
+            application = JobApplications.objects.filter(id=job_application_id, candidate=candidate).first()
+            offer = OfferLetters.objects.filter(offers_id=offer_letter_id).first() if application else None
+
+            if not application or not offer:
+                messages.error(request, 'Application or Offer Letter not found.')
+                return redirect('job_seeker:status', page='offered')
+
+            if not acknowledgment:
+                messages.error(request, 'You must acknowledge the terms and conditions.')
+                return redirect('job_seeker:status', page='offered')
+
+            try:
+                with transaction.atomic():
+                    # Update OfferLetter
+                    offer.response = response_message
+                    offer.is_acknowledged = True
+                    if accept:
+                        offer.approve_at = timezone.now()
+                        offer.approve_by = request.user.candidate
+                    else:
+                        offer.approve_at = None
+                        offer.approve_by = None
+                    offer.save()
+
+                    # Update JobApplications
+                    if accept:
+                        application.status = 'Accepted'
+                        application.accepted_at = timezone.now()
+                    elif decline:
+                        application.status = 'Rejected'
+                        application.rejected_at = timezone.now()
+                    application.save()
+
+                messages.success(request, "Your response has been recorded.")
+                return redirect('job_seeker:status', page='offered')
+
+            except Exception as e:
+                messages.error(request, f"Something went wrong: {str(e)}")
+                return redirect('job_seeker:status', page='offered')
+        # if request.method == "POST":
+        #     action = request.POST.get("action")
+        #     if action == "accept" and not offer.is_accepted:
+        #         offer.is_accepted = True
+        #         offer.accepted_at = timezone.now()
+        #         offer.save()
+        #         messages.success(request, "You have accepted the offer.")
+        #     elif action == "decline" and not offer.is_accepted:
+        #         offer.is_accepted = False
+        #         offer.accepted_at = None
+        #         offer.save()
+        #         messages.info(request, "You have declined the offer.")
+        print("p=offer----",offer)
         context = {
             'bookmarks': jobs,
             'applied': applied,
             'offered': offered,
             'applied': applied,
             'job_status': job_status,
+            'offer': offer,
             'onboarding_id':onboarding_id,
             'page': page, 
         }
@@ -440,12 +512,11 @@ def Status(request, page):
         return HttpResponse(f"An error occurred: {e}", status=500)
 
 
-def Notifications(request):
-    return HttpResponse("<h1>Notifications are With pop up window</h1>")
 
 @login_required
 @is_onboarding
 def OnboardingCandidate(request,onboarding_id, page):
+    
     try:
         candidate = Candidates.objects.get(user=request.user)
         if request.method == 'POST':
@@ -556,3 +627,79 @@ def OnboardingCandidate(request,onboarding_id, page):
 
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
+    
+    
+
+
+
+
+# API 
+# for get job post beased on user input like keyword and location as p and q
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticatedOrReadOnly])
+def ApiSearch(request):
+    try:
+        keyword1 = request.GET.get('q', '')
+        keyword2 = request.GET.get('p', '')        
+        page_number = request.GET.get('page', 2)
+        if request.user.is_authenticated:
+            candidate = Candidates.objects.get(user=request.user)
+        else:
+            candidate = False
+        jobs = search_job(request,keyword1,keyword2,page_number,candidate)
+
+        # Pagination
+        paginator = Paginator(jobs, 10)  # Show 20 jobs per page
+        page_obj = paginator.get_page(page_number)
+
+        # Filter
+        filters = get_filter_from_job(jobs)
+
+
+        serializer = JobsCardSerializer(page_obj, many=True)
+        api_response = {
+            'jobs': serializer.data,  # Serialized job list
+            'keyword1': keyword1,
+            'keyword2': keyword2,
+            'filters': filters,
+            'pagination': {
+                'page_from': page_obj.start_index(),
+                'page_to': page_obj.end_index(),
+                'page_of': page_obj.paginator.count,
+                'total_pages': paginator.num_pages,
+                'current_pages': page_obj.number,
+                'has_next': page_obj.has_next(),
+                'has_previous': page_obj.has_previous(),
+            }
+        }
+        return Response(api_response)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
+
+
+# for get job post beased on user input like keyword and location as p and q
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticatedOrReadOnly])
+def ApiTitle(request):
+    try:
+        title_query = Jobs.objects.values('title') \
+            .annotate(job_count=Count('title')) \
+            .order_by('-job_count')
+            # .order_by('-job_count')[:50]
+
+        locations_query = Locations.objects.annotate(
+        job_count=Count('location_map_jlm')  # Reverse name from Jobs.location_id
+            ).filter(job_count__gt=0).order_by('-job_count')
+
+        
+        data = {
+            'titles': TitleSerializer(title_query, many=True).data,
+            'locations': LocationSerializer(locations_query, many=True).data
+        }
+        
+        return Response(data)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
+
+
+

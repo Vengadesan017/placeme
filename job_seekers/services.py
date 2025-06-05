@@ -125,7 +125,7 @@ def apply_filter_in_job(request,jobs):
     if employment_type:
         jobs = jobs.filter(employment_type__in=employment_type)
     if qualification:
-        jobs = jobs.filter(qualifications__qualification__in=qualification)
+        jobs = jobs.filter(qualifications__name__in=qualification)
     if industry_type:
         jobs = jobs.filter(company__industry_type__in=industry_type)
     if location:
@@ -183,10 +183,10 @@ def get_filter_from_job(jobs):
         for key, value in salary_counts.items()
     }
 
-    qualification_data = qualification_counts = jobs.filter(qualifications__isnull=False).values('qualifications__qualification').annotate(count=Count('job_id', distinct=True))
+    qualification_data = qualification_counts = jobs.filter(qualifications__isnull=False).values('qualifications__name').annotate(count=Count('job_id', distinct=True))
     qualification_counts = {}
     for item in qualification_data:
-        qualification_counts[item['qualifications__qualification']] = qualification_counts.get(item['qualifications__qualification'], 0) + item['count']
+        qualification_counts[item['qualifications__name']] = qualification_counts.get(item['qualifications__name'], 0) + item['count']
 
     industry_data = jobs.values('company__industry_type').annotate(count=Count('job_id'))
     industry_counts = {}

@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.utils.timezone import now
 from credentials.models import Users  # Import the custom Users model
 # from .models import Candidates
-from recruiters.models import Jobs  # Import the Jobs model from recruiters app
+from recruiters.models import Jobs,OfferLetters # Import the Jobs model from recruiters app
 from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
 
@@ -36,14 +36,19 @@ def validate_file_size(file):
         raise ValidationError("File size must be under 200KB.")
 
 def upload_profile_pic(instance, filename):
-    user_path = path_by_user_id(instance.candidate.user.userid)    
+    user = getattr(instance, 'user', None)
+    if user and hasattr(user, 'userid'):
+        user_path = path_by_user_id(user.userid)
+    else:
+        user_path = 'unknown_user'
+    # user_path = path_by_user_id(instance.user.userid)    
     # timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
     # Generate path based on email and timestamp
     # return 'UsersDF/{0}/personal/Profile_Pic_{1}_{2}'.format(user_path(),timestamp,filename)
     return 'UsersDF/{0}/personal/Profile_{1}'.format(user_path,filename)
 
 def upload_profile_resume(instance, filename):
-    user_path = path_by_user_id(instance.candidate.user.userid)
+    user_path = path_by_user_id(instance.user.userid)
     # timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
     # Generate path based on email and timestamp
     # return 'UsersDF/{0}/personal/Profile_Pic_{1}_{2}'.format(user_path(),timestamp,filename)
@@ -151,7 +156,7 @@ class Candidates(models.Model):
             self.bookmarks_count -= 1
         self.save()
     def __str__(self):
-        return f'{self.first_name} ({self.user.email})'
+        return f'{self.first_name}'
 
 # class Documents(models.Model):
 #     document_id = models.AutoField(primary_key=True)
@@ -233,6 +238,7 @@ class Familys(models.Model):
 class JobApplications(models.Model):
     candidate = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='candidate_form', null=True, blank=True)
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE, related_name='job_applications', null=True, blank=True)  
+    offer_id = models.ForeignKey(OfferLetters, on_delete=models.CASCADE, related_name='job_applications_offer', null=True, blank=True)  
     status = models.CharField(max_length=50, choices=[
         ('Viewed', 'Viewed'),
         ('Shortlisted', 'Shortlisted'),
@@ -245,6 +251,7 @@ class JobApplications(models.Model):
     ], default='Applied')
     applied_date = models.DateTimeField(auto_now_add=True)
     viewed_at = models.DateTimeField(blank=True, null=True)    
+    not_shortlisted_at = models.DateTimeField(blank=True, null=True)    
     shortlisted_at = models.DateTimeField(blank=True, null=True)    
     interview_at = models.DateTimeField(blank=True, null=True)    
     selected_at = models.DateTimeField(blank=True, null=True)    
@@ -289,7 +296,7 @@ class Skills(models.Model):
     domain = models.ForeignKey(DomainForSkill, related_name="skills", on_delete=models.CASCADE, null=True, blank=True)
     skill = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True)
-    created_by = models.ForeignKey(Users, related_name='Skill_by', on_delete=models.CASCADE, null=True, blank=True)
+    created_by = models.ForeignKey(Candidates, related_name='Skill_by', on_delete=models.CASCADE, null=True, blank=True)
     is_verified = models.BooleanField(default=False)    
 
     def __str__(self):
@@ -312,21 +319,28 @@ class LevelForEdu(models.Model):
 class CourseForEdu(models.Model):
     course_id = models.AutoField(primary_key=True)
     level = models.ForeignKey(LevelForEdu, related_name="courses", on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, unique=True)  # Example: "Bachelor of Technology" | degree
-    code = models.CharField(max_length=10, unique=True, null=True, blank=True)  # Example: "B.E" or "B.A"
+    name = models.CharField(max_length=20, unique=True)  # Example: "Bachelor of Technology" | degree | B.Tech
+
 
     def __str__(self):
-        return f"{self.code} - {self.name}"
+        return f"{self.name}"
 
 class SpecificationForEdu(models.Model):
     specification_id = models.AutoField(primary_key=True)
-    course = models.ForeignKey(CourseForEdu, related_name="specialities", on_delete=models.CASCADE)
+    course = models.ForeignKey(CourseForEdu, related_name="specialities", on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=100)  # Example: "Computer Science and Engineering", "Information Technology"
-    created_by = models.ForeignKey(Users, related_name='education_by', on_delete=models.CASCADE, null=True, blank=True)
+    created_by = models.ForeignKey(Candidates, related_name='education_by', on_delete=models.CASCADE, null=True, blank=True)
     is_verified = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.course.code} in {self.name}"
+        if self.course:
+            if self.course.name.lower()==self.name.lower():
+                return f'{self.name}' 
+            else:
+                return f"{self.course} {self.name}"
+        else:
+            return f'{self.name}' 
+
 
 class EducationType(models.Model):
     edu_type_id = models.AutoField(primary_key=True)
@@ -341,7 +355,7 @@ class EducationType(models.Model):
 class Languages(models.Model):
     language_id = models.AutoField(primary_key=True)
     language = models.CharField(max_length=100)
-    created_by = models.ForeignKey(Users, related_name='language_by', on_delete=models.CASCADE, null=True, blank=True)
+    created_by = models.ForeignKey(Candidates, related_name='language_by', on_delete=models.CASCADE, null=True, blank=True)
     is_verified = models.BooleanField(default=False)    
 
     def __str__(self):
@@ -411,9 +425,9 @@ class EducationMap(models.Model):
 
 
     def __str__(self):
-        if self.candidate.first_name and self.edu_id.name and self.type_id.edu_type:
-            # return f'{self.candidate.first_name} complete {self.edu_id.name} as {self.type_id.edu_type}'
-            return "hello"
+        if self.candidate.first_name and self.edu_id:
+            return f'{self.candidate.first_name} - {self.edu_id}'
+
         else:
             return f'{self.edu_map_id}'
 

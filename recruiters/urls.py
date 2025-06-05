@@ -23,7 +23,10 @@ urlpatterns = [
 
     path('hiring-tracker/',views.HiringTracker,name='hiring_tracker'),
     path('position-manager/',views.PositionManager,name='position_manager'),
-    path('api/position-manager/',views.APIPositionManager,name='api_position_manager'),
     path('admin-control/<str:page>',views.AdminControl,name='admin_control'),
     path('all-packages/ ',views.AllPackages,name='all_packages'),
+    
+    # API
+    path('api/position-manager/',views.APIPositionManager,name='api_position_manager'),
+    path('api/create-job-form/',views.APICreatePostForm,name='api_create_job_form'),
 ]

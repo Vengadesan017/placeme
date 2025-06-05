@@ -136,7 +136,7 @@
     }
     .admin-input{
         width: 60%;
-        height: 40px;
+        min-height: 40px;
         border-radius: 10px;
         border: 0.5px solid #141B5F;
         padding-left: 10px;

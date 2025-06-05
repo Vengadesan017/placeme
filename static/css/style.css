@@ -219,6 +219,12 @@ form .btn input[type="submit"] {
   object-fit: cover;
   opacity: 20%;
 }
+.logo img {
+  width: auto;
+  /* height: 100%; */
+  object-fit: none;
+  opacity: unset;
+}
 
 .overlay-text {
   position: absolute;

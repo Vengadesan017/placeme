@@ -249,6 +249,14 @@ body {
 
 }
 
+.fa-circle-xmark {
+    color: red;
+    justify-content: center;
+    margin-top: 5px;
+    white-space: nowrap;
+
+}
+
 .application-saved {
     color: black;
     white-space: nowrap;

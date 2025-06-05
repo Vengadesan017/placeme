@@ -16,8 +16,12 @@ login page
   <div class="slide-controls">
     <input type="radio" name="slide" id="login" checked>
     <input type="radio" name="slide" id="signup">       
-    <a for="login" class="slide login white" id="login-btn"  href="{% url 'auth:login' %}">Login</a>
-    <a for="signup" class="slide signup" id="signup-btn" href="{% url 'auth:signup' %}">Signup</a>
+    {% with request.GET.next|default:request.get_full_path as next_path %}
+        <a for="login" class="slide login white" id="login-btn" href="{% url  'auth:login' %}?next={{ next_path|urlencode }}">Login</a>
+        <a for="signup" class="slide signup" id="signup-btn" href="{% url 'auth:signup' %}?next={{ next_path|urlencode }}">Signup</a>
+    {% endwith %}
+    {% comment %} <a for="login" class="slide login white" id="login-btn"  href="{% url 'auth:login' %}">Login</a>
+    <a for="signup" class="slide signup" id="signup-btn" href="{% url 'auth:signup' %}">Signup</a> {% endcomment %}
     <div class="slider-tab"></div>
   </div>
   <div class="form-inner">
@@ -48,8 +52,10 @@ login page
         <span>
           Don't have an account? 
         </span>
-        <a class="link-colour" href="{% url 'auth:signup' %}">
-          Signup here</a>
+            {% with request.GET.next|default:request.get_full_path as next_path %}
+            <a class="link-colour" href="{% url 'auth:signup' %}?next={{ next_path|urlencode }}">Signup here</a>
+          {% endwith %}
+
       </div>
     </div>
     </form>

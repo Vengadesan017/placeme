@@ -13,10 +13,11 @@ Job vacancy post
 <link rel="stylesheet" href="{% static 'css/recruiters/post-create-form-input-res.css' %}">
 <link rel="stylesheet" href="{% static 'css/job.css' %}">
 <link rel="stylesheet" href="{% static 'css/model.css' %}">
-<link rel="stylesheet" href="{% static 'css/recruiters/post_create_js_form.css' %}">
+<link rel="stylesheet" href="{% static 'css/recruiters/post_create_form_multiple_select.css' %}">
 
 <script src="{% static 'js/recruiters/post.js' %}" defer></script>
-<script src="{% static 'js/recruiters/post_create_js_form.js' %}" defer></script>
+<script src="{% static 'js/recruiters/post_create_form_multiple_select.js' %}" defer></script>
+<script src="{% static 'js/recruiters/post_create_form_load_options.js' %}" defer></script>
 {% comment %} <script src="{% static 'js/recruiters/word-count.js' %}" defer></script> {% endcomment %}
 
 
@@ -47,6 +48,122 @@ Job vacancy post
     padding: 20px 20px;
     margin-bottom: 20px;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+.multi-select-container {
+  width: 80%;
+/*  margin: 10px 0;
+  font-family: sans-serif;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  min-height: 46px;
+  padding: 6px 10px;  */
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;  /* Allow wrapping */
+  gap: 5px;
+
+
+}
+
+
+/* Tags container */
+.selected-tags {
+  display: flex;
+  flex-wrap: wrap; /* allow multiple rows if needed */
+  gap: 5px;
+ /* flex: 1 1 auto; */  /* allow it to grow AND shrink */
+  min-width: 0;     /* allow shrinking */
+  align-items: center;
+}
+
+/* Individual tag styles */
+.tag {
+  padding: 6px 10px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  border-radius: 50px;
+  background-color: #FFBD03;
+  color: #000;
+  border: 1px solid #FFBD03;
+  white-space: nowrap;
+}
+
+/* Close button inside tag */
+.tag button {
+  margin-left: 6px;
+  background: transparent;
+  color: #000;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Search input */
+.search-input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  min-width: 120px;      /* Prevents it from getting too small */
+  flex: 1 1 0%;           /* ⬅️ This is the key */
+  padding: 6px 4px;
+  background: transparent;
+}
+
+
+
+/* Dropdown list styles */
+.dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 1051;
+  border-radius: 4px;
+  margin-top: 2px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+  background: #f0f0f0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </style>
 {% endblock statics %}
 
@@ -99,28 +216,27 @@ Job vacancy post
                         <div class="admin-div">
                             <p>Job Location <span class="red-star">*</span></p>
                             <!-- Locations -->
-                            <div class="multi-select-container" id="location-wrapper">
-                                <div class="selected-tags" id="selected-tags-location"></div>
-                                <input type="text" class="search-input admin-input-sel" id="search-location" placeholder="Search or add locations..." autocomplete="off">
+                            <div class="multi-select-container admin-input" id="location-wrapper">
+                                <div class="selected-tags" id="selected-tags-location">
+
+
+                                </div>
+                                <input type="text" class="search-input" id="search-location" placeholder="Search or add locations..." autocomplete="off">
                                 <div class="dropdown-list" id="dropdown-location"></div>
                             </div>
 
                             <select class="company-input" id="multi-select-location" name="location_id" style="display: none;" multiple>
-                                {% for loc in form.location_id.field.queryset %}
+                                {% comment %} {% for loc in form.location_id.field.queryset %}
                                     <option value="{{ loc.pk }}">{{ loc }}</option>
-                                {% endfor %}  
+                                {% endfor %}   {% endcomment %}
                             </select> 
                         </div>
                 
                         <div class="company-div">
                             <div class="email-name">
                                 <p>Job type <span class="red-star">*</span></p>
-                                <select class="admin-input-sel" name="employment_type" required>
-                                    <option value="Full-time">Full-time</option>
-                                    <option value="Part-time">Part-time</option>
-                                    <option value="Fixed-term">Fixed-term</option>
-                                    <option value="Internship">Internship</option>
-                                </select> 
+                                {{form.employment_type}}
+
                             </div>
                             <div class="website">
                                 <p>Shift <span class="red-star">*</span></p>
@@ -153,15 +269,15 @@ Job vacancy post
                         <div class="admin-div">
                             <p>Qualifications <span class="red-star">*</span></p>
                             <!-- Qualifications -->
-                            <div class="multi-select-container" id="qualifications-wrapper">
+                            <div class="multi-select-container admin-input" id="qualifications-wrapper">
                                 <div class="selected-tags" id="selected-tags-qualifications"></div>
-                                <input type="text" class="search-input admin-input-sel" id="search-qualifications" placeholder="Search or add qualifications..." autocomplete="off">
+                                <input type="text" class="search-input" id="search-qualifications" placeholder="Search or add qualifications..." autocomplete="off">
                                 <div class="dropdown-list" id="dropdown-qualifications"></div>
                             </div>
                                  <select class="company-input" id="multi-select-qualifications" name="qualifications" multiple style="display: none;">
-                                {% for q in form.qualifications.field.queryset %}
+                                {% comment %} {% for q in form.qualifications.field.queryset %}
                                     <option value="{{ q.pk }}">{{ q }}</option>
-                                {% endfor %}
+                                {% endfor %} {% endcomment %}
                             </select> 
 
 
@@ -171,26 +287,26 @@ Job vacancy post
                         <div class="company-div">
                             <div class="admin-name">
                                 <p>Experience <span class="red-star">*</span></p>
-                                <input class="admin-input" name="min_experience" type="number" placeholder="Min experience" min="0" required /> 
+                                {{form.min_experience}}
                             </div>
                             <div class="admin-role">
                                 <p>To</p>
-                                <input class="admin-input" name="max_experience" type="number" placeholder="Max experience" min="0" required />
+                                {{form.max_experience}}
                             </div>
                         </div>
 
                         <div class="admin-div">
                             <p>Key Skills <span class="red-star">*</span></p>
                             <!-- Locations -->
-                            <div class="multi-select-container" id="skills-wrapper">
+                            <div class="multi-select-container admin-input" id="skills-wrapper">
                                 <div class="selected-tags" id="selected-tags-skills"></div>
-                                <input type="text" class="search-input admin-input-sel" id="search-skills" placeholder="Search or add Key Skills..." autocomplete="off">
+                                <input type="text" class="search-input" id="search-skills" placeholder="Search or add Key Skills..." autocomplete="off">
                                 <div class="dropdown-list" id="dropdown-skills"></div>
                             </div>
                              <select class="company-input" id="multi-select-skills" name="skills" style="display: none;" multiple>
-                                {% for loc in form.skills.field.queryset %}
+                                {% comment %} {% for loc in form.skills.field.queryset %}
                                     <option value="{{ loc.pk }}">{{ loc }}</option>
-                                {% endfor %}
+                                {% endfor %} {% endcomment %}
                             </select> 
                         </div>
 
@@ -213,21 +329,21 @@ Job vacancy post
                             <div class="textarea-div">
                                 <input type="hidden" name="description" id="hidden-description" required>
                                 <div id="editor-container" style="height: 200px;"></div>
-                                <p id="char-count">0/200 characters</p>
+                                <p id="char-count">0/1000 characters</p>
                             </div>
                         </div>
                 
                         <div class="admin-div">
                             <p>Employee Benefits <span class="red-star">*</span></p>
                              <select class="company-input-last" id="multi-select-benefits" name="benefit_id" style="display: none;"  multiple>
-                                {% for b in form.benefit_id.field.queryset %}
+                                {% comment %} {% for b in form.benefit_id.field.queryset %}
                                     <option value="{{ b.pk }}">{{ b }}</option>
-                                {% endfor %}
+                                {% endfor %} {% endcomment %}
                             </select> 
                             <!-- Benefits -->
-                            <div class="multi-select-container" id="benefit-wrapper">
+                            <div class="multi-select-container admin-input" id="benefit-wrapper">
                                 <div class="selected-tags" id="selected-tags-benefits"></div>
-                                <input type="text" class="search-input admin-input-sel" id="search-benefits" placeholder="Search or add benefits..." autocomplete="off"> 
+                                <input type="text" class="search-input" id="search-benefits" placeholder="Search or add benefits..." autocomplete="off"> 
                                 <div class="dropdown-list" id="dropdown-benefits"></div>
                             </div>
                         </div>
@@ -281,7 +397,7 @@ Job vacancy post
                 
                 const charCountDisplay = document.getElementById('char-count');
                 const hiddenInput = document.getElementById('hidden-description');
-                const maxLength = 200;
+                const maxLength = 1000;
                 
                 quill.on('text-change', function () {
                     const plainText = quill.getText().trim();

@@ -5,6 +5,7 @@
     
         {% if offered %}
         {% for job in offered %}
+            <a href="{% url 'job_seeker:status' page='offered' id=job.id %}">
             <div class="dev-detail-2 {% if job_status == job %}active{% endif %}">
     
                 <div class="dev-detail-2-inside">
@@ -12,29 +13,44 @@
                     <h1 class="dev-name">{{ job.job.title }}</h1>
                     <p class="company-name">{{ job.job.company.company_name }}</p>
                     <div class="application">
-                        <i class="fa-sharp fa-solid fa-circle-check"></i>
-                        <p class="application-saved">
-                            {% if job.status == "Selected" %}
-                            Selected in Interview 
-                            {% elif job.status == "Offered"%}
-                            Offer letter issued
-                            {% elif job.status == "Accepted"%}
-                            Offer letter Accepted  
-                            {% elif job.status == "Rejected"%}
-                            Offer Rejected  
+                            {% if job.hired_at %}
+                                <i class="fa-sharp fa-solid fa-circle-check"></i>
+                                <p class="application-saved"> 
+                                    Hired — Congratulations!
+                                </p>
+                            {% elif job.onboarding_at %}
+                                <i class="fa-sharp fa-solid fa-circle-check"></i>
+                                <p class="application-saved"> 
+                                    Onboarding Completed — Verification Pending
+                                </p>
+                            {% elif job.rejected_at %}
+                                <i class="fa-sharp fa-solid fa-circle-xmark"></i>
+                                <p class="application-saved"> 
+                                    Offer Declined
+                                </p>
+                            {% elif job.accepted_at %}
+                                <i class="fa-sharp fa-solid fa-circle-check"></i>
+                                <p class="application-saved"> 
+                                    Offer Accepted — Waiting for Onboarding
+                                </p>
+                            {% elif job.offered_at %}
+                                <i class="fa-sharp fa-solid fa-circle-check"></i>
+                                <p class="application-saved"> 
+                                    Offer Made — Your Action Required
+                                </p>
                             {% else%}
-                            You are hired
+                                <i class="fa-sharp fa-solid fa-circle-xmark"></i>
+                                <p class="application-saved"> 
+                                    Pending
+                                </p>
                             {% endif%}
-                            
-    
-                        </p>
                     </div>
                 </div>
                 <div class="dev-box2">
                     <div class="dev-box2-profile">
     
                     </div>
-                    <div class="dev-box2-a">
+                    {% comment %} <div class="dev-box2-a">
                         {% if job_status != job %}                        
                         <form method="post" action="#">
                             {% csrf_token %}
@@ -42,12 +58,12 @@
                         <button type="submit" name="view_offered_status" style="color:#000" class="save_job"><u>View Status</u></button>
                         </form>
                         {% endif %}
-                    </div>
+                    </div> {% endcomment %}
                 </div>
                 
                 
             </div>
-
+            </a>
             {% endfor %}
             {% else %}
                 <a href="{% url 'job_seeker:home' %}">No data found. Click here to search.</a>
@@ -76,8 +92,8 @@
     
                         <div class="right-dev-info-fixed-1-part1">
     
-                            <h1 class="right-fixied-name">JUNIOR DEVELOPER</h1>
-                            <p class="right-fixied-company">Kavery technologes</p>
+                            <h1 class="right-fixied-name">{{job_status.job.title}}</h1>
+                            <p class="right-fixied-company">{{ job_status.job.company.company_name }}</p>
                         
                             <div class="right-a-div">
                                 <a href="{% url 'job_seeker:search' %}?q={{ job_status.job.title }}" class="right-a">
@@ -106,19 +122,47 @@
                     <!---pending status-bar-->
                     <div class="bar-set">
                         <div class="progress-track">
+
+                        <ul id="progressbar">
+                        <li class="{% if job_status.offered_at %}active{% endif %}">
+                            Offered 
+                            <p>{{job_status.offered_at|date:'d M Y'}}</p>
+                        </li>
                             {% if job_status.rejected_at%}
-                            <ul id="progressbar">
-                            <p><h3>Sorry, the job offer rejected.</h3><p>
-                            </ul>
+                        <li class="{% if job_status.rejected_at %}inactive{% endif %}">
+                            Offer Declined 
+                            <p>{{job_status.rejected_at|date:'d M Y'}}</p>
+                        </li>
                             {% else %}
-                            <ul id="progressbar">
-                                <li class="step0 {% if job_status.offered_at %}active{% endif %}" id="step1">Offered <p>{{job_status.offered_at|date:'d M Y'}}</p></li>
-                                <li class="step0 text-center {% if job_status.accepted_at %}active{% endif %}" id="step2">Offer Accepted<p>{{job_status.accepted_at|date:'d M Y'}}</p></li>
-                                <li class="step0 text-center {% if job_status.onboarding_at %}active{% endif %}" id="step2-1">Onboarding await<p>{{job_status.onboarding_at|date:'d M Y'}}</p></li>
-    <!--                                         <li class="step0 active text-right" id="step3"><span id="three">Joining Await<p>27 Feb 24</p></span></li> -->
-                                <li class="step0 text-right {% if job_status.hired_at %}active{% endif %}" id="step4">Joining Await<p>{{job_status.hired_at|date:'d M Y'}}</p></li>
-                            </ul>
+
+                        <li class="{% if job_status.accepted_at %}active{% endif %}">
+                            {% if job_status.accepted_at %}
+                                Offer Accepted
+                                <p>{{ job_status.accepted_at|date:'d M Y' }}</p>
+                            {% else %}
+                                Acceptance await
                             {% endif %}
+                        </li>
+                        <li class="{% if job_status.onboarding_at %}active{% endif %}">
+                            {% if job_status.onboarding_at %}
+                                Onboarding completed
+                                <p>{{ job_status.onboarding_at|date:'d M Y' }}</p>
+                            {% else %}
+                                Onboarding await
+                            {% endif %}
+
+                        </li>
+                        <li class="{% if job_status.hired_at %}active{% endif %}">
+                            {% if job_status.hired_at %}
+                                Joined Company
+                                <p>{{ job_status.hired_at|date:'d M Y' }}</p>
+                            {% else %}
+                                Joining Await
+                            {% endif %}
+
+                        </li>
+                            {% endif %}
+                        </ul>
 
                         </div>            
                     </div>     
@@ -132,17 +176,139 @@
                      <!--create recommendation box start-->
                      <div class="right-rec-box-scroll">
 
-    
+                        <!-- for onboarding-->
                             <div class="right-rec-box-width">
                         {% if not job_status.rejected_at and job_status.accepted_at and not job_status.onboarding_at%}                            
-                        <div class="button" style="display: flex;justify-content: space-around;position: relative;bottom: 20px;">
+                        <div class="status pending" style="display: flex;justify-content: space-around;">
                             {% if onboarding_id %}
                             <a href="{% url 'job_seeker:onboarding' onboarding_id=onboarding_id page="personal" %}" class="">Click here to process Onboarding</a>
                             {% else%}
-                            <a href="#" class="" disabled>Waiting for Recruiter Approval</a>
+                            <a href="#" class="" disabled>Onboarding Waiting for Recruiter Initiative</a>
                             {% endif %}
                         </div>
                         {% endif %}
+
+                        <!-- for offer letter-->
+
+<div class="offer-letter-container">
+    <div class="offer-letter-card">
+        {% if job_status.offer_id.offer_letter %}
+            <h3>Offer Letter from</h3> <h2 class="company-name">{{ job_status.job.company.company_name }}</h2>
+       <div class="offer-row">
+
+            <p><strong>Released At:</strong> {{ job_status.offer_id.approve_at|date:"d M Y" }}</p>
+    
+            <p class="status 
+                {% if job_status.rejected_at %}declined{% elif job_status.accepted_at %}accepted{% else %}pending{% endif %}
+            ">
+                {% if job_status.rejected_at %}
+                Declined on {{ job_status.rejected_at|date:"d M Y" }}
+                {% elif job_status.accepted_at %}
+                    Accepted on {{ job_status.accepted_at|date:"d M Y" }}
+                {% else %}
+                    Pending
+                {% endif %}
+            </p>
+        </div>
+{% comment %} {% with job_status.offer_id.offer_letter.url as file_url %}
+    {% with file_url|slice:"-4:" as ext %}
+
+        {% if ext == ".pdf" %}
+            <embed
+                src="{{ file_url }}"
+                type="application/pdf"
+                width="100%"
+                height="500px"
+            />
+        {% else %}
+            <p>This file type ({{ ext }}) cannot be embedded. 
+               <a href="{{ file_url }}">Download File</a>.</p>
+        {% endif %}
+    {% endwith %}
+{% endwith %} {% endcomment %}
+
+
+            <div class="pdf-container">
+{% comment %} <svg width="100%" height="300px"  viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="#f5faff"/>
+
+  <!-- Header bar -->
+  <rect x="0" y="0" width="600" height="60" fill="#141b5f"/>
+  <text
+    x="300"
+    y="38"
+    font-size="22"
+    font-family="Arial, sans-serif"
+    fill="white"           
+    font-weight="bold"
+    text-anchor="middle">
+    Offer Letter
+  </text>
+
+
+  <!-- Hidden content placeholder lines -->
+  <rect x="30" y="90" width="154" height="14" fill="#e0ecf8"/>
+  <rect x="30" y="115" width="150" height="14" fill="#e0ecf8"/>
+  <rect x="30" y="140" width="470" height="14" fill="#e0ecf8"/>
+  <rect x="30" y="165" width="520" height="14" fill="#e0ecf8"/>
+  <rect x="30" y="190" width="480" height="14" fill="#e0ecf8"/>
+  <rect x="30" y="215" width="460" height="14" fill="#e0ecf8"/>
+  <rect x="30" y="240" width="400" height="14" fill="#e0ecf8"/>
+
+  <!-- View button (optional) -->
+  <rect x="220" y="270" width="160" height="30" fill="#141b5f"/>
+  <text x="300" y="290" font-size="14" font-family="Arial, sans-serif" fill="white" font-weight="bold" text-anchor="middle">
+    View Full Letter
+  </text>
+</svg> {% endcomment %}
+
+
+                <iframe src="{{ job_status.offer_id.offer_letter.url }}#toolbar=0" 
+                    width="100%" 
+                    height="300px"
+                    style="border: none; border-radius: 10px;"
+                    title="Offer Letter"></iframe>
+
+                <!-- Floating action icons -->
+                <div class="pdf-actions">
+                    <a href="{{ job_status.offer_id.offer_letter.url }}" target="_blank" class="icon-btn" title="View">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                    <a href="{{ job_status.offer_id.offer_letter.url }}" download class="icon-btn" title="Download">
+                        <i class="fa-solid fa-download"></i>
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <p class="info">No offer letter uploaded.</p>
+        {% endif %}
+
+ 
+        
+
+        {% if not job_status.accepted_at and not job_status.rejected_at %}
+            <form method="post" class="response-form" action="#">
+                {% csrf_token %}
+                <input type="hidden" name="application_id" value="{{ job_status.id}}">
+                <input type="hidden" name="offer_id" value="{{ job_status.offer_id.offers_id }}">
+                <label for="response">Message (optional)</label>
+                <textarea id="response" name="response" placeholder="Write your message here..."></textarea>
+
+                <label>
+                    <input type="checkbox" name="acknowledgment" required>
+                        I have read and agree to the offer letter, and acknowledge the terms and conditions.
+                </label>
+
+                <div class="button-group">
+                    <button type="submit" name="accept" value="accept" class="btn btn-accept">Accept</button>
+                    <button type="submit" name="decline" value="decline" class="btn btn-decline">Decline</button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+</div>
+
                     </div>
                 </div>
 

@@ -2,6 +2,15 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import user_passes_test
 
+from django.utils.http import url_has_allowed_host_and_scheme
+import logging
+
+logger = logging.getLogger('job_seeker_logger')
+
+# check the query num
+from django.db import connection, reset_queries
+import time
+
 def is_admin(user):
     return user.is_authenticated and user.is_admin
 

@@ -1,17 +1,24 @@
-from functools import wraps
+
 from django.shortcuts import redirect,render
 from django.urls import reverse
 from django.http import HttpResponse
+
 from django.contrib.auth.decorators import user_passes_test,login_required
+from django.contrib import messages
+
 from django.db.models import Prefetch
 from django.db.models import Subquery,OuterRef
-from django.db.models import Case, When, Value, F
+from django.db.models import Case, When, Value, F, CharField
 from django.db.models import IntegerField
+from django.db.models import Count
+from django.db.models import Value as V
+from django.db.models.functions import Concat
+
 from .forms import CreateCompanyForm, CreateCompanyKYCForm, CreatePosition, CreateHireRequest, CreateJobs
 from .models import Companies, Positions, HireRequests, Qualifications, Locations, Benefits, Jobs
-from job_seekers.models import Candidates, Skills
-from django.contrib import messages
-from .serializers import HireRequestSerializer, PositionSerializer
+from job_seekers.models import Candidates, Skills, SpecificationForEdu
+from .serializers import HireRequestSerializer, PositionSerializer, LocationSerializer, BenefitSerializer, SkillSerializer, QualificationSerializer
+from .decorators import is_kyc, is_recruiter
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
@@ -20,36 +27,17 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import permissions
 
 from django.http import JsonResponse
-from rest_framework.response import Response
 
-def is_recruiter(view_func):
-    @wraps(view_func)
-    def _wrapped_view(request, *args, **kwargs):
-        
-        if request.user.is_authenticated:
-            if request.user.is_recruiter: 
-                return view_func(request, *args, **kwargs)
-            messages.info(request, "You must rigister your company or Your company admin must add you as recruiter")
-            return redirect('recruiters:create_company')  # Replace with your no-permission page
-        messages.info(request, "Please login  or signup")
-        return redirect('auth:employer_login')  # Replace with your no-permission page
-    return _wrapped_view
+from django.utils.http import url_has_allowed_host_and_scheme
+import logging
 
-def is_kyc(view_func):
-    @wraps(view_func)
-    def _wrapped_view(request, *args, **kwargs):
-        try:
-            candidate = Candidates.objects.get(user=request.user)
-            company = Companies.objects.get(candidate=candidate)
-            if company.is_kyc_verified:
-                return view_func(request, *args, **kwargs)
-            else:
-                messages.error(request, "Your KYC verification is pending.")
-                return redirect('recruiters:complete_kyc')  # Replace with your KYC verification page
-        except (Candidates.DoesNotExist, Companies.DoesNotExist):
-            messages.error(request, "You must be associated with a company.")
-            return redirect('error_page')  # Replace with your error page
-    return _wrapped_view
+logger = logging.getLogger('recruiter_logger')
+
+
+# check the query num
+from django.db import connection, reset_queries
+import time
+
 
 
 @login_required
@@ -81,7 +69,7 @@ def CreateCompany(request):
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
 
-
+@login_required
 @is_recruiter
 def CompleteKYC(request):
     try:
@@ -108,7 +96,7 @@ def CompleteKYC(request):
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
 
-
+@login_required
 @is_recruiter
 @is_kyc
 def OpenSearch(request):
@@ -121,6 +109,7 @@ def OpenSearch(request):
     }
     return render(request,'recruiters/keyword_search.html',context)
 
+@login_required
 @is_recruiter
 @is_kyc
 def AdvanceSearch(request):
@@ -133,6 +122,7 @@ def AdvanceSearch(request):
     }
     return render(request,'recruiters/advance_search.html',context)
 
+@login_required
 @is_recruiter
 @is_kyc
 def FindCandidates(request):
@@ -145,6 +135,7 @@ def FindCandidates(request):
     }
     return render(request,'recruiters/find_candidates.html',context)
 
+@login_required
 @is_recruiter
 @is_kyc
 def Candidate(request):
@@ -157,6 +148,7 @@ def Candidate(request):
     }
     return render(request,'recruiters/candidate.html',context)
 
+@login_required
 @is_recruiter
 @is_kyc
 def HiringTracker(request):
@@ -167,6 +159,7 @@ def HiringTracker(request):
     }
     return render(request,'recruiters/hiring_tracker.html',context)
 
+@login_required
 @is_recruiter
 @is_kyc
 def PositionManager(request):
@@ -296,6 +289,326 @@ def PositionManager(request):
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
 
+
+
+      
+@login_required
+@is_recruiter
+@is_kyc
+def AdminControl(request,page):
+    try:
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+        context = {
+            'company':company,
+            'page':page
+        }
+        return render(request,'recruiters/admin_control.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
+
+@login_required
+@is_recruiter
+@is_kyc
+def AllPackages(request):
+    try:
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+        context = {
+            'company':company,
+
+        }
+        return render(request,'recruiters/admin_control_all_packages.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
+
+@login_required
+@is_recruiter
+@is_kyc
+def Applications(request):
+    return HttpResponse("<h1>view the Candidate's Applications</h1>")
+
+@login_required
+@is_recruiter
+@is_kyc
+def Post(request):
+    try:
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+        posts = Jobs.objects.filter(company=company, is_draft=False).order_by('-created_at')
+        # if request.method == "POST":
+        #     if 'upload_kyc' in request.POST:
+        #         form = CreateCompanyKYCForm(request.POST, request.FILES,instance=company)
+        #         if form.is_valid():
+        #             form.save()
+        #             messages.info(request,'Your KYC was successfully Registered.')
+        #             return redirect('recruiters:complete_kyc') 
+        #         else:
+        #             print("Form errors:", form.errors)
+        #             messages.error(request, 'Please enter the valid data')
+        # KYCForm = CreateCompanyKYCForm()
+        context = {
+            # 'KYCForm': KYCForm,
+            'company':company,
+            'posts':posts
+        }
+        return render(request,'recruiters/post.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
+
+@login_required
+@is_recruiter
+@is_kyc
+def PostDraft(request):
+    try:
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+        posts = Jobs.objects.filter(company=company, is_draft=True).order_by('-created_at')
+        # if request.method == "POST":
+        #     if 'upload_kyc' in request.POST:
+        #         form = CreateCompanyKYCForm(request.POST, request.FILES,instance=company)
+        #         if form.is_valid():
+        #             form.save()
+        #             messages.info(request,'Your KYC was successfully Registered.')
+        #             return redirect('recruiters:complete_kyc') 
+        #         else:
+        #             print("Form errors:", form.errors)
+        #             messages.error(request, 'Please enter the valid data')
+        # KYCForm = CreateCompanyKYCForm()
+        context = {
+            # 'KYCForm': KYCForm,
+            'company':company,
+            'posts':posts
+        }
+        return render(request,'recruiters/post_draft.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
+
+@login_required
+@is_recruiter
+@is_kyc
+def CreatePost(request):
+    try:
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+        if request.method == 'POST':
+            form = CreateJobs(request.POST, company = company)
+            if form.is_valid():
+                job = form.save(commit=False,company=company,created_by=candidate)
+                
+                action = request.POST.get('action')
+                if action == 'draft':
+                    job.is_draft = True
+                elif action == 'publish':
+                    job.is_draft = False
+                    
+                job.save()  
+                form.save_m2m()
+
+
+
+                # Qualifications
+                new_qualifications_raw = request.POST.get('new_qualifications', '')
+                new_qualifications = [item.strip() for item in new_qualifications_raw.split(',') if item.strip()]
+                for qual_name in new_qualifications:
+                    try:
+                        qualification, created = SpecificationForEdu.objects.get_or_create(
+                            name=qual_name, created_by=candidate)
+                        job.qualifications.add(qualification)
+                    except Exception as e:
+                        messages.error(request, f"Error saving qualification '{qual_name}': {str(e)}")
+
+                # Locations
+                new_locations_raw = request.POST.get('new_locations', '')
+                new_locations = [item.strip() for item in new_locations_raw.split(',') if item.strip()]
+                for location_name in new_locations:
+                    try:
+                        location, created = Locations.objects.get_or_create(location=location_name, created_by=candidate)
+                        job.location_id.add(location)
+                    except Exception as e:
+                        messages.error(request, f"Error saving location '{location_name}': {str(e)}")
+
+                    # Benefits
+                    new_benefits_raw = request.POST.get('new_benefits', '')
+                    new_benefits = [item.strip() for item in new_benefits_raw.split(',') if item.strip()]
+                    for benefit_name in new_benefits:
+                        try:
+                            benefit, created = Benefits.objects.get_or_create(benefit=benefit_name, Created_by=candidate)
+                            job.benefit_id.add(benefit)
+                        except Exception as e:
+                            messages.error(request, f"Error saving benefit '{benefit_name}': {str(e)}")
+
+                    # Skills
+                    new_skills_raw = request.POST.get('new_skills', '')
+                    new_skills = [item.strip() for item in new_skills_raw.split(',') if item.strip()]
+                    for skill_name in new_skills:
+                        try:
+                            skill, created = Skills.objects.get_or_create(skill=skill_name, created_by=candidate)
+                            job.skills.add(skill)
+                        except Exception as e:
+                            messages.error(request, f"Error saving skill '{skill_name}': {str(e)}")
+
+                    # If you want to include existing items from the multi-selects, you have to manually add them too:
+                    for qualification in form.cleaned_data.get('qualifications', []):
+                        job.qualifications.add(qualification)
+                    for location in form.cleaned_data.get('location_id', []):
+                        job.location_id.add(location)
+                    for benefit in form.cleaned_data.get('benefit_id', []):
+                        job.benefit_id.add(benefit)
+                    for skill in form.cleaned_data.get('skills', []):
+                        job.skills.add(skill)
+
+
+
+                # # Handle the dynamic qualifications and skills
+                # new_qualifications_raw = request.POST.get('new_qualifications', '')
+                # new_locations_raw = request.POST.get('new_locations', '')
+                # new_skills_raw = request.POST.get('new_skills', '')
+                # new_benefits_raw = request.POST.get('new_benefits', '')
+
+
+
+                # # Handle new qualifications
+                # for qual_name in new_qualifications_raw.split(','):                    
+                #     qual_name = qual_name.strip()
+                #     if qual_name:
+                        
+                #         print("qual_name",qual_name)
+                #         try:
+                #             print(job.qualifications)
+                #             qualification, created = SpecificationForEdu.objects.get_or_create(name=qual_name, created_by = candidate)
+                #             job.qualifications.add(qualification)   # Add the qualification to the job
+                #             print(qualification)
+                #         except Exception as e:
+                #             messages.error(request, f"Error saving qualification '{qual_name}': {str(e)} but post is created with out Qualifications")
+                #             return redirect('recruiters:create_post')
+
+                # # Handle new location
+                # for location_name in new_locations_raw.split(','):
+                #     location_name = location_name.strip()
+                #     if location_name:
+                #         try:
+                #             location, created = Locations.objects.get_or_create(location=location_name, created_by = candidate)
+                #             job.location_id.add(location)  # Add the location to the job
+                #         except Exception as e:
+                #             messages.error(request, f"Error saving Location '{location_name}': {str(e)} but post is created with out location")
+                #             return redirect('recruiters:create_post')
+                    
+                # # Handle new benefits
+                # for benefit_name in new_benefits_raw.split(','):
+                #     benefit_name = benefit_name.strip()
+                #     if benefit_name:
+                #         try:
+                #             benefit, created = Benefits.objects.get_or_create(benefit=benefit_name, Created_by = candidate)
+                #             job.benefit_id.add(benefit)  # Add the benefits to the job
+                #         except Exception as e:
+                #             messages.error(request, f"Error saving benefit '{benefit_name}': {str(e)} but post is created with out benefits")
+                #             return redirect('recruiters:create_post')
+                # # Handle new skills
+                # for skill_name in new_skills_raw.split(','):
+                #     skill_name = skill_name.strip()
+                #     if skill_name:
+                #         try:
+                #             skill, created = Skills.objects.get_or_create(skill=skill_name, created_by = candidate)
+                #             job.skills.add(skill)  # Add the skill to the job
+                #         except Exception as e:
+                #             messages.error(request, f"Error saving skill '{skill_name}': {str(e)} but post is created with out key skills")
+                #             return redirect('recruiters:create_post')
+
+                # # # Now save any other many-to-many relationships through the form
+                # form.save_m2m()
+
+                if action == 'draft':
+                    messages.info(request, "Saved as Draft.")
+                    return redirect('recruiters:post_draft')
+                elif action == 'publish':
+                    messages.info(request, "Job Published.")
+                    return redirect('recruiters:post')
+                else:
+                    messages.error(request, "Job post did't able to save")
+                    redirect('recruiters:create_post')
+                # messages.info(request, "Saved as Draft." if action == 'draft' else "Job Published.")
+                # return redirect(f"{reverse('job_seeker:job')}?r={job.slug}")
+                
+            else:
+                messages.error(request,form.errors)
+                return redirect('recruiters:create_post')
+        context = {
+            # 'KYCForm': KYCForm,
+            'company':company,
+            'form' : CreateJobs(request.POST or None, company=company)
+        }
+        return render(request,'recruiters/post_create.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
+
+@login_required
+@is_recruiter
+@is_kyc
+def CreateJob(request):
+    return HttpResponse("<h1>CreateJob</h1>")
+
+@login_required
+@is_recruiter
+@is_kyc
+def Users(request):
+    return HttpResponse("<h1>view or edit Users</h1>")
+
+@login_required
+@is_recruiter
+@is_kyc
+def CreateUser(request):
+    return HttpResponse("<h1>CreateUsers</h1>")
+
+@login_required
+@is_recruiter
+@is_kyc
+def Profile(request):
+    return HttpResponse("<h1>view or edit profile</h1>")
+
+@login_required
+@is_recruiter
+@is_kyc
+def EmployeeLifeCycle(request):
+    candidate = Candidates.objects.get(user=request.user)
+    company = Companies.objects.get(candidate=candidate)
+    context = {
+        'company':company
+    }
+    return render(request,'recruiters/employee_info.html',context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Api
 @is_recruiter
 @is_kyc
 @api_view(['GET'])
@@ -336,207 +649,62 @@ def APIPositionManager(request):
         })
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
+
+@is_recruiter
+@is_kyc
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated]) 
+def APICreatePostForm(request):
+    try:
+        reset_queries()
+        start = time.time()
         
-@is_recruiter
-@is_kyc
-def AdminControl(request,page):
-    try:
         candidate = Candidates.objects.get(user=request.user)
         company = Companies.objects.get(candidate=candidate)
-        context = {
-            'company':company,
-            'page':page
+
+        locations = Locations.objects.annotate(
+            job_count=Count('location_map_jlm'),
+            display_name=Case(
+                When(district__name__isnull=True, then='location'),
+                When(district__name='', then='location'),
+                default=Concat('location', V(' ('), 'district__name', V(')')),
+                output_field=CharField()
+            )
+        ).only('location_id', 'location', 'district__name').order_by('-job_count')
+
+        skills = Skills.objects.annotate(
+            job_count=Count('job_post_skills'),
+            display_name=Case(
+                When(domain__name__isnull=True, then='skill'),
+                When(domain__name='', then='skill'),
+                default=Concat('skill', V(' ('), 'domain__name', V(')')),
+                output_field=CharField()
+            )
+        ).only('skill_id', 'skill', 'domain__name').order_by('-job_count')
+
+        qualifications = SpecificationForEdu.objects.select_related('course').annotate(
+            job_count=Count('qualification_map'),
+            display_name=Case(
+                When(name__isnull=True, then='course__name'),
+                When(name='', then='course__name'),
+                default=Concat('course__name', V(' '), 'name'),
+                output_field=CharField()
+            )
+        ).order_by('-job_count')
+        benefits = Benefits.objects.annotate(
+            job_count=Count('benefit_map_jbm')
+        ).order_by('-job_count')
+
+        data = {
+            'locations': LocationSerializer(locations, many=True).data,
+            'skills': SkillSerializer(skills, many=True).data,
+            'qualifications': QualificationSerializer(qualifications, many=True).data,
+            'benefits': BenefitSerializer(benefits, many=True).data,
         }
-        return render(request,'recruiters/admin_control.html',context)
+        # print(f"Total Queries: {connection.queries}")
+        print(f"Total Queries: {len(connection.queries)}")
+        print(f"Time taken: {time.time() - start}")
+        return Response(data)
+    
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
-
-@is_recruiter
-@is_kyc
-def AllPackages(request):
-    try:
-        candidate = Candidates.objects.get(user=request.user)
-        company = Companies.objects.get(candidate=candidate)
-        context = {
-            'company':company,
-
-        }
-        return render(request,'recruiters/admin_control_all_packages.html',context)
-    except Exception as e:
-        return HttpResponse(f"An error occurred: {e}", status=500)
-
-@is_recruiter
-@is_kyc
-def Applications(request):
-    return HttpResponse("<h1>view the Candidate's Applications</h1>")
-
-@is_recruiter
-@is_kyc
-def Post(request):
-    try:
-        candidate = Candidates.objects.get(user=request.user)
-        company = Companies.objects.get(candidate=candidate)
-        posts = Jobs.objects.filter(company=company, is_draft=False).order_by('-created_at')
-        # if request.method == "POST":
-        #     if 'upload_kyc' in request.POST:
-        #         form = CreateCompanyKYCForm(request.POST, request.FILES,instance=company)
-        #         if form.is_valid():
-        #             form.save()
-        #             messages.info(request,'Your KYC was successfully Registered.')
-        #             return redirect('recruiters:complete_kyc') 
-        #         else:
-        #             print("Form errors:", form.errors)
-        #             messages.error(request, 'Please enter the valid data')
-        # KYCForm = CreateCompanyKYCForm()
-        context = {
-            # 'KYCForm': KYCForm,
-            'company':company,
-            'posts':posts
-        }
-        return render(request,'recruiters/post.html',context)
-    except Exception as e:
-        return HttpResponse(f"An error occurred: {e}", status=500)
-
-@is_recruiter
-@is_kyc
-def PostDraft(request):
-    try:
-        candidate = Candidates.objects.get(user=request.user)
-        company = Companies.objects.get(candidate=candidate)
-        posts = Jobs.objects.filter(company=company, is_draft=True).order_by('-created_at')
-        # if request.method == "POST":
-        #     if 'upload_kyc' in request.POST:
-        #         form = CreateCompanyKYCForm(request.POST, request.FILES,instance=company)
-        #         if form.is_valid():
-        #             form.save()
-        #             messages.info(request,'Your KYC was successfully Registered.')
-        #             return redirect('recruiters:complete_kyc') 
-        #         else:
-        #             print("Form errors:", form.errors)
-        #             messages.error(request, 'Please enter the valid data')
-        # KYCForm = CreateCompanyKYCForm()
-        context = {
-            # 'KYCForm': KYCForm,
-            'company':company,
-            'posts':posts
-        }
-        return render(request,'recruiters/post_draft.html',context)
-    except Exception as e:
-        return HttpResponse(f"An error occurred: {e}", status=500)
-
-@is_recruiter
-@is_kyc
-def CreatePost(request):
-    try:
-        candidate = Candidates.objects.get(user=request.user)
-        company = Companies.objects.get(candidate=candidate)
-        
-        if request.method == 'POST':
-            form = CreateJobs(request.POST, company = company)
-            if form.is_valid():
-                job = form.save(commit=False,company=company,created_by=candidate)
-                
-                action = request.POST.get('action')
-                if action == 'draft':
-                    job.is_draft = True
-                elif action == 'publish':
-                    job.is_draft = False
-                    
-                job.save()  
-
-                # # Handle the dynamic qualifications and skills
-                # new_qualifications = request.POST.getlist('new_qualifications')  # Get the new qualifications from POST
-                # new_locations = request.POST.getlist('new_locations')  # Get the new skills from POST
-                # new_skills = request.POST.getlist('new_skills')  # Get the new skills from POST
-                # new_benefits = request.POST.getlist('new_benefits')  # Get the new skills from POST
-
-                # # Handle new qualifications
-                # for qual_name in new_qualifications:
-                #     try:
-                #         qualification, created = Qualifications.objects.get_or_create(qualification=qual_name, created_by = candidate)
-                #         job.qualifications.add(qualification)  # Add the qualification to the job
-                #     except Exception as e:
-                #         messages.error(request, f"Error saving qualification '{qual_name}': {str(e)} but post is created with out Qualifications")
-                #         return redirect('recruiters:create_post')
-
-                # # Handle new location
-                # for location_name in new_locations:
-                #     try:
-                #         location, created = Locations.objects.get_or_create(location=location_name, created_by = candidate)
-                #         job.location_id.add(location)  # Add the location to the job
-                #     except Exception as e:
-                #         messages.error(request, f"Error saving Location '{location_name}': {str(e)} but post is created with out location")
-                #         return redirect('recruiters:create_post')
-                    
-                # # Handle new benefits
-                # for benefit_name in new_benefits:
-                #     try:
-                #         benefit, created = Benefits.objects.get_or_create(benefit=benefit_name, created_by = candidate)
-                #         job.benefit_id.add(benefit)  # Add the benefits to the job
-                #     except Exception as e:
-                #         messages.error(request, f"Error saving benefit '{benefit_name}': {str(e)} but post is created with out benefits")
-                #         return redirect('recruiters:create_post')
-                # # Handle new skills
-                # for skill_name in new_skills:
-                #     try:
-                #         skill, created = Skills.objects.get_or_create(skill=skill_name, created_by = candidate)
-                #         job.skills.add(skill)  # Add the skill to the job
-                #     except Exception as e:
-                #         messages.error(request, f"Error saving skill '{skill_name}': {str(e)} but post is created with out key skills")
-                #         return redirect('recruiters:create_post')
-
-                # # Now save any other many-to-many relationships through the form
-                form.save_m2m()
-
-                if action == 'draft':
-                    messages.info(request, "Saved as Draft.")
-                    return redirect('recruiters:post_draft')
-                elif action == 'publish':
-                    messages.info(request, "Job Published.")
-                    return redirect('recruiters:post')
-                else:
-                    messages.error(request, "Job post did't able to save")
-                    # redirect('recruiters:create_post')
-                # messages.info(request, "Saved as Draft." if action == 'draft' else "Job Published.")
-                # return redirect(f"{reverse('job_seeker:job')}?r={job.slug}")
-                
-            else:
-                messages.error(request,form.errors)
-                return redirect('recruiters:create_post')
-        context = {
-            # 'KYCForm': KYCForm,
-            'company':company,
-            'form' : CreateJobs(request.POST or None, company=company)
-        }
-        return render(request,'recruiters/post_create.html',context)
-    except Exception as e:
-        return HttpResponse(f"An error occurred: {e}", status=500)
-@is_recruiter
-@is_kyc
-def CreateJob(request):
-    return HttpResponse("<h1>CreateJob</h1>")
-
-@is_recruiter
-@is_kyc
-def Users(request):
-    return HttpResponse("<h1>view or edit Users</h1>")
-
-@is_recruiter
-@is_kyc
-def CreateUser(request):
-    return HttpResponse("<h1>CreateUsers</h1>")
-
-@is_recruiter
-@is_kyc
-def Profile(request):
-    return HttpResponse("<h1>view or edit profile</h1>")
-
-@is_recruiter
-@is_kyc
-def EmployeeLifeCycle(request):
-    candidate = Candidates.objects.get(user=request.user)
-    company = Companies.objects.get(candidate=candidate)
-    context = {
-        'company':company
-    }
-    return render(request,'recruiters/employee_info.html',context)
