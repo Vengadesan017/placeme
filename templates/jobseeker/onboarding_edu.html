@@ -21,31 +21,89 @@
                     </tr>
                 </thead>
                 <tbody id="bindrow">
-                    {% comment %} {%for fam in family_forms%}
-                    <tr><input type="hidden" name="id[]" id="" class="form-control" value="{{fam.family_member_id}}">
-                        <td><input type="text" name="txtFirstName[]" id="txtFFirstName1" class="form-control" value="{{fam.first_name}}"></td>
-                        <td><input type="text" name="txtLastName[]" id="txtFLastName1" class="form-control" value="{{fam.last_name}}"> </td>
-                        <td><select id="ddlFGender1" name="Gender[]" class="form-control">
-                            <option value="">Select </option>
-                            <option value="Male" {% if fam.gender == 'Male' %}selected{% endif %}>Male </option>
-                            <option value="Female" {% if fam.gender == 'Female' %}selected{% endif %}>Female </option>
-                            <option value="Transgender" {% if fam.gender == 'Transgender' %}selected{% endif %}>Transgender </option>
-                            <option value="NotDisclosed" {% if fam.gender == 'NotDisclosed' %}selected{% endif %}>NotDisclosed </option>
-                        </select></td>
-                        <td><select id="ddlFReleationship1" name="Releationship[]" class="form-control">
-                            <option value="">Select </option>
-                            <option value="Father" {% if fam.relationship == 'Father' %}selected{% endif %}>Father </option>
-                            <option value="Mother" {% if fam.relationship == 'Mother' %}selected{% endif %}>Mother </option>
-                            <option value="Spouse" {% if fam.relationship == 'Spouse' %}selected{% endif %}>Spouse </option>
-                            <option value="Son" {% if fam.relationship == 'Son' %}selected{% endif %}>Son </option>
-                            <option value="Daughter" {% if fam.relationship == 'Daughter' %}selected{% endif %}>Daughter </option>
-                        </select></td>
-                        <td><input type="date" name="txtdob[]" style="position: relative" id="" class="form-control" value="{{fam.dob|date:'Y-m-d'}}"> </td>
-                        <td><input type="text" name="txtAadhar[]" id="txtFamilyAadhar1" class="form-control" onchange="validateAadharNumber()" value="{{fam.aadhar_no}}"> </td>
-                        <td><input type="text" name="txtFContactNo[]" id="txtFContactNo1" class="form-control" value="{{fam.mobile_no}}"> </td>
+                    {%for edu in education%}
+                    <tr><input type="hidden" name="id[]" id="" class="form-control" value="{{edu.edu_map_id}}">
+                        <td><span class="form-control">
+
+                            {{edu.edu_id.course.level.name }}      
+                        </span>
+                        </td>
+                        <td>
+                            {{edu.edu_id.course.name }}      
+                        </td>
+                        <td>
+                            {{edu.edu_id.name }}      
+            
+                        </td>
+                        <td>
+                            {{edu.institute}}
+                        </td>
+                        <td>{{edu.type_id}}
+                        </td>
+                        <td>
+                            {{ edu.year_of_passing}}
+                        </td>
+                        <td>{{edu.score}}</td>
+                        <td>{{edu.doc}}</td>
                     </tr>
                     
-                    {% endfor %} {% endcomment %}
+                    {% endfor %}
+                    <tr><input type="hidden" name="id[]" id="" class="form-control" value="{{edu.edu_map_id}}">
+                        <td>
+                            <select class="form-control" name="edu_id" id="id_edu_id">
+                                <option value="">Select Education Level</option>
+                                {% for option in level %}
+                                    <option value="{{ option }}">
+                                        {{ option }}
+                                    </option>
+                                {% endfor %}
+                            </select>       
+                        </td>
+                        <td>
+                            <select class="form-control" name="edu_id" id="id_edu_id">
+                                <option value="">Select Brance</option>
+                                {% for option in course %}
+                                    <option value="{{ option }}">
+                                        {{ option }}
+                                    </option>
+                                {% endfor %}
+                            </select>        
+                        </td>
+                        <td>
+                            <select class="form-control" name="edu_id" id="id_edu_id">
+                                <option value="">Select Degree</option>
+                                {% for option in new_education.fields.edu_id.queryset %}
+                                    <option value="{{ option.pk }}" {% if option.pk == new_education.initial.edu_id %}selected{% endif %}>
+                                        {{ option }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+            
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" name="institute" id="id_institute" value="{{ new_education.initial.institute|default_if_none:'' }}" placeholder="Enter your institude name" />
+                        </td>
+                        <td>
+                            <select class="form-control" name="type_id" id="id_type_id">
+                                <option value="">Select Education Type</option>
+                                {% for option in new_education.fields.type_id.queryset %}
+                                    <option value="{{ option.pk }}" {% if option.pk == new_education.initial.type_id %}selected{% endif %}>
+                                        {{ option }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" id="id_year_of_passing" name="year_of_passing">
+                                <option value="">Select Passing out Year</option>
+                                {% for i in years%}
+                                <option value="{{ i }}">{{i}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><input type="text" name="score" class="form-control" id="id_score" value="{{ new_education.initial.score|default_if_none:'' }}" placeholder="Enter Grade like 7.1/10 or Percentage like 78.2%" /></td>
+                        <td><input type="file" class="form-control" id="" name="doc" value=""> </td>
+                    </tr>
                 </tbody>
             </table>
     
@@ -64,114 +122,5 @@
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
     <script src="{% static 'bootstrap/Scripts/Employee/Employee.js' %}"></script>
-    <style>
-        .error {
-            color: red;
-        }
-    </style>
-    
-    <script>
-        $(document).ready(function () {
-            var count = 1;
-            if (count >= 1) {
-                for (var i = 1; i <= count; i++) {
-                    dynamic_field(i);
-                }
-            }
-    
-            function dynamic_field(number) {
-                var html = '<tr>';
-                html += '<input type="hidden" name="id[]" id="" class="form-control" value="">';
-    
-                var select_list = '<select id="ddlFGender" name="Gender[]" class = "form-control">';
-                select_list += '<option value="">Select </option>';
-                select_list += '<option value="Male">Male </option>';
-                select_list += '<option value="Female">Female </option>';
-                select_list += '<option value="Transgender">Transgender </option>';
-                select_list += '<option value="NotDisclosed">NotDisclosed </option>';
-                select_list += '</select>';
-                html += '<td>' + select_list + '</td>';
-    
-                var select_list = '<select id="ddlFReleationship" name="Releationship[]" class = "form-control">';
-                select_list += '<option value="">Select </option>';
-                select_list += '<option value="Father">Father </option>';
-                select_list += '<option value="Mother">Mother </option>';
-                select_list += '<option value="Spouse">Spouse </option>';
-                select_list += '<option value="Son">Son </option>';
-                select_list += '<option value="Daughter">Daughter </option>';
-                select_list += '</select>';
-                html += '<td>' + select_list + '</td>';
-    
-                var select_list = '<select id="ddlFReleationship" name="Releationship[]" class = "form-control">';
-                select_list += '<option value="">Select </option>';
-                select_list += '<option value="Father">Father </option>';
-                select_list += '<option value="Mother">Mother </option>';
-                select_list += '<option value="Spouse">Spouse </option>';
-                select_list += '<option value="Son">Son </option>';
-                select_list += '<option value="Daughter">Daughter </option>';
-                select_list += '</select>';
-                html += '<td>' + select_list + '</td>';
-
-                html += '<td><input type ="text" name="grade[]" id=""  class ="form-control" /> </td >';
-
-                var select_list = '<select id="ddlFReleationship" name="Releationship[]" class = "form-control">';
-                select_list += '<option value="">Select </option>';
-                select_list += '<option value="Father">Father </option>';
-                select_list += '<option value="Mother">Mother </option>';
-                select_list += '<option value="Spouse">Spouse </option>';
-                select_list += '<option value="Son">Son </option>';
-                select_list += '<option value="Daughter">Daughter </option>';
-                select_list += '</select>';
-                html += '<td>' + select_list + '</td>';
-    
-                var select_list = '<select id="ddlFReleationship" name="Releationship[]" class = "form-control">';
-                select_list += '<option value="">Select </option>';
-                select_list += '<option value="Father">Father </option>';
-                select_list += '<option value="Mother">Mother </option>';
-                select_list += '<option value="Spouse">Spouse </option>';
-                select_list += '<option value="Son">Son </option>';
-                select_list += '<option value="Daughter">Daughter </option>';
-                select_list += '</select>';
-                html += '<td>' + select_list + '</td>';
-    
-                html += '<td><input type ="text" name="grade[]" id=""  class ="form-control" /> </td >';
-                html += '<td><input type ="file" name="grade[]" id=""  class ="form-control" /> </td >';
-                //if (number > 1) {
-                //    html += '<td><button type="button" name="remove" id="remove" class="btn btn-danger"> Remove </button> </td >  </tr>';
-                //    $('#bindrow').append(html);
-                //}
-                //else {
-                //    html += '<td><button type="button" name="add" id="add" class="btn btn-success"> Add </button> </td>  </tr>';
-                //    $('#bindrow').append(html);
-                //}
-                    html += '<td><button type="button" name="remove" id="remove" class="btn btn-danger"> Remove </button> </td >  </tr>';
-                    $('#bindrow').append(html);
-            }
-    
-            $('#add').click(function () {
-                count++;
-                dynamic_field(count);
-            });
-    
-    
-            $(document).on('click', '#remove', function () {
-                count--;
-                //dynamic_field(count);
-                $(this).closest('tr').remove();
-            });
-    
-    
-        });
-    
-    
-        $("#dynamic_form").validate({
-            rules: {
-                Name: "required"
-            }
-        });
-    
-    </script>
-
-
-
+ 
 </div>

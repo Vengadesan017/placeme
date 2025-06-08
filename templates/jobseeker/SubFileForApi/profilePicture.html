@@ -18,13 +18,20 @@
         <div class="">
 
             <table class="modal-table">
-                <tr> 
-                    <td><b>Profile</b></td>
-                    <td><input type="file" id="firstname" name="first_name" value="{{ candidate.first_name|default_if_none:'' }}" required></td>
-                </tr>
- 
-            </table>
+                <tbody><tr> 
+                    <td>
+                    <div class="upload-box">
+                    <label for="profile_picture" id="profile_pictureLabel">Choose Profile Picture</label>
+                    <input type="file" id="profile_picture" />
+                    </div>
+                        <!-- <div class="custom-file-upload">
 
+                            <input type="file" id="firstname" name="first_name" value="qwertyp2056@gmail.com" accept=".png,.jpg" required=""></td>
+                        </div> -->
+                </tr>
+                    <tr><td><b>Supported formats: png, jpg up to 5MB</b></td></tr>
+
+            </tbody></table>
         </div>
         </div>
         </div>

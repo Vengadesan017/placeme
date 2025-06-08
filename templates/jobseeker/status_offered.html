@@ -189,14 +189,39 @@
 
                         <!-- for onboarding-->
                             <div class="right-rec-box-width">
-                        {% if not job_status.rejected_at and job_status.accepted_at and not job_status.onboarding_at%}                            
-                        <div class="status pending" style="display: flex;justify-content: space-around;">
-                            {% if onboarding_id %}
-                            <a href="{% url 'job_seeker:onboarding' onboarding_id=onboarding_id page="personal" %}" class="">Click here to process Onboarding</a>
-                            {% else%}
-                            <a href="#" class="" disabled>Onboarding Waiting for Recruiter Initiative</a>
+                        {% if not job_status.rejected_at and job_status.accepted_at and not job_status.onboarding_at%}  
+                        <div class="offer-row">
+                                            <p>{% if onboarding_id %}<strong>Onboarding Initiated on:</strong> {{ onboarding_id.created_date|date:"d M Y" }} {% else %}<strong> Onboarding not initiated</strong>{% endif %}</p>
+
+                                    {% if onboarding_id.verified %}
+                                    <p class="status accepted">
+                                    Onboarding completed
+                                    </p>
+                                    {% elif onboarding_id.completed_date %}
+                                    
+                                    <p class="status pending">
+                                    Awaiting Verification
+                                    </p>
+                                    {% elif onboarding_id.created_date %}
+                                        {% if onboarding_id and not onboarding_id.completed_date%}
+                                        <a  class="status btn btn-accept" href="{% url 'job_seeker:onboarding' onboarding_id=onboarding_id.Onbording_id page="personal" %}" class="">Click here to process Onboarding</a>
+                                        {% else %}
+                                        <p class="status pending">
+                                        Awaiting Your Action
+                                        </p>
+                                    {% endif %}
+                                    {% else %}
+                                    <p class="status declined">
+                                        Onboarding pending
+                                    </p>
+                                    {% endif %}
+                                
+                            </div>
+                        {% comment %} <div style="display: flex;justify-content: space-around;">
+                            {% if onboarding_id and not onboarding_id.completed_date%}
+                            <a  class="btn btn-accept" href="{% url 'job_seeker:onboarding' onboarding_id=onboarding_id.Onbording_id page="personal" %}" class="">Click here to process Onboarding</a>
                             {% endif %}
-                        </div>
+                        </div> {% endcomment %}
                         {% endif %}
 
                         <!-- for offer letter-->
@@ -204,10 +229,9 @@
 <div class="offer-letter-container">
     <div class="offer-letter-card">
         {% if job_status.offer_id.offer_letter %}
-            <h3>Offer Letter from</h3> <h2 class="company-name">{{ job_status.job.company.company_name }}</h2>
        <div class="offer-row">
 
-            <p><strong>Released At:</strong> {{ job_status.offer_id.approve_at|date:"d M Y" }}</p>
+            <p><strong>Offer Released on:</strong> {{ job_status.offer_id.approve_at|date:"d M Y" }}</p>
     
             <p class="status 
                 {% if job_status.rejected_at %}declined{% elif job_status.accepted_at %}accepted{% else %}pending{% endif %}
@@ -283,12 +307,15 @@
 
                 <!-- Floating action icons -->
                 <div class="pdf-actions">
-                    <a href="{{ job_status.offer_id.offer_letter.url }}" target="_blank" class="icon-btn" title="View">
-                        <i class="fa-solid fa-eye"></i>
-                    </a>
-                    <a href="{{ job_status.offer_id.offer_letter.url }}" download class="icon-btn" title="Download">
-                        <i class="fa-solid fa-download"></i>
-                    </a>
+                    <div class="offer-letter-actions">
+
+                        <a href="#" class="open-modal-btn icon-btn" title="View"  data-modal-id="OfferLetterModal" >
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                        <a href="{{ job_status.offer_id.offer_letter.url }}" download class="icon-btn" title="Download">
+                            <i class="fa-solid fa-download"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         {% else %}
@@ -296,27 +323,18 @@
         {% endif %}
 
  
+ 
         
-
         {% if not job_status.accepted_at and not job_status.rejected_at %}
-            <form method="post" class="response-form" action="#">
-                {% csrf_token %}
-                <input type="hidden" name="application_id" value="{{ job_status.id}}">
-                <input type="hidden" name="offer_id" value="{{ job_status.offer_id.offers_id }}">
-                <label for="response">Message (optional)</label>
-                <textarea id="response" name="response" placeholder="Write your message here..."></textarea>
+                    <div class="button-group">
+                <a href="#" class="open-modal-btn btn btn-accept" data-modal-id="AcceptModal" >Accept</a>
+                <a href="#" class="open-modal-btn btn btn-decline" data-modal-id="DeclineModal" >Decline</a>
+            </div>
+            {% include "jobseeker/SubFileForApi/statusAccept.html" %}
+            {% include "jobseeker/SubFileForApi/statusDecline.html" %}
+            {% endif %}   
+            {% include "jobseeker/SubFileForApi/statusOfferLetter.html" %}
 
-                <label>
-                    <input type="checkbox" name="acknowledgment" required>
-                        I have read and agree to the offer letter, and acknowledge the terms and conditions.
-                </label>
-
-                <div class="button-group">
-                    <button type="submit" name="accept" value="accept" class="btn btn-accept">Accept</button>
-                    <button type="submit" name="decline" value="decline" class="btn btn-decline">Decline</button>
-                </div>
-            </form>
-        {% endif %}
     </div>
 </div>
 
@@ -333,3 +351,5 @@
     
     </div>
     </section>
+
+ 

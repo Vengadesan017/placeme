@@ -1,175 +1,164 @@
-﻿{% extends "jobseeker/layout.html" %}
+﻿{% extends 'jobseeker/layout.html' %}
 {% block title %}
-Employee Onboarding
-{% endblock title %}
+  Employee Onboarding
+{% endblock %}
 {% load static %}
 {% block statics %}
+  {% comment %} <link href="{% static 'bootstrap/Content/Site.css' %}" rel="stylesheet" type="text/css" /> {% endcomment %}
+  <link href="{% static 'bootstrap/Content/bootstrap.min.css' %}" rel="stylesheet" />
+  <link href="{% static 'bootstrap/Content/bootstrap-datetimepicker.min.css' %}" rel="stylesheet" />
+  <link href="{% static 'bootstrap/Content/toastr/toastr-responsive.css' %}" rel="stylesheet" />
+  <link href="{% static 'bootstrap/Content/toastr/toastr.css' %}" rel="stylesheet" />
+  <script src="{% static 'bootstrap/Scripts/modernizr-2.8.3.js' %}"></script>
+  {% comment %} <script src="{% static 'bootstrap/Scripts/Employee/Employee.js' %}"></script> {% endcomment %}
 
-    {% comment %} <link href="{% static 'bootstrap/Content/Site.css' %}" rel="stylesheet" type="text/css" /> {% endcomment %}
-    <link href="{% static 'bootstrap/Content/bootstrap.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'bootstrap/Content/bootstrap-datetimepicker.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'bootstrap/Content/toastr/toastr-responsive.css' %}" rel="stylesheet" />
-    <link href="{% static 'bootstrap/Content/toastr/toastr.css' %}" rel="stylesheet" />
-    <script src="{% static 'bootstrap/Scripts/modernizr-2.8.3.js' %}"></script>
-    {% comment %} <script src="{% static 'bootstrap/Scripts/Employee/Employee.js' %}"></script> {% endcomment %}
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
-    <link href="{% static 'bootstrap/Content/Common.css' %}" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link href="{% static 'bootstrap/Content/Common.css' %}" rel="stylesheet" />
 
+  <link rel="stylesheet" href="{% static 'css/nav.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/error.css' %}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-
-    <link rel="stylesheet" href="{% static 'css/nav.css' %}">
-    <link rel="stylesheet" href="{% static 'css/error.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />    
-
-
-
-
-<style>
-    *{
-        font-family: Poppins,sans-serif;
+  <style>
+    * {
+      font-family: Poppins, sans-serif;
     }
-.form-control  {
-width:90%
-}
-ol, ul {
-margin-bottom: unset;
-}
-.onboarding-message{
-margin:15px 15px 0 15px;
-font-weight: 550;
-font-size: 16px;
-color:#141b5f;
-}
-.btn-primary{
-margin: 0 15px 15px 0;
-background-color: #141b5f;
-color: #fff;
-border: #141b5f;
-transition: all .5s;
-}
-.btn-primary:hover{
-background-color: #FFBD03;
-color: #000;
-border: #FFBD03;
-
-}
-
-.company-text-1 a {
-
-    font-size: 16px;
-}
-footer{
-    margin-top: 100px;
-}
-</style>
-
-{% endblock statics %}
+    .form-control {
+      width: 90%;
+    }
+    ol,
+    ul {
+      margin-bottom: unset;
+    }
+    .onboarding-message {
+      margin: 15px 15px 0 15px;
+      font-weight: 550;
+      font-size: 16px;
+      color: #141b5f;
+    }
+    .btn-primary {
+      margin: 0 15px 15px 0;
+      background-color: #141b5f;
+      color: #fff;
+      border: #141b5f;
+      transition: all 0.5s;
+    }
+    .btn-primary:hover {
+      background-color: #ffbd03;
+      color: #000;
+      border: #ffbd03;
+    }
+    
+    .company-text-1 a {
+      font-size: 16px;
+    }
+    footer {
+      margin-top: 100px;
+    }
+  </style>
+{% endblock %}
 
 {% block content %}
+  <div class="container-fluid" style="margin:60px;">
+    <div class="container-fluid">
+      <div class="row">
+        <table class="tblassetsteps">
+          <tr>
+            <td style="">
+              <label class="onboarding-message">
+                Please Complete Your Onboarding Process for <span style="color:#FFBD03">
+                  {{ onboarding_obj.job_post.job.company }}
+                  {% comment %} {{ company }} {% endcomment %}
+                </span>
+              </label>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <br />
 
-    <div class="container-fluid" style="margin:60px;">
-        <div class="container-fluid">
-           <div class="row">
-                <table class="tblassetsteps">
-                    <tr>
-                        <td style="">
-                            <label class="onboarding-message">Please Complete Your Onboarding Process for <span style="color:#FFBD03">Abc Private Limited
-                                {% comment %} {{company}} {% endcomment %}
-                            </span></label>
-
-                        </td>
-
-                    </tr>
-                </table>
-    
-    
-    
-            </div> 
-            <br />
-    
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel with-nav-tabs panel-default">
-                        <div class="panel-heading">
-                            <ul class="nav nav-tabs">
-                                <li class="{% if page == 'personal' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="personal" %}" data-toggle="">Personal details</a></li>
-                                <li class="{% if page == 'family' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="family" %}" data-toggle="">Family Details</a></li>
-                                <li class="{% if page == 'education' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="education" %}" data-toggle="">Educational Details</a></li>
-                                <li class="{% if page == 'experience' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="experience" %}" data-toggle="">Experience Details</a></li>
-                                <li class="{% if page == 'identity' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="identity" %}" data-toggle="">Identity Details</a></li>
-                                {% comment %} <li class="{% if request.resolver_match.kwargs.page == 'personal' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="personal" %}" data-toggle="">Personal details</a></li>
-                                <li class="{% if request.resolver_match.kwargs.page == 'family' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="family" %}" data-toggle="">Family Details</a></li>
-                                <li class="{% if request.resolver_match.kwargs.page == 'education' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="education" %}" data-toggle="">Educational Details</a></li>
-                                <li class="{% if request.resolver_match.kwargs.page == 'experience' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="experience" %}" data-toggle="">Experience Details</a></li>
-                                <li class="{% if request.resolver_match.kwargs.page == 'identity' %}active{% endif %}"><a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page="identity" %}" data-toggle="">Identity Details</a></li> {% endcomment %}
-                            </ul>
-                        </div>
-                        {% if messages %}
-                        {% for message in messages %}
-                          <div class='alert alert-{{ message.tags }}'>
-                            <span class="closebtn">&times;</span>
-                            {% comment %} <script>
-                                let text ="Microsoft"; 
-                                document.getElementById("demo").innerHTML = text.replace("Microsoft", "W3Schools");
-                            </script> {% endcomment %}
-                              {{ message }}
-                          </div>    
-                        {% endfor %}
-                      {% endif %}
-                        <div class="panel-body">
-                            <div class="tab-content">
-                                
-
-                                {% if page == "personal" %}
-                                    {% include "jobseeker/onboarding_personal.html" %}                                
-                                {% elif page == "family" %}
-                                    {% include "jobseeker/onboarding_family.html" %}                                
-                                {% elif page == "education" %}
-                                    {% include "jobseeker/onboarding_edu.html" %}                                
-                                {% elif page == "experience" %}
-                                    {% include "jobseeker/onboarding_experience.html" %}                                
-                                {% elif page == "identity" %}
-                                    {% include "jobseeker/onboarding_indentity.html" %}                                
-                                {% else %}
-                                    <h2>Invalid page</h2>                            
-                                
-                                
-                                {% endif %}
-                                
-                                
-                                
-                                
-                                
-                                
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-    
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel with-nav-tabs panel-default">
+            <div class="panel-heading">
+              <ul class="nav nav-tabs">
+                <li class="{% if page == 'personal' %}active{% endif %}">
+                  <a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page='personal' %}" data-toggle="">Personal details</a>
+                </li>
+                <li class="{% if page == 'family' %}active{% endif %}">
+                  <a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page='family' %}" data-toggle="">Family Details</a>
+                </li>
+                <li class="{% if page == 'education' %}active{% endif %}">
+                  <a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page='education' %}" data-toggle="">Educational Details</a>
+                </li>
+                <li class="{% if page == 'experience' %}active{% endif %}">
+                  <a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page='experience' %}" data-toggle="">Experience Details</a>
+                </li>
+                <li class="{% if page == 'identity' %}active{% endif %}">
+                  <a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page='identity' %}" data-toggle="">Identity Details</a>
+                </li>
+                {% comment %} <li class="{% if request.resolver_match.kwargs.page == 'personal' %}active{% endif %}">
+                  <a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page='personal' %}" data-toggle="">Personal details</a>
+                </li>
+                <li class="{% if request.resolver_match.kwargs.page == 'family' %}active{% endif %}">
+                  <a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page='family' %}" data-toggle="">Family Details</a>
+                </li>
+                <li class="{% if request.resolver_match.kwargs.page == 'education' %}active{% endif %}">
+                  <a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page='education' %}" data-toggle="">Educational Details</a>
+                </li>
+                <li class="{% if request.resolver_match.kwargs.page == 'experience' %}active{% endif %}">
+                  <a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page='experience' %}" data-toggle="">Experience Details</a>
+                </li>
+                <li class="{% if request.resolver_match.kwargs.page == 'identity' %}active{% endif %}">
+                  <a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page='identity' %}" data-toggle="">Identity Details</a>
+                </li> {% endcomment %}
+              </ul>
             </div>
-            
-    
+            {% if messages %}
+            {% for message in messages %}
+                <div class='alert alert-{{ message.tags }}'>
+                <span class="closebtn">&times;</span>
+                    {{ message }}
+                </div>    
+            {% endfor %}
+            {% endif %}
+            <div class="panel-body">
+              <div class="tab-content">
+                {% if page == 'personal' %}
+                  {% include 'jobseeker/onboarding_personal.html' %}
+                {% elif page == 'family' %}
+                  {% include 'jobseeker/onboarding_family.html' %}
+                {% elif page == 'education' %}
+                  {% include 'jobseeker/onboarding_edu.html' %}
+                {% elif page == 'experience' %}
+                  {% include 'jobseeker/onboarding_experience.html' %}
+                {% elif page == 'identity' %}
+                  {% include 'jobseeker/onboarding_indentity.html' %}
+                {% else %}
+                  <h2>Invalid page</h2>
+                {% endif %}
+              </div>
+            </div>
+          </div>
         </div>
-    
-        {% comment %} <hr /> {% endcomment %}
-        {% comment %} <footer>
-            <p>&copy;  Placenow</p>
-        </footer> {% endcomment %}
+      </div>
     </div>
 
+    {% comment %} <hr /> {% endcomment %}
+    {% comment %} <footer>
+      <p>&copy; Placenow</p>
+    </footer> {% endcomment %}
+  </div>
 
-    <script src="{% static 'bootstrap/Scripts/jquery-3.4.1.min.js' %}"></script>
-    <script src="{% static 'bootstrap/Scripts/bootstrap.min.js' %}"></script>
-    <script src="{% static 'bootstrap/Scripts/moment.min.js' %}"></script>
-    <script src="{% static 'bootstrap/Scripts/bootstrap-datetimepicker.min.js' %}"></script>
-    <script src="{% static 'bootstrap/Scripts/toastr/customToastr.js' %}"></script>
-    <script src="{% static 'bootstrap/Scripts/toastr/toastr.js' %}"></script>
-    <script src="{% static 'bootstrap/Scripts/Common.js' %}"></script>
-    <script src="{% static 'bootstrap/Scripts/jquery.validate.min.js' %}"></script>
-    <script src="{% static 'bootstrap/Scripts/Employee/Employee.js' %}"></script>
-    <!-- @RenderSection("scripts", required: false) -->
-     
-    {% endblock content %}
+  <script src="{% static 'bootstrap/Scripts/jquery-3.4.1.min.js' %}"></script>
+  <script src="{% static 'bootstrap/Scripts/bootstrap.min.js' %}"></script>
+  <script src="{% static 'bootstrap/Scripts/moment.min.js' %}"></script>
+  <script src="{% static 'bootstrap/Scripts/bootstrap-datetimepicker.min.js' %}"></script>
+  <script src="{% static 'bootstrap/Scripts/toastr/customToastr.js' %}"></script>
+  <script src="{% static 'bootstrap/Scripts/toastr/toastr.js' %}"></script>
+  <script src="{% static 'bootstrap/Scripts/Common.js' %}"></script>
+  <script src="{% static 'bootstrap/Scripts/jquery.validate.min.js' %}"></script>
+  <script src="{% static 'bootstrap/Scripts/Employee/Employee.js' %}"></script>
+  <!-- @RenderSection("scripts", required: false) -->
+{% endblock %}

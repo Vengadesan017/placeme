@@ -18,11 +18,17 @@
         <div class="">
 
             <table class="modal-table">
-                <tr> 
-                    <td><b>Resume</b></td>
-                    <td><input type="file" id="firstname" name="first_name" value="{{ candidate.first_name|default_if_none:'' }}" required></td>
-                </tr>
+                <tbody>
+                    <tr> 
 
+                        <td>
+                        <div class="upload-box">
+                        <label for="resume" id="resumeLabel">Choose Resume</label>
+                        <input type="file" id="resume" />
+                        </div>
+                    </tr>
+                    <tr><td><b>Supported formats: PDF, DOC, DOCX up to 5MB</b></td></tr>
+             </tbody>
             </table>
 
         </div>

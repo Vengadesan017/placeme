@@ -46,7 +46,7 @@ def path_by_user_id(user_id: int):
 
 
 def validate_file_size(file):
-    max_size = 1024 * 1024  # 1 MB limit
+    max_size = 1024 * 1024 * 5 # 5 MB limit
     if file.size > max_size:
         raise ValidationError("File size must be under 200KB.")
 

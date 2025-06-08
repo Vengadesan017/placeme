@@ -31,7 +31,7 @@ def path_by_user_id(user_id: int):
 #     file.seek(0)
 
 def validate_file_size(file):
-    max_size = 1024 * 1024  # 1MB limit
+    max_size = 1024 * 1024 * 5  # 5MB limit
     if file.size > max_size:
         raise ValidationError("File size must be under 200KB.")
 
@@ -66,7 +66,7 @@ class Candidates(models.Model):
     user = models.OneToOneField(Users, on_delete=models.CASCADE, related_name='candidate', null=True, blank=True)
     
     # Personal Information
-    first_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255,verbose_name='First name')
     last_name = models.CharField(max_length=255)
     gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')], blank=True, null=True)
     work_status = models.CharField(max_length=15, choices=[('Fresher', 'Fresher'), ('Experienced', 'Experienced')], blank=True, null=True)

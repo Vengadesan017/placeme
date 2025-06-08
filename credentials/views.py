@@ -163,7 +163,8 @@ def SignupPage(request):
                                 try:
                                     validate_password(password1)
                                 except ValidationError as e:
-                                    messages.error(request, "Create a strong password.")
+                                    for error in e.messages:
+                                        messages.error(request, error)
                                     return render(request,'auth/signup.html',{'recaptcha_site_key': settings.RECAPTCHA_PUBLIC_KEY})
                                 else:
                                     # Create a new user

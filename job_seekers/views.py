@@ -418,12 +418,14 @@ def Status(request, page, id=None):
             elif page == "offered":
                 if offered.exists():
                     job_status = offered[0]
-                    onboarding_id = Onboarding.objects.filter(candidate=candidate,job_post=job_status.id).values_list('Onbording_id').first()
+                    onboarding_id = Onboarding.objects.filter(candidate=candidate,job_post=job_status.id).values().first()
                     id = job_status.id
         if not onboarding_id:
             onboarding_id = False
-        else:
-            onboarding_id = onboarding_id[0]
+        # else:
+        #     print(onboarding_id)
+        #     onboarding_id = onboarding_id[0]
+        print(onboarding_id)
 
         # for offer letter
         if job_status:
@@ -524,17 +526,19 @@ def OnboardingCandidate(request,onboarding_id, page):
                     
                 candidate_form = OnboardingCandidatePersonalForm(request.POST, request.FILES, instance=Candidates.objects.get(user=request.user))
                 onboarding_form = OnboardingPersonalForm(request.POST, request.FILES, instance=Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id))
+                page = "family"
                 if not candidate_form.is_valid():
                     messages.error(request, candidate_form.errors)
+                    page = "personal"
                 else:
                     candidate_form.save()
                     # x(not cleaned_data.get(field) for field in ['firstname', 'lastname', 'dob', 'email']):
                 if not onboarding_form.is_valid():
                     messages.error(request, onboarding_form.errors)
-                    print(onboarding_form.errors)
+                    page = "personal"
                 else:
                     onboarding_form.save()
-                page = "family"
+
 
 
                 # return render(request,'jobseeker/onboarding.html',context)
@@ -584,23 +588,16 @@ def OnboardingCandidate(request,onboarding_id, page):
                             }
                             # Create and add the form to the list
                             create_family_forms.append(OnboardingFamilyForm(family_data))
-
-                # # Validate and save each form if valid
-                for form in create_family_forms:
-
-                    if form.is_valid():
-                        form.save(candidate=candidate)
-                    else:
-                        print("Form errors:", form.errors)
-                        
-                for form in edit_family_forms:
-
-                    if form.is_valid():
-                        form.save()
-                    else:
-                        print("Form errors:", form.errors)
-
+            if 'education' in request.POST:
                 page = "education"
+                form = CandidateEducationUpdateForm(request.POST)
+                if form.is_valid():
+                    form.save(candidate=candidate)
+                    messages.info(request, 'Your New Education has been added successfully.')
+                    
+                else:
+                    print("Form errors:", form.errors)
+                    messages.error(request, 'Please enter the valid data.')
                     
 
                 # return render(request,'jobseeker/onboarding.html',context)
@@ -609,16 +606,26 @@ def OnboardingCandidate(request,onboarding_id, page):
         # onboarding_form = OnboardingPersonalForm(instance=Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id))
         onboarding = Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id)
         onboarding_form = OnboardingPersonalForm(instance=onboarding)
-        company = 1
+        education = EducationMap.objects.filter(candidate=candidate)
+        employment = Employment.objects.filter(candidate=candidate)
         print(onboarding)
         create_family_forms =Familys.objects.filter(candidate=candidate)
 
+        new_education = CandidateEducationUpdateForm()
+        new_employment = CandidateEmploymentUpdateForm()
         context = {
-            'company':company,
+            'onboarding_obj':onboarding,
             'candidate': candidate_form,
             'onboarding': onboarding_form,
             'family_forms': create_family_forms,
-            'onboarding_id':onboarding_id,
+            'family_forms': create_family_forms,
+            'education':education,
+            'employment':employment,
+            'new_education':new_education,
+            'new_employment':new_employment,
+            'level' : LevelForEdu.objects.all(),
+            'course' : CourseForEdu.objects.all(),
+            'years' : range(2000, 2030),
             'page':page,
             
         }

@@ -6,7 +6,7 @@
     border-radius: 15px;
     margin-top: 80px;
     position: sticky;
-    top: 62px;
+    top: 66px;
     border: 1px solid #d0d0d0;
     z-index: 5;
 }
@@ -33,6 +33,7 @@
 .offer a {
     color: #141B5F;
     font-weight: 500;
+    
 }
 
 .save a:hover,
@@ -47,7 +48,7 @@
 .offer a.active {
     color: #FF8C00;
     font-weight: 500;
-    /* font-size: 20px; */
+    font-size: 20px;
 }
 
 .all-menu ul li a,
@@ -80,17 +81,19 @@
 .left {
     min-height: 700px;
     height: auto;
-    width: 38%;   
-     border-top-left-radius: 15px;
+    width: 33%;    
+    border-top-left-radius: 15px;
     border-right: 1px solid #d0d0d0;
     position: relative;
     z-index: 0;
     white-space: nowrap;
+    overflow-y: auto;
     
     .buttons{
         height: fit-content;
         width: 100%;
         padding: 15px;
+        overflow: auto;
     }
     .button{
         border: 1px solid #d0d0d0;
@@ -108,7 +111,6 @@
     }
 
 }
-
 
 
 /*box all*/
@@ -220,7 +222,7 @@
     border-top-left-radius: inherit;
 }
 .dev-detail-2.active {
-background-color: #F0553711;
+    background-color: #F0553711;
 }
 
 .dev-detail-2-inside {
@@ -273,9 +275,10 @@ background-color: #F0553711;
 }
 
 .application-saved {
-    color: #555;
+   color: #555;
     white-space: nowrap;
     font-size: 14px;
+
 }
 
 .dev-box2 {

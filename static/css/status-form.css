@@ -5,6 +5,7 @@
     /* min-height: 100vh; */
     margin: unset;
     padding: unset;
+    
 }
 
 .offer-letter-card {
@@ -12,17 +13,15 @@
     border-radius: 20px; */
     max-width: 900px;
     width: 100%;
-    margin: 0 10px;
     /* box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1); */
     position: relative;
 }
 
-.offer-letter-card h3,
+.offer-letter-card > h3,
 .offer-letter-card h2 {
-    /* margin-top: 20px;
-    margin-bottom: 20px; */
     display: inline;
-    color: #2c3e50;
+    color: #555;
+    font-weight: 500;
 }
 
 .pdf-container {
@@ -31,6 +30,9 @@
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .pdf-container iframe {
@@ -38,22 +40,32 @@
     max-height: 300px;
     border: none;
     border-radius: 12px;
+    filter: blur(8px);
+    -webkit-filter: blur(8px);
+    /* height: 100%;
+    width: 100%; */
 }
 
 .pdf-actions {
     position: absolute;
-    top: 12px;
-    right: 12px;
+    /* top: 0;
+    left: 0; */
     display: flex;
     gap: 10px;
     z-index: 2;
+    flex-direction: column;
 }
 
+.offer-letter-actions{
+    display: flex;
+
+}
 .icon-btn {
+    margin: 10px;
     background: #141b5f;
     color: white;
-    width: 38px;
-    height: 38px;
+    width: 60px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -67,9 +79,28 @@
     background: #ffbd03;
     color: #000;
 }
+.icon-btn-only {
+    background: #141b5f;
+    color: white;
+    padding: 12px 24px;
+    /* width: 60px; */
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    border-radius: 10%;
+    text-decoration: none;
+    transition: background 0.5s ease;
+}
+
+.icon-btn:hover {
+    background: #ffbd03;
+    color: #000;
+}
 
 .company-name {
-    font-size: 16px;
+     font-size: 16px;
     color: #141B5F;
 }
 
@@ -133,6 +164,7 @@
     display: flex;
     gap: 15px;
     margin-top: 10px;
+    justify-content: flex-end
 }
 
 .btn {
@@ -173,3 +205,5 @@
     align-items: center;
     margin-bottom: 10px;
 }
+
+

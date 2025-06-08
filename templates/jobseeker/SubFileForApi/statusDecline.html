@@ -1,0 +1,54 @@
+
+<!-- The Modal for ==========DeclineModal===================== -->
+<div class="modal" id="DeclineModal">
+    <div class="modal-dialog">
+            <form method="post" action="#">
+                {% csrf_token %}
+        <div class="modal-content">
+    
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h3 class="modal-title">Decline Your offer</h3>
+            <button type="button" class="btn-close close-modal-btn" id="closePersonalModalButton"><i class='fas fa-times edit'></i></button>
+        </div>
+    
+        <!-- Modal Body -->
+        <div class="modal-body">
+        <div class="margin20">
+        <div class="">
+
+            <table class="modal-table">
+                <input type="hidden" name="application_id" value="{{ job_status.id}}">
+                <input type="hidden" name="offer_id" value="{{ job_status.offer_id.offers_id }}">
+                <tr>
+                    <td>Your Message (Optional)</td>
+                    <td>
+                        <textarea id="response" name="response" placeholder="Write your message here..."></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                    <label>
+                        <input type="checkbox" name="acknowledgment">
+                            I have read and agree to the offer letter, and acknowledge the terms and conditions.
+                    </label>
+                    </td>
+                </tr>
+
+
+  
+            </table>
+
+        </div>
+        </div>
+        </div>
+    
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+                    <button type="submit" name="decline" value="decline" class="model-btn-save">Decline</button>
+        </div>
+    
+        </div>
+    </form>
+    </div>
+    </div>

@@ -3,7 +3,7 @@
     /* Hidden by default */
     position: fixed;
     /* Stay in place */
-    z-index: 1050;
+    z-index: 10;
     /* Sit on top */
     left: 0;
     top: 0;
@@ -54,6 +54,7 @@
 .modal-title {
     font-size: 24px;
     font-weight: bold;
+    color: #141b5f;
 }
 
 /* Style the modal body to handle scrolling */
@@ -62,6 +63,14 @@
     overflow: auto;
     padding: 0 20px;
 }
+
+.modal-body b{
+    .modal-table b{
+    color: #333;
+    font-weight: 600;
+}
+}
+
 
 /* Style for the close button */
 .btn-close {
@@ -164,6 +173,7 @@
     input[type="number"],
     input[type="email"],
     input[type="date"],
+    textarea,
     select {
         width: 90%;
         padding: 10px;
@@ -179,6 +189,7 @@
     input[type="text"]:focus,
     input[type="email"]:focus,
     input[type="date"]:focus,
+    textarea,
     select:focus {
         border-color: #5c6bc0;
         outline: none;
@@ -186,7 +197,8 @@
 
     input[type="text"]::placeholder,
     input[type="email"]::placeholder,
-    input[type="date"]::placeholder {
+    input[type="date"]::placeholder,
+    textarea {
         color: #aaa;
     }
 
@@ -215,11 +227,52 @@
     width: 100%;
 }
 
-/* .modal-table tr td:nth-child(1){
-    width: fit-content;
-    background-color: red;
+.modal-table b{
+    color: #333;
+    font-weight: 600;
 }
 
-.modal-table tr td:nth-child(2){
-    background-color: blue;
-} */
+.modal-table td{
+    color: #333;
+    font-weight: 600;
+    height: 20px;
+
+}
+
+/* Hide default file upload button (WebKit browsers like Chrome) */
+input[type="file"]::-webkit-file-upload-button {
+  visibility: hidden;
+}
+
+/* Hide default file upload button (Firefox) */
+input[type="file"]::file-selector-button {
+  visibility: hidden;
+}
+
+/* Style the input to center the text and make it look nice */
+input[type="file"] {
+  text-align: center;
+  width: 95%;
+  height: 60px;
+  padding: 16px 30% 0 30%;
+  box-sizing: border-box;
+  font-weight: 600;
+  font-size: 16px;
+  color: #141b5f;
+  border: 2px dashed #141b5f;
+  border-radius: 6px;
+  background-color: #fff;
+  cursor: pointer;
+  margin: 5px 5px 3px 20px;
+  
+}
+
+/* Style the 'Supported formats' <b> tag */
+.model-body2 b {
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 400;
+  color: #555;
+  margin: 10px 0 0 0;
+}

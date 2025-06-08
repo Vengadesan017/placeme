@@ -535,16 +535,7 @@
         
     </div>
     
-        <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ resume.as_p }}
-        <button name="upload_resume" type="submit" class="">Upload</button>
-    </form>
-        <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ profile.as_p }}
-        <button name="upload_profile" type="submit" class="">Upload</button>
-    </form>
+
 </main>
 
 
