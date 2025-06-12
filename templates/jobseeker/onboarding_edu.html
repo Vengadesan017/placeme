@@ -23,28 +23,52 @@
                 <tbody id="bindrow">
                     {%for edu in education%}
                     <tr><input type="hidden" name="id[]" id="" class="form-control" value="{{edu.edu_map_id}}">
-                        <td><span class="form-control">
+    <!-- Course Level -->
+    <td>
+        <input type="text" class="form-control" name="level" value="{{ edu.edu_id.course.level.name }}" disabled>
+    </td>
 
-                            {{edu.edu_id.course.level.name }}      
-                        </span>
-                        </td>
-                        <td>
-                            {{edu.edu_id.course.name }}      
-                        </td>
-                        <td>
-                            {{edu.edu_id.name }}      
-            
-                        </td>
-                        <td>
-                            {{edu.institute}}
-                        </td>
-                        <td>{{edu.type_id}}
-                        </td>
-                        <td>
-                            {{ edu.year_of_passing}}
-                        </td>
-                        <td>{{edu.score}}</td>
-                        <td>{{edu.doc}}</td>
+    <!-- Course Name -->
+    <td>
+        <input type="text" class="form-control" name="course_name" value="{{ edu.edu_id.course.name }}" disabled>
+    </td>
+
+    <!-- Education Name -->
+    <td>
+        <input type="text" class="form-control" name="education_name" value="{{ edu.edu_id.name }}" disabled>
+    </td>
+
+    <!-- Institute -->
+    <td>
+        <input type="text" class="form-control" name="institute" value="{{ edu.institute }}" disabled>
+    </td>
+
+    <!-- Type -->
+    <td>
+        <input type="text" class="form-control" name="type" value="{{ edu.type_id }}" disabled>
+    </td>
+
+    <!-- Year of Passing -->
+    <td>
+        <input type="text" class="form-control" name="year" value="{{ edu.year_of_passing }}" disabled>
+    </td>
+
+    <!-- Score -->
+    <td>
+        <input type="text" class="form-control" name="score" value="{{ edu.score }}" disabled>
+    </td>
+
+    <!-- Document -->
+    <td>
+        <input type="file" class="form-control" name="doc" value="{{ edu.doc }}" disabled>
+    </td>
+
+    <!-- Action Buttons -->
+    <td>
+        <button type="button" class="btn btn-warning btn-sm" onclick="enableEdit('{{ forloop.counter }}')">Edit</button>
+        {% comment %} <button type="submit" class="btn btn-primary btn-sm d-none" id="save-btn-{{ forloop.counter }}">Save</button> {% endcomment %}
+    </td>
+
                     </tr>
                     
                     {% endfor %}
@@ -103,6 +127,7 @@
                         </td>
                         <td><input type="text" name="score" class="form-control" id="id_score" value="{{ new_education.initial.score|default_if_none:'' }}" placeholder="Enter Grade like 7.1/10 or Percentage like 78.2%" /></td>
                         <td><input type="file" class="form-control" id="" name="doc" value=""> </td>
+                        <td><button type="button" name="remove" id="remove" class="btn btn-danger"> Remove </button> </td>      
                     </tr>
                 </tbody>
             </table>

@@ -8,22 +8,22 @@
 .Perference {
   min-height: 100px;
   height: auto;
-  /*background-color: rgb(231, 157, 67);*/
+  /* background-color: rgb(231, 157, 67); */
   padding-top: 10px;
 }
 
 .Perference-heading {
   display: flex;
   justify-content: space-between;
-  /*background-color: blue;*/
+  /* background-color: blue; */
   height: auto;
   margin-top: 10px;
 }
 
 .Perference-heading h4 {
   /* mod */
-  font-size: 22px;
-
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .Perference-add-div {
@@ -33,13 +33,18 @@
 }
 
 .Perference-add-div a {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 500;
   margin-right: 7px;
+  color: #141b5f;
+  
 }
 
 .Perference-add-div .fa-pen-to-square {
-  margin-top: 2px;
+  margin-top: 4px;
+  margin-left: 5px;
+  font-size: 16px;
+  color: #141b5f;
 }
 
 .languages {
@@ -50,17 +55,19 @@
 
 .languages-row {
   display: flex;
-  margin-top: 5px;
-  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  margin-left: 60px;
   justify-content: space-around;
 
 }
 
 .languages-ul-div {
-  width: 85%;
+  width: 75%;
   display: flex;
   /* justify-content: center;
     align-items: center; */
+    /* background-color: blueviolet; */
 }
 
 .languages-ul {
@@ -77,13 +84,14 @@
 }
 
 .languages h4 {
-  text-decoration: 2px underline;
+  /* text-decoration: 2px underline; */
   margin-left: 5px;
 
-  font-size: 18px;
+  font-size: 16px;
 
   /* mod */
-  font-weight: 650;
+  font-weight: 500;
+  color: #333;
 }
 
 .languages-ul-li-1-head {
@@ -98,6 +106,7 @@
   /* mod */
   font-weight: 700;
   font-size: 17px;
+  /* background-color: bisque; */
 }
 
 .languages-ul-li-1 {
@@ -112,11 +121,15 @@
   /* mod */
   font-size: 17px;
 }
-
+thead tr td{
+  font-size: 16px;
+  font-weight: 500;
+  
+}
 .fa-circle-check,
 .fa-circle-xmark {
   /* mod */
-  font-size: 24px;
+  font-size: 14px;
 }
 
 .fa-circle-check {
@@ -140,6 +153,7 @@
   overflow-y: hidden;
   height: 25px;
   width: 85%;
+  padding-left: 10px;
 }
 
 .Preferred-btn-div {
@@ -152,12 +166,12 @@
   padding-right: 7px;
   padding-top: 3px;
   padding-bottom: 3px;
-  /*background-color: blueviolet;*/
-  background-color: snow;
+  /* background-color: blueviolet; */
+  background-color: #fff;
   border: none;
   border-radius: 50px;
-  text-decoration: underline;
-
+  font-size: 14px;
+  color: #555;
   /* mod */
   display: inline-block;
 }
@@ -179,6 +193,8 @@
 .Preferred-text {
   padding-bottom: 10px;
   flex-wrap: wrap;
+  color: #555;
+  font-size: 14px;
 }
 
 /* end */
@@ -197,23 +213,23 @@
 .employement {
   min-height: 100px;
   height: auto;
-  /*background-color: rgb(53, 201, 201);*/
+  /* background-color: rgb(53, 201, 201); */
   padding-top: 10px;
   margin-top: 10px;
-  border-top: 2px solid gray;
+  border-top: 1px solid #d0d0d0;
 }
 
 .employement-heading {
   display: flex;
   justify-content: space-between;
-  /*background-color: blue;*/
+  /* background-color: blue; */
   height: auto;
   margin-top: 10px;
 }
 
 .employement-heading h4 {
   font-size: 20px;
-
+  font-weight: 600;
 }
 
 .employement-add-div {
@@ -223,13 +239,16 @@
 }
 
 .employement-add-div a {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 500;
   margin-right: 7px;
+  color: #141b5f;
 }
 
 .employement-add-div .fa-pen-to-square {
   margin-top: 2px;
+  margin-left: 5px;
+  color: #141b5f;
 }
 
 .employement-flex {
@@ -239,8 +258,14 @@
 }
 
 .employement-role {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.employement-company{
+  color: #333;
+  font-size: 14px;
 }
 
 
@@ -253,10 +278,12 @@
 
 .employement-date {
   font-size: 14px;
+  color: #555555;
 }
 
 .employement-time {
-  font-size: 12px;
+  font-size: 14px;
+  color: #555555;
 }
 
 
@@ -264,23 +291,23 @@
 .internship {
   min-height: 100px;
   height: auto;
-  /*background-color: rgb(53, 201, 201);*/
+  /* background-color: rgb(53, 201, 201); */
   padding-top: 10px;
   margin-top: 10px;
-  border-top: 2px solid gray;
+  border-top: 1px solid #d0d0d0;
 }
 
 .internship-heading {
   display: flex;
   justify-content: space-between;
-  /*background-color: blue;*/
+  /* background-color: blue; */
   height: auto;
   margin-top: 10px;
 }
 
 .internship-heading h4 {
   font-size: 20px;
-
+  font-weight: 600; 
 }
 
 .internship-add-div {
@@ -290,13 +317,16 @@
 }
 
 .internship-add-div a {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 500;
   margin-right: 7px;
+  color: #141b5f;
 }
 
 .internship-add-div .fa-pen-to-square {
   margin-top: 2px;
+  margin-left: 5px;
+  color: #141b5f;
 }
 
 .internship-flex {
@@ -306,8 +336,14 @@
 }
 
 .internship-role {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.internship-company{
+  color: #333;
+  font-size: 14px;
 }
 
 .internship-date-div {
@@ -320,10 +356,12 @@
 
 .internship-date {
   font-size: 14px;
+  color: #555555;
 }
 
 .internship-time {
-  font-size: 12px;
+  font-size: 14px;
+  color: #555555;
 }
 
 
@@ -337,23 +375,23 @@
 .career {
   min-height: 100px;
   height: auto;
-  /*background-color: rgb(53, 201, 201);*/
+  /* background-color: rgb(53, 201, 201); */
   padding-top: 10px;
   margin-top: 10px;
-  border-top: 2px solid gray;
+  border-top: 1px solid #d0d0d0;
 }
 
 .career-heading {
   display: flex;
   justify-content: space-between;
-  /*background-color: blue;*/
+  /* background-color: blue; */
   height: auto;
   margin-top: 10px;
 }
 
 .career-heading h4 {
   font-size: 20px;
-
+  font-weight: 600;
 }
 
 .career-add-div {
@@ -363,33 +401,36 @@
 }
 
 .career-add-div a {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 500;
   margin-right: 7px;
+  color: #141b5f;
 }
 
 .career-add-div .fa-pen-to-square {
   margin-top: 2px;
+  margin-left: 5px;
+  color: #141b5f;
 }
 
 
 .career-info-list {
   display: flex;
-  /*background-color: indianred;*/
+  /* background-color: indianred; */
   margin-top: -10px;
   min-height: 40px;
   height: auto;
 }
 
 .career-info-list-1 {
-  /*background-color: burlywood;*/
+  /* background-color: burlywood; */
   width: 40%;
 
 
 }
 
 .career-info-list-2 {
-  /*background-color: crimson;*/
+  /* background-color: crimson; */
   width: 40%;
 }
 
@@ -402,19 +443,36 @@
 }
 
 .career-info-list-1-1 h4 {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
+  color: #333;
 }
 
 .career-info-list-1-1 p {
   font-size: 14px;
+  color: #333;
 }
 
 .career-info-list-2-1 h4 {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
+  color: #333;
 }
 
 .career-info-list-2-1 p {
   font-size: 14px;
+  color: #333;
 }
+
+.language-table td{
+  font-size: 14px;
+  color: #555;
+  padding: 5px;
+}
+
+.language-table th{
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+  }
+  

@@ -5,7 +5,8 @@
     right: 2%;
     /*background-color: blue;*/
     background-color: rgb(255, 255, 255);
-    width: 400px;
+    min-width: 430px;
+    max-width: 600px;
     display: none;
     flex-direction: row;
     border-radius: 15px;
@@ -14,7 +15,8 @@
     
     z-index: 10;
     transition: all .5s;
-    box-shadow: 0px 0px 10px 0px #555;
+    border: 1px solid #d0d0d0;
+    box-shadow: 0px 0px 10px 0px #d0d0d0;
  }
  .scroll-div{
      width: 400px;
@@ -34,7 +36,7 @@
      height: auto;
      /*background-color: burlywood;*/
      padding-bottom: 10px;
-     border-bottom: 2px solid gray;
+     border-bottom: 1px solid #d0d0d0;
      display: flex;
      flex-direction: row;
      padding-left: 10px;
@@ -49,6 +51,13 @@
  .name h2{
      font-size: 16px;
      font-weight: 500;
+     color: #141b5f;
+ }
+
+ .name p{
+     font-size: 14px;
+     font-weight: 500;
+     color: #555;
  }
  .new{
      width: 30%;
@@ -60,8 +69,8 @@
  }
  .new p{
      padding: 1px 13px;
-     border: 2px solid #141b5f;
-     border-radius: 25px;
+     border: 1px solid #141b5f;
+     border-radius: 5px;
      color: #141b5f;
      font-size: 14px;
      cursor: pointer ;

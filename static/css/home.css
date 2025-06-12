@@ -145,4 +145,61 @@ form {
 
 .home-ads{
   min-height: 370px;
+  overflow-x: auto;
 }
+
+.action-button-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  padding: 20px;
+}
+
+.action-btn {
+  width: 160px;
+  height: 100px;
+  background-color: #ccc;
+  border-radius: 10px;
+  text-decoration: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.action-btn:hover {
+  transform: scale(1.05);
+  opacity: 0.95;
+}
+
+.btn-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn-content i {
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.btn-content span {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  word-wrap: break-word;
+}
+
+/* Different Button Colors */
+.color1 { background-color: #6C5CE7; }
+.color2 { background-color: #00B894; }
+.color3 { background-color: #E17055; }
+.color4 { background-color: #00CEC9; }
+.color5 { background-color: #0984E3; }
+.color6 { background-color: #D63031; }
+.color7 { background-color: #2D3436; }
+.color8 { background-color: #FDCB6E; color: #000; }

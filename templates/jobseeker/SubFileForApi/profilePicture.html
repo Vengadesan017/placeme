@@ -2,7 +2,7 @@
 <!-- The Modal for ==========personal Info===================== -->
 <div class="modal" id="PictureModal">
     <div class="modal-dialog">
-        <form method="post" action="#">
+        <form method="post" action="#"  enctype="multipart/form-data">
             {% csrf_token %}
         <div class="modal-content">
     
@@ -13,7 +13,7 @@
         </div>
     
         <!-- Modal Body -->
-        <div class="modal-body">
+        <div class="modal-body2">
         <div class="margin20">
         <div class="">
 
@@ -22,7 +22,7 @@
                     <td>
                     <div class="upload-box">
                     <label for="profile_picture" id="profile_pictureLabel">Choose Profile Picture</label>
-                    <input type="file" id="profile_picture" />
+                    <input type="file" name="profile_pic" id="profile_picture" />
                     </div>
                         <!-- <div class="custom-file-upload">
 
@@ -38,7 +38,7 @@
     
         <!-- Modal Footer -->
         <div class="modal-footer">
-            <button type="submit" name="profile_personal_edit" class="model-btn-save" id="">Save</button>
+            <button type="submit" name="upload_profile" class="model-btn-save" id="">Save</button>
         </div>
     
         </div>

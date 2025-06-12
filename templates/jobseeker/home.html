@@ -26,7 +26,7 @@ Search Job
 <form method="get" action="{% url 'job_seeker:search' %}" class="home-form">
 <div class="search-section">
     <div class="search-bar">
- 
+            <div class="input-wrapper">
             <input type="text" name='q' placeholder="Jobs title / company / Skills" id="searchInput"  autocomplete="off" required>
             <div class="recommendation-box" id="recommendationBox">
 
@@ -39,11 +39,14 @@ Search Job
                     {% endfor %}
 
             </div>
+            </div>
             <div class="divider"></div> <!-- Divider -->
+            <div class="input-wrapper">
             <input type="text" name='p' id="locationInput" autocomplete="off" placeholder="Location / remote">
             <div class="recommendation-box" id="locationRecommendationBox">
                     
                 
+            </div>
             </div>
             <button>Search Jobs</button>
 
@@ -58,13 +61,73 @@ Search Job
   </div>    
 {% endfor %}
 {% endif %}
+
+{% if upload_resume_url or complete_profile_url or review_offer_url %}
+<div class="dream-job-header">
+    <h1>INSTANT ACTIONS</h1>
+</div>
+<div class="home-ads">
+    <div class="action-button-container">
+        {% if upload_resume_url %}
+        <a href="{{ upload_resume_url }}" class="action-btn color1">
+            <div class="btn-content"><i class="fas fa-file-upload"></i><span>Upload Resume</span></div>
+        </a>
+        {% endif %}
+
+        {% if complete_profile_url %}
+        <a href="{{ complete_profile_url }}" class="action-btn color2">
+            <div class="btn-content"><i class="fas fa-user-check"></i><span>Complete Profile</span></div>
+        </a>
+        {% endif %}
+
+        {% if review_offer_url %}
+        <a href="{{ review_offer_url }}" class="action-btn color3">
+            <div class="btn-content"><i class="fas fa-envelope-open-text"></i><span>Review Offer Letter</span></div>
+        </a>
+        {% endif %}
+
+        {% if onboarding_url %}
+        <a href="{{ onboarding_url }}" class="action-btn color4">
+            <div class="btn-content"><i class="fas fa-clipboard-list"></i><span>Onboarding Awaited</span></div>
+        </a>
+        {% endif %}
+
+        {% if check_attendance_url %}
+        <a href="{{ check_attendance_url }}" class="action-btn color5">
+            <div class="btn-content"><i class="fas fa-calendar-check"></i><span>Check Attendance</span></div>
+        </a>
+        {% endif %}
+
+        {% if apply_leave_url %}
+        <a href="{{ apply_leave_url }}" class="action-btn color6">
+            <div class="btn-content"><i class="fas fa-calendar-minus"></i> <span>Apply for Leave</span></div>
+        </a>
+        {% endif %}
+
+        {% if logout_url %}
+        <a href="{{ logout_url }}" class="action-btn color7">
+            <div class="btn-content"><i class="fas fa-sign-out-alt"></i><span>Log Out</span></div>
+        </a>
+        {% endif %}
+
+        {% if feedback_url %}
+        <a href="{{ feedback_url }}" class="action-btn color8">
+            <div class="btn-content"><i class="fas fa-comment-dots"></i><span>Give Feedback</span></div>
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+{% else %}
+
 <div class="dream-job-header">
     <h1>FIND YOUR DREAM JOB</h1>
 </div>
 <div class="home-ads">
-
+    <!-- Public (guest) content -->
 </div>
 
+{% endif %}
 
 
 

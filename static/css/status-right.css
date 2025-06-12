@@ -136,11 +136,16 @@
     border-top: 1px solid #d0d0d0;
     padding: 15px 10px 15px 0;
     
+.right--div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 }
 
 .right-recommdation-text{
     font-size: 18px;
     color: #333;
     font-weight: 600;
-    margin-bottom: 10px;
+
 }

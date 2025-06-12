@@ -1,5 +1,5 @@
 from django.utils import timezone
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, NoReverseMatch, reverse
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -42,17 +42,35 @@ from django.db import connection, reset_queries
 import time
 
 
-
+def safe_reverse(name):
+    try:
+        return reverse(name)
+    except NoReverseMatch:
+        return False
 
 def Home(request):
     try:
-        jobs_titles = Jobs.objects.values_list('title', flat=True) \
-            .annotate(job_count=Count('title')) \
-            .order_by('-job_count')[:5]
-        # jobs_titles = Jobs.objects.values_list('title', flat=True).distinct()
-        context = {
-            'jobs_titles': jobs_titles,
-        }
+        
+        if request.user.is_authenticated:
+            context = {
+                "upload_resume_url": safe_reverse("job_seeker:profile"),
+                "complete_profile_url": safe_reverse("job_seeker:profile"),
+                "review_offer_url": safe_reverse("review_offer"),
+                "onboarding_url": safe_reverse("onboarding"),
+                "check_attendance_url": safe_reverse("check_attendance"),
+                "apply_leave_url": safe_reverse("apply_leave"),
+                "logout_url": safe_reverse("auth:logout"),
+                "feedback_url": safe_reverse("job_seeker:home"),
+            }
+        else:
+            context = {}
+        # jobs_titles = Jobs.objects.values_list('title', flat=True) \
+        #     .annotate(job_count=Count('title')) \
+        #     .order_by('-job_count')[:5]
+        # # jobs_titles = Jobs.objects.values_list('title', flat=True).distinct()
+        # context = {
+        #     'jobs_titles': jobs_titles,
+        # }
         return render(request,'jobseeker/home.html',context)
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
@@ -104,7 +122,7 @@ def Profile(request):
                         candidate.profile_pic = request.FILES['profile_pic']
 
                     candidate.save()
-                    messages.success(request, "Profile picture updated successfully.")
+                    messages.info(request, "Profile picture updated successfully.")
                     
                 else:
                     print("Form errors:", form.errors)

@@ -2,7 +2,7 @@
 <!-- The Modal for ==========personal Info===================== -->
 <div class="modal" id="ResumeModal">
     <div class="modal-dialog">
-        <form method="post" action="#">
+        <form method="post" action="#"  enctype="multipart/form-data">
             {% csrf_token %}
         <div class="modal-content">
     
@@ -13,7 +13,7 @@
         </div>
     
         <!-- Modal Body -->
-        <div class="modal-body">
+        <div class="modal-body2">
         <div class="margin20">
         <div class="">
 
@@ -24,7 +24,7 @@
                         <td>
                         <div class="upload-box">
                         <label for="resume" id="resumeLabel">Choose Resume</label>
-                        <input type="file" id="resume" />
+                        <input type="file" name="resume" id="resume" />
                         </div>
                     </tr>
                     <tr><td><b>Supported formats: PDF, DOC, DOCX up to 5MB</b></td></tr>
@@ -37,7 +37,7 @@
     
         <!-- Modal Footer -->
         <div class="modal-footer">
-            <button type="submit" name="profile_personal_edit" class="model-btn-save" id="">Save</button>
+            <button type="submit" name="upload_resume" class="model-btn-save" id="">Save</button>
         </div>
     
         </div>

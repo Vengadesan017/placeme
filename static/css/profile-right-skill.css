@@ -8,11 +8,11 @@
 .skill-container {
   min-height: 400px;
   height: auto;
-  /*background-color: rgb(135, 136, 189);*/
+  /* background-color: rgb(135, 136, 189); */
   margin-top: 20px;
   padding: 20px;
   border-radius: 15px;
-  box-shadow: 0px 0px 10px 0px #555;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   /* mod */
   background-color: #fff;
 }
@@ -20,14 +20,18 @@
 .education {
   min-height: 190px;
   height: auto;
-  /*background-color: brown;*/
+  /* background-color: brown; */
 }
 
 .education-name1 {
   display: flex;
-  /*background-color: bisque;*/
+  /* background-color: bisque; */
   justify-content: space-between;
 
+}
+.education-name1 h4{
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .add-div {
@@ -35,16 +39,22 @@
 }
 
 .add-div a {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 16px;
+  font-weight: 500;
   margin-right: 7px;
+  color: #141b5f;
 
+}
+
+.add-div i{
+  font-size: 16px;
+  color: #141b5f;
 }
 
 .education-name2 {
   min-height: 150px;
   height: auto;
-  /*background-color: cadetblue;*/
+  /* background-color: cadetblue; */
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -57,7 +67,7 @@
 .education-name2-2,
 .education-name2-3 {
 
-  /*background-color: cornflowerblue;*/
+  /* background-color: cornflowerblue; */
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
@@ -69,15 +79,24 @@
   width: 70%;
 }
 
-.education-name2-1-col h2 {
+.education-name2-1-col h4 {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 500;
+  color:#333;
+}
+
+
+.education-name2-1-col h2 {
+  font-size: 16px;
+  font-weight: 500;
+  color:#333;
 }
 
 .education-name2-1-col p {
   font-size: 14px;
   font-weight: 400;
-
+  color: #555;
+  /* color: #999; */
 }
 
 .education-name2-1-date {
@@ -88,24 +107,25 @@
 .key-skills {
   min-height: 100px;
   height: auto;
-  /*background-color: bisque;*/
+  /* background-color: bisque; */
   padding-top: 10px;
+  padding-bottom: 10px;
   position: relative;
-  border-top: 2px solid gray;
-  border-bottom: 2px solid gray;
+  border-top: 1px solid #d0d0d0;
+  border-bottom: 1px solid #d0d0d0;
 
 }
 
 .key-headline {
   display: flex;
   justify-content: space-between;
-  /*background-color: blue;*/
+  /* background-color: blue; */
   height: auto;
 }
 
 .key-headline h4 {
   font-size: 20px;
-
+  font-weight: 600;
 }
 
 .key-add-div {
@@ -115,17 +135,18 @@
 }
 
 .key-add-div a {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 500;
   margin-right: 7px;
+  color: #141b5f;
 }
 
-.fa-pen-to-square {
-  font-size: 22px;
-}
 
 .key-add-div .fa-pen-to-square {
-  margin-top: 2px;
+  font-size: 16px;
+  margin-top: 3px;
+  margin-left: 5px;
+  color: #141b5f;
 }
 
 
@@ -137,7 +158,7 @@
 }
 
 .key-list-div {
-  width: 90%;
+  width: 89%;
 }
 
 .key-list-ul {
@@ -159,15 +180,15 @@
 .key-list-li {
   margin-left: 10px;
   background-color: #eaeaea;
-  padding: 5px 10px;
+  padding: 7px 14px;
   border-radius: 50px;
-
+  color: #333;
   /* mod */
   /*margin-left: 40px;*/
   margin-top: 10px;
   margin-bottom: 5px;
   overflow-y: hidden;
-
+  font-size: 14px;
 
 
 }
@@ -188,24 +209,31 @@
   padding-right: 7px;
   padding-top: 3px;
   padding-bottom: 3px;
-  /*background-color: blueviolet;*/
-  background-color: snow;
+  background-color: #fff;
+  /* background-color: snow; */
+  background-color: #fff;
   border: none;
   border-radius: 50px;
-  text-decoration: underline;
+  font-size: 14px;
+    color: #555;
 
   /* mod */
   display: inline-block;
 }
 
+.fa-arrow-right{
+ color: #777;
+  
+}
 .close-btn {
   margin-top: 17px;
   padding-left: 7px;
   padding-right: 7px;
   padding-top: 3px;
   padding-bottom: 3px;
-  /*background-color: blueviolet;*/
-  background-color: snow;
+  /* background-color: blueviolet; */
+  /* background-color: snow; */
+  background-color: #fff;
   border: none;
   border-radius: 50px;
   text-decoration: underline;

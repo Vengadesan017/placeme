@@ -8,6 +8,10 @@
 
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 65px; /* match your navbar height */
+}
 body {
   font-family: sans-serif;
   background-color: #f4f5ff;

@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="{% static 'css/profile-right.css' %}">
 <link rel="stylesheet" href="{% static 'css/profile-right-skill.css' %}">
 <link rel="stylesheet" href="{% static 'css/profile-right-skill-2.css' %}">
+<link rel="stylesheet" href="{% static 'css/profile-moblie-view.css' %}">
 <link rel="stylesheet" href="{% static 'css/model.css' %}">
 {% endblock statics %}
 
@@ -31,12 +32,6 @@
 {% endwith %} {% endcomment %}
                     {% if candidate.profile_pic %}
                     <img src="{{candidate.profile_pic.url }}" class="pic-photo" alt="profile pic" width="100%">
-                    <a href="{{ candidate.profile_pic.url }}" download>
-                        Download Profile Picture
-                    </a>
-                    <a href="{{ candidate.profile_pic.url }}">
-                        link
-                    </a>
                 {% else %}
                     <img src="{% static 'img/image.png' %}" class="pic-photo" alt="profile pic" width="100%">
                 {% endif %}
@@ -112,6 +107,48 @@
             {% endfor %}
           {% endif %}
             <div class="info-container" id="personal-info">
+                    <div class="info-profile-mv">
+
+                        <div class="pic-div-mv">
+                    {% if candidate.profile_pic %}
+                    <img src="{{candidate.profile_pic.url }}" class="pic-photo" alt="profile pic" width="100%">
+                {% else %}
+                    <img src="{% static 'img/image.png' %}" class="pic-photo" alt="profile pic" width="100%">
+                {% endif %}
+
+
+                            <button class="btn-mv">+</button>
+                        </div>
+
+
+                        <div class="info-name-mv">
+
+
+
+                            <div class="info-name1-mv">
+                                <!-- mod -->
+                                <div class="name-div-mv">
+                                    <h1 id="userName">Vengadesan G <a href="##"
+                                            class="open-modal-btn" data-modal-id="PersonalModal"> <i
+                                                class="fa-solid fa-pencil"></i></a></h1>
+
+                                </div>
+                                <div class="detial-div-name-mv">
+                                    <p>Diplamo/ITI</p>
+                                    <p1>Don bosco disloma and polytechnic college</p1>
+                                </div>
+
+                            </div>
+                            <div class="info-date-mv">
+                                <p class="update-p-mv">Last Updated -</p>
+                                <p class="date-mv"> Jan. 25, 2025</p>
+                            </div>
+
+
+                        </div>
+                        
+
+                    </div>
                 <div class="info-name">
 
 
@@ -259,7 +296,7 @@
             <div class="skill-container" id="education">
                 <div class="education">
                     <div class="education-name1">
-                        <h2>Education</h2>
+                        <h4>Education</h4>
                         <div class="add-div">
                             <a href="#" class="open-modal-btn" data-modal-id="EduModal" >Add</a>
                             <i id="openEduEditModalButton" class="fa-solid fa-pen-to-square open-modal-btn" data-modal-id="EduEditModal"></i>
@@ -561,5 +598,19 @@
         {% include "jobseeker/SubFileForApi/profileResume.html" %}
         
     <script src="{% static 'js/jobseeker/profile.js' %}"></script>
+
+        <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById('resume').addEventListener('change', function () {
+      const fileName = this.files[0]?.name || "Choose Resume";
+      document.getElementById('resumeLabel').textContent = fileName;
+    });
+
+    document.getElementById('profile_picture').addEventListener('change', function () {
+      const fileName = this.files[0]?.name || "Choose Resume";
+      document.getElementById('profile_pictureLabel').textContent = fileName;
+    });
+  });
+</script>
  
     {% endblock content %}

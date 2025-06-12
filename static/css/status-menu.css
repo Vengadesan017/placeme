@@ -305,6 +305,18 @@
 
 
 
+.center-from-top {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .job-card{
+        margin: 10px;
+    }
+}
+
 
 
 

@@ -12,13 +12,16 @@
   height: auto;
 
   /* mod */
-  width: 800px;
+  /* width: 800px; */
+
+  width: 66.67%; /* 800 / 1200 * 100 */
+  margin-left: 3%; /* 50 / 1200 * 100 */
 
 
   margin-top: 40px;
-  /*background-color: aqua;*/
-  /*background-color: white;*/
-  margin-left: 50px;
+  /* background-color: aqua; */
+  /* background-color: white; */
+  /* margin-left: 50px; */
   border-radius: 15px;
 }
 
@@ -26,7 +29,8 @@
 .info-container {
   min-height: 250px;
   height: auto;
-  /*background-color: rgb(104, 77, 77);*/
+  width: 100%;
+  /* background-color: rgb(104, 77, 77); */
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 20px;
@@ -35,49 +39,107 @@
 
   /* mod */
   background-color: #fff;
-  box-shadow: 0px 0px 10px 0px #555;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .info-name {
   /* mod */
   min-height: 80px;
   height: auto;
-  /*background-color: bisque;*/
+  /* background-color: bisque; */
   display: flex;
 
 }
 
-.info-name1 {
+
+
+
+/* .profile-pic-mv {
+  background-color: bisque;
+  height: 30%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+
+} */
+.info-profile-mv {
   /* mod */
   min-height: 80px;
   height: auto;
-  /*background-color: blue;*/
+  /* background-color: rgb(208, 18, 97); */
+  display: none;
+  
+  padding-bottom: 10px;
 
-  width: 74%;
+}
+.pic-div-mv {
+  /* background-color: rgb(65, 192, 133); */
+  width: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
-.info-date {
+.btn-mv {
+  padding: 1px;
+  padding-left: 7px;
+  padding-right: 7px;
+  border-radius: 80px;
+  font-size: 16px;
+  position: absolute;
+  bottom: 5px;
+  right: 70px;
+  border-style: none;
+  background-color: palevioletred;
+  color: white;
+}
+
+.info-name-mv {
   /* mod */
-  min-height: 80px;
+  min-height: 100px;
   height: auto;
-  /*background-color: cadetblue;*/
-  width: 26%;
-
+  /* background-color: bisque; */
   display: flex;
-  justify-content: end;
-  /*background-color: blanchedalmond;*/
+  flex-direction: column;
+  width: calc(100% - 250px);
+
 }
 
-.name-div {
+.info-name1-mv {
+  /* mod */
+  min-height: 100px;
+  height: auto;
+  /* background-color: blue; */
+
+  width: 100%;
+}
+
+.info-date-mv {
+  /* mod */
+  min-height: 50px;
+  height: auto;
+  /* background-color: cadetblue; */
+  width: 100%;
+
   display: flex;
-  /*background-color: rgb(71, 216, 216);*/
+  justify-content: start;
+  /* background-color: blanchedalmond; */
+}
+
+.name-div-mv {
+  display: flex;
+  /* background-color: rgb(71, 216, 216); */
   flex-wrap: wrap;
 
 }
 
-.name-div h1 {
+.name-div-mv h1 {
   font-size: 28px;
-  font-weight: 900;
+  font-weight: 600;
   flex-wrap: wrap;
 
 }
@@ -89,29 +151,102 @@
 
 }
 
-.detial-div-name p {
+.detial-div-name-mv p {
   font-size: 12px;
   font-weight: 500;
+  color: #555555;
 
+}
+
+.info-date-mv p {
+  font-size: 13px;
+  margin-top: 15px;
+  color: #555555;
+}
+
+.update-p-mv {
+  color: #555555;
+}
+
+.date-mv {
+  color: #555555;
+}
+
+
+
+.info-name1 {
+  /* mod */
+  min-height: 80px;
+  height: auto;
+  /* background-color: blue; */
+
+  width: 60%;
+}
+
+.info-date {
+  /* mod */
+  min-height: 80px;
+  height: auto;
+  /* background-color: cadetblue; */
+  width: 40%;
+
+  display: flex;
+  justify-content: end;
+  /* background-color: blanchedalmond; */
+}
+
+.name-div {
+  display: flex;
+  /* background-color: rgb(71, 216, 216); */
+  flex-wrap: wrap;
+
+}
+
+.name-div h1 {
+  font-size: 28px;
+  font-weight: 600;
+  flex-wrap: wrap;
+
+}
+
+.fa-pencil {
+  font-size: 20px;
+  margin-top: 13px;
+  margin-left: 2px;
+  color: #555;
+
+}
+
+.detial-div-name p {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.detial-div-name p1{
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
 }
 
 .info-date p {
-  font-size: 13px;
+  font-size: 14px;
   margin-top: 15px;
+  
 }
 
 .update-p {
-  color: gray;
+  color: #999;
 }
 
 .date {
-  color: rgb(110, 110, 110);
+  color: #999;
 }
 
 .detail-main {
   min-height: 160px;
   height: auto;
-  /*background-color: blueviolet;*/
+  /* background-color: blueviolet; */
   display: flex;
 }
 
@@ -143,15 +278,24 @@
   justify-content: space-evenly;
   height: 140px;
   width: 100%;
-  border-right: 2px solid rgb(168, 158, 158);
+  border-right: 1px solid #d0d0d0;
+  gap: 8px;
+  margin-top: 5px;
 }
+
 
 .gender-box-person {
   display: flex;
+  color: #555555;
 }
 
 .gender-box-date {
   display: flex;
+  color: #555555;
+}
+
+.gender-box-date p a{
+  color: #555555;
 }
 
 .gender-box-place {
@@ -161,7 +305,9 @@
 
 }
 
-
+.gender-box-place a{
+  color: #555555;
+}
 
 
 .fa-user,
@@ -169,21 +315,28 @@
 .fa-location-dot {
   margin-right: 8px;
   margin-top: 3px;
+
 }
 
 .fa-location-dot {
   font-size: 18px;
+  color: #777; 
 }
 
 .gender-box-place p {
   font-size: 14px;
+  color: #555555;
 
 
 }
 
+.open-modal-btn{
+  color: #555555;
+}
 .gender-box-date p {
   margin-top: 2px;
   font-size: 14px;
+  color: #555555;
 }
 
 .phone-box {
@@ -212,6 +365,7 @@
 /* mod */
 .phone-box-ul li {
   margin-bottom: 2px;
+  color: #555555;
 }
 
 .phone-box-person {
@@ -245,27 +399,30 @@
 .fa-phone {
   margin-right: 8px;
   margin-top: 3px;
+  color: #777;
 }
 
 .fa-envelope {
   margin-right: 8px;
   margin-top: 5px;
+  color: #777;
 }
 
 .fa-suitcase {
+  color: #777;
   margin-right: 8px;
   font-size: 18px;
 }
 
 .phone-box-place p {
-  font-size: 14px;
+  font-size: 16px;
 
 
 }
 
 .phone-box-date p {
   margin-top: 2px;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 
@@ -289,12 +446,13 @@
 
 /* mod   */
 .color-div {
-  height: 120px;
-  background-color: #FFBD03;
+  height: 125px;
+  /*background-color: #FFBD11;*/
+  background-color: #e6c466f6; 
   display: flex;
   border-radius: 15px;
   width: 90%;
-
+  padding: 7px 8px 9px 8px;
 
 }
 
@@ -325,21 +483,30 @@
 .add-resume {
   /*display: flex;*/
   font-size: 16px;
-  margin-left: 10px;
+  margin-left: 15px;
+  color: #333;
+  font-weight: 500;
 }
 
 .fa-file {
   margin-right: 10px;
   margin-top: 2px;
   font-size: 20px;
+  color: #333;
 }
 
 .resume-a1 .fa-regular {
   font-size: 20px;
   margin-top: 2px;
+  color: #333;
 }
 
-
+.resume p{
+  font-size: 16px;
+  margin-left: 5px;
+  font-weight: 500;
+  color: #333;
+}
 
 
 
@@ -365,13 +532,15 @@
 /* mod */
 .upload-btn {
   width: 40%;
-  margin-right: 10px;
   border: none;
-  border-radius: 15px;
-  padding-top: 2px;
-  padding-bottom: 2px;
+  border-radius: 10px;
+  padding:7px 7px 7px 7px;
   font-size: 16px;
   background-color: darkblue;
   color: white;
-
+  position: relative;
+  left:  200px;
+  top: -20px
 }
+
+
