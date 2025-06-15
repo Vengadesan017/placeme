@@ -12483,3 +12483,52 @@ django.db.utils.OperationalError: (1054, "Unknown column 'job_seekers_onboarding
 [2025-06-15 14:55:24,617] [INFO] [django.server] "GET /profile/ HTTP/1.1" 302 0
 [2025-06-15 14:55:25,182] [INFO] [django.utils.autoreload] C:\Users\User\Desktop\Hiring Platform Project\SourceCode\placeme\job_seekers\views.py changed, reloading.
 [2025-06-15 14:55:26,118] [INFO] [django.utils.autoreload] Watching for file changes with StatReloader
+[2025-06-15 14:55:27,213] [INFO] [django.server] "GET /profile/ HTTP/1.1" 200 128811
+[2025-06-15 14:55:36,511] [INFO] [django.server] "POST /profile/ HTTP/1.1" 302 0
+[2025-06-15 14:55:36,987] [INFO] [django.server] "GET /profile/ HTTP/1.1" 200 129525
+[2025-06-15 14:55:39,196] [INFO] [django.server] "GET /profile/ HTTP/1.1" 200 129313
+[2025-06-15 14:56:23,789] [INFO] [django.server] "GET /profile/ HTTP/1.1" 200 129315
+[2025-06-15 14:56:39,473] [INFO] [django.server] "POST /profile/ HTTP/1.1" 302 0
+[2025-06-15 14:56:40,133] [INFO] [django.server] "GET /profile/ HTTP/1.1" 200 130208
+[2025-06-15 15:00:36,260] [INFO] [django.server] "GET /profile/ HTTP/1.1" 200 129983
+[2025-06-15 15:00:37,931] [INFO] [django.server] "GET / HTTP/1.1" 200 9330
+[2025-06-15 15:00:37,989] [INFO] [django.server] "GET /api/keyword/ HTTP/1.1" 200 1746
+[2025-06-15 15:00:38,776] [INFO] [django.server] "GET /onboarding/7/personal HTTP/1.1" 200 33260
+[2025-06-15 15:00:46,896] [INFO] [django.server] "GET /onboarding/7/personal HTTP/1.1" 200 33268
+[2025-06-15 15:01:30,276] [INFO] [django.server] "GET /onboarding/7/personal HTTP/1.1" 200 33228
+[2025-06-15 15:01:38,844] [INFO] [django.server] "GET /onboarding/7/personal HTTP/1.1" 200 33212
+[2025-06-15 15:01:39,096] [INFO] [django.server] "GET /static/css/notification.css HTTP/1.1" 200 2136
+[2025-06-15 15:01:39,098] [INFO] [django.server] "GET /static/bootstrap/Content/toastr/toastr-responsive.css HTTP/1.1" 200 1150
+[2025-06-15 15:01:39,101] [INFO] [django.server] "GET /static/bootstrap/Content/toastr/toastr.css HTTP/1.1" 200 4732
+[2025-06-15 15:01:39,108] [INFO] [django.server] "GET /static/css/nav.css HTTP/1.1" 200 5607
+[2025-06-15 15:01:39,111] [INFO] [django.server] "GET /static/css/model.css HTTP/1.1" 200 5751
+[2025-06-15 15:01:39,115] [INFO] [django.server] "GET /static/bootstrap/Content/Common.css HTTP/1.1" 200 14072
+[2025-06-15 15:01:39,124] [INFO] [django.server] "GET /static/css/error.css HTTP/1.1" 200 1076
+[2025-06-15 15:01:39,128] [INFO] [django.server] "GET /static/img/logo.svg HTTP/1.1" 200 21415
+[2025-06-15 15:01:39,132] [INFO] [django.server] "GET /static/bootstrap/Scripts/modernizr-2.8.3.js HTTP/1.1" 200 51351
+[2025-06-15 15:01:39,135] [INFO] [django.server] "GET /static/css/recruiters/footer.css HTTP/1.1" 200 3156
+[2025-06-15 15:01:39,147] [INFO] [django.server] "GET /static/bootstrap/Content/bootstrap-datetimepicker.min.css HTTP/1.1" 200 7789
+[2025-06-15 15:01:39,152] [INFO] [django.server] "GET /static/bootstrap/Content/bootstrap.min.css HTTP/1.1" 200 121419
+[2025-06-15 15:01:39,156] [INFO] [django.server] "GET /static/js/nav.js HTTP/1.1" 200 489
+[2025-06-15 15:01:39,161] [INFO] [django.server] "GET /static/js/jobseeker/notification.js HTTP/1.1" 200 798
+[2025-06-15 15:01:39,161] [INFO] [django.server] "GET /static/js/modal.js HTTP/1.1" 200 854
+[2025-06-15 15:01:39,169] [INFO] [django.server] "GET /static/js/error.js HTTP/1.1" 200 2086
+[2025-06-15 15:01:39,170] [INFO] [django.server] "GET /static/js/script.js HTTP/1.1" 200 468
+[2025-06-15 15:01:39,321] [WARNING] [django.request] Not Found: /favicon.ico
+[2025-06-15 15:01:39,322] [WARNING] [django.server] "GET /favicon.ico HTTP/1.1" 404 6638
+[2025-06-15 15:02:25,655] [INFO] [django.server] "GET /onboarding/7/personal HTTP/1.1" 200 33212
+[2025-06-15 15:02:26,684] [INFO] [django.server] "GET /onboarding/7/family HTTP/1.1" 200 20469
+[2025-06-15 15:02:28,097] [INFO] [django.server] "GET /onboarding/7/education HTTP/1.1" 200 68059
+[2025-06-15 15:02:29,338] [INFO] [django.server] "GET /onboarding/7/experience HTTP/1.1" 200 18117
+[2025-06-15 15:02:30,206] [INFO] [django.server] "GET /onboarding/7/identity HTTP/1.1" 200 15631
+[2025-06-15 15:02:31,480] [INFO] [django.server] "GET /onboarding/7/education HTTP/1.1" 200 68059
+[2025-06-15 15:02:32,054] [INFO] [django.server] "GET /onboarding/7/family HTTP/1.1" 200 20469
+[2025-06-15 15:06:37,335] [INFO] [django.utils.autoreload] C:\Users\User\Desktop\Hiring Platform Project\SourceCode\placeme\placeme\settings.py changed, reloading.
+[2025-06-15 15:06:38,451] [INFO] [django.utils.autoreload] Watching for file changes with StatReloader
+[2025-06-15 15:07:25,744] [INFO] [django.utils.autoreload] C:\Users\User\Desktop\Hiring Platform Project\SourceCode\placeme\placeme\settings.py changed, reloading.
+[2025-06-15 15:07:26,727] [INFO] [django.utils.autoreload] Watching for file changes with StatReloader
+[2025-06-15 15:07:32,300] [INFO] [django.utils.autoreload] C:\Users\User\Desktop\Hiring Platform Project\SourceCode\placeme\placeme\settings.py changed, reloading.
+[2025-06-15 15:07:33,202] [INFO] [django.utils.autoreload] Watching for file changes with StatReloader
+[2025-06-15 15:07:46,180] [INFO] [django.utils.autoreload] C:\Users\User\Desktop\Hiring Platform Project\SourceCode\placeme\placeme\settings.py changed, reloading.
+[2025-06-15 15:07:47,031] [INFO] [django.utils.autoreload] Watching for file changes with StatReloader
+[2025-06-15 15:08:01,129] [INFO] [django.utils.autoreload] C:\Users\User\Desktop\Hiring Platform Project\SourceCode\placeme\placeme\settings.py changed, reloading.

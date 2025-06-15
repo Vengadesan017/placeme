@@ -2,6 +2,7 @@ asgiref==3.8.1
 certifi==2025.1.31
 charset-normalizer==3.4.1
 Django==5.2
+django-htmx==1.23.0
 django-ratelimit==4.1.0
 django-recaptcha==4.1.0
 djangorestframework==3.16.0
