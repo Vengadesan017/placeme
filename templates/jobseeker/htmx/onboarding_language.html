@@ -1,0 +1,44 @@
+<!-- Modal for Adding or Editing Languages -->
+<div class="modal" id="PreferLanguageModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 class="modal-title">Add or Edit Your Known Languages</h3>
+                <button
+                    type="button"
+                    class="btn-close close-modal-btn"
+                    id="closePreferLanguageEditModalButton"
+                    hx-get="{% url 'job_seeker:onboarding_htmx_language_show_partial' %}"
+                    hx-target="#onboarding-language-td"
+                    hx-swap="innerHTML"
+                    hx-on="htmx:afterRequest: closeOpenedModal()"
+                    ><i class='fas fa-times edit'></i>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body" id="language-modal-body" hx-target="this" hx-swap="innerHTML">
+            {% comment %} {% include 'jobseeker/htmx/onboarding_language_table.html' with languages=languages %} {% endcomment %}
+            {% include 'jobseeker/htmx/onboarding_language_table.html' %}
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                {% comment %} <button type="button" class="btn-close close-modal-btn model-btn-save" id="closePreferLanguageEditModalButton">Close</button> {% endcomment %}
+                {% comment %} <button
+    type="button"
+    class="btn-close close-modal-btn model-btn-save"
+    id="closePreferLanguageEditModalButton"
+    hx-get="{% url 'job_seeker:onboarding_htmx_language_show_partial' %}"
+    hx-target="#onboarding-language-td"
+    hx-swap="innerHTML"
+    hx-on="htmx:afterRequest: closeOpenedModal()"
+>Close</button> {% endcomment %}
+            </div>
+
+        </div>
+    </div>
+</div>

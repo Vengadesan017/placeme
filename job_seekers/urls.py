@@ -19,6 +19,9 @@ urlpatterns = [
     # API
     path('api/search/',views.ApiSearch,name='api_search'),
     path('api/keyword/',views.ApiTitle,name='api_title'),
+    
+    # HTMX
+    path('htmx/keyword/',views.HTMXOnboardingLanguages,name='onboarding_htmx_language_show_partial'),
 
 ]
 

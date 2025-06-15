@@ -1,0 +1,33 @@
+
+                    {% if not family_form.instance.family_member_id %}
+                        {% include 'jobseeker/htmx/onboarding_family_save.html' %}
+                    {% endif %}
+                    {%for fam in my_family%}
+                        {% if family_form.instance.family_member_id == fam.family_member_id %}
+                            {% include 'jobseeker/htmx/onboarding_family_save.html' %}
+                        {% else %}
+                        <tr>
+                            
+                            <td>{{fam.first_name}}</td>
+                            <td>{{fam.last_name}} </td>
+                            <td>{{fam.gender}}</td>
+                            <td>{{fam.relationship}}</td>
+                            <td>{{fam.dob|date:'d-m-Y'}} </td>
+                            <td>{{fam.aadhar_no}}</td>
+                            <td>{{fam.mobile_no}} </td>
+                            <td>
+                        <button 
+                            formnovalidate
+                            class="btn btn-warning btn-sm"
+                            type="button"
+                            hx-post="{% url 'job_seeker:onboarding' onboarding_id=onboarding_obj.Onbording_id page='family' %}"
+                            hx-target="#family-body"
+                            hx-swap="innerHTML"
+                            hx-vals='{"edit_family": "{{ fam.family_member_id }}"}'>
+
+                                <i class="fa-solid fa-pen-to-square open-modal-btn"></i>
+                            </button>
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% endfor %}

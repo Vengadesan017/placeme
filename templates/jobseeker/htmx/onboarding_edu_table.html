@@ -1,0 +1,71 @@
+  {% if not education_form.instance.edu_map_id %}
+    {% include 'jobseeker/htmx/onboarding_edu_save.html' %}
+{% endif %}
+ {%for edu in my_education %}
+        {% if education_form.instance.edu_map_id == edu.edu_map_id %}
+        {% include 'jobseeker/htmx/onboarding_edu_save.html' %}
+    {% else %}
+<tr>
+<!-- Course Level -->
+<td>
+    {{ edu.edu_id.course.level.name }}
+</td>
+
+<!-- Course Name -->
+<td>
+    {{ edu.edu_id.course.name }}
+</td>
+
+<!-- Education Name -->
+<td>
+    {{ edu.edu_id.name }}
+</td>
+
+<!-- Institute -->
+<td>
+    {{ edu.institute }}
+</td>
+
+<!-- Type -->
+<td>
+    {{ edu.type_id }}
+</td>
+
+<!-- Year of Passing -->
+<td>
+    {{ edu.year_of_joining|default:'' }} -
+    {{ edu.year_of_passing|default:'' }}
+</td>
+
+<!-- Score -->
+<td>
+    {{ edu.score }}
+</td>
+
+<!-- Document -->
+<td>
+    {% with edu.doc.name|cut:"UsersDF/100/000/001/onboarding/" as filename %}
+        {{ filename }}
+    {% endwith %}
+</td>
+
+<!-- Action Buttons -->
+<td>
+    <button 
+        formnovalidate
+        class="btn btn-warning btn-sm"
+        type="button"
+        hx-post="{% url 'job_seeker:onboarding' onboarding_id=onboarding_obj.Onbording_id page='education' %}"
+        hx-target="#education-body"
+        hx-swap="innerHTML"
+        hx-vals='{"edit_education": "{{ edu.edu_map_id }}"}'>
+
+            <i class="fa-solid fa-pen-to-square open-modal-btn"></i>
+        </button>
+</td>
+
+</tr>
+{% endif %}
+{% endfor %}
+
+ 

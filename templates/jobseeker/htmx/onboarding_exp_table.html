@@ -1,0 +1,35 @@
+{% if not experience_form.instance.work_company_id %}
+  {% include 'jobseeker/htmx/onboarding_exp_save.html' %}
+{% endif %}
+
+{% for exp in my_experience %}
+  {% if experience_form.instance.work_company_id == exp.work_company_id %}
+  {% include 'jobseeker/htmx/onboarding_exp_save.html' %}
+  {% else %}
+    <tr>
+      <td>{{ exp.company_name }}</td>
+      <td>{{ exp.company_role }}</td>
+      <td>{{ exp.type_id }}</td>
+      <td>{{ exp.doj|date:"M-Y" }}</td>
+      <td>{{ exp.dol|date:"M-Y" }}</td>
+      <td>{{ exp.reason_for_leaving }}</td>
+      <td>
+        {% if exp.doc %}
+          {% with exp.doc.name|cut:"UsersDF/100/000/001/onboarding/" as filename %}
+            {{ filename }}
+          {% endwith %}
+        {% endif %}
+      </td>
+      <td>
+        <button type="button"
+                class="btn btn-warning btn-sm"
+                hx-post="{% url 'job_seeker:onboarding' onboarding_id=onboarding_obj.Onbording_id page='experience' %}"
+                hx-target="#experience-body"
+                hx-swap="innerHTML"
+                hx-vals='{"edit_experience": "{{ exp.work_company_id }}"}'>
+          <i class="fa-solid fa-pen-to-square open-modal-btn"></i>
+        </button>
+      </td>
+    </tr>
+  {% endif %}
+{% endfor %}

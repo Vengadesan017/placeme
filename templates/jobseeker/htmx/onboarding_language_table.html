@@ -1,0 +1,52 @@
+<form hx-post="{% url 'job_seeker:profile' %}" hx-target="#language-modal-body" hx-swap="innerHTML">
+{% csrf_token %}
+<table class="language-table">
+  <thead>
+    <tr>
+      <th class="lang-col">Language</th>
+      <th class="ability-col">Ability</th>
+      <th class="prof-col">Proficiency Level</th>
+      <th class="action-col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- If no language is selected for editing, show blank form -->
+    {% if not language_form.instance.language_id %}
+        {% include 'jobseeker/htmx/onboarding_language_save.html' %}
+    {% endif %}
+
+    <!-- List existing languages -->
+    {% for lang in languages %}
+    {% if language_form.instance.language_id == lang.language_id %}
+        {% include 'jobseeker/htmx/onboarding_language_save.html' %}
+    {% else %}
+      <tr>
+          <td class="lang-col">{{ lang.language_id }}</td>
+          <td class="ability-col">
+            {{lang.ability_display}}
+          </td>
+          <td class="prof-col">{{ lang.get_proficiency_display }}</td>
+          <td class="action-col">
+
+                        <button 
+                            class="btn btn-warning btn-sm"
+                            type="button"
+                            name="save_language" 
+                            value="{{ lang.user_language_id }}"
+                            hx-post="{% url 'job_seeker:profile' %}"
+                            hx-target="#language-modal-body"
+                            hx-swap="innerHTML"
+                            hx-vals='{"edit_language": "{{ lang.user_language_id }}"}'>
+
+             <i class="fa-solid fa-pen-to-square open-modal-btn"></i>
+        </button>
+          </td>
+        {% endif %}
+      </tr>
+      {% empty %}
+      
+    {% endfor %}
+  </tbody>
+</table>
+
+</form>

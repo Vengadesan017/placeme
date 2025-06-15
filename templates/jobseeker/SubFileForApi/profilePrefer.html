@@ -33,11 +33,13 @@
                         </td>
                     </tr>
                     <tr> 
+                        <label>
                         <td><b>Can you speak</b></td>
                         <td>
                             <input type="checkbox" name="can_speak">
                             
                         </td>
+                    </label>
                     </tr>
                     <tr> 
                         <td><b>Can you Read</b></td>
@@ -55,7 +57,7 @@
                         <td><b>Select Proficiency level</b></td>
                         <td>
                             <select name="proficiency" id="proficiency">
-                                <option value="">Select key Skills</option>
+                                <option value="">Select Proficiency Level</option>
                                 {% for choice in new_language.fields.proficiency.choices %}
                                 {% if choice.0 != "" %}
                                 <option value="{{ choice.0 }}" {% if choice.0 == new_language.initial.proficiency %}selected{% endif %}>

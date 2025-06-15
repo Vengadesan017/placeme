@@ -11,10 +11,10 @@
     width: initial;
 }
 
-.alert strong {
+/* .alert strong {
     display: block;
     margin-bottom: 5px;
-}
+} */
 
 .alert-info {
     background-color: #09c134;

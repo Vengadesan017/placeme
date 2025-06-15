@@ -152,7 +152,8 @@ thead tr td{
   /* background-color: blanchedalmond; */
   overflow-y: hidden;
   height: 25px;
-  width: 85%;
+  /* width: 85%; */
+  display: flex;
   padding-left: 10px;
 }
 
@@ -195,6 +196,7 @@ thead tr td{
   flex-wrap: wrap;
   color: #555;
   font-size: 14px;
+  margin: 3px;
 }
 
 /* end */

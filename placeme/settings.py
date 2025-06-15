@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'administrator',
     'rest_framework',
     'load_data',  
+    'django_htmx',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -66,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_ratelimit.middleware.RatelimitMiddleware',
+    'django_htmx.middleware.HtmxMiddleware',
 ]
 
 ROOT_URLCONF = 'placeme.urls'

@@ -11,7 +11,32 @@ class CreateCompanyForm(forms.ModelForm):
                   'contact_no', 'phone_no', 'admin_name', 'admin_role', 'Company_type', 'no_of_employees',
                   'on_role_employees', 'off_role_employees','business_type', 'industry_type', 'organization_type',
                   'website', 'linkedin', 'about', 'established_at']
-        
+
+        labels = {
+            'candidate': 'Candidate',
+            'company_name': 'Company name',
+            'permanent_address': 'Permanent address',
+            'communication_address': 'Communication address',
+            'state': 'State',
+            'city': 'City',
+            'official_email': 'Official email',
+            'contact_no': 'Contact number',
+            'phone_no': 'Phone number',
+            'admin_name': 'Administrator name',
+            'admin_role': 'Administrator role',
+            'Company_type': 'Company type',
+            'no_of_employees': 'Total number of employees',
+            'on_role_employees': 'On-roll employees',
+            'off_role_employees': 'Off-roll employees',
+            'business_type': 'Business type',
+            'industry_type': 'Industry type',
+            'organization_type': 'Organization type',
+            'website': 'Company website',
+            'linkedin': 'LinkedIn profile',
+            'about': 'About the company',
+            'established_at': 'Year established',
+        }
+
     def save(self, commit=True, candidate=None):
         instance = super().save(commit=False)
         if candidate:
@@ -26,22 +51,23 @@ class CreateCompanyKYCForm(forms.ModelForm):
         fields = ['gst_no', 'gst_doc', 'pan_no', 'pan_doc', 'back_ifsc_no',
                   'bank_account_doc', 'list_of_dir_doc']
         
+        labels = {
+            'gst_no': 'GST number',
+            'gst_doc': 'GST document',
+            'pan_no': 'PAN number',
+            'pan_doc': 'PAN document',
+            'back_ifsc_no': 'Bank IFSC number',
+            'bank_account_doc': 'Bank account document',
+            'list_of_dir_doc': 'List of directors document',
+        }
+        
     def save(self, commit=True):
         instance = super().save(commit=False)
         instance.kyc_uploaded_at = now()
         if commit:
             instance.save()
         return instance
-# class JobForm(forms.ModelForm):
-#     locations = forms.ModelMultipleChoiceField(
-#         queryset=Locations.objects.all(),
-#         widget=forms.CheckboxSelectMultiple
-#     )
 
-
-    # class Meta:
-    #     model = Job
-    #     fields = ['job_title', 'locations'] 
     
 class CreateJobs(forms.ModelForm):
     class Meta:
@@ -53,6 +79,32 @@ class CreateJobs(forms.ModelForm):
             'qualifications', 'min_experience', 'max_experience', 'salary','salary_type',
             'last_date_to_apply', 'opening_count'
         ]
+        labels = {
+            'hire_request': 'Hire request',
+            'company': 'Company',
+            'title': 'Job title',
+            'location_id': 'Job location',
+            'slug': 'Job slug (URL identifier)',
+            'description': 'Job description',
+            'benefit_id': 'Job benefits',
+            'employment_type': 'Employment type',
+            'is_fixed_shift': 'Fixed shift',
+            'is_rotational_shift': 'Rotational shift',
+            'is_day_shift': 'Day shift',
+            'is_night_shift': 'Night shift',
+            'is_onsite': 'On-site',
+            'is_work_from_home': 'Work from home',
+            'is_hybrid': 'Hybrid work',
+            'skills': 'Required skills',
+            'qualifications': 'Qualifications',
+            'min_experience': 'Minimum experience (in years)',
+            'max_experience': 'Maximum experience (in years)',
+            'salary': 'Salary',
+            'salary_type': 'Salary type (e.g. Monthly, Yearly)',
+            'last_date_to_apply': 'Last date to apply',
+            'opening_count': 'Number of openings',
+        }
+
         widgets = {
             'salary_type': forms.Select(attrs={
                 'class': 'admin-input-sel',
@@ -134,8 +186,6 @@ class CreateJobs(forms.ModelForm):
 
     
     def save(self, commit=True, company=None,created_by=None):
-        print("==============")
-        print(commit, company,created_by)
         instance = super().save(commit=False)
         if company:
             instance.company = company
@@ -149,6 +199,13 @@ class CreatePosition(forms.ModelForm):
     class Meta:
         model = Positions
         fields = ['position_title', 'description', 'remarks']
+        labels = {
+            'position': 'Position',
+            'description': 'Description',
+            'remarks': 'Remarks',
+        }
+
+
         
     def save(self, commit=True, company=None,created_by=None):
         instance = super().save(commit=False)
@@ -165,6 +222,18 @@ class CreateHireRequest(forms.ModelForm):
         model = HireRequests
         fields = [ 'position', 'hire_request_code', 'employee_id', 
                   'hire_date', 'leave_date', 'remarks', 'deadline', 'is_open', 'is_active']
+
+        labels = {
+            'position': 'Position',
+            'hire_request_code': 'Hire request code',
+            'employee_id': 'Employee ID',
+            'hire_date': 'Hire date',
+            'leave_date': 'Leave date',
+            'remarks': 'Remarks',
+            'deadline': 'Application deadline',
+            'is_open': 'Is position open',
+            'is_active': 'Is position active',
+        }
 
     def __init__(self, *args, **kwargs):
         company = kwargs.pop('company', None)

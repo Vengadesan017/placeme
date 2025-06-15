@@ -20,12 +20,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+  <link rel="stylesheet" href="{% static 'css/model.css' %}">
   <style>
     * {
       font-family: Poppins, sans-serif;
     }
     .form-control {
-      width: 90%;
+      width: 100%;
     }
     ol,
     ul {
@@ -38,7 +39,6 @@
       color: #141b5f;
     }
     .btn-primary {
-      margin: 0 15px 15px 0;
       background-color: #141b5f;
       color: #fff;
       border: #141b5f;
@@ -56,6 +56,105 @@
     footer {
       margin-top: 100px;
     }
+    .known-lans{
+      display:flex;
+       
+    }
+
+    label.can-lan{
+      display:flex !important;
+      flex-direction: row-reverse;
+      margin:10px;
+    }
+
+    .btn-save{
+            margin: 0 15px 15px 0;
+    }
+
+.language-table-wrapper {
+    overflow-x: auto;
+    min-width: 730px;
+    border: 1px solid #ccc;
+    overflow-y: auto;
+}
+
+.language-table {
+    min-width: 730px; /* Ensure both tables are same width */
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.language-table th,
+.language-table td {
+
+    text-align: center;
+
+
+}
+
+/* Column-specific widths */
+.lang-col {
+    width: 20%;
+}
+
+.ability-col {
+    width: 45%;
+}
+
+.prof-col {
+    width: 20%;
+}
+
+.action-col {
+    width: 15%;
+}
+
+/* Hide the real checkbox */
+.custom-checkbox {
+display: none;
+}
+
+/* Style the label normally */
+.checkbox-label {
+height: 38px;
+min-width: 90px;
+width: fit-content;
+padding: 7px 18px;
+background-color: #fff;
+display: flex;
+justify-content: center;
+align-items: center;
+border: 1px solid gray;
+border-radius: 50px;
+cursor: pointer;
+margin: 3px 17px;
+transition: 0.3s;
+
+}
+
+/* Style the label when checkbox is checked */
+.custom-checkbox:checked + label {
+background-color: #FFBD03;
+color: #000000;
+border-color: #FFBD03;
+}
+
+.modal-body {
+    min-height: 300px;
+}
+.modal-body div label {
+        display: inline-block;
+        margin-right: unset;
+
+}
+.dynamictbl td{
+  font-size: 14px;
+  vertical-align: middle;
+}   
+
+.form-control-half{
+  width: 45%;
+}
   </style>
 {% endblock %}
 
@@ -78,7 +177,7 @@
       </div>
       <br />
 
-      <div class="row">
+       <div class="row">
         <div class="col-md-12">
           <div class="panel with-nav-tabs panel-default">
             <div class="panel-heading">
@@ -119,9 +218,9 @@
             {% for message in messages %}
                 <div class='alert alert-{{ message.tags }}'>
                 <span class="closebtn">&times;</span>
-                    {{ message }}
+                    {{ message|safe }}
                 </div>    
-            {% endfor %}
+            {% endfor %}  
             {% endif %}
             <div class="panel-body">
               <div class="tab-content">
@@ -139,7 +238,7 @@
                   <h2>Invalid page</h2>
                 {% endif %}
               </div>
-            </div>
+            </div> 
           </div>
         </div>
       </div>
@@ -151,6 +250,8 @@
     </footer> {% endcomment %}
   </div>
 
+  <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+{% comment %} 
   <script src="{% static 'bootstrap/Scripts/jquery-3.4.1.min.js' %}"></script>
   <script src="{% static 'bootstrap/Scripts/bootstrap.min.js' %}"></script>
   <script src="{% static 'bootstrap/Scripts/moment.min.js' %}"></script>
@@ -159,6 +260,6 @@
   <script src="{% static 'bootstrap/Scripts/toastr/toastr.js' %}"></script>
   <script src="{% static 'bootstrap/Scripts/Common.js' %}"></script>
   <script src="{% static 'bootstrap/Scripts/jquery.validate.min.js' %}"></script>
-  <script src="{% static 'bootstrap/Scripts/Employee/Employee.js' %}"></script>
+  <script src="{% static 'bootstrap/Scripts/Employee/Employee.js' %}"></script> {% endcomment %}
   <!-- @RenderSection("scripts", required: false) -->
 {% endblock %}

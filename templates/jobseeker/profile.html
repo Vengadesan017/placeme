@@ -67,13 +67,13 @@
                                 <div class="height"></div>
                             </div>
                         </li>
-                        <li>
+                        {% comment %} <li>
                             <div class="li-1">
                                 <div class="personal-div">
                                 <a href="#internship" class="profile-link">Internship</a></div>
                                 <div class="height"></div>
                             </div>
-                        </li>
+                        </li> {% endcomment %}
                         <li>
                             <div class="li-1">
                                 <div class="personal-div">
@@ -83,7 +83,7 @@
                         </li>
                         <li>
                             <div class="li-1">
-                                <div class="personal-div"><a href="#career-info" class="profile-link">Career Info</a></div>
+                                <div class="personal-div"><a href="#career-info" class="profile-link">Compensation and benefits</a></div>
                                 <div class="height"></div>
                             </div>
                         </li>
@@ -102,7 +102,7 @@
             {% for message in messages %}
               <div class='alert alert-{{ message.tags }}'>
                 <span class="closebtn">&times;</span>
-                  {{ message }}
+                  {{ message|safe }}
               </div>    
             {% endfor %}
           {% endif %}
@@ -134,8 +134,7 @@
 
                                 </div>
                                 <div class="detial-div-name-mv">
-                                    <p>Diplamo/ITI</p>
-                                    <p1>Don bosco disloma and polytechnic college</p1>
+                                    <p>An innovative and dedicated software engineer with a proven track record of successful projects and client satisfaction</p>
                                 </div>
 
                             </div>
@@ -160,8 +159,7 @@
                             
                         </div>
                         <div class="detial-div-name">
-                            <p>Diplamo/ITI</p>
-                            <p>don bosco disloma and polytechnic college</p>
+                            <p>An innovative and dedicated software engineer with a proven track record of successful projects and client satisfaction</p>
                         </div>
                         
                     </div>
@@ -380,7 +378,7 @@
                         </div>
                     </div>
                     <div class="languages">
-                        <h4>Perfered languages</h4>
+                        <h4>Known Languages</h4>
                         <div class="languages-row">
                             <div class="languages-ul-div">
 
@@ -430,7 +428,7 @@
                             <div class="Preferred-text-div" id="PreferredTextDiv">
                                 {% if location %}
                                 {% for loc in location %}
-                                    <p class="Preferred-text">{{loc}}</p> 
+                                    <p class="Preferred-text">{{loc}}</p> ,
                                 {% endfor %}
                                 {% else %}
                                         <a href="#" class="open-modal-btn" data-modal-id="PreferModal" >Add</a>
@@ -461,11 +459,13 @@
                     {% for emp in employment %}
                     <div class="employement-flex">
                         <div class="employement-play">
-                            <p class="employement-role">{{emp.company_role|default_if_none:''}}</p>
-                            <p class="employement-company">{{emp.company_name|default_if_none:''}}</p>
+                            <p class="employement-role">{{emp.company_name|default_if_none:''}}</p>
+                            <p class="employement-company">{{emp.company_role|default_if_none:''}}</p>
                         </div>
                         <div class="employement-date-div">
-                            <p class="employement-date">{{emp.doj|date:'M Y'|default_if_none:''}} - {{emp.dol|date:'M Y'|default_if_none:''}}</p>
+                            <p class="employement-date"><i style='font-size: smaller;'>
+                             {{emp.get_experience_duration }} 
+                            </i> / {{emp.doj|date:'M Y'|default_if_none:''}} - {{emp.dol|date:'M Y'|default_if_none:''}}</p>
                             <p class="employement-time">{{emp.type_id|default_if_none:''}}</p>
                         </div>
                     </div>
@@ -485,7 +485,7 @@
 
 
 
-
+{% comment %} 
                 <div class="internship" id="internship">
                     <div class="internship-heading">
                         <h4>Internship</h4>
@@ -515,10 +515,10 @@
                         </div>
                     </div>
                     {% endif %}
-                </div>
+                </div> {% endcomment %}
                 <div class="career" id="career-info">
                     <div class="career-heading">
-                        <h4>Career</h4>
+                        <h4>Compensation and benefits</h4>
                         <div class="career-add-div">
                             <a href="#" class="open-modal-btn" data-modal-id="CareerModal" >Add</a>
                             <i class="fa-solid fa-pen-to-square"></i>
@@ -552,7 +552,7 @@
                             </div>
                             <div class="career-info-list-2-1">
                                 <h4>Notice Period</h4>
-                                <p>{{ candidate.notice_period|default_if_none:'' }} month</p>
+                                <p>{{ candidate.notice_period|default_if_none:'' }} Days</p>
                             </div>
                         </div>
 

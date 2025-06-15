@@ -1,0 +1,90 @@
+                    <tr>
+                        <td>
+                            <select class="form-control" name="edu_id" id="id_edu_id" required>
+                                <option value="">Select Education Level</option>
+                                {% for option in level %}
+                                    <option value="{{ option }}">
+                                        {{ option }}
+                                    </option>
+                                {% endfor %}
+                            </select>       
+                        </td>
+                        <td>
+                            <select class="form-control" name="edu_id" id="id_edu_id" required>
+                                <option value="">Select Brance</option>
+                                {% for option in course %}
+                                    <option value="{{ option }}">
+                                        {{ option }}
+                                    </option>
+                                {% endfor %}
+                            </select>        
+                        </td>
+                        <td>
+                            
+                            <select class="form-control" name="edu_id" id="id_edu_id" required>
+                                <option value="">Select Degree</option>
+                                {% for option in education_form.fields.edu_id.queryset %}
+                                    <option value="{{ option.pk }}" {% if option.pk == education_form.initial.edu_id %}selected{% endif %}>
+                                        {{ option }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+            
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" name="institute" id="id_institute" value="{{ education_form.initial.institute|default_if_none:'' }}" placeholder="Enter your institude name"  required/>
+                        </td>
+                        <td>
+                            <select class="form-control" name="type_id" id="id_type_id" required>
+                                <option value="">Select Education Type</option>
+                                {% for option in education_form.fields.type_id.queryset %}
+                                    <option value="{{ option.pk }}" {% if option.pk == education_form.initial.type_id %}selected{% endif %}>
+                                        {{ option }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                        <select class="form-control" id="id_year_of_joining" name="year_of_joining" required>
+                            <option value="">Start Year</option>
+                            {% for value, label in education_form.fields.year_of_joining.choices %}
+                                <option value="{{ value }}"
+                                    {% if value == education_form.initial.year_of_joining %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+
+                        <select class="form-control" id="id_year_of_joining" name="year_of_passing" required>
+                            <option value="">End Year</option>
+                            {% for value, label in education_form.fields.year_of_joining.choices %}
+                                <option value="{{ value }}"
+                                    {% if value == education_form.initial.year_of_joining %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        </td>
+                        <td><input type="text" name="score" class="form-control" id="id_score" value="{{ education_form.initial.score|default_if_none:'' }}" placeholder="Enter Grade like 7.1/10 or Percentage like 78.2%" /></td>
+                        <td><input type="file" class="form-control" id="" name="doc" value=""> </td>
+                        <td>
+                        <input type="hidden" name="save_education" value="{{ education_form.instance.edu_map_id }}">
+                        <button 
+                            class="model-btn-save"
+                            type="submit">
+
+                                   {% if education_form.instance.edu_map_id %}
+                                    Save
+                                {% else %}
+                                    Add
+                                {% endif %}
+                            </button>
+                        </td>      
+                    </tr>
+ 
+
+
+
+
+
+

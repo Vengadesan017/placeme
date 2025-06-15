@@ -1,5 +1,7 @@
 from django import forms
-from .models import Candidates, Onboarding, EducationMap, UserLanguages, UserLocations, Employment, Internship, Familys
+from .models import Candidates, Onboarding, EducationMap, UserLanguages,\
+    UserLocations, Employment, Internship, Familys,OnboardingDocumentRequirement
+import datetime
 
 
 class CandidatePersonalUpdateForm(forms.ModelForm):
@@ -9,46 +11,37 @@ class CandidatePersonalUpdateForm(forms.ModelForm):
             'first_name', 'last_name', 'gender', 'dob', 'linkedin_profile', 'country', 'state', 'city',
             'marital_status','languages','work_status'
         ]
-        error_messages = {
-            'first_name': {
-                'required': "First name is required.",
-                'max_length': "First name can be at most 255 characters."
-            },
-            'last_name': {
-                'required': "Last name is required.",
-                'max_length': "Last name can be at most 255 characters."
-            },
-            'dob': {
-                'required': "Date of birth is required.",
-                'invalid': "Enter a valid date in YYYY-MM-DD format."
-            },
-            'linkedin_profile': {
-                'invalid': "Please enter a valid LinkedIn profile URL."
-            },
-            'pincode': {
-                'required': "Pincode is required.",
-                'invalid': "Enter a valid pincode."
-            }
+        labels = {
+            'first_name': 'First name',
+            'last_name': 'Last name',
+            'gender': 'Gender',
+            'dob': 'Date of birth',
+            'linkedin_profile': 'LinkedIn profile',
+            'country': 'Country',
+            'state': 'State',
+            'city': 'City',
+            'marital_status': 'Marital status',
+            'languages': 'Languages known',
+            'work_status': 'Current work status',
         }
+
 
 class CandidateEducationUpdateForm(forms.ModelForm):
     class Meta:
         model = EducationMap
         fields = [
-             'edu_id', 'institute', 'year_of_passing', 'score', 'type_id', 'doc'
+             'edu_id', 'institute', 'year_of_passing','year_of_joining', 'score', 'type_id', 'doc'
         ]
-        error_messages = {
-            'institute': {
-                'required': "Institute name is required.",
-            },
-            'year_of_passing': {
-                'required': "Year of passing is required.",
-                'invalid': "Enter a valid year."
-            },
-            'score': {
-                'invalid': "Enter a valid score.",
-            }
+        labels = {
+            'edu_id': 'Education level',
+            'institute': 'Institute name',
+            'year_of_joining': 'Year of joining',
+            'year_of_passing': 'Year of passing',
+            'score': 'Score / Grade',
+            'type_id': 'Education type',
+            'doc': 'Supporting document',
         }
+
 
     def save(self, commit=True, candidate=None):
         instance = super().save(commit=False)
@@ -69,37 +62,25 @@ class OnboardingCandidatePersonalForm(forms.ModelForm):
         labels = {
             'first_name': 'First name',
             'last_name': 'Last name',
+            'gender': 'Gender',
             'dob': 'Date of birth',
+            'marital_status': 'Marital status',
+            'country': 'Country',
+            'state': 'State',
+            'city': 'City',
+            'languages': 'Languages known',
+            'address': 'Address',
             'pincode': 'Pincode',
             'linkedin_profile': 'LinkedIn profile',
-            # Add others as needed
+            'profile_pic': 'Profile picture',
+            'resume': 'Resume',
         }
-        error_messages = {
-            'first_name': {
-                'required': "First name is required.",
-                'max_length': "First name can be at most 255 characters."
-            },
-            'last_name': {
-                'required': "Last name is required.",
-                'max_length': "Last name can be at most 255 characters."
-            },
-            'gender': {
-                'required': "Gender is required."
-            },
-            'dob': {
-                'required': "Date of birth is required.",
-                'invalid': "Enter a valid date in YYYY-MM-DD format."
-            },
-            'pincode': {
-                'required': "Pincode is required.",
-                'max_length': "Pincode can be at most 6 digits.",
-                'invalid': "Enter a valid pincode."
-            },
-            'linkedin_profile': {
-                'invalid': "Enter a valid LinkedIn profile URL.",
-                'max_length': "LinkedIn URL can be at most 255 characters."
-            }
-        }
+        # error_messages = {
+        #     'first_name': {
+        #         'required': "First name is required.",
+        #         'max_length': "First name can be at most 255 characters."
+        #     }
+        # }
     # def clean(self):
     #     cleaned_data = super().clean()  # Get cleaned data from Django
     #     required_fields = ['first_name', 'last_name', 'gender', 'dob', 'country', 'state', 'pincode']
@@ -133,19 +114,18 @@ class OnboardingPersonalForm(forms.ModelForm):
             'doj', 'dol'
         ]
         
-    def clean(self):
-        cleaned_data = super().clean()
-        required_fields = ['father_name', 'doj']
-        
-        if self.instance.pk:  # Ensure it's an existing record
-            self.instance.save()
-        
-        if self.instance.pk:  # Ensure it's an existing record
-            self.instance.save()
-        for field in required_fields:
-            if not cleaned_data.get(field):
-                self.add_error(None, f"{field.replace('_', ' ').capitalize()} is required.")  # ✅ Adds only the message
-        return cleaned_data
+        labels = {
+            'father_name': "Father's name",
+            'mobile_two': 'Alternate mobile number',
+            'communication_country': 'Communication country',
+            'communication_state': 'Communication state',
+            'communication_city': 'Communication city',
+            'communication_address': 'Communication address',
+            'communication_pincode': 'Communication pincode',
+            'doj': 'Date of joining',
+            'dol': 'Date of leaving',
+        }
+
 
     
         # widgets = {
@@ -170,37 +150,17 @@ class OnboardingFamilyForm(forms.ModelForm):
         fields = ['first_name', 'last_name', 'gender', 'dob', 'relationship', 'aadhar_no', 'mobile_no']
         
 
-        error_messages = {
-            'first_name': {
-                'required': "First name is required.",
-                'max_length': "First name must be at most 255 characters."
-            },
-            'last_name': {
-                'required': "Last name is required.",
-                'max_length': "Last name must be at most 255 characters."
-            },
-            'gender': {
-                'required': "Gender is required."
-            },
-            'dob': {
-                'required': "Date of birth is required.",
-                'invalid': "Enter a valid date."
-            },
-            'relationship': {
-                'required': "Relationship is required.",
-                'max_length': "Relationship must be at most 100 characters."
-            },
-            'aadhar_no': {
-                'required': "Aadhar number is required.",
-                'max_length': "Aadhar number must be 12 digits.",
-                'invalid': "Enter a valid Aadhar number."
-            },
-            'mobile_no': {
-                'required': "Mobile number is required.",
-                'max_length': "Mobile number must be at most 10 digits.",
-                'invalid': "Enter a valid mobile number."
-            }
+        labels = {
+            'first_name': 'First name',
+            'last_name': 'Last name',
+            'gender': 'Gender',
+            'dob': 'Date of birth',
+            'relationship': 'Relationship',
+            'aadhar_no': 'Aadhar number',
+            'mobile_no': 'Mobile number',
         }
+
+
     def save(self, commit=True, candidate=None):
         instance = super().save(commit=False)
         if candidate:
@@ -215,15 +175,14 @@ class CandidateLanguageUpdateForm(forms.ModelForm):
         fields = [
              'language_id', 'can_read', 'can_write', 'can_speak', 'proficiency'
         ]
-        error_messages = {
-            'language_id': {
-                'required': "Language is required."
-            },
-            'proficiency': {
-                'required': "Proficiency level is required.",
-                'invalid': "Enter a valid proficiency value."
-            }
+        labels = {
+            'language_id': 'Language',
+            'can_read': 'Can read',
+            'can_write': 'Can write',
+            'can_speak': 'Can speak',
+            'proficiency': 'Overall proficiency',
         }
+
     def save(self, commit=True, candidate=None):
         instance = super().save(commit=False)
         if candidate:
@@ -238,12 +197,10 @@ class CandidateLocationUpdateForm(forms.ModelForm):
         fields = [
              'location'
         ]
-        error_messages = {
-            'location': {
-                'required': "Location is required.",
-                'max_length': "Location name must be at most 255 characters."
-            }
+        labels = {
+            'location': 'Location',
         }
+
     def save(self, commit=True, candidate=None):
         instance = super().save(commit=False)
         if candidate:
@@ -256,18 +213,21 @@ class CandidateCareerUpdateForm(forms.ModelForm):
     class Meta:
         model = Candidates
         fields = [
-            'present_ctc', 'present_take_home', 'expected_ctc', 'expected_take_home', 'notice_period', 'work_experience'
+            'present_ctc',
+            'present_take_home',
+            'expected_ctc',
+            'expected_take_home',
+            'notice_period',
+            'work_experience',
         ]
-        error_messages = {
-            'present_ctc': {
-                'invalid': "Enter a valid present CTC."
-            },
-            'expected_ctc': {
-                'invalid': "Enter a valid expected CTC."
-            },
-            'notice_period': {
-                'max_length': "Notice period must be at most 100 characters."
-            }
+
+        labels = {
+            'present_ctc': 'Present CTC (Cost to Company)',
+            'present_take_home': 'Present take-home salary',
+            'expected_ctc': 'Expected CTC',
+            'expected_take_home': 'Expected take-home salary',
+            'notice_period': 'Notice period',
+            'work_experience': 'Total work experience (in years)',
         }
 
 
@@ -275,28 +235,43 @@ class CandidateEmploymentUpdateForm(forms.ModelForm):
     class Meta:
         model = Employment
         fields = [
-             'company_name', 'company_role', 'doj', 'dol', 'type_id','reason_for_leaving', 'doc'
+            'company_name',
+            'company_role',
+            'doj',
+            'dol',
+            'type_id',
+            'reason_for_leaving',
+            'doc',
         ]
-        error_messages = {
-            'company_name': {
-                'required': "Company name is required.",
-                'max_length': "Company name must be at most 255 characters."
-            },
-            'company_role': {
-                'required': "Role is required.",
-                'max_length': "Role must be at most 255 characters."
-            },
-            'doj': {
-                'required': "Date of joining is required.",
-                'invalid': "Enter a valid date."
-            },
-            'dol': {
-                'invalid': "Enter a valid date of leaving."
-            },
-            'reason_for_leaving': {
-                'max_length': "Reason must be at most 500 characters."
-            }
+
+        labels = {
+            'company_name': 'Company name',
+            'company_role': 'Role/Designation',
+            'doj': 'Date of joining',
+            'dol': 'Date of leaving',
+            'type_id': 'Employment type',
+            'reason_for_leaving': 'Reason for leaving',
+            'doc': 'Relieving/Experience document',
         }
+    doj = forms.DateField(
+        widget=forms.TextInput(attrs={'type': 'month'}),
+        input_formats=['%Y-%m'],  # accepts only year and month
+        required=False
+    )
+    dol = forms.DateField(
+        widget=forms.TextInput(attrs={'type': 'month'}),
+        input_formats=['%Y-%m'],
+        required=False
+    )
+
+    def clean_doj(self):
+        doj = self.cleaned_data.get('doj')
+        return datetime.date(doj.year, doj.month, 1) if doj else None
+
+    def clean_dol(self):
+        dol = self.cleaned_data.get('dol')
+        return datetime.date(dol.year, dol.month, 1) if dol else None
+    
     def save(self, commit=True, candidate=None):
         instance = super().save(commit=False)
         if candidate:
@@ -311,23 +286,15 @@ class CandidateIntenshipUpdateForm(forms.ModelForm):
         fields = [
              'company_name', 'company_role', 'doj', 'dol','what_did', 'doc'
         ]
-        error_messages = {
-            'company_name': {
-                'required': "Company name is required.",
-                'max_length': "Company name must be at most 255 characters."
-            },
-            'company_role': {
-                'required': "Role is required.",
-                'max_length': "Role must be at most 255 characters."
-            },
-            'doj': {
-                'required': "Date of joining is required.",
-                'invalid': "Enter a valid date."
-            },
-            'what_did': {
-                'max_length': "Description must be at most 1000 characters."
-            }
-        }
+        labels = {
+        'company_name': 'Company name',
+        'company_role': 'Role/Designation',
+        'doj': 'Date of joining',
+        'dol': 'Date of leaving',
+        'what_did': 'Key responsibilities / What you did',
+        'doc': 'Supporting document',
+        }   
+
     def save(self, commit=True, candidate=None):
         instance = super().save(commit=False)
         if candidate:
@@ -340,13 +307,11 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Candidates
         fields = ['profile_pic']
-        error_messages = {
-            'profile_pic': {
-                'required': "Profile picture is required.",
-                'invalid_image': "Upload a valid image. The file you uploaded was either not an image or a corrupted image.",
-                'invalid': "Invalid image format. Please upload a valid image file (e.g., JPG, PNG)."
-            }
+        
+        labels = {
+            'profile_pic': 'Profile Photo',
         }
+
     # def save(self, commit=True, candidate=None, user=None):
     #     instance = super().save(commit=False)
     #     if user and not instance.user:
@@ -359,11 +324,8 @@ class ResumeForm(forms.ModelForm):
     class Meta:
         model = Candidates
         fields = ['resume']
-        error_messages = {
-            'resume': {
-                'required': "Resume file is required.",
-                'invalid': "Invalid file format. Please upload a PDF or DOCX file."
-            }
+        labels = {
+            'resume': 'Resume',
         }
     def save(self, commit=True, candidate=None):
         instance = super().save(commit=False)
@@ -372,3 +334,48 @@ class ResumeForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+    
+
+
+class IdentityForm(forms.ModelForm):
+    class Meta:
+        model = Onboarding
+        fields = [
+            'aadhar_number', 'aadhar_card',
+            'pf_number', 'pf',
+            'pan_number', 'pan_card',
+            'bank_name', 'ifsc_code', 'account_number',
+            'bank_book', 'pf_uan', 'esic_number',
+            'address_proof',
+        ]
+
+    def __init__(self, *args, **kwargs):
+        company = kwargs.pop('company', None)
+        super().__init__(*args, **kwargs)
+
+        # Make all fields not required by default + add form-control
+        for field_name, field in self.fields.items():
+            field.required = False
+            existing_class = field.widget.attrs.get('class', '')
+            if isinstance(field.widget, forms.FileInput):
+                field.widget.attrs['class'] = (existing_class + ' form-control').strip()
+            else:
+                field.widget.attrs['class'] = (existing_class + ' form-control').strip()
+
+        # Dynamically apply required fields
+        print(company)
+        if company:
+            required_fields = OnboardingDocumentRequirement.objects.filter(
+                company=company, is_required=True
+            ).values_list('field_name', flat=True)
+
+            # Optional debug print (only in dev)
+            print("Required Fields:", list(required_fields))
+
+            for field_name in required_fields:
+                if field_name in self.fields:
+                    self.fields[field_name].required = True
+                else:
+                    print(f"⚠ Field '{field_name}' not found in form fields!")
+        else:
+            print("No company")

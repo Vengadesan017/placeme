@@ -45,13 +45,13 @@
                     <tr> 
                         <td><b>Date of Joining</b></td>
                         <td>
-                            <input type="date" name="doj" id="" value="{{ new_employment.initial.doj|default_if_none:'' }}" placeholder="Enter DOJ" /></td>
+                            <input type="month" name="doj" id="" value="{{ new_employment.initial.doj|default_if_none:'' }}" placeholder="Enter DOJ" /></td>
                         </td>
                     </tr>
                     <tr> 
                     <td><b>Date of leaving</b></td>
                         <td>
-                            <input type="date" name="dol" id="" value="{{ new_employment.initial.dol|default_if_none:'' }}" placeholder="Enter DOL" /></td>
+                            <input type="month" name="dol" id="" value="{{ new_employment.initial.dol|default_if_none:'' }}" placeholder="Enter DOL" /></td>
                     </tr>
                     <td><b>Reason for leaving</b></td>
                         <td>

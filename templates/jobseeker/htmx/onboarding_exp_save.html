@@ -1,0 +1,35 @@
+<tr>
+  <td><input type="text" name="company_name" class="form-control" value="{{ experience_form.initial.company_name|default_if_none:'' }}" required></td>
+
+  <td><input type="text" name="company_role" class="form-control" value="{{ experience_form.initial.company_role|default_if_none:'' }}" required></td>
+
+  <td>
+    <select name="type_id" class="form-control" required>
+      <option value="">Select</option>
+      {% for option in experience_form.fields.type_id.queryset %}
+        <option value="{{ option.pk }}" {% if option.pk == experience_form.initial.type_id %}selected{% endif %}>
+          {{ option }}
+        </option>
+      {% endfor %}
+    </select>
+  </td>
+
+  <td><input type="month" name="doj" class="form-control" value="{{ experience_form.initial.doj|date:'Y-m-d' }}"></td>
+
+  <td><input type="month" name="dol" class="form-control" value="{{ experience_form.initial.dol|date:'Y-m-d' }}"></td>
+
+  <td><input type="text" name="reason_for_leaving" class="form-control" value="{{ experience_form.initial.reason_for_leaving|default_if_none:'' }}" required></td>
+
+  <td><input type="file" name="doc" class="form-control" required></td>
+
+  <td>
+    <input type="hidden" name="save_experience" value="{{ experience_form.instance.work_company_id }}">
+    <button type="submit" class="model-btn-save btn btn-success btn-sm">
+      {% if experience_form.instance.work_company_id %}
+        Save
+      {% else %}
+        Add
+      {% endif %}
+    </button>
+  </td>
+</tr>

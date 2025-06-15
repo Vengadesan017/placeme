@@ -18,10 +18,11 @@ from .models import Candidates, JobApplications, Onboarding, EducationMap , User
 from .forms import CandidatePersonalUpdateForm, CandidateEducationUpdateForm, OnboardingCandidatePersonalForm,\
         OnboardingPersonalForm ,CandidateLanguageUpdateForm, CandidateLocationUpdateForm, CandidateCareerUpdateForm,\
         CandidateEmploymentUpdateForm, CandidateIntenshipUpdateForm, OnboardingFamilyForm, \
-        ResumeForm, ProfileForm
+        ResumeForm, ProfileForm,IdentityForm
 from .serializers import JobsCardSerializer, TitleSerializer, LocationSerializer
 from .services import apply_filter_in_job,get_filter_from_job,search_job
 from .decorators import is_onboarding
+from .utils import form_errors_to_messages
 
 from django.views.decorators.csrf import csrf_exempt
 
@@ -52,16 +53,36 @@ def Home(request):
     try:
         
         if request.user.is_authenticated:
+            candidate = Candidates.objects.get(user=request.user)
+
             context = {
                 "upload_resume_url": safe_reverse("job_seeker:profile"),
                 "complete_profile_url": safe_reverse("job_seeker:profile"),
                 "review_offer_url": safe_reverse("review_offer"),
-                "onboarding_url": safe_reverse("onboarding"),
+                "onboarding_url": safe_reverse("review_offer"),
                 "check_attendance_url": safe_reverse("check_attendance"),
                 "apply_leave_url": safe_reverse("apply_leave"),
                 "logout_url": safe_reverse("auth:logout"),
                 "feedback_url": safe_reverse("job_seeker:home"),
             }
+            onboarding_id = Onboarding.objects.filter(candidate=candidate).values_list('Onbording_id',flat=True).first()
+            if onboarding_id:
+                context['onboarding_url'] = reverse("job_seeker:onboarding", kwargs={
+                    'onboarding_id': onboarding_id,
+                    'page': 'personal'
+                })
+            offer_letter_id = JobApplications.objects.filter(
+                candidate=candidate,
+                offered_at__isnull=False,
+                accepted_at__isnull=True,
+                rejected_at__isnull=True
+            ).values_list("id", flat=True).first()
+            print(offer_letter_id)
+            if offer_letter_id:
+                context['review_offer_url'] = reverse("job_seeker:status", kwargs={
+                    'page': 'offered',
+                    'id': offer_letter_id
+                })
         else:
             context = {}
         # jobs_titles = Jobs.objects.values_list('title', flat=True) \
@@ -84,11 +105,11 @@ def Profile(request):
                 form = CandidatePersonalUpdateForm(request.POST, instance=candidate)
                 if form.is_valid():
                     form.save()
-                    messages.info(request, 'Your profile has been updated successfully.')
+                    # messages.info(request, 'Your profile has been updated successfully.')
                     
                 else:
                     print("Form errors:", form.errors)
-                    messages.error(request, 'Please enter the valid data')
+                    form_errors_to_messages(request, form)
 
             elif 'profile_education_create' in request.POST:
                 form = CandidateEducationUpdateForm(request.POST)
@@ -98,7 +119,7 @@ def Profile(request):
                     
                 else:
                     print("Form errors:", form.errors)
-                    messages.error(request, 'Please enter the valid data.')
+                    form_errors_to_messages(request, form)
             elif 'upload_resume' in request.POST:
                 form = ResumeForm(request.POST, request.FILES, instance= candidate)
                 if form.is_valid():
@@ -107,7 +128,7 @@ def Profile(request):
                     
                 else:
                     print("Form errors:", form.errors)
-                    messages.error(request, 'Please enter the valid data.')
+                    form_errors_to_messages(request,form)
             elif 'upload_profile' in request.POST:
                 form = ProfileForm(request.POST, request.FILES,instance=candidate)
                 if form.is_valid():
@@ -126,7 +147,7 @@ def Profile(request):
                     
                 else:
                     print("Form errors:", form.errors)
-                    messages.error(request, 'Please enter the valid data.')
+                    form_errors_to_messages(request, form)
 
             elif 'SelectEducation' in request.POST:
                 index = request.POST.get("SelectEducation")
@@ -137,7 +158,7 @@ def Profile(request):
                     
                 # else:
                 #     print("Form errors:", form.errors)
-                #     messages.error(request, 'Please enter the valid data')
+                #     form_errors_to_messages(request, form)
             elif 'profile_education_edit' in request.POST:
                 form = CandidateEducationUpdateForm(request.POST, instance=EducationMap.objects.filter(candidate=candidate))
                 if form.is_valid():
@@ -146,7 +167,7 @@ def Profile(request):
                     
                 else:
                     print("Form errors:", form.errors)
-                    messages.error(request, 'Please enter the valid data')
+                    form_errors_to_messages(request, form)
 
 
             elif 'profile_skill_edit' in request.POST:
@@ -159,7 +180,7 @@ def Profile(request):
                         return redirect('job_seeker:profile')
                     
                 else:
-                    messages.error(request, 'No skills selected')
+                    form_errors_to_messages(request, 'No skills selected')
 
             elif 'profile_preference_edit' in request.POST:
                 if request.POST.get('language_id'):
@@ -170,7 +191,7 @@ def Profile(request):
 
                     else:
                         print("Form errors:", form.errors)
-                        messages.error(request, 'Please enter the valid data')
+                        form_errors_to_messages(request, form)
 
                 if request.POST.get('location'):
                     form = CandidateLocationUpdateForm(request.POST)
@@ -180,7 +201,41 @@ def Profile(request):
 
                     else:
                         print("Form errors:", form.errors)
-                        messages.error(request, 'Please enter the valid data')
+                        form_errors_to_messages(request, form)
+                        
+            elif 'save_language' in request.POST:
+                if request.POST.get('language_id'):
+                    pk = request.POST.get('save_language')
+                    if pk:
+                        instance = get_object_or_404(UserLanguages, candidate=candidate, user_language_id=pk)
+                        form = CandidateLanguageUpdateForm(request.POST,instance=instance)
+                    else:
+                        form = CandidateLanguageUpdateForm(request.POST)
+                    if form.is_valid():
+                        form.save(candidate=candidate)
+
+                    else:
+                        print("Form errors:", form.errors)
+                        form_errors_to_messages(request, form)
+                    
+                if request.htmx:
+                    form = CandidateLanguageUpdateForm()
+                    languages = UserLanguages.objects.filter(candidate=candidate)
+                    return render(request,"jobseeker/htmx/onboarding_language_table.html",context={'language_form':form,'languages':languages,})
+                else:
+                    return redirect("job_seeker:profile")
+            
+            elif 'edit_language' in request.POST:
+                pk = request.POST.get('edit_language')
+                if pk and request.htmx:
+                    instance = get_object_or_404(UserLanguages, candidate=candidate, user_language_id=pk)
+                    form = CandidateLanguageUpdateForm(instance=instance)
+                    languages = UserLanguages.objects.filter(candidate=candidate)
+                    return render(request,"jobseeker/htmx/onboarding_language_table.html",context={'language_form':form,'languages':languages,})
+                else:
+                    return redirect("job_seeker:profile")
+                
+
                         
             elif 'profile_employment_create' in request.POST:
                 form = CandidateEmploymentUpdateForm(request.POST)
@@ -190,7 +245,7 @@ def Profile(request):
                     
                 else:
                     print("Form errors:", form.errors)
-                    messages.error(request, 'Please enter the valid data')
+                    form_errors_to_messages(request, form)
 
             elif 'profile_internship_create' in request.POST:
                 form = CandidateIntenshipUpdateForm(request.POST)
@@ -200,7 +255,7 @@ def Profile(request):
                     
                 else:
                     print("Form errors:", form.errors)
-                    messages.error(request, 'Please enter the valid data')
+                    form_errors_to_messages(request, form)
 
             elif 'profile_career_edit' in request.POST:
                 form = CandidateCareerUpdateForm(request.POST, instance=candidate)
@@ -210,8 +265,8 @@ def Profile(request):
                     
                 else:
                     print("Form errors:", form.errors)
-                    messages.error(request, 'Please enter the valid data')
-
+                    form_errors_to_messages(request,form)
+            return redirect("job_seeker:profile")
                     
 
 
@@ -221,7 +276,7 @@ def Profile(request):
         education = EducationMap.objects.filter(candidate=candidate)
         language = UserLanguages.objects.filter(candidate=candidate)
         location = UserLocations.objects.filter(candidate=candidate)
-        employment = Employment.objects.filter(candidate=candidate)
+        employment = Employment.objects.filter(candidate=candidate).order_by('-dol')
         internship = Internship.objects.filter(candidate=candidate)
         new_language = CandidateLanguageUpdateForm()
         new_location = CandidateLocationUpdateForm()
@@ -443,7 +498,6 @@ def Status(request, page, id=None):
         # else:
         #     print(onboarding_id)
         #     onboarding_id = onboarding_id[0]
-        print(onboarding_id)
 
         # for offer letter
         if job_status:
@@ -502,7 +556,8 @@ def Status(request, page, id=None):
                 return redirect('job_seeker:status', page='offered')
 
             except Exception as e:
-                messages.error(request, f"Something went wrong: {str(e)}")
+                messages.error(request, f"Something went wrong: ")
+                print(f"Error at {e}")
                 return redirect('job_seeker:status', page='offered')
         # if request.method == "POST":
         #     action = request.POST.get("action")
@@ -516,7 +571,7 @@ def Status(request, page, id=None):
         #         offer.accepted_at = None
         #         offer.save()
         #         messages.info(request, "You have declined the offer.")
-        print("p=offer----",offer)
+
         context = {
             'bookmarks': jobs,
             'applied': applied,
@@ -539,6 +594,10 @@ def OnboardingCandidate(request,onboarding_id, page):
     
     try:
         candidate = Candidates.objects.get(user=request.user)
+        # context = {
+        #     'onboarding_obj':onboarding,
+        # }
+        family_form = OnboardingFamilyForm()
         if request.method == 'POST':
             if 'personal' in request.POST:
                     
@@ -546,13 +605,13 @@ def OnboardingCandidate(request,onboarding_id, page):
                 onboarding_form = OnboardingPersonalForm(request.POST, request.FILES, instance=Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id))
                 page = "family"
                 if not candidate_form.is_valid():
-                    messages.error(request, candidate_form.errors)
+                    form_errors_to_messages(request, candidate_form, 'error')
                     page = "personal"
                 else:
                     candidate_form.save()
                     # x(not cleaned_data.get(field) for field in ['firstname', 'lastname', 'dob', 'email']):
                 if not onboarding_form.is_valid():
-                    messages.error(request, onboarding_form.errors)
+                    form_errors_to_messages(request, onboarding_form)
                     page = "personal"
                 else:
                     onboarding_form.save()
@@ -562,60 +621,112 @@ def OnboardingCandidate(request,onboarding_id, page):
                 # return render(request,'jobseeker/onboarding.html',context)
                 # return render(request,'jobseeker/onboarding.html',context)
 
-            if 'family' in request.POST:
-                # Create a list to hold the form instances
-                create_family_forms = []
-                edit_family_forms = []
-                
-
-                # Get the data from the request
-                id = request.POST.getlist('id[]')
-                first_names = request.POST.getlist('txtFirstName[]')
-                last_names = request.POST.getlist('txtLastName[]')
-                genders = request.POST.getlist('Gender[]')
-                relationships = request.POST.getlist('Releationship[]')
-                aadhar_numbers = request.POST.getlist('txtAadhar[]')
-                dob = request.POST.getlist('txtdob[]')
-                mobile_numbers = request.POST.getlist('txtFContactNo[]')
-                # Loop through the lists and create forms for each family member
-                edit_family_original_forms =Familys.objects.filter(candidate=candidate)
-                for i in range(len(first_names)):
-                    if first_names[i] and last_names[i] and genders[i] and relationships[i]:
-                        if id[i]:
-                            family_edit = {
-                                'first_name': first_names[i],
-                                'last_name': last_names[i],
-                                'gender': genders[i],
-                                'relationship': relationships[i],
-                                'dob':dob[i],
-                                'aadhar_no': aadhar_numbers[i],
-                                'mobile_no': mobile_numbers[i]
-                            }
-                            family_id= edit_family_original_forms.filter(family_member_id=id[i])
-                            # Create and add the form to the list
-                            edit_family_forms.append(OnboardingFamilyForm(family_edit, instance=family_id[0]))
-                        else:
-                            family_data = {
-                                'first_name': first_names[i],
-                                'last_name': last_names[i],
-                                'gender': genders[i],
-                                'relationship': relationships[i],
-                                'dob':dob[i],
-                                'aadhar_no': aadhar_numbers[i],
-                                'mobile_no': mobile_numbers[i]
-                            }
-                            # Create and add the form to the list
-                            create_family_forms.append(OnboardingFamilyForm(family_data))
-            if 'education' in request.POST:
-                page = "education"
-                form = CandidateEducationUpdateForm(request.POST)
-                if form.is_valid():
-                    form.save(candidate=candidate)
-                    messages.info(request, 'Your New Education has been added successfully.')
-                    
+            if 'edit_family' in request.POST or 'save_family' in request.POST:
+                if request.POST.get('edit_family'):
+                    pk = request.POST.get('edit_family')
+                    if pk and request.htmx:
+                        instance = get_object_or_404(Familys, candidate=candidate, family_member_id=pk)
+                        family_form = OnboardingFamilyForm(instance=instance)
+                        my_family = Familys.objects.filter(candidate=candidate)  
                 else:
-                    print("Form errors:", form.errors)
-                    messages.error(request, 'Please enter the valid data.')
+                    pk = request.POST.get('save_family')
+                    if pk and pk != "None": 
+                        instance = get_object_or_404(Familys, candidate=candidate, family_member_id = pk)
+                        form = OnboardingFamilyForm(request.POST,instance=instance)
+                    else:
+                        form = OnboardingFamilyForm(request.POST)
+                    if form.is_valid():
+                        form.save(candidate=candidate)
+                    else:
+                        print("Form errors:", form.errors)
+                        form_errors_to_messages(request, form)
+                    family_form = OnboardingFamilyForm()
+                    my_family = Familys.objects.filter(candidate=candidate)
+
+                if request.htmx:
+                    context = {
+                    'onboarding_obj': Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id),
+                    'family_form' : family_form,
+                    'my_family' : my_family,
+                    }
+                    return render(request,"jobseeker/htmx/onboarding_family_table.html",context)
+                return redirect("job_seeker:onboarding",onboarding_id=onboarding_id,page='family')
+            
+            if 'edit_education' in request.POST or 'save_education' in request.POST:
+                if request.POST.get('edit_education'):
+                    pk = request.POST.get('edit_education')
+                    print(pk)
+                    instance = get_object_or_404(EducationMap, candidate=candidate, edu_map_id=pk)
+                    education_form = CandidateEducationUpdateForm(instance=instance)
+                    # print(education_form)
+                else:
+                    pk = request.POST.get('save_education')
+                    if pk and pk != "None": 
+                        instance = get_object_or_404(EducationMap, candidate=candidate, edu_map_id = pk)
+                        form = CandidateEducationUpdateForm(request.POST, request.FILES,instance=instance)
+                    else:
+                        form = CandidateEducationUpdateForm(request.POST, request.FILES)
+                    if form.is_valid():
+                        form.save(candidate=candidate)
+                    else:
+                        print("Form errors:", form.errors)
+                        form_errors_to_messages(request, form)
+                    education_form = CandidateEducationUpdateForm()
+                if request.htmx:
+                    context = {
+                    'onboarding_obj': Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id),
+                    'education_form' : education_form,
+                    'my_education' : EducationMap.objects.filter(candidate=candidate),
+                    'level' : LevelForEdu.objects.all(),
+                    'course' : CourseForEdu.objects.all(),
+                    }
+                    
+                    return render(request,"jobseeker/htmx/onboarding_edu_table.html",context)
+                return redirect("job_seeker:onboarding",onboarding_id=onboarding_id,page='education')
+
+            if 'edit_experience' in request.POST or 'save_experience' in request.POST:
+                if request.POST.get('edit_experience'):
+                    pk = request.POST.get('edit_experience')
+                    instance = get_object_or_404(Employment, candidate=candidate, work_company_id=pk)
+                    experience_form = CandidateEmploymentUpdateForm(instance=instance)
+                else:
+                    pk = request.POST.get('save_experience')
+                    if pk and pk != "None": 
+                        instance = get_object_or_404(Employment, candidate=candidate, work_company_id = pk)
+                        form = CandidateEmploymentUpdateForm(request.POST, request.FILES,instance=instance)
+                    else:
+                        form = CandidateEmploymentUpdateForm(request.POST, request.FILES)
+                    if form.is_valid():
+                        form.save(candidate=candidate)
+                    else:
+                        print("Form errors:", form.errors)
+                        form_errors_to_messages(request, form)
+                    experience_form = CandidateEmploymentUpdateForm()
+                if request.htmx:
+                    context = {
+                    'onboarding_obj': Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id),
+                    'experience_form' : experience_form,
+                    'my_experience' : Employment.objects.filter(candidate=candidate),
+                    }
+                    return render(request,"jobseeker/htmx/onboarding_exp_table.html",context)
+                return redirect("job_seeker:onboarding",onboarding_id=onboarding_id,page='experience')
+
+            if 'complete_onboarding' in request.POST:
+                onboarding = Onboarding.objects.get(pk=onboarding_id)
+                company = onboarding.company  # adjust if job_post or company is linked differently
+
+                if request.method == 'POST':
+                    form = IdentityForm(request.POST, request.FILES, instance=onboarding, company=company)
+                    if form.is_valid():
+                        form.save()
+                        # Redirect or message
+                else:
+                    form = IdentityForm(instance=onboarding, company=company)
+
+                return redirect("job_seeker:home")
+
+                    
+
                     
 
                 # return render(request,'jobseeker/onboarding.html',context)
@@ -624,23 +735,30 @@ def OnboardingCandidate(request,onboarding_id, page):
         # onboarding_form = OnboardingPersonalForm(instance=Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id))
         onboarding = Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id)
         onboarding_form = OnboardingPersonalForm(instance=onboarding)
+        
+        language_form = CandidateLanguageUpdateForm()
+        languages = UserLanguages.objects.filter(candidate=candidate)
         education = EducationMap.objects.filter(candidate=candidate)
-        employment = Employment.objects.filter(candidate=candidate)
-        print(onboarding)
-        create_family_forms =Familys.objects.filter(candidate=candidate)
+        my_experience = Employment.objects.filter(candidate=candidate)
+        my_family =Familys.objects.filter(candidate=candidate)
+        company = onboarding.company
 
-        new_education = CandidateEducationUpdateForm()
-        new_employment = CandidateEmploymentUpdateForm()
+        education_form = CandidateEducationUpdateForm()
+        experience_form = CandidateEmploymentUpdateForm()
         context = {
             'onboarding_obj':onboarding,
             'candidate': candidate_form,
             'onboarding': onboarding_form,
-            'family_forms': create_family_forms,
-            'family_forms': create_family_forms,
-            'education':education,
-            'employment':employment,
-            'new_education':new_education,
-            'new_employment':new_employment,
+            'language_form':language_form,
+            'languages':languages,
+            'my_family': my_family,
+            'family_form': family_form,
+            'my_education':education,
+            'my_experience':my_experience,
+            'education_form':education_form,
+            'experience_form':experience_form,
+            'indentity_form':IdentityForm(instance=onboarding,company=company),
+            'experience_form':experience_form,
             'level' : LevelForEdu.objects.all(),
             'course' : CourseForEdu.objects.all(),
             'years' : range(2000, 2030),
@@ -727,4 +845,14 @@ def ApiTitle(request):
         return HttpResponse(f"An error occurred: {e}", status=500)
 
 
+
+
+# HTMX
+def HTMXOnboardingLanguages(request):
+    candidate = Candidates.objects.get(user=request.user)
+    if request.htmx:
+        languages = UserLanguages.objects.filter(candidate=candidate)
+        return render(request,"jobseeker/htmx/onboarding_language_show.html",context={'languages':languages,})
+    else:
+        return redirect("job_seeker:profile")
 

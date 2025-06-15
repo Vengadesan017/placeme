@@ -25,7 +25,14 @@ Application Status
         <li class="offer {% if request.resolver_match.kwargs.page == 'offered' %}active{% endif %}"><a href="{% url 'job_seeker:status' page="offered" %}" class="{% if request.resolver_match.kwargs.page == 'offered' %}active{% endif %}" onclick="showSection('offered')">My Offers({{offered|length}})</a></li>
     </ul>
 </div>
-
+            {% if messages %}
+            {% for message in messages %}
+              <div class='alert alert-{{ message.tags }}'>
+                <span class="closebtn">&times;</span>
+                  {{ message|safe }}
+              </div>    
+            {% endfor %}
+          {% endif %}
         {% if page == "saved" %}
         {% include "jobseeker/status_saved.html" %}                                
         {% elif page == "applied" %}

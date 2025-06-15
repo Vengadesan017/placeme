@@ -1,0 +1,63 @@
+
+                    <tr> 
+                        <td class="lang-col">
+                            <select name="language_id" id="language_form">
+                                <option value="">Select Language</option>
+                                {% for lang in language_form.fields.language_id.queryset %}
+                                    <option value="{{ lang.pk }}" {% if lang.pk == language_form.initial.language_id %}selected{% endif %}>
+                                        {{ lang }}
+                                    </option>
+                                {% endfor %}
+                            </select>           
+                        </td>
+                        <td class="ability-col">
+                        <div  class="known-lans">
+                            <p>
+                                <input type="checkbox" class="custom-checkbox" name="can_speak" id="can_speak" {% if language_form.can_speak.value %}checked{% endif %}>
+                                <label for="can_speak" class="checkbox-label">Speak</label>
+                            </p>
+                            <p>
+                                <input type="checkbox" class="custom-checkbox" name="can_read" id="can_read" {% if language_form.can_read.value %}checked{% endif %}>
+                                <label for="can_read" class="checkbox-label">Read</label>
+                            </p>
+                            <p>
+                                <input type="checkbox" class="custom-checkbox" name="can_write" id="can_write" {% if language_form.can_write.value %}checked{% endif %}>
+                                <label for="can_write" class="checkbox-label">Write</label>
+                            </p>
+
+
+                </div>                        </td>
+                        <td class="prof-col">
+                            <select name="proficiency" id="proficiency">
+                                <option value="">Select Proficiency Level</option>
+                                {% for choice in language_form.fields.proficiency.choices %}
+                                {% if choice.0 != "" %}
+                                <option value="{{ choice.0 }}" {% if choice.0 == language_form.initial.proficiency %}selected{% endif %}>
+                                    {{ choice.1 }}
+                                </option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>            
+                        </td>
+                        <td>
+                        <button 
+                            class="model-btn-save"
+                            type="button"
+                            name="save_language" 
+                            value="{{ lang.user_language_id }}"
+                            hx-post="{% url 'job_seeker:profile' %}"
+                            hx-target="#language-modal-body"
+                            hx-swap="innerHTML"
+                            hx-vals='{"save_language": "{{ lang.user_language_id }}"}'>
+
+                                   {% if lang.user_language_id %}
+                                    Save
+                                {% else %}
+                                    Add
+                                {% endif %}
+                            </button>
+                        </td>
+                    </tr>
+
+
+

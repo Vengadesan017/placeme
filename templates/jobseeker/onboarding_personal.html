@@ -7,7 +7,7 @@
             <table border="0" class="tblassetsteps" style="width:100%">
                 <tr>
                     <td>
-
+                        
                         <label class="SideLabelBold">First Name</label>
                         <label><font size="3" color="red">*</font></label>
                     </td>
@@ -87,16 +87,13 @@
                         <label><font size="3" color="red">*</font></label>
                     </td>
                     <td>
-                        {% comment %} {% if candidate.dob.value %}
-                        <input type="date" id="" style="position: relative" class="form-control  " name="dob" value="{{ candidate.dob.value|date:'Y-m-d'|default_if_none:'' }}" disabled>
-                    {% else %}
-                    <input type="date" id="" style="position: relative" class="form-control   " name="dob" value="{{ candidate.dob.value|date:'Y-m-d'|default_if_none:'' }}" >
-                    {% endif %}  {% endcomment %}
-                    {% if candidate.dob.value %}
+
+                        <input type="date" id="dob" name="dob" class="form-control" value="{{ candidate.dob.value|date:'Y-m-d'|default_if_none:'' }}"  required>
+                    {% comment %} {% if candidate.dob.value %}
                     <input type="date" id="dob" name="dob" class="form-control" value="{{ candidate.dob.value|date:'Y-m-d'|default_if_none:'' }}" disabled>
                 {% else %}
                 <input type="date" id="dob" name="dob" class="form-control" value="{{ candidate.dob.value|date:'Y-m-d'|default_if_none:'' }}"  required>
-                {% endif %}            
+                {% endif %}             {% endcomment %}
                     </td>
     
                     <td>
@@ -122,33 +119,24 @@
                     {% comment %} {% endif %}  {% endcomment %}
                     </td>
                 </tr>
-
                 <tr>
                     <td>
-                        <label class="SideLabelBold">Known Language 1</label>
+                        <label class="SideLabelBold">Known Languages</label>
                         <label><font size="3" color="red">*</font></label>
                     </td>
-                    <td>
-                        <input typeof="textbox" id="txtMobileNo1" class="form-control  " type="text" required>
-                    </td>
-    
-                    <td>
-                        <label class="SideLabelBold">Language 2</label>
-                        
-                    </td>
-                    <td>
-                        <input typeof="textbox" id="txtMobileNo1" class="form-control  " type="text">
-                    </td>
-    
-                    <td>
-                        <label class="SideLabelBold">Language 3</label>
-                    </td>
-                    <td>
-                        <input typeof="textbox" id="txtMobileNo1" class="form-control  " type="text">
+                    <td colspan="5">
+                        <div id="onboarding-language-td">
+                            
+                            {% include 'jobseeker/htmx/onboarding_language_show.html' %}
+                        </div>
+
+
+                        <a href="#" class="open-modal-btn btn btn-primary" data-modal-id="PreferLanguageModal">Add Language</a>
                     </td>
                 </tr>
-    
             </table>
+            <div id="languages_wrapper">
+
         </div>
     </div>
     
@@ -273,17 +261,53 @@
        
         <div style="float:right">
             {% comment %} <button id="btnEmpSave" onclick="saveEmpData()" style="color:#254b96 !important;margin-left:1000px" class="btn btn-default">Save & Next</button> {% endcomment %}
-            <button type="submit" name="personal"  style="margin-top: 25px;" class="btn btn-primary">Save & Next</button>
+            <button type="submit" name="personal"  style="margin-top: 25px;" class="btn btn-primary btn-save">Save & Next</button>
             
         </div>
     </div>
 </form>
     <br/>
-    <script src="{% static 'bootstrap/Scripts/jquery-3.4.1.min.js' %}"></script>
-    <script src="{% static 'bootstrap/Scripts/toastr/customToastr.js' %}"></script>
-    <script src="{% static 'bootstrap/Scripts/toastr/toastr.js' %}"></script>
+    {% comment %} <script src="{% static 'bootstrap/Scripts/jquery-3.4.1.min.js' %}"></script> {% endcomment %}
+    {% comment %} <script src="{% static 'bootstrap/Scripts/toastr/customToastr.js' %}"></script> {% endcomment %}
+    {% comment %} <script src="{% static 'bootstrap/Scripts/toastr/toastr.js' %}"></script> {% endcomment %}
     <script>
         function UsePermanentAddress() {
+            const checkbox = document.querySelector("input[name='chkUsePaddress']");
+            
+            const isChecked = checkbox && checkbox.checked;
+
+            const pAddress1 = document.getElementById("txtPAddress1");
+            const pAddress2 = document.getElementById("txtPAddress2");
+            const pAddress3 = document.getElementById("txtPAddress3");
+            const pState    = document.getElementById("txtPState");
+            const pCountry  = document.getElementById("txtPCountry");
+            const pPIN      = document.getElementById("txtPPIN");
+
+            const cAddress1 = document.getElementById("txtCAddress1");
+            const cAddress2 = document.getElementById("txtCAddress2");
+            const cAddress3 = document.getElementById("txtCAddress3");
+            const cState    = document.getElementById("txtCState");
+            const cCountry  = document.getElementById("txtCCountry");
+            const cPincode  = document.getElementById("txtCPincode");
+
+            if (isChecked) {
+                cAddress1.value = pAddress1.value;
+//                cAddress2.value = pAddress2.value;
+  //              cAddress3.value = pAddress3.value;
+                cState.value    = pState.value;
+                cCountry.value  = pCountry.value;
+                cPincode.value  = pPIN.value;
+            } else {
+                cAddress1.value = '';
+                cAddress2.value = '';
+                cAddress3.value = '';
+                cState.value    = '';
+                cCountry.value  = '';
+                cPincode.value  = '';
+            }
+        }
+
+        {% comment %} function UsePermanentAddress() {
             if ($("input[name='chkUsePaddress']:checked").prop('checked') == true) {
                 $("#txtCAddress1").val($("#txtPAddress1").val());
                 $("#txtCAddress2").val($("#txtPAddress2").val());
@@ -301,7 +325,10 @@
                 $("#txtCPincode").val('');
             }
             
-        }
+        } {% endcomment %}
     </script>
 
 </div>
+</div>
+
+    {% include 'jobseeker/htmx/onboarding_language.html' %}

@@ -8,130 +8,112 @@
 
     <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-start align-items-start d-inline-block" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;width:100%">
         <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-center order-2 d-inline-block bg-white align-top  align-items-start">
+            <form method="POST" enctype="multipart/form-data">
+{% csrf_token %}
             <table border="0" class="tblassetsteps" style="width:100%">
-                <tr>
-                    <td>
-                        <label class="SideLabelBold">Aadhar Number</label> <label><font size="3" color="red">*</font></label>
-                       
-                    </td>
-           
-                    <td>
-                        <input type="number" placeholder="Enter Aadhar Number" id="txtAadhar" class="form-control">
-                       
-                    
-                    </td>
-                    <td>
-                        <label class="SideLabelBold">Aadhar Document</label><label><font size="3" color="red">*</font></label>
-                    </td>
-                    <td>
-                        <input type="file" id="txtPANNo" class="form-control">
-                      
-                    </td>
-                    <td>
-                        <label class="SideLabelBold">PF Number</label>
-                    </td>
-                    <td>
-                        <input typeof="textbox" placeholder="Enter PF Number" id="txtPF" class="form-control" type="text">
-                      
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label class="SideLabelBold">Pan Number</label>
-                    </td>
-                    <td>
-                        <input type="number" placeholder="Enter PAN Number" id="txtPFUAN" class="form-control">
-                        
-                    </td>
-                    <td>
-                        <label class="SideLabelBold">Pan Document</label>
-                    </td>
-                    <td>
-                        <input type="file" id="txtESICNo" class="form-control">
-                        
-                    </td>
-                    <td>
-                        <label class="SideLabelBold">Bank Name</label>
-                    </td>
-                    <td>
-                        <input placeholder="Enter Bank Name" id="txtBankAccountNo" class="form-control" type="text">
-                        
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label class="SideLabelBold">IFSC Code</label><label><font size="3" color="red">*</font></label>
-                    </td>
-                    <td>
-                        <input placeholder="Enter IFSC Number" id="txtIFSCCode" class="form-control" type="number">
-                   
-                    </td>
-                    <td>
-                        <label class="SideLabelBold">Bank Book Document</label><label><font size="3" color="red">*</font></label>
-                    </td>
-                    <td>
-                        <input id="txtIFSCCode" class="form-control" type="file">
-                   
-                    </td>
+
+    <tr>
+      <td>
+        <label class="SideLabelBold">Aadhar Number</label>
+        {% if indentity_form.aadhar_number.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
+      </td>
+      <td>{{ indentity_form.aadhar_number }}</td>
+
+      <td>
+        <label class="SideLabelBold">Aadhar Document</label>
+        {% if indentity_form.aadhar_card.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
+      </td>
+      <td>    {% if indentity_form.instance.aadhar_card %}
+        <a class="form-conrol" href="{{ indentity_form.instance.aadhar_card.url }}" target="_blank" class="btn btn-sm btn-outline-primary mb-2">
+            View Uploaded Aadhar
+        </a><br>
+    {% endif %}</td>
+
+      <td>
+        <label class="SideLabelBold">PF Number</label>
+        {% if indentity_form.pf_number.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
+      </td>
+      <td>{{ indentity_form.pf_number }}</td>
+    </tr>
+
+    <tr>
+      <td>
+        <label class="SideLabelBold">PAN Number</label>
+        {% if indentity_form.pan_number.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
+      </td>
+      <td>{{ indentity_form.pan_number }}</td>
+
+      <td>
+        <label class="SideLabelBold">PAN Document</label>
+        {% if indentity_form.pan_card.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
+      </td>
+      <td>{{ indentity_form.pan_card }}</td>
+
+      <td>
+        <label class="SideLabelBold">Bank Name</label>
+        {% if indentity_form.bank_name.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
+      </td>
+      <td>{{ indentity_form.bank_name }}</td>
+    </tr>
+
+    <tr>
+      <td>
+        <label class="SideLabelBold">IFSC Code</label>
+        {% if indentity_form.ifsc_code.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
+      </td>
+      <td>{{ indentity_form.ifsc_code }}</td>
+
+      <td>
+        <label class="SideLabelBold">Bank Book Document</label>
+        {% if indentity_form.bank_book.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
+      </td>
+      <td>{{ indentity_form.bank_book }}</td>
+
+      <td>
+        <label class="SideLabelBold">Bank Account Number</label>
+        {% if indentity_form.account_number.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
+      </td>
+      <td>{{ indentity_form.account_number }}</td>
+    </tr>
+
+    <tr>
+      <td>
+        <label class="SideLabelBold">PFUAN</label>
+        {% if indentity_form.pf_uan.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
+      </td>
+      <td>{{ indentity_form.pf_uan }}</td>
+
+      <td>
+        <label class="SideLabelBold">ESIC Number</label>
+        {% if indentity_form.esic_number.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
+      </td>
+      <td>{{ indentity_form.esic_number }}</td>
+
+      <td>
+        <label class="SideLabelBold">Address Proof</label>
+        {% if indentity_form.address_proof.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
+      </td>
+      <td>{{ indentity_form.address_proof }}</td>
+    </tr>
+  </table>
+
+  <br>
+  <br>
+</table>
+
+<div style="float:right">
+    {% comment %} <button formnovalidate type="submit" name="save_as_draft_onboarding" class="btn btn-primary btn-save">Savs as Draft</button> {% endcomment %}
+    <button type="submit" name="complete_onboarding" class="btn btn-primary btn-save">Complete</button>
     
-                    <td>
-                        <label class="SideLabelBold">Bank Account Number</label>
-                    </td>
-    
-    
-                    <td>
-                        <input typeof="textbox"placeholder="Enter Account Number" id="txtNationality" class="form-control" type="text">
-                    </td>
-    
-                </tr>
-                <tr>
-                    <td>
-                        <label class="SideLabelBold">PFUAN</label>
-                    </td>
-                    <td>
-                        <input typeof="textbox" placeholder="Enter PFUAN Number" id="txtPFUAN" class="form-control" type="text">
-                        
-                    </td>
-                    <td>
-                        <label class="SideLabelBold">ESIC Number </label>
-                    </td>
-                    <td>
-                        <input typeof="textbox" placeholder="Enter ESIC Number" id="txtESICNo" class="form-control" type="text">
-                        
-                    </td>
-                    <td>
-                        <label class="SideLabelBold">Address Proof </label> <label><font size="3" color="red">*</font></label>
-                    </td>
-                    <td>
-                        <input placeholder="Enter ESIC Number" id="txtESICNo" class="form-control" type="file">
-                        
-                    </td>
-                </tr>
-            </table>
-            <br/>
-            <br/>
-            <div style="float:right">
-                <button id="btnlegelData" onclick="saveLegalData()" style="" class="btn btn-primary">Complete</button>
-    
-            </div>
+</div>
+</form>
       
      
     </div>
     </div>
     
     
-    <script>
-        $(document).ready(function () {
-            $('.numberonly').keypress(function (e) {
-                var charCode = (e.which) ? e.which : event.keyCode
-                if (String.fromCharCode(charCode).match(/[^0-9]/g))
-                    return false;
-    
-            });
-    
-        });
-    
-    </script>
+
 
 
 </div>

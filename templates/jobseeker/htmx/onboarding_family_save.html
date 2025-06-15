@@ -1,0 +1,39 @@
+
+
+                    <tr>
+                        <td><input type="text" name="first_name" id="txtFFirstName1" class="form-control" value="{{family_form.first_name.value|default:''}}" required></td>
+                        <td><input type="text" name="last_name" id="txtFLastName1" class="form-control" value="{{family_form.last_name.value|default:''}}" required> </td>
+                        <td><select id="ddlFGender1" name="gender" class="form-control" required>
+                            <option value="">Select </option>
+                            <option value="Male" {% if family_form.gender.value == 'Male' %}selected{% endif %}>Male </option>
+                            <option value="Female" {% if family_form.gender.value == 'Female' %}selected{% endif %}>Female </option>
+                            <option value="Transgender" {% if family_form.gender.value == 'Transgender' %}selected{% endif %}>Transgender </option>
+                            <option value="NotDisclosed" {% if family_form.gender.value == 'NotDisclosed' %}selected{% endif %}>NotDisclosed </option>
+                        </select></td>
+                        <td><select id="ddlFReleationship1" name="relationship" class="form-control" required>
+                            <option value="">Select </option>
+                            <option value="Father" {% if family_form.relationship.value == 'Father' %}selected{% endif %}>Father </option>
+                            <option value="Mother" {% if family_form.relationship.value == 'Mother' %}selected{% endif %}>Mother </option>
+                            <option value="Spouse" {% if family_form.relationship.value == 'Spouse' %}selected{% endif %}>Spouse </option>
+                            <option value="Son" {% if family_form.relationship.value == 'Son' %}selected{% endif %}>Son </option>
+                            <option value="Daughter" {% if family_form.relationship.value == 'Daughter' %}selected{% endif %}>Daughter </option>
+                        </select></td>
+                        <td><input type="date" name="dob" style="position: relative" id="" class="form-control" value="{{family_form.dob.value|date:'Y-m-d'}}" required> </td>
+                        <td><input type="text" name="aadhar_no" id="txtFamilyAadhar1" class="form-control" onchange="validateAadharNumber()" value="{{family_form.aadhar_no.value|default:''}}" required> </td>
+                        <td><input type="text" name="mobile_no" id="txtFContactNo1" class="form-control" value="{{family_form.mobile_no.value|default:''}}" required> </td>
+                        <td>
+                        <input type="hidden" name="save_family" value="{{ family_form.instance.family_member_id }}">
+
+                        <button 
+                            class="model-btn-save"
+                            type="submit">
+
+                                   {% if family_form.instance.family_member_id %}
+                                    Save
+                                {% else %}
+                                    Add
+                                {% endif %}
+                            </button>
+                        </td>
+                    </tr>
+

@@ -3,9 +3,13 @@ from django.utils import timezone
 from django.utils.timezone import now
 from credentials.models import Users  # Import the custom Users model
 # from .models import Candidates
-from recruiters.models import Jobs,OfferLetters # Import the Jobs model from recruiters app
+from recruiters.models import Jobs,OfferLetters,Companies # Import the Jobs model from recruiters app
 from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
+from datetime import date
+from dateutil.relativedelta import relativedelta
+
+YEAR_CHOICES = [(year, year) for year in range(2000, 2031)]
 
 def path_by_user_id(user_id: int):
     user_id_int = user_id + 100000000
@@ -183,6 +187,7 @@ class Onboarding(models.Model):
     Onbording_id = models.AutoField(primary_key=True)
     candidate = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='onbording_candidate', null=True, blank=True)
     job_post = models.ForeignKey('JobApplications', on_delete=models.CASCADE,related_name='onboarding_job',null=True, blank=True)
+    company = models.ForeignKey(Companies, on_delete=models.CASCADE,related_name='onboarding_company',null=True, blank=True)
     father_name = models.CharField(max_length=255, null=True, blank=True)
     mobile_two = models.BigIntegerField(null=True,blank=True)
     communication_country = models.CharField(max_length=100, blank=True, null=True)
@@ -200,6 +205,23 @@ class Onboarding(models.Model):
     aadhar_card = models.FileField(upload_to=upload_onboarding, blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'pdf']),validate_file_size])
     bank_book = models.FileField(upload_to=upload_onboarding, blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'pdf']),validate_file_size])
     pf = models.FileField(upload_to=upload_onboarding, blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'pdf']),validate_file_size])
+    
+    # Personal / Government Details
+    aadhar_number = models.CharField(max_length=20, null=True, blank=True)
+    pan_number = models.CharField(max_length=20, null=True, blank=True)
+    pf_number = models.CharField(max_length=20, null=True, blank=True)
+    pf_uan = models.CharField(max_length=20, null=True, blank=True)
+    esic_number = models.CharField(max_length=20, null=True, blank=True)
+
+    # Banking Details
+    bank_name = models.CharField(max_length=100, null=True, blank=True)
+    ifsc_code = models.CharField(max_length=20, null=True, blank=True)
+    account_number = models.CharField(max_length=30, null=True, blank=True)
+
+    # Extra Document Uploads
+    pan_card = models.FileField(upload_to=upload_onboarding, blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'pdf']), validate_file_size])
+    address_proof = models.FileField(upload_to=upload_onboarding, blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'pdf']), validate_file_size])
+    
     created_date = models.DateTimeField(auto_now_add=True,null=True,blank=True)
     completed_date = models.DateTimeField(blank=True, null=True)
     verified = models.BooleanField(default=False)
@@ -233,7 +255,14 @@ class Familys(models.Model):
     def __str__(self):
         return f"{self.candidate.first_name} {self.relationship}"
 
+class OnboardingDocumentRequirement(models.Model):
+    company_doc_is_required_id = models.AutoField(primary_key=True)
+    company = models.ForeignKey('recruiters.Companies', on_delete=models.CASCADE)
+    field_name = models.CharField(max_length=50)  # e.g. 'aadhar_number', 'pan_card'
+    is_required = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"{self.company} - {self.field_name}"
 # =====================================Onboarding end========================================================
 class JobApplications(models.Model):
     candidate = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='candidate_form', null=True, blank=True)
@@ -350,6 +379,14 @@ class EducationType(models.Model):
     def __str__(self):
         return f"{self.edu_type}"
 
+class EmployemntType(models.Model):
+    emp_type_id = models.AutoField(primary_key=True)
+    emp_type = models.CharField(max_length=50)  # Example: "Full-time" or "Part-time"
+
+
+    def __str__(self):
+        return f"{self.emp_type}"
+
 # =====================================Education End========================================================
 # =====================================Language Begin========================================================
 class Languages(models.Model):
@@ -374,6 +411,23 @@ class UserLanguages(models.Model):
         ('Intermediate', 'Intermediate'),
         ('Beginner', 'Beginner')
     ],null=True,blank=True)
+    
+    def ability_display(self):
+        abilities = []
+        if self.can_speak:
+            abilities.append("Speak")
+        if self.can_read:
+            abilities.append("Read")
+        if self.can_write:
+            abilities.append("Write")
+
+        if len(abilities) == 1:
+            return f"Can {abilities[0]} only"
+        elif len(abilities) == 2:
+            return f"Can {abilities[0]} and {abilities[1]}"
+        elif len(abilities) == 3:
+            return f"Can {abilities[0]}, {abilities[1]}, and {abilities[2]}"
+        return "Non mentioned"
 
     def __str__(self):
         return f"{self.candidate.first_name} Knows {self.language_id.language}"
@@ -390,9 +444,26 @@ class Employment(models.Model):
     doj = models.DateField(null=True,blank=True)
     dol = models.DateField(null=True, blank=True)
     reason_for_leaving = models.TextField(null=True,blank=True)
-    type_id = models.ForeignKey('EducationType',on_delete=models.CASCADE, related_name='emp_type',null=True,blank=True)
+    type_id = models.ForeignKey('EmployemntType',on_delete=models.CASCADE, related_name='employment_type',null=True,blank=True)
     doc = models.FileField(upload_to=upload_onboarding, blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'pdf']),validate_file_size])
     
+    def get_experience_duration(self):
+        if not self.doj:
+            return ""
+        end_date = self.dol or date.today()
+        delta = relativedelta(end_date, self.doj)
+        years = delta.years
+        months = delta.months
+
+        if years and months:
+            return f"{years} yr {months} mon"
+        elif years:
+            return f"{years} yr"
+        elif months:
+            return f"{months} mon"
+        else:
+            return "Less than 1 mon"
+        
     def __str__(self):
         return f"{self.candidate.first_name} worked in {self.company_name}"
     
@@ -418,7 +489,8 @@ class EducationMap(models.Model):
     candidate = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='candidate_to_edu_map', null=True, blank=True)
     edu_id = models.ForeignKey('SpecificationForEdu',on_delete=models.CASCADE, related_name='edu_to_user_map',null=True,blank=True)
     institute = models.CharField(max_length=200, null=True, blank=True)
-    year_of_passing = models.IntegerField(null=True,blank=True)
+    year_of_joining = models.IntegerField(choices=YEAR_CHOICES, null=True, blank=True)
+    year_of_passing = models.IntegerField(choices=YEAR_CHOICES, null=True, blank=True)
     score = models.CharField(max_length=20,null=True,blank=True)
     type_id = models.ForeignKey('EducationType',on_delete=models.CASCADE, related_name='edu_type_map',null=True,blank=True)
     doc = models.FileField(upload_to=upload_onboarding, blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'Pdf']),validate_file_size])

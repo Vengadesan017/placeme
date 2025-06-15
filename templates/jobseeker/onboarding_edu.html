@@ -1,151 +1,50 @@
 {% load static %}
 <div class="tab-pane fade in active" id="tab2default">
+  <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-start align-items-start d-inline-block" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;width:100%">
+    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-center order-2 d-inline-block bg-white align-top align-items-start">
+      <form enctype="multipart/form-data" hx-post="{% url 'job_seeker:onboarding' onboarding_id=onboarding_obj.Onbording_id page='education' %}" hx-target="#education-body" hx-swap="innerHTML">
+        {% csrf_token %}
+        <table class="tblassetsteps dynamictbl table table-hover" id="tblEmpFamily">
+          <thead>
+            <tr>
+              <th width="10%">
+                <label class="SideLabelBold">Education Level</label>
+              </th>
+              <th width="10%">
+                <label class="SideLabelBold">Branch</label>
+              </th>
+              <th width="10%">
+                <label class="SideLabelBold">Degree</label>
+              </th>
+              <th width="20%">
+                <label class="SideLabelBold">Institute Name</label>
+              </th>
+              <th width="10%">
+                <label class="SideLabelBold">Education Type</label>
+              </th>
+              <th width="20%">
+                <label class="SideLabelBold">Course duration</label>
+              </th>
+              <th width="10%">
+                <label class="SideLabelBold">Grade or Percentage</label>
+              </th>
+              <th width="10%">
+                <label class="SideLabelBold">Proof (Mark Sheet or TC)</label>
+              </th>
+              <th width="10%">
+                <label class="SideLabelBold">Action</label>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="education-body">
+            {% include 'jobseeker/htmx/onboarding_edu_table.html' %}
+          </tbody>
+        </table>
+      </form>
+      <div style="float:right">
 
-        <form method="POST" action="">
-            {% csrf_token %}
-    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-start align-items-start d-inline-block" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;width:100%">
-        <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-center order-2 d-inline-block bg-white align-top  align-items-start">
-            <table class="tblassetsteps dynamictbl table table-hover" id="tblEmpFamily">
-                <thead>
-                    <tr>                    
-                        <th width="10%"><label class="SideLabelBold">Education Level</label></th>
-                        <th width="10%"><label class="SideLabelBold">Branch</label></th>
-                        <th width="10%"><label class="SideLabelBold">Degree</label></th>
-                        <th width="20%"><label class="SideLabelBold">Institute Name</label></th>
-                        <th width="10%"><label class="SideLabelBold">Education Type</label></th>
-                        <th width="10%"><label class="SideLabelBold">Passing Year</label></th>
-                        <th width="10%"><label class="SideLabelBold">Grade or Percentage</label></th>
-                        <th width="10%"><label class="SideLabelBold">Proof (Mark Sheet or TC)</label></th>
-                        <th width="10%"><label class="SideLabelBold">Action</label></th>
-    
-                    </tr>
-                </thead>
-                <tbody id="bindrow">
-                    {%for edu in education%}
-                    <tr><input type="hidden" name="id[]" id="" class="form-control" value="{{edu.edu_map_id}}">
-    <!-- Course Level -->
-    <td>
-        <input type="text" class="form-control" name="level" value="{{ edu.edu_id.course.level.name }}" disabled>
-    </td>
-
-    <!-- Course Name -->
-    <td>
-        <input type="text" class="form-control" name="course_name" value="{{ edu.edu_id.course.name }}" disabled>
-    </td>
-
-    <!-- Education Name -->
-    <td>
-        <input type="text" class="form-control" name="education_name" value="{{ edu.edu_id.name }}" disabled>
-    </td>
-
-    <!-- Institute -->
-    <td>
-        <input type="text" class="form-control" name="institute" value="{{ edu.institute }}" disabled>
-    </td>
-
-    <!-- Type -->
-    <td>
-        <input type="text" class="form-control" name="type" value="{{ edu.type_id }}" disabled>
-    </td>
-
-    <!-- Year of Passing -->
-    <td>
-        <input type="text" class="form-control" name="year" value="{{ edu.year_of_passing }}" disabled>
-    </td>
-
-    <!-- Score -->
-    <td>
-        <input type="text" class="form-control" name="score" value="{{ edu.score }}" disabled>
-    </td>
-
-    <!-- Document -->
-    <td>
-        <input type="file" class="form-control" name="doc" value="{{ edu.doc }}" disabled>
-    </td>
-
-    <!-- Action Buttons -->
-    <td>
-        <button type="button" class="btn btn-warning btn-sm" onclick="enableEdit('{{ forloop.counter }}')">Edit</button>
-        {% comment %} <button type="submit" class="btn btn-primary btn-sm d-none" id="save-btn-{{ forloop.counter }}">Save</button> {% endcomment %}
-    </td>
-
-                    </tr>
-                    
-                    {% endfor %}
-                    <tr><input type="hidden" name="id[]" id="" class="form-control" value="{{edu.edu_map_id}}">
-                        <td>
-                            <select class="form-control" name="edu_id" id="id_edu_id">
-                                <option value="">Select Education Level</option>
-                                {% for option in level %}
-                                    <option value="{{ option }}">
-                                        {{ option }}
-                                    </option>
-                                {% endfor %}
-                            </select>       
-                        </td>
-                        <td>
-                            <select class="form-control" name="edu_id" id="id_edu_id">
-                                <option value="">Select Brance</option>
-                                {% for option in course %}
-                                    <option value="{{ option }}">
-                                        {{ option }}
-                                    </option>
-                                {% endfor %}
-                            </select>        
-                        </td>
-                        <td>
-                            <select class="form-control" name="edu_id" id="id_edu_id">
-                                <option value="">Select Degree</option>
-                                {% for option in new_education.fields.edu_id.queryset %}
-                                    <option value="{{ option.pk }}" {% if option.pk == new_education.initial.edu_id %}selected{% endif %}>
-                                        {{ option }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-            
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" name="institute" id="id_institute" value="{{ new_education.initial.institute|default_if_none:'' }}" placeholder="Enter your institude name" />
-                        </td>
-                        <td>
-                            <select class="form-control" name="type_id" id="id_type_id">
-                                <option value="">Select Education Type</option>
-                                {% for option in new_education.fields.type_id.queryset %}
-                                    <option value="{{ option.pk }}" {% if option.pk == new_education.initial.type_id %}selected{% endif %}>
-                                        {{ option }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" id="id_year_of_passing" name="year_of_passing">
-                                <option value="">Select Passing out Year</option>
-                                {% for i in years%}
-                                <option value="{{ i }}">{{i}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td><input type="text" name="score" class="form-control" id="id_score" value="{{ new_education.initial.score|default_if_none:'' }}" placeholder="Enter Grade like 7.1/10 or Percentage like 78.2%" /></td>
-                        <td><input type="file" class="form-control" id="" name="doc" value=""> </td>
-                        <td><button type="button" name="remove" id="remove" class="btn btn-danger"> Remove </button> </td>      
-                    </tr>
-                </tbody>
-            </table>
-    
-            <br />
-            <div style="float:right">            
-                <a id="add" class="btn btn-primary"> Add Row</a> &nbsp;&nbsp;&nbsp;&nbsp;
-                <button type="submit" name="family" id="btnSaveEmpFamilyData" onclick="SaveEmpFamilyData()" style="" class="btn btn-primary">Save & Next</button>
-            </div>
-        </div>
-        </div>
-        </form>
-    
-    {% comment %} <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> {% endcomment %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.js"></script>
-    <script src="{% static 'bootstrap/Scripts/Employee/Employee.js' %}"></script>
- 
+                <a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page='experience' %}" class="btn btn-primary btn-save">Next</a>
+      </div>
+    </div>
+  </div>
 </div>

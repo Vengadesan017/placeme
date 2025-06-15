@@ -190,7 +190,7 @@ need to use comman id
         {% for message in messages %}
           <div class='alert alert-{{ message.tags }}'>
             <span class="closebtn">&times;</span>
-              {{ message }}
+              {{ message|safe }}
           </div>    
         {% endfor %}
       {% endif %}    
