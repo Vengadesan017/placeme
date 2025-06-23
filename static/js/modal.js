@@ -27,3 +27,13 @@
             }
         }
     }
+
+function closeLanguageModal() {
+    const modal = document.getElementById('PreferLanguageModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.classList.remove('modal-open');
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) backdrop.remove();
+    }
+}

@@ -22,7 +22,7 @@
               <th width="10%">
                 <label class="SideLabelBold">Education Type</label>
               </th>
-              <th width="20%">
+              <th width="10%">
                 <label class="SideLabelBold">Course duration</label>
               </th>
               <th width="10%">
@@ -36,15 +36,282 @@
               </th>
             </tr>
           </thead>
-          <tbody id="education-body">
+          <tbody id="education-body" data-has-education="{% if my_education %}true{% else %}false{% endif %}">
             {% include 'jobseeker/htmx/onboarding_edu_table.html' %}
           </tbody>
         </table>
-      </form>
-      <div style="float:right">
+        <div style="float:right">
 
-                <a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page='experience' %}" class="btn btn-primary btn-save">Next</a>
-      </div>
+        <button type="button" class="btn btn-primary btn-save btn-bottom" id="add-row-btn">Add Row</button>
+        <button type="button" class="btn btn-primary btn-save btn-bottom" id="save-btn" style="display:none;">Save</button>
+        <button type="button" class="btn btn-primary btn-save btn-bottom" id="save-add-another-btn" style="display:none;">Save and Add Another</button>
+          <a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page='experience' %}" class="btn btn-primary btn-save btn-bottom">Next</a>
+        </div>
+      </form>
     </div>
   </div>
 </div>
+
+{{ levels|json_script:"level-data" }}
+{{ courses|json_script:"course-data" }}
+{{ specs|json_script:"spec-data" }}
+{% comment %} <script>
+document.querySelector('.btn-add-row').addEventListener('click', function (e) {
+  e.preventDefault();
+
+  const template = document.getElementById('new-edu-form-template');
+  const clone = template.content.cloneNode(true);
+
+  document.getElementById('education-body').appendChild(clone);
+});
+</script> {% endcomment %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const addRowBtn = document.getElementById('add-row-btn');
+    const saveBtn = document.getElementById('save-btn');
+    const saveAddAnotherBtn = document.getElementById('save-add-another-btn');
+    const tableBody = document.getElementById('education-body');
+    const outerForm = addRowBtn?.closest('form');
+
+    const hasEducation = tableBody?.dataset?.hasEducation === 'true';
+    let formActive = !!tableBody.querySelector('.edu-form') || !hasEducation;
+    let saveAndAddAnotherClicked = false;
+
+    function toggleButtons() {
+        if (formActive) {
+            addRowBtn.style.display = 'none';
+            saveBtn.style.display = 'inline-block';
+            saveAddAnotherBtn.style.display = 'inline-block';
+            
+        } else {
+            addRowBtn.style.display = 'inline-block';
+            saveBtn.style.display = 'none';
+            saveAddAnotherBtn.style.display = 'none';
+        }
+    }
+
+    toggleButtons();
+
+    addRowBtn?.addEventListener('click', function (e) {
+        e.preventDefault();
+        const template = document.getElementById('new-edu-form-template');
+        if (template && !formActive) {
+            const clone = template.content.cloneNode(true);
+            tableBody.appendChild(clone);
+            setupDropdowns();
+            formActive = true;
+            toggleButtons();
+        }
+    });
+
+    saveBtn?.addEventListener('click', function (e) {
+        e.preventDefault();
+        saveAndAddAnotherClicked = false;
+        outerForm?.requestSubmit();
+    });
+
+    saveAddAnotherBtn?.addEventListener('click', function (e) {
+        e.preventDefault();
+        saveAndAddAnotherClicked = true;
+        outerForm?.requestSubmit();
+    });
+
+    document.addEventListener('htmx:afterSwap', function () {
+        formActive = !!tableBody.querySelector('.edit-form');
+
+        if (saveAndAddAnotherClicked) {
+            // Reset the flag
+            saveAndAddAnotherClicked = false;
+
+            // Automatically trigger "Add Row" if the template exists
+            const template = document.getElementById('new-edu-form-template');
+            if (template) {
+                const clone = template.content.cloneNode(true);
+                tableBody.appendChild(clone);
+                formActive = true;
+            }
+        }
+
+        toggleButtons();
+        setupDropdowns();
+    });
+
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('cancel-form')) {
+        const formRow = e.target.closest('.edu-form');
+
+        // Only remove if it's a newly added row (not an edit form)
+        if (formRow && formRow.dataset.new === "true") {
+            formRow.remove();
+            formActive = false;
+            toggleButtons();
+        }
+    }
+});
+setupDropdowns();
+
+});
+
+
+function setupDropdowns() {
+    const levels = JSON.parse(document.getElementById('level-data').textContent);
+    const courses = JSON.parse(document.getElementById('course-data').textContent);
+    const specs = JSON.parse(document.getElementById('spec-data').textContent);
+
+    const levelSelect = document.querySelector('.edu-level');
+    const courseSelect = document.querySelector('.edu-course');
+    const specSelect = document.querySelector('.edu-spec');
+
+
+    if (specSelect.dataset.selectedSpec){
+        const selectedSpecId = parseInt(specSelect.dataset.selectedSpec || 0);
+        populateDropdownsFromSpecId( selectedSpecId, levels, courses, specs);
+    }
+
+    function clearOptions(select) {
+        select.innerHTML = '<option value="">Select</option>';
+    }
+
+
+        clearOptions(levelSelect);
+        levels.forEach(level => {
+            const option = new Option(level.name, level.level_id);
+            levelSelect.add(option);
+        });
+
+
+    // When Level changes
+    levelSelect.addEventListener('change', function () {
+        const selectedLevelId = parseInt(this.value);
+        clearOptions(courseSelect);
+        clearOptions(specSelect);
+
+        const filteredCourses = courses.filter(c => c.level_id === selectedLevelId);
+        filteredCourses.forEach(course => {
+            const option = new Option(course.name, course.course_id);
+            courseSelect.add(option);
+        });
+    });
+
+    // When Course changes
+    courseSelect.addEventListener('change', function () {
+        const selectedCourseId = parseInt(this.value);
+        clearOptions(specSelect);
+
+        const filteredSpecs = specs.filter(s => s.course_id === selectedCourseId);
+        filteredSpecs.forEach(spec => {
+            const option = new Option(spec.name, spec.specification_id);
+            specSelect.add(option);
+        });
+    });
+}
+
+
+// Utility function to safely set a select's value after DOM render
+function forceSelectValue(select, value) {
+    setTimeout(() => {
+        const strValue = value.toString();
+        select.value = strValue;
+
+        if (select.value !== strValue) {
+            [...select.options].forEach((opt, i) => {
+                if (opt.value === strValue) {
+                    select.selectedIndex = i;
+                }
+            });
+        }
+
+        console.log(`Value set on <select name="${select.name}">:`, select.value);
+    }, 0);
+}
+
+function populateDropdownsFromSpecId( selectedSpecId, levels, courses, specs) {
+    const levelSelect = document.querySelector('.edu-level');
+    const courseSelect = document.querySelector('.edu-course');
+    const specSelect = document.querySelector('.edu-spec');
+
+    if (!levelSelect || !courseSelect || !specSelect) {
+        console.warn("Missing dropdown(s) in form row", formRow);
+        return;
+    }
+
+    selectedSpecId = parseInt(selectedSpecId);
+    let selectedCourseId = 0;
+    let selectedLevelId = 0;
+
+    // Reverse lookup: spec → course → level
+    const selectedSpec = specs.find(s => parseInt(s.specification_id) === selectedSpecId);
+    if (selectedSpec) {
+        selectedCourseId = parseInt(selectedSpec.course_id);
+        const selectedCourse = courses.find(c => parseInt(c.course_id) === selectedCourseId);
+        if (selectedCourse) {
+            selectedLevelId = parseInt(selectedCourse.level_id);
+        }
+    }
+
+    console.log("Spec ID:", selectedSpecId);
+    console.log("Course ID:", selectedCourseId);
+    console.log("Level ID:", selectedLevelId);
+
+    function clearOptions(select) {
+        select.innerHTML = '<option value="">Select</option>';
+    }
+
+    // 🟩 Populate Levels
+    clearOptions(levelSelect);
+    levels.forEach(level => {
+        const option = new Option(level.name, level.level_id.toString());
+        levelSelect.add(option);
+    });
+    forceSelectValue(levelSelect, selectedLevelId);
+
+    // 🟦 Populate Courses based on selected level
+    clearOptions(courseSelect);
+    const filteredCourses = courses.filter(c => parseInt(c.level_id) === selectedLevelId);
+    filteredCourses.forEach(course => {
+        const option = new Option(course.name, course.course_id.toString());
+        courseSelect.add(option);
+    });
+    forceSelectValue(courseSelect, selectedCourseId);
+
+    // 🟨 Populate Specs based on selected course
+    clearOptions(specSelect);
+    const filteredSpecs = specs.filter(s => parseInt(s.course_id) === selectedCourseId);
+    filteredSpecs.forEach(spec => {
+        const option = new Option(spec.name, spec.specification_id.toString());
+        specSelect.add(option);
+    });
+    forceSelectValue(specSelect, selectedSpecId);
+
+    // 🔄 Setup change events for cascading dropdown updates
+    levelSelect.onchange = function () {
+        const newLevelId = parseInt(this.value);
+        clearOptions(courseSelect);
+        clearOptions(specSelect);
+
+        const updatedCourses = courses.filter(c => parseInt(c.level_id) === newLevelId);
+        updatedCourses.forEach(course => {
+            const option = new Option(course.name, course.course_id.toString());
+            courseSelect.add(option);
+        });
+    };
+
+    courseSelect.onchange = function () {
+        const newCourseId = parseInt(this.value);
+        clearOptions(specSelect);
+
+        const updatedSpecs = specs.filter(s => parseInt(s.course_id) === newCourseId);
+        updatedSpecs.forEach(spec => {
+            const option = new Option(spec.name, spec.specification_id.toString());
+            specSelect.add(option);
+        });
+    };
+}
+
+
+</script>
+
+
+
+

@@ -1,57 +1,43 @@
-  {% if not education_form.instance.edu_map_id %}
+{% for edu in my_education %}
+  {% if education_form.instance.edu_map_id == edu.edu_map_id %}
     {% include 'jobseeker/htmx/onboarding_edu_save.html' %}
-{% endif %}
- {%for edu in my_education %}
-        {% if education_form.instance.edu_map_id == edu.edu_map_id %}
-        {% include 'jobseeker/htmx/onboarding_edu_save.html' %}
-    {% else %}
-<tr>
-<!-- Course Level -->
-<td>
-    {{ edu.edu_id.course.level.name }}
-</td>
+  {% else %}
+    <tr>
+      <!-- Course Level -->
+      <td>{{ edu.edu_id.course.level.name }}</td>
 
-<!-- Course Name -->
-<td>
-    {{ edu.edu_id.course.name }}
-</td>
+      <!-- Course Name -->
+      <td>{{ edu.edu_id.course.name }}</td>
 
-<!-- Education Name -->
-<td>
-    {{ edu.edu_id.name }}
-</td>
+      <!-- Education Name -->
+      <td>{{ edu.edu_id.name }}</td>
 
-<!-- Institute -->
-<td>
-    {{ edu.institute }}
-</td>
+      <!-- Institute -->
+      <td>{{ edu.institute }}</td>
 
-<!-- Type -->
-<td>
-    {{ edu.type_id }}
-</td>
+      <!-- Type -->
+      <td>{{ edu.type_id }}</td>
 
-<!-- Year of Passing -->
-<td>
-    {{ edu.year_of_joining|default:'' }} -
-    {{ edu.year_of_passing|default:'' }}
-</td>
+      <!-- Year of Passing -->
+      <td>{{ edu.year_of_joining|default:'' }} -
+        {{ edu.year_of_passing|default:'' }}</td>
 
-<!-- Score -->
-<td>
-    {{ edu.score }}
-</td>
+      <!-- Score -->
+      <td>{{ edu.score }}</td>
 
-<!-- Document -->
-<td>
-    {% with edu.doc.name|cut:"UsersDF/100/000/001/onboarding/" as filename %}
-        {{ filename }}
-    {% endwith %}
-</td>
+      <!-- Document -->
+      <td>
+        {% if edu.doc %}
+        <a class="form-conrol" href="{{ edu.doc.url }}" target="_blank" class="btn btn-sm btn-outline-primary mb-2">
+            View file
+        </a>
+    {% endif %}
 
-<!-- Action Buttons -->
-<td>
-    <button 
+      </td>
+
+      <!-- Action Buttons -->
+      <td>
+            <button 
         formnovalidate
         class="btn btn-warning btn-sm"
         type="button"
@@ -62,10 +48,26 @@
 
             <i class="fa-solid fa-pen-to-square open-modal-btn"></i>
         </button>
-</td>
-
-</tr>
-{% endif %}
+    <button
+      formnovalidate
+      class="btn btn-danger btn-sm delete-edu-btn"
+      type="button"
+      hx-post="{% url 'job_seeker:onboarding' onboarding_id=onboarding_obj.Onbording_id page='education' %}"
+      hx-vals='{"delete_education": "{{ edu.edu_map_id }}"}'
+      hx-target="#education-body"
+      hx-swap="innerHTML">
+      <i class="fa-solid fa-trash"></i>
+    </button>
+      </td>
+    </tr>
+  {% endif %}
+{% empty %}
+  {% if not education_form.instance.edu_map_id %}
+    {% include 'jobseeker/htmx/onboarding_edu_save.html' %}
+  {% endif %}
 {% endfor %}
-
- 
+{% if not education_form.instance.edu_map_id %}
+  <template id="new-edu-form-template">
+    {% include 'jobseeker/htmx/onboarding_edu_save.html' %}
+  </template>
+{% endif %}

@@ -422,6 +422,23 @@ class UserLanguages(models.Model):
             abilities.append("Write")
 
         if len(abilities) == 1:
+            return f"{abilities[0][0]}"
+        elif len(abilities) == 2:
+            return f"{abilities[0][0]}, {abilities[1][0]}"
+        elif len(abilities) == 3:
+            return f"{abilities[0][0]}, {abilities[1][0]}, {abilities[2][0]}"
+        return "Non mentioned"
+
+    def ability_display_name(self):
+        abilities = []
+        if self.can_speak:
+            abilities.append("Speak")
+        if self.can_read:
+            abilities.append("Read")
+        if self.can_write:
+            abilities.append("Write")
+
+        if len(abilities) == 1:
             return f"Can {abilities[0]} only"
         elif len(abilities) == 2:
             return f"Can {abilities[0]} and {abilities[1]}"

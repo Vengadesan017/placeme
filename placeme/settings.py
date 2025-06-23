@@ -23,11 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-t8ovx6ha2tj2hhamki83z2^z2_7!#x24=hr-a19xv0_ztdrkcz'
 
-# SECURITY WARNING: don't run with debug turned on in production! https://8f54-38-134-138-215.ngrok-free.app/
+# SECURITY WARNING: don't run with debug turned on in production! https://577d-38-134-138-191.ngrok-free.app/
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost','52.63.139.176']
-CSRF_TRUSTED_ORIGINS = ['https://52.63.139.176']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost','577d-38-134-138-191.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://577d-38-134-138-191.ngrok-free.app']
 
 # ALLOWED_HOSTS = []
 
@@ -95,26 +95,26 @@ WSGI_APPLICATION = 'placeme.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'placeme_hrms',
-        'USER': 'newuser',
-        'PASSWORD': 'Str0ngP@ssw0rd!',
-        'HOST': 'localhost',  
-        'PORT': '3306',        
-    }
-}
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'placenow_hrms',
-#         'USER': 'root',
-#         'PASSWORD': '123456',
+#         'NAME': 'placeme_hrms',
+#         'USER': 'newuser',
+#         'PASSWORD': 'Str0ngP@ssw0rd!',
 #         'HOST': 'localhost',  
 #         'PORT': '3306',        
 #     }
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'placenow_hrms',
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': 'localhost',  
+        'PORT': '3306',        
+    }
+}
 
 
 

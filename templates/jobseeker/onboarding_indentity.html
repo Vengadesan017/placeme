@@ -1,120 +1,148 @@
 {% load static %}
-<style>
-
-</style>
+<style></style>
 <div class="tab-pane fade active in show" id="tab5default">
-                                    
+  <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-start align-items-start d-inline-block" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;width:100%">
+    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-center order-2 d-inline-block bg-white align-top align-items-start">
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table border="0" class="tblassetsteps" style="width:100%">
+          <tr>
+            <td>
+              <label class="SideLabelBold">Aadhar Number</label>
+              {% if indentity_form.aadhar_number.field.required %}
+                <label><font size="3" color="red">*</font></label>
+              {% endif %}
+            </td>
+            <td>{{ indentity_form.aadhar_number }}</td>
 
+            <td>
+              <label class="SideLabelBold">Aadhar Document</label>
+              {% if indentity_form.aadhar_card.field.required %}
+                <label><font size="3" color="red">*</font></label>
+              {% endif %}
+            </td>
+            <td>
+              {% if indentity_form.instance.aadhar_card %}
+                <a class="form-conrol" href="{{ indentity_form.instance.aadhar_card.url }}" target="_blank" class="btn btn-sm btn-outline-primary mb-2">View file</a>
+              {% else %}
+                {{ indentity_form.aadhar_card }}
+              {% endif %}
+            </td>
 
-    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-start align-items-start d-inline-block" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;width:100%">
-        <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-center order-2 d-inline-block bg-white align-top  align-items-start">
-            <form method="POST" enctype="multipart/form-data">
-{% csrf_token %}
-            <table border="0" class="tblassetsteps" style="width:100%">
+            <td>
+              <label class="SideLabelBold">PF Number</label>
+              {% if indentity_form.pf_number.field.required %}
+                <label><font size="3" color="red">*</font></label>
+              {% endif %}
+            </td>
+            <td>{{ indentity_form.pf_number }}</td>
+          </tr>
 
-    <tr>
-      <td>
-        <label class="SideLabelBold">Aadhar Number</label>
-        {% if indentity_form.aadhar_number.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
-      </td>
-      <td>{{ indentity_form.aadhar_number }}</td>
+          <tr>
+            <td>
+              <label class="SideLabelBold">PAN Number</label>
+              {% if indentity_form.pan_number.field.required %}
+                <label><font size="3" color="red">*</font></label>
+              {% endif %}
+            </td>
+            <td>{{ indentity_form.pan_number }}</td>
 
-      <td>
-        <label class="SideLabelBold">Aadhar Document</label>
-        {% if indentity_form.aadhar_card.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
-      </td>
-      <td>    {% if indentity_form.instance.aadhar_card %}
-        <a class="form-conrol" href="{{ indentity_form.instance.aadhar_card.url }}" target="_blank" class="btn btn-sm btn-outline-primary mb-2">
-            View Uploaded Aadhar
-        </a><br>
-    {% endif %}</td>
+            <td>
+              <label class="SideLabelBold">PAN Document</label>
+              {% if indentity_form.pan_card.field.required %}
+                <label><font size="3" color="red">*</font></label>
+              {% endif %}
+            </td>
+            <td>
+              {% if indentity_form.instance.pan_card %}
+                <a class="form-conrol" href="{{ indentity_form.instance.pan_card.url }}" target="_blank" class="btn btn-sm btn-outline-primary mb-2">View file</a>
+              {% else %}
+                {{ indentity_form.pan_card }}
+              {% endif %}
+            </td>
 
-      <td>
-        <label class="SideLabelBold">PF Number</label>
-        {% if indentity_form.pf_number.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
-      </td>
-      <td>{{ indentity_form.pf_number }}</td>
-    </tr>
+            <td>
+              <label class="SideLabelBold">Bank Name</label>
+              {% if indentity_form.bank_name.field.required %}
+                <label><font size="3" color="red">*</font></label>
+              {% endif %}
+            </td>
+            <td>{{ indentity_form.bank_name }}</td>
+          </tr>
 
-    <tr>
-      <td>
-        <label class="SideLabelBold">PAN Number</label>
-        {% if indentity_form.pan_number.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
-      </td>
-      <td>{{ indentity_form.pan_number }}</td>
+          <tr>
+            <td>
+              <label class="SideLabelBold">IFSC Code</label>
+              {% if indentity_form.ifsc_code.field.required %}
+                <label><font size="3" color="red">*</font></label>
+              {% endif %}
+            </td>
+            <td>{{ indentity_form.ifsc_code }}</td>
 
-      <td>
-        <label class="SideLabelBold">PAN Document</label>
-        {% if indentity_form.pan_card.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
-      </td>
-      <td>{{ indentity_form.pan_card }}</td>
+            <td>
+              <label class="SideLabelBold">Bank Book Document</label>
+              {% if indentity_form.bank_book.field.required %}
+                <label><font size="3" color="red">*</font></label>
+              {% endif %}
+            </td>
+            <td>
+              {% if indentity_form.instance.bank_book %}
+                <a class="form-conrol" href="{{ indentity_form.instance.bank_book.url }}" target="_blank" class="btn btn-sm btn-outline-primary mb-2">View file</a>
+              {% else %}
+                {{ indentity_form.bank_book }}
+              {% endif %}
+            </td>
 
-      <td>
-        <label class="SideLabelBold">Bank Name</label>
-        {% if indentity_form.bank_name.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
-      </td>
-      <td>{{ indentity_form.bank_name }}</td>
-    </tr>
+            <td>
+              <label class="SideLabelBold">Bank Account Number</label>
+              {% if indentity_form.account_number.field.required %}
+                <label><font size="3" color="red">*</font></label>
+              {% endif %}
+            </td>
+            <td>{{ indentity_form.account_number }}</td>
+          </tr>
 
-    <tr>
-      <td>
-        <label class="SideLabelBold">IFSC Code</label>
-        {% if indentity_form.ifsc_code.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
-      </td>
-      <td>{{ indentity_form.ifsc_code }}</td>
+          <tr>
+            <td>
+              <label class="SideLabelBold">PFUAN</label>
+              {% if indentity_form.pf_uan.field.required %}
+                <label><font size="3" color="red">*</font></label>
+              {% endif %}
+            </td>
+            <td>{{ indentity_form.pf_uan }}</td>
 
-      <td>
-        <label class="SideLabelBold">Bank Book Document</label>
-        {% if indentity_form.bank_book.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
-      </td>
-      <td>{{ indentity_form.bank_book }}</td>
+            <td>
+              <label class="SideLabelBold">ESIC Number</label>
+              {% if indentity_form.esic_number.field.required %}
+                <label><font size="3" color="red">*</font></label>
+              {% endif %}
+            </td>
+            <td>{{ indentity_form.esic_number }}</td>
 
-      <td>
-        <label class="SideLabelBold">Bank Account Number</label>
-        {% if indentity_form.account_number.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
-      </td>
-      <td>{{ indentity_form.account_number }}</td>
-    </tr>
+            <td>
+              <label class="SideLabelBold">Address Proof</label>
+              {% if indentity_form.address_proof.field.required %}
+                <label><font size="3" color="red">*</font></label>
+              {% endif %}
+            </td>
+            <td>
+              {% if indentity_form.instance.address_proof %}
+                <a class="form-conrol" href="{{ indentity_form.instance.address_proof.url }}" target="_blank" class="btn btn-sm btn-outline-primary mb-2">View file</a>
+              {% else %}
+                {{ indentity_form.address_proof }}
+              {% endif %}
+            </td>
+          </tr>
+        </table>
 
-    <tr>
-      <td>
-        <label class="SideLabelBold">PFUAN</label>
-        {% if indentity_form.pf_uan.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
-      </td>
-      <td>{{ indentity_form.pf_uan }}</td>
+        <br />
+        <br />
 
-      <td>
-        <label class="SideLabelBold">ESIC Number</label>
-        {% if indentity_form.esic_number.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
-      </td>
-      <td>{{ indentity_form.esic_number }}</td>
-
-      <td>
-        <label class="SideLabelBold">Address Proof</label>
-        {% if indentity_form.address_proof.field.required %}<label><font size="3" color="red">*</font></label>{% endif %}
-      </td>
-      <td>{{ indentity_form.address_proof }}</td>
-    </tr>
-  </table>
-
-  <br>
-  <br>
-</table>
-
-<div style="float:right">
-    {% comment %} <button formnovalidate type="submit" name="save_as_draft_onboarding" class="btn btn-primary btn-save">Savs as Draft</button> {% endcomment %}
-    <button type="submit" name="complete_onboarding" class="btn btn-primary btn-save">Complete</button>
-    
-</div>
-</form>
-      
-     
+        <div style="float:right">
+          {% comment %} <button formnovalidate type="submit" name="save_as_draft_onboarding" class="btn btn-primary btn-save">Savs as Draft</button> {% endcomment %}
+          <button type="submit" name="complete_onboarding" class="btn btn-primary btn-save btn-bottom">Complete</button>
+        </div>
+      </form>
     </div>
-    </div>
-    
-    
-
-
-
+  </div>
 </div>
-

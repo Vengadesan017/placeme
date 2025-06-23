@@ -1,36 +1,23 @@
-                    <tr>
-                        <td>
-                            <select class="form-control" name="edu_id" id="id_edu_id" required>
-                                <option value="">Select Education Level</option>
-                                {% for option in level %}
-                                    <option value="{{ option }}">
-                                        {{ option }}
-                                    </option>
-                                {% endfor %}
-                            </select>       
-                        </td>
-                        <td>
-                            <select class="form-control" name="edu_id" id="id_edu_id" required>
-                                <option value="">Select Brance</option>
-                                {% for option in course %}
-                                    <option value="{{ option }}">
-                                        {{ option }}
-                                    </option>
-                                {% endfor %}
-                            </select>        
-                        </td>
-                        <td>
-                            
-                            <select class="form-control" name="edu_id" id="id_edu_id" required>
-                                <option value="">Select Degree</option>
-                                {% for option in education_form.fields.edu_id.queryset %}
-                                    <option value="{{ option.pk }}" {% if option.pk == education_form.initial.edu_id %}selected{% endif %}>
-                                        {{ option }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-            
-                        </td>
+                    <tr class="edit-form" data-new="true">
+    <td>
+    <select class="form-control edu-level" name="level" required>
+        <option value="">Select Level</option>
+
+    </select>
+    </td>
+    <td>
+        <select class="form-control edu-course" name="course"
+                required>
+            <option value="">Select Degree</option>
+        </select>
+    </td>
+    <td>
+        <select class="form-control edu-spec" name="edu_id"
+                data-selected-spec="{{ education_form.initial.edu_id|default:'' }}"
+                required>
+            <option value="">Select Specialization{{ education_form.initial.edu_id|default:'' }}</option>
+        </select>
+    </td>
                         <td>
                             <input type="text" class="form-control" name="institute" id="id_institute" value="{{ education_form.initial.institute|default_if_none:'' }}" placeholder="Enter your institude name"  required/>
                         </td>
@@ -69,16 +56,18 @@
                         <td><input type="file" class="form-control" id="" name="doc" value=""> </td>
                         <td>
                         <input type="hidden" name="save_education" value="{{ education_form.instance.edu_map_id }}">
-                        <button 
-                            class="model-btn-save"
-                            type="submit">
 
-                                   {% if education_form.instance.edu_map_id %}
-                                    Save
-                                {% else %}
-                                    Add
-                                {% endif %}
-                            </button>
+                        {% comment %} <button
+                            formnovalidate
+                            class="btn btn-danger btn-sm delete-edu-btn"
+                            type="button"
+                            hx-post="{% url 'job_seeker:onboarding' onboarding_id=onboarding_obj.Onbording_id page='education' %}"
+                            hx-vals='{"delete_education": "{{ education_form.instance.edu_map_id }}"}'
+                            hx-target="#education-body"
+                            hx-swap="innerHTML"
+                            onclick="return confirm('Are you sure you want to delete this education entry?');">
+                            <i class="fa-solid fa-trash"></i>
+                            </button> {% endcomment %}
                         </td>      
                     </tr>
  

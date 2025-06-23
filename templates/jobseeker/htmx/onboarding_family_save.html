@@ -1,6 +1,6 @@
 
 
-                    <tr>
+                    <tr class="edit-form" data-new="true">
                         <td><input type="text" name="first_name" id="txtFFirstName1" class="form-control" value="{{family_form.first_name.value|default:''}}" required></td>
                         <td><input type="text" name="last_name" id="txtFLastName1" class="form-control" value="{{family_form.last_name.value|default:''}}" required> </td>
                         <td><select id="ddlFGender1" name="gender" class="form-control" required>
@@ -24,16 +24,6 @@
                         <td>
                         <input type="hidden" name="save_family" value="{{ family_form.instance.family_member_id }}">
 
-                        <button 
-                            class="model-btn-save"
-                            type="submit">
-
-                                   {% if family_form.instance.family_member_id %}
-                                    Save
-                                {% else %}
-                                    Add
-                                {% endif %}
-                            </button>
                         </td>
                     </tr>
 

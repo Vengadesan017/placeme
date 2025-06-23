@@ -1,6 +1,3 @@
-{% if not experience_form.instance.work_company_id %}
-  {% include 'jobseeker/htmx/onboarding_exp_save.html' %}
-{% endif %}
 
 {% for exp in my_experience %}
   {% if experience_form.instance.work_company_id == exp.work_company_id %}
@@ -15,9 +12,10 @@
       <td>{{ exp.reason_for_leaving }}</td>
       <td>
         {% if exp.doc %}
-          {% with exp.doc.name|cut:"UsersDF/100/000/001/onboarding/" as filename %}
-            {{ filename }}
-          {% endwith %}
+
+        <a class="form-conrol" href="{{ exp.doc.url }}" target="_blank" class="btn btn-sm btn-outline-primary mb-2">
+            View file
+        </a>
         {% endif %}
       </td>
       <td>
@@ -29,7 +27,32 @@
                 hx-vals='{"edit_experience": "{{ exp.work_company_id }}"}'>
           <i class="fa-solid fa-pen-to-square open-modal-btn"></i>
         </button>
+
+            <button
+        formnovalidate
+        class="btn btn-danger btn-sm delete-edu-btn"
+        type="button"
+        hx-post="{% url 'job_seeker:onboarding' onboarding_id=onboarding_obj.Onbording_id page='experience' %}"
+        hx-vals='{"delete_experience": "{{ exp.work_company_id }}"}'
+        hx-target="#experience-body"
+        hx-swap="innerHTML">
+        <i class="fa-solid fa-trash"></i>
+        </button> 
+        
+        
       </td>
     </tr>
   {% endif %}
+  {% empty %}
+{% if not experience_form.instance.work_company_id %}
+  {% include 'jobseeker/htmx/onboarding_exp_save.html' %}
+{% endif %}
+
 {% endfor %}
+
+{% if not experience_form.instance.work_company_id %}
+  <template id="new-exp-form-template">
+     {% include 'jobseeker/htmx/onboarding_exp_save.html' %}
+    </template>
+{% endif %}
+

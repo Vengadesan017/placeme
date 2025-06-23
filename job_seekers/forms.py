@@ -1,6 +1,7 @@
 from django import forms
 from .models import Candidates, Onboarding, EducationMap, UserLanguages,\
-    UserLocations, Employment, Internship, Familys,OnboardingDocumentRequirement
+    UserLocations, Employment, Internship, Familys,OnboardingDocumentRequirement,\
+        SpecificationForEdu
 import datetime
 
 
@@ -50,7 +51,26 @@ class CandidateEducationUpdateForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
+        edu_obj = self.instance.edu_id  # This is the SpecificationForEdu object if editing
+
+        self.fields['edu_id'].queryset = SpecificationForEdu.objects.select_related('course__level')
+
+        # Extra hidden fields to use in the template (JS)
+        self.level_id = None
+        self.course_id = None
+
+        if edu_obj:
+            course = edu_obj.course
+            level = course.level if course else None
+
+            self.course_id = course.course_id if course else None
+            self.level_id = level.level_id if level else None
+            
+            
 class OnboardingCandidatePersonalForm(forms.ModelForm):
     class Meta:
         model = Candidates

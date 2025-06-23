@@ -21,15 +21,18 @@
     
                     </tr>
                 </thead>
-                <tbody id="experience-body">
+                <tbody id="experience-body" data-has-education="{% if my_experience %}true{% else %}false{% endif %}">
                     {% include 'jobseeker/htmx/onboarding_exp_table.html' %}
                 </tbody>
             </table>
     
-        </form>
-            <div style="float:right">            
-                <a href="{% url 'job_seeker:onboarding' onboarding_id=onboarding_obj.Onbording_id page='identity' %}" class="btn btn-primary btn-save">Next</a>
+            <div style="float:right">         
+                <button type="button" class="btn btn-primary btn-save btn-bottom" id="add-row-btn">Add Row</button>
+                <button type="button" class="btn btn-primary btn-save btn-bottom" id="save-btn" style="display:none;">Save</button>
+                <button type="button" class="btn btn-primary btn-save btn-bottom" id="save-add-another-btn" style="display:none;">Save and Add Another</button>   
+                <a href="{% url 'job_seeker:onboarding' onboarding_id=onboarding_obj.Onbording_id page='identity' %}" class="btn btn-primary btn-save btn-bottom">Next</a>
             </div>
+        </form>
         </div>
     </div>
 
@@ -44,3 +47,93 @@
 
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const addRowBtn = document.getElementById('add-row-btn');
+    const saveBtn = document.getElementById('save-btn');
+    const saveAddAnotherBtn = document.getElementById('save-add-another-btn');
+    const tableBody = document.getElementById('experience-body');
+    const outerForm = addRowBtn?.closest('form');
+
+    const hasEducation = tableBody?.dataset?.hasEducation === 'true';
+    let formActive = !!tableBody.querySelector('.edu-form') || !hasEducation;
+    let saveAndAddAnotherClicked = false;
+
+    function toggleButtons() {
+        if (formActive) {
+            addRowBtn.style.display = 'none';
+            saveBtn.style.display = 'inline-block';
+            saveAddAnotherBtn.style.display = 'inline-block';
+            
+        } else {
+            addRowBtn.style.display = 'inline-block';
+            saveBtn.style.display = 'none';
+            saveAddAnotherBtn.style.display = 'none';
+        }
+    }
+
+    toggleButtons();
+
+    addRowBtn?.addEventListener('click', function (e) {
+        e.preventDefault();
+        const template = document.getElementById('new-exp-form-template');
+        if (template && !formActive) {
+            const clone = template.content.cloneNode(true);
+            tableBody.appendChild(clone);
+            formActive = true;
+            toggleButtons();
+        }
+    });
+
+    saveBtn?.addEventListener('click', function (e) {
+        e.preventDefault();
+        saveAndAddAnotherClicked = false;
+        outerForm?.requestSubmit();
+    });
+
+    saveAddAnotherBtn?.addEventListener('click', function (e) {
+        e.preventDefault();
+        saveAndAddAnotherClicked = true;
+        outerForm?.requestSubmit();
+    });
+
+    document.addEventListener('htmx:afterSwap', function () {
+        formActive = !!tableBody.querySelector('.edit-form');
+
+        if (saveAndAddAnotherClicked) {
+            // Reset the flag
+            saveAndAddAnotherClicked = false;
+
+            // Automatically trigger "Add Row" if the template exists
+            const template = document.getElementById('new-exp-form-template');
+            if (template) {
+                const clone = template.content.cloneNode(true);
+                tableBody.appendChild(clone);
+                formActive = true;
+            }
+        }
+
+        toggleButtons();
+    });
+
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('cancel-form')) {
+        const formRow = e.target.closest('.edu-form');
+
+        // Only remove if it's a newly added row (not an edit form)
+        if (formRow && formRow.dataset.new === "true") {
+            formRow.remove();
+            formActive = false;
+            toggleButtons();
+        }
+    }
+});
+
+
+});
+
+
+
+
+</script>

@@ -1,52 +1,119 @@
-<form hx-post="{% url 'job_seeker:profile' %}" hx-target="#language-modal-body" hx-swap="innerHTML">
+<form hx-post="#" hx-target="#language-modal-body" hx-swap="innerHTML">
 {% csrf_token %}
-<table class="language-table">
-  <thead>
-    <tr>
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 class="modal-title">Add or Edit Your Known Languages</h3>
+                {% comment %} <button
+                    type="button"
+                    class="btn-close close-modal-btn"
+                    id="closePreferLanguageEditModalButton"
+                    hx-get="{% url 'job_seeker:onboarding_htmx_language_show_partial' %}"
+                    hx-target="#onboarding-language-td"
+                    hx-swap="innerHTML"
+                    hx-on="htmx:afterRequest: closeOpenedModal()"
+                    ><i class='fas fa-times edit'></i>
+                </button> {% endcomment %}
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body" >
+
+
+                                <table class="language-table">
+                                    <thead>
+                                        <tr>
+                                            {% comment %} <th class="">Languages</th>
+                                            <th class="">Speak</th>
+                                            <th>Read</th>
+                                            <th>Write</th>
+                                            <th>Proficiency Level</th>
+                                            <th>Action</th> {% endcomment %}
       <th class="lang-col">Language</th>
-      <th class="ability-col">Ability</th>
+      <th class="ability-col">Can Speak</th>
+      <th class="ability-col">Can Read</th>
+      <th class="ability-col">Can Write</th>
       <th class="prof-col">Proficiency Level</th>
       <th class="action-col">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- If no language is selected for editing, show blank form -->
-    {% if not language_form.instance.language_id %}
-        {% include 'jobseeker/htmx/onboarding_language_save.html' %}
-    {% endif %}
+                                        </tr>
+                                    </thead>
+                                    <tbody class="language-body">
+                                    {% for lan in languages %}
+                              {% if language_form.instance.language_id == lan.language_id %}
+                                  {% include 'jobseeker/htmx/onboarding_language_save.html' %}
+                              {% else %}
+                                    <tr>
+                                        <td>{{lan.language_id}}
+                                        <td>{% if lan.can_speak %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}</td>
+                                        <td>{% if lan.can_read %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}</td>
+                                        <td>{% if lan.can_write %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}</td>
+                                        <td>{{lan.proficiency|default_if_none:''}}</td>
+                                        <td>
+                                      <button 
+                                      formnovalidate
+                                          class="btn btn-warning btn-sm"
+                                          type="button"
+                                          name="save_language" 
+                                          value="{{ lan.user_language_id }}"
+                                          hx-post="#"
+                                          hx-target="#language-modal-body"
+                                          hx-swap="innerHTML"
+                                          hx-vals='{"edit_language": "{{ lan.user_language_id }}"}'>
 
-    <!-- List existing languages -->
-    {% for lang in languages %}
-    {% if language_form.instance.language_id == lang.language_id %}
-        {% include 'jobseeker/htmx/onboarding_language_save.html' %}
-    {% else %}
-      <tr>
-          <td class="lang-col">{{ lang.language_id }}</td>
-          <td class="ability-col">
-            {{lang.ability_display}}
-          </td>
-          <td class="prof-col">{{ lang.get_proficiency_display }}</td>
-          <td class="action-col">
+                          <i class="fa-solid fa-pen-to-square open-modal-btn"></i>
+                      </button>
 
-                        <button 
-                            class="btn btn-warning btn-sm"
-                            type="button"
-                            name="save_language" 
-                            value="{{ lang.user_language_id }}"
-                            hx-post="{% url 'job_seeker:profile' %}"
-                            hx-target="#language-modal-body"
-                            hx-swap="innerHTML"
-                            hx-vals='{"edit_language": "{{ lang.user_language_id }}"}'>
+                      <button 
+                      formnovalidate
+                                          class="btn btn-danger btn-sm delete-edu-btn"
+                                          type="button"
+                                          name="delete_language" 
+                                          value="{{ lan.user_language_id }}"
+                                          hx-post="#"
+                                          hx-target="#language-modal-body"
+                                          hx-swap="innerHTML"
+                                          hx-vals='{"delete_language": "{{ lan.user_language_id }}"}'>
 
-             <i class="fa-solid fa-pen-to-square open-modal-btn"></i>
-        </button>
-          </td>
-        {% endif %}
-      </tr>
-      {% empty %}
-      
-    {% endfor %}
-  </tbody>
-</table>
+                          <i class="fa-solid fa-trash open-modal-btn"></i>
+                      </button>
 
+                      
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% empty %}
+                                    {% if not language_form.instance.language_id %}
+                                        {% include 'jobseeker/htmx/onboarding_language_save.html' %}
+                                    {% endif %}
+                                    {% endfor %}
+                      {% if add_row and not language_form.instance.language_id %}
+                          {% include 'jobseeker/htmx/onboarding_language_save.html' %}
+                      {% endif %}
+                                    </tbody>
+
+
+                                </table>
+
+           </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                {% comment %}   the value is not work when using the submit in htmx bcox it is in outtter scope     {% endcomment %}
+                {% if add_row or language_form.instance.language_id or not languages %}
+                <button type="submit" class="btn btn-primary btn-save" value="{{ language_form.instance.user_language_id|default:'' }}" name="save_language"  id="save-btn" style=";">Save</button>
+                {% else %}
+                <button type="submit" formnovalidate name="add_row_lang" class="btn btn-primary btn-save" id="add-row-btn">Add Row</button>
+
+                {% endif %}
+
+                <button type="button" class="btn btn-primary btn-save" id="save-add-another-btn" style="display:none;">Save and Add Another</button>
+                <button
+                    type="button"
+                    class="btn btn-primary btn-save close-modal-btn"
+                    id="closePreferLanguageEditModalButton"
+                    hx-get="{% url 'job_seeker:onboarding_htmx_language_show_partial' %}"
+                    hx-target="#onboarding-language-td"
+                    hx-swap="innerHTML"
+                    hx-on="htmx:afterRequest: closeLanguageModal()"
+                >Close</button>
+            </div>
 </form>

@@ -1,7 +1,3 @@
-
-                    {% if not family_form.instance.family_member_id %}
-                        {% include 'jobseeker/htmx/onboarding_family_save.html' %}
-                    {% endif %}
                     {%for fam in my_family%}
                         {% if family_form.instance.family_member_id == fam.family_member_id %}
                             {% include 'jobseeker/htmx/onboarding_family_save.html' %}
@@ -27,7 +23,27 @@
 
                                 <i class="fa-solid fa-pen-to-square open-modal-btn"></i>
                             </button>
+
+                            <button
+                        formnovalidate
+                        class="btn btn-danger btn-sm delete-edu-btn"
+                        type="button"
+                        hx-post="{% url 'job_seeker:onboarding' onboarding_id=onboarding_obj.Onbording_id page='family' %}"
+                        hx-vals='{"delete_family": "{{ fam.family_member_id }}"}'
+                        hx-target="#family-body"
+                        hx-swap="innerHTML">
+                        <i class="fa-solid fa-trash"></i>
+                        </button>
                             </td>
                         </tr>
                     {% endif %}
+                    {% empty %}
+                    {% if not family_form.instance.family_member_id %}
+                            {% include 'jobseeker/htmx/onboarding_family_save.html' %}
+                    {% endif %}
                     {% endfor %}
+{% if not family_form.instance.family_member_id %}
+  <template id="new-fam-form-template">
+        {% include 'jobseeker/htmx/onboarding_family_save.html' %}
+    </template>
+{% endif %}
