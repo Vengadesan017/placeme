@@ -21,7 +21,8 @@ urlpatterns = [
     path('api/keyword/',views.ApiTitle,name='api_title'),
     
     # HTMX
-    path('htmx/keyword/',views.HTMXOnboardingLanguages,name='onboarding_htmx_language_show_partial'),
+    path('htmx/profile_language/',views.HTMXOnProfileLanguages,name='profile_htmx_language_show_partial'),
+    path('htmx/onboaring_language/',views.HTMXOnboardingLanguages,name='onboarding_htmx_language_show_partial'),
 
 ]
 

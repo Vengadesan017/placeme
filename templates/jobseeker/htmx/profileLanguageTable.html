@@ -1,0 +1,110 @@
+
+<form hx-post="#" hx-target="#language-modal-body" hx-swap="innerHTML">
+{% csrf_token %}
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 class="modal-title">Known Languages</h3>
+                <button
+                    type="button"
+                    class="btn-close close-modal-btn"
+                    id=""
+                    hx-post="{% url 'job_seeker:profile_htmx_language_show_partial' %}"
+                    hx-target="#my_language"
+                    hx-swap="innerHTML"
+                    hx-on="htmx:afterRequest: closeHtmxModalButton()"
+                ><i class='fas fa-times edit'></i></button>                
+
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body" >
+
+
+                                <table class="language-table">
+                                    <thead>
+                                        <tr>
+                                            {% comment %} <th class="">Languages</th>
+                                            <th class="">Speak</th>
+                                            <th>Read</th>
+                                            <th>Write</th>
+                                            <th>Proficiency Level</th>
+                                            <th>Action</th> {% endcomment %}
+      <th class="lang-col">Language</th>
+      <th class="ability-col">Can Speak</th>
+      <th class="ability-col">Can Read</th>
+      <th class="ability-col">Can Write</th>
+      <th class="prof-col">Proficiency Level</th>
+      <th class="action-col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="language-body">
+                                    {% for lan in my_languages %}
+                              {% if language_form.instance.user_language_id == lan.user_language_id %}
+                                  {% include 'jobseeker/htmx/onboarding_language_save.html' %}
+                              {% else %}
+                                    <tr>
+                                        <td>{{lan.language_id}}
+                                        <td>{% if lan.can_speak %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}</td>
+                                        <td>{% if lan.can_read %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}</td>
+                                        <td>{% if lan.can_write %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}</td>
+                                        <td>{{lan.proficiency|default_if_none:''}}</td>
+                                        <td>
+                                      <button 
+                                      formnovalidate
+                                          class="btn-warning btn-sm"
+                                          type="submit"
+                                          name="edit_language" 
+                                          value="{{ lan.user_language_id }}"
+>
+
+                          <i class="fa-solid fa-pen-to-square open-modal-btn"></i>
+                      </button>
+
+                      <button 
+                      formnovalidate
+                                          class="btn-danger btn-sm delete-edu-btn"
+                                          type="button"
+                                          name="delete_language" 
+                                          value="{{ lan.user_language_id }}"
+                                          hx-post="#"
+                                          hx-target="#language-modal-body"
+                                          hx-swap="innerHTML"
+                                          hx-vals='{"delete_language": "{{ lan.user_language_id }}"}'>
+
+                          <i class="fa-solid fa-trash open-modal-btn"></i>
+                      </button>
+
+                      
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% empty %}
+                                    {% if not language_form.instance.language_id %}
+                                        {% include 'jobseeker/htmx/onboarding_language_save.html' %}
+                                    {% endif %}
+                                    {% endfor %}
+                      {% if add_row and not language_form.instance.language_id %}
+                          {% include 'jobseeker/htmx/onboarding_language_save.html' %}
+                      {% endif %}
+                                    </tbody>
+
+
+                                </table>
+
+           </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+     
+                {% if add_row or language_form.instance.language_id or not my_languages %}
+                <button type="submit" class="model-btn-save" value="{{ language_form.instance.user_language_id|default:'' }}" name="save_language"  id="save-btn" style=";">Save</button>
+                {% else %}
+                <button type="submit" formnovalidate name="add_row_lang" class="model-btn-save" id="add-row-btn">Add Row</button>
+
+                {% endif %}
+
+
+
+            </div>
+</form>
+

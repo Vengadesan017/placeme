@@ -1,9 +1,3 @@
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-
-}
 
 .skill-container {
   min-height: 400px;
@@ -18,7 +12,7 @@
 }
 
 .education {
-  min-height: 190px;
+  min-height: 50px;
   height: auto;
   /* background-color: brown; */
 }
@@ -52,7 +46,7 @@
 }
 
 .education-name2 {
-  min-height: 150px;
+  min-height: 50px;
   height: auto;
   /* background-color: cadetblue; */
   display: flex;

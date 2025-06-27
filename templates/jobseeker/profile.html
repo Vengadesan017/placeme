@@ -12,6 +12,15 @@
 <link rel="stylesheet" href="{% static 'css/profile-right-skill-2.css' %}">
 <link rel="stylesheet" href="{% static 'css/profile-moblie-view.css' %}">
 <link rel="stylesheet" href="{% static 'css/model.css' %}">
+<link rel="stylesheet" href="{% static 'css/loading.css' %}">
+
+  {% comment %} <script src="{% static 'js/htmx/2_0_5.min.js' %}" defer></script> {% endcomment %}
+  <script src="{% static 'js/htmx/1_9_12.min.js' %}" defer></script>
+
+<script src="{% static 'js/loading.js' %}" defer></script>
+
+
+{% comment %} <script src="{% static 'js/recruiters/post_create_form_multiple_select.js' %}" defer></script> {% endcomment %}
 {% endblock statics %}
 
 
@@ -23,13 +32,13 @@
         <div class="left-container">
             <div class="profile-pic">
                 <div class="pic-div">
-{% comment %} {% with profile_pic=form.instance.profile_pic %}
-    {% if profile_pic %}
-        <img src="{{ profile_pic.url }}" class="pic-photo" alt="profile pic" width="100%">
-    {% else %}
-        <img src="{% static 'img/image.png' %}" class="pic-photo" alt="profile pic" width="100%">
-    {% endif %}
-{% endwith %} {% endcomment %}
+        {% comment %} {% with profile_pic=form.instance.profile_pic %}
+            {% if profile_pic %}
+                <img src="{{ profile_pic.url }}" class="pic-photo" alt="profile pic" width="100%">
+            {% else %}
+                <img src="{% static 'img/image.png' %}" class="pic-photo" alt="profile pic" width="100%">
+            {% endif %}
+        {% endwith %} {% endcomment %}
                     {% if candidate.profile_pic %}
                     <img src="{{candidate.profile_pic.url }}" class="pic-photo" alt="profile pic" width="100%">
                 {% else %}
@@ -46,6 +55,12 @@
                         <li>
                             <div class="li-1">
                                 <div class="personal-div"><a href="#personal-info" class="profile-link">Personal Info</a></div>
+                                <div class="height"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="li-1">
+                                <div class="personal-div"><a href="#professional-summary" class="profile-link">Professional Summary</a></div>
                                 <div class="height"></div>
                             </div>
                         </li>
@@ -77,13 +92,19 @@
                         <li>
                             <div class="li-1">
                                 <div class="personal-div">
-                                    <a href="#employement" class="profile-link">Employement</a></div>
+                                    <a href="#employment" class="profile-link">Employement</a></div>
                                 <div class="height"></div>
                             </div>
                         </li>
                         <li>
                             <div class="li-1">
                                 <div class="personal-div"><a href="#career-info" class="profile-link">Compensation and benefits</a></div>
+                                <div class="height"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="li-1">
+                                <div class="personal-div"><a href="#resume" class="profile-link">Resume</a></div>
                                 <div class="height"></div>
                             </div>
                         </li>
@@ -106,340 +127,81 @@
               </div>    
             {% endfor %}
           {% endif %}
-            <div class="info-container" id="personal-info">
-                    <div class="info-profile-mv">
-
-                        <div class="pic-div-mv">
-                    {% if candidate.profile_pic %}
-                    <img src="{{candidate.profile_pic.url }}" class="pic-photo" alt="profile pic" width="100%">
-                {% else %}
-                    <img src="{% static 'img/image.png' %}" class="pic-photo" alt="profile pic" width="100%">
-                {% endif %}
-
-
-                            <button class="btn-mv">+</button>
-                        </div>
-
-
-                        <div class="info-name-mv">
-
-
-
-                            <div class="info-name1-mv">
-                                <!-- mod -->
-                                <div class="name-div-mv">
-                                    <h1 id="userName">Vengadesan G <a href="##"
-                                            class="open-modal-btn" data-modal-id="PersonalModal"> <i
-                                                class="fa-solid fa-pencil"></i></a></h1>
-
-                                </div>
-                                <div class="detial-div-name-mv">
-                                    <p>An innovative and dedicated software engineer with a proven track record of successful projects and client satisfaction</p>
-                                </div>
-
-                            </div>
-                            <div class="info-date-mv">
-                                <p class="update-p-mv">Last Updated -</p>
-                                <p class="date-mv"> Jan. 25, 2025</p>
-                            </div>
-
-
-                        </div>
-                        
-
+                    <div id="loading-screen">
+                    <div class="loader-wrapper">
+                        <div class="loader"></div>
+                        <span class="loading-text">Loading, please wait...</span>
                     </div>
-                <div class="info-name">
-
-
-
-                    <div class="info-name1">
-                        <!-- mod -->
-                        <div class="name-div">
-                            <h1 id="userName">{{ candidate.first_name }} {{ candidate.last_name }} <a href="#" class="open-modal-btn" data-modal-id="PersonalModal" > <i class='fa-solid fa-pencil'></i></a></h1>
-                            
-                        </div>
-                        <div class="detial-div-name">
-                            <p>An innovative and dedicated software engineer with a proven track record of successful projects and client satisfaction</p>
-                        </div>
-                        
                     </div>
-                    <div class="info-date">
-                        <p class="update-p">Last Updated -</p>
-                        <p class="date"> {{ candidate.last_update }}</p>
-                    </div>
-
-
-                </div>
-
-                <div class="detail-main">
-                    <div class="detail-1">
-
-
-
-                        <div class="gender-box">
-                            <ul class="gender-box-ul">
-                                <li>
-                                    <div class="gender-box-person">
-                                        <i class="fa-solid fa-user"></i>
-                                        <p>
-                                            {% if candidate.gender %}
-                                                {{ candidate.gender }}
-                                            {% else %}
-                                            <a href="#" class="open-modal-btn" data-modal-id="PersonalModal" >Add Gender</a>
-                                            {% endif %}
-                                        </p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="gender-box-date">
-                                        <i class="fa-solid fa-calendar-week"></i>
-                                        <p>
-                                            {% if candidate.dob %}
-                                                {{ candidate.dob|date:'d-m-Y' }}
-                                            {% else %}
-                                            <a href="#" class="open-modal-btn" data-modal-id="PersonalModal" >Add DOB</a>
-                                            {% endif %}
-
-                                        </p>
-                                    </div>
-                                </li>
-                                <!-- mod -->
-                                <li>
-                                    <div class="phone-box-place">
-                                        <i class="fa-solid fa-suitcase"></i>
-                                        {% if candidate.work_status %}
-                                            {{ candidate.work_status|default_if_none:'' }}
-                                        {% else %}
-                                        <a href="#" class="open-modal-btn" data-modal-id="PersonalModal" >Add Status</a>
-                                        {% endif %}
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-
-
-
-
-                        <div class="phone-box">
-                            <ul class="phone-box-ul">
-                                <li>
-                                    <div class="phone-box-person">
-                                        <i class="fa-solid fa-phone"></i>
-                                        <p>{{ candidate.user.mobile_no|default_if_none:'' }}</p>
-                                    </div>
-                                </li>
-                                <!-- mod -->
-                                <li>
-                                    <div class="phone-box-date">
-                                        <i class="fa-solid fa-envelope"></i>
-                                        <div class="email-div">
-                                            <p class="email" id="email">{{ candidate.user.email|default_if_none:'' }}</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                
-                                <li>
-                                    <div class="gender-box-place">
-                                        <i class="fa-solid fa-location-dot"></i>
-                                        <p>
-                                            {% if candidate.city and candidate.state and candidate.country %}
-                                            {{ candidate.city }}, {{ candidate.state }}, {{ candidate.country }}
-                                            {% else %}
-                                            <a href="#" class="open-modal-btn" data-modal-id="PersonalModal" >Add Location</a>
-                                            {% endif %}
-                                        </p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-
-
-
-
-
-
-                    <div class="uploadfile-div">
-                        <div class="color-div">
-                            <div class="resume">
-                                <ul class="resume-ul">
-                                    <li class="resume-li1">
-                                        <a class="resume-a1">
-                                            <i class="fa-regular fa-envelope"></i>
-                                            <p>Verify Email</p>
-                                        </a>
-                                    </li>
-                                    <li class="resume-li2">
-                                        <a class="resume-a2">
-                                            <i class="fa-regular fa-file"><span class="add-resume">Add Resume</span> </i>
-                                                               
-                                            {% comment %} <button class="upload-btn">Upload file</button> {% endcomment %}
-                                            <a href="#" class="open-modal-btn upload-btn" data-modal-id="ResumeModal" >Upload file</a>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-<!--                                 <div class="upload-file">
-                                <button class="upload-btn">Upload file</button>
-                            </div> -->
-
-                        </div>
-
-
-                    </div>
-
-                </div>
+          <div class="info-container" id="personal-info">
+                {% include "jobseeker/htmx/profilePersonalShow.html" %}
             </div>
-            <div class="skill-container" id="education">
-                <div class="education">
-                    <div class="education-name1">
-                        <h4>Education</h4>
-                        <div class="add-div">
-                            <a href="#" class="open-modal-btn" data-modal-id="EduModal" >Add</a>
-                            <i id="openEduEditModalButton" class="fa-solid fa-pen-to-square open-modal-btn" data-modal-id="EduEditModal"></i>
-                        </div>
-                    </div>
-                    <div class="education-name2">
+{% comment %}  {% endcomment %}
 
-                        {% if education %}
-                        {% for edu in education %}
-                        <div class="education-name2-1">
-                            <div class="education-name2-1-col">
-                                <h2>{{edu.institute|default_if_none:''}}</h2>
-                                <p>{{edu.edu_id|default_if_none:''}}</p>
-                            </div>
-                            <div class="employement-date-div">
-                                <p class="employement-date">{{edu.year_of_passing|default_if_none:''}}</p>
-                                <p class="employement-time">{{edu.type_id|default_if_none:''}}</p>
-                            </div>
-                            {% comment %} <div class="education-name2-1-date">
-                                <p>{{edu.year_of_passing}}</p>
-                                <p>{{edu.type_id}}</p>
-                            </div> {% endcomment %}
-                        </div>
-                        {% endfor %}
-                        {% else %}
-                        <div class="education-name2-1">
-                            <div class="education-name2-1-col">
-                                <a href="#" class="open-modal-btn" data-modal-id="EduModal" >Add</a>
 
-                            </div>
-                        </div>
-                        {% endif %}
-
-                    </div>
+                
+            <div class="summary-container" id="professional-summary">
+                {% include "jobseeker/htmx/profileSummaryShow.html" %}
+                
+            </div>
+            
+            {% comment %}  {% endcomment %}
+            <div class="skill-container">
+                <div class="education"  id="education">
+                    
+                    {% include "jobseeker/htmx/profileEducationShow.html" %}
                 </div>
                 <div class="key-skills" id="skills">
-                    <div class="key-headline">
-                        <h4>Key Skills</h4>
-                        <div class="key-add-div">
-                            <a href="#" class="open-modal-btn" data-modal-id="SkillsModal" >Add</a>
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </div>
-                    </div>
-                    <div class="key-list">
-                        <div class="key-list-div">
-                            <ul class="key-list-ul" id="keyUl">
-                                {% if skills_list %}
-                                {% for skill in skills_list %}
-                                {% if skill %}                                
-                                <li class="key-list-li">
-                                    {{ skill }}
-
-                                </li>
-                                {% else %}
-                                {% endif%}
-                                {% endfor %}
-                                {% else %}
-                                <li class="key-list-li">
-                                    No skills provided,
-                                   <a href="">Add key skills</a>
-                                </li>
-                                {% endif %}
-                                
-                            </ul>
-                        </div>
-                        <div class="key-list-more">
-
-                            <!-- mod -->
-                            <button class="more-btn" id="skill-more">More <i class="fa-solid fa-arrow-right"></i></button>
-                            <button class="close-btn" id="skill-close">Close <i class="fa-solid fa-xmark"></i></i></button>
-                        </div>
-                    </div>
-
+                    
+                    {% include "jobseeker/htmx/profileSkillShow.html" %}
                 </div>
                 <div class="Perference" id="preference">
                     <div class="Perference-heading">
                         <h4>Preference</h4>
-                        <div class="Perference-add-div">
-                            <a href="#" class="open-modal-btn" data-modal-id="PreferModal" >Add</a>
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </div>
                     </div>
                     <div class="languages">
-                        <h4>Known Languages</h4>
-                        <div class="languages-row">
-                            <div class="languages-ul-div">
-
-                                <table class="language-table">
-                                    {% if language %}
-                                    <thead>
-                                        <tr>
-                                            <th class="">Languages</th>
-                                            <th class="">Speak</th>
-                                            <th>Read</th>
-                                            <th>Write</th>
-                                            <th>Proficiency Level</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for lan in language %}
-                                    <tr>
-                                        <td>{{lan.language_id}}
-                                        <td>{% if lan.can_speak %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}</td>
-                                        <td>{% if lan.can_read %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}</td>
-                                        <td>{% if lan.can_write %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}</td>
-                                        <td>{{lan.proficiency|default_if_none:''}}</td>
-                                    </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                    {% else %}
-                                            <a href="#" class="open-modal-btn" data-modal-id="PreferModal" >Add</a>
-                                    {% endif %}
-
-                                </table>
-
+                        <div class="flex-space-between">
+                            <h4>Known Languages</h4>
+                            <div class="add-div">
+                        <a href="#"
+                        hx-post="#"
+                        hx-vals='{"get_language_form": ""}'
+                        hx-target="#HtmxModal"
+                        hx-trigger="click"
+                        hx-swap="innerHTML"
+                        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                        hx-on="htmx:beforeRequest: startLoading();
+                        htmx:afterRequest: stopLoading();
+                        htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
                             </div>
-                            <div class="key-list-more">
-                                <!-- <button class="more-btn">Check <i class="fa-solid fa-arrow-right"></i></button> -->
-                            </div>
-                            
+                        </div>
+                        <div class="languages-row" id="my_language">
+                            {% include "jobseeker/htmx/profileLanguageShow.html" %}
                         </div>
                         
-                        
-                        
-                        
-
+                    
+                        <div class="flex-space-between">
                         <h4>Preferred location</h4>
-
-                        <!-- mod -->
-                         <div class="Preferred-text-div-par">
-                            <div class="Preferred-text-div" id="PreferredTextDiv">
-                                {% if location %}
-                                {% for loc in location %}
-                                    <p class="Preferred-text">{{loc}}</p> ,
-                                {% endfor %}
-                                {% else %}
-                                        <a href="#" class="open-modal-btn" data-modal-id="PreferModal" >Add</a>
-                                {% endif %}
-
-                            </div>
-                            <div class="Preferred-btn-dic">
-                                <button class="Preferred-more-btn" id="PreferredMoreBtn">More <i class="fa-solid fa-arrow-right"></i></button>
-                                <button class="Preferred-close-btn" id="PreferredCloseBtn">Close <i class="fa-solid fa-xmark"></i></button>
-                            </div>
-                         </div>
+                        <div class="add-div">
+                                <a href="#"
+                                    hx-post="#"
+                                    hx-vals='{"get_location_form": ""}'
+                                    hx-target="#HtmxModal"
+                                    hx-trigger="click"
+                                    hx-swap="innerHTML"
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                    hx-on="htmx:beforeRequest: startLoading();
+                                        htmx:afterRequest: stopLoading();
+                                        htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
+                                     <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                        </div>
+                        </div>
+                    <div class="Preferred-text-div-par" id="locations">
+                        {% include "jobseeker/htmx/profileLocationShow.html" %}
+                    </div>
                         
                          
                     </div>
@@ -447,161 +209,46 @@
 
 
 
-                <div class="employement" id="employement">
-                    <div class="employement-heading">
-                        <h4>Employement</h4>
-                        <div class="employement-add-div">
-                            <a href="#" class="open-modal-btn" data-modal-id="EmpModal" >Add</a>
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </div>
-                    </div>
-                    {% if employment %}
-                    {% for emp in employment %}
-                    <div class="employement-flex">
-                        <div class="employement-play">
-                            <p class="employement-role">{{emp.company_name|default_if_none:''}}</p>
-                            <p class="employement-company">{{emp.company_role|default_if_none:''}}</p>
-                        </div>
-                        <div class="employement-date-div">
-                            <p class="employement-date"><i style='font-size: smaller;'>
-                             {{emp.get_experience_duration }} 
-                            </i> / {{emp.doj|date:'M Y'|default_if_none:''}} - {{emp.dol|date:'M Y'|default_if_none:''}}</p>
-                            <p class="employement-time">{{emp.type_id|default_if_none:''}}</p>
-                        </div>
-                    </div>
-
-                    {% endfor %}
-                    {% else %}
-                    <div class="education-name2-1">
-                        <div class="education-name2-1-col">
-                            <a href="#" class="open-modal-btn" data-modal-id="EmpModal" >Add</a>
-
-                        </div>
-                    </div>
-                    {% endif %}
-
-
+                <div class="employement" id="employment">
+                    {% include "jobseeker/htmx/profileEmploymentShow.html" %}
                 </div>
 
-
-
-{% comment %} 
-                <div class="internship" id="internship">
-                    <div class="internship-heading">
-                        <h4>Internship</h4>
-                        <div class="internship-add-div">
-                            <a href="#" class="open-modal-btn" data-modal-id="InternModal" >Add</a>
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </div>
-                    </div>
-                    {% if internship %}
-                    {% for intern in internship %}
-                    <div class="internship-flex">
-                        <div class="internship-play">
-                            <p class="internship-role">{{intern.company_role|default_if_none:''}}</p>
-                            <p class="internship-company">{{intern.company_name|default_if_none:''}}</p>
-                        </div>
-                        <div class="internship-date-div">
-                            <p class="internship-date">{{intern.doj|date:'M Y'|default_if_none:''}} - {{intern.dol|date:'M Y'|default_if_none:''}}</p>
-                            <p class="internship-time">Internship</p>
-                        </div>
-                    </div>
-                    {% endfor %}
-                    {% else %}
-                    <div class="education-name2-1">
-                        <div class="education-name2-1-col">
-                            <a href="#" class="open-modal-btn" data-modal-id="InternModal" >Add</a>
-
-                        </div>
-                    </div>
-                    {% endif %}
-                </div> {% endcomment %}
-                <div class="career" id="career-info">
-                    <div class="career-heading">
-                        <h4>Compensation and benefits</h4>
-                        <div class="career-add-div">
-                            <a href="#" class="open-modal-btn" data-modal-id="CareerModal" >Add</a>
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </div>
-                    </div>
-                    <div class="career-info-list">
-                        <div class="career-info-list-1">
-                            
-                            <div class="career-info-list-1-1">
-                                <h4>Current CTC</h4>
-                                <p>{{ candidate.present_ctc|floatformat:0|default_if_none:'' }} LPA</p>
-                            </div>
-                            <div class="career-info-list-1-1">
-                                <h4>Current Take Home</h4>
-                                <p>{{ candidate.present_take_home|floatformat:0|default_if_none:'' }} LPA</p>
-                            </div>
-                            <div class="career-info-list-1-1">
-                                <h4>Total Year of Experience</h4>
-                                <p>{{ candidate.work_experience|floatformat:0|default_if_none:'' }} year</p>
-                            </div>
-
-                        </div>
-                        <div class="career-info-list-2">
-                            <div class="career-info-list-2-1">
-                                <h4>Expected CTC</h4>
-                                <p>{{ candidate.expected_ctc|floatformat:0|default_if_none:'' }} LPA</p>
-                            </div>
-                            <div class="career-info-list-2-1">
-                                <h4>Expected Take Home</h4>
-                                <p>{{ candidate.expected_take_home|floatformat:0|default_if_none:'' }} LPA</p>
-                            </div>
-                            <div class="career-info-list-2-1">
-                                <h4>Notice Period</h4>
-                                <p>{{ candidate.notice_period|default_if_none:'' }} Days</p>
-                            </div>
-                        </div>
-
-
-                    </div>
-
-
-
-
-
-
+                    <div class="career" id="career-info">              
+                        {% include "jobseeker/htmx/profileCareerShow.html" %}   
+                    </div> 
                 </div>
-
+                <div class="resume1" id="resume">
+                    {% include "jobseeker/htmx/profileResumeShow.html" %}
+            </div>
 
             </div>
+            
         </div>
         
-    </div>
+        
+    </main>
     
 
-</main>
 
 
 
 
+ <!-- The Modal for ==========All===================== -->
+{{ levels|json_script:"level-data" }}
+{{ courses|json_script:"course-data" }}
+{{ specs|json_script:"spec-data" }}
 
+<div class="modal" id="HtmxModal">
 
- 
+</div>
 
-
-
-
-
-
-        {% include "jobseeker/SubFileForApi/profilePersonal.html" %}
-        {% include "jobseeker/SubFileForApi/profileEdu.html" %}
-        {% include "jobseeker/SubFileForApi/profileSkill.html" %}
-        {% include "jobseeker/SubFileForApi/profilePrefer.html" %}
-        {% include "jobseeker/SubFileForApi/profileEmp.html" %}
-        {% include "jobseeker/SubFileForApi/profileCareer.html" %}
-        {% include "jobseeker/SubFileForApi/profileIntern.html" %}
-        {% include "jobseeker/SubFileForApi/profilePicture.html" %}
-        {% include "jobseeker/SubFileForApi/profileResume.html" %}
         
     <script src="{% static 'js/jobseeker/profile.js' %}"></script>
 
+
         <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById('resume').addEventListener('change', function () {
+  {% comment %} document.addEventListener("DOMContentLoaded", function () { {% endcomment %}
+    {% comment %} document.getElementById('resume').addEventListener('change', function () {
       const fileName = this.files[0]?.name || "Choose Resume";
       document.getElementById('resumeLabel').textContent = fileName;
     });
@@ -609,8 +256,393 @@
     document.getElementById('profile_picture').addEventListener('change', function () {
       const fileName = this.files[0]?.name || "Choose Resume";
       document.getElementById('profile_pictureLabel').textContent = fileName;
-    });
+    }); {% endcomment %}
+  {% comment %} }); {% endcomment %}
+
+
+
+
+  document.body.addEventListener('htmx:afterSwap', function (event) {
+    // Optional: limit to only the modal content
+    if (event.target.id === "HtmxModal") {
+        console.log("HTMX content swapped into #HtmxModal");
+        console.log(event);
+
+        // Delay execution slightly to allow DOM to fully render
+        setTimeout(() => {
+            console.log("Calling setupDropdowns after delay");
+            setupDropdowns();   
+
+            setupMultiSelect();          // run your initialization
+
+        }, 50); // 50ms is usually safe
+    }
+
   });
+
+
+{% comment %} to load the eduation filter dynamically  {% endcomment %}
+
+function setupDropdowns() {
+    console.log("setupDropdowns");
+    const levels = JSON.parse(document.getElementById('level-data').textContent);
+    const courses = JSON.parse(document.getElementById('course-data').textContent);
+    const specs = JSON.parse(document.getElementById('spec-data').textContent);
+
+    const levelSelect = document.querySelector('.edu-level');
+    const courseSelect = document.querySelector('.edu-course');
+    const specSelect = document.querySelector('.edu-spec');
+
+    if (!levelSelect || !courseSelect || !specSelect) {
+        console.warn("Dropdown(s) not found: setupDropdowns() aborted");
+        return;
+    }
+
+    if (specSelect.dataset.selectedSpec){
+        const selectedSpecId = parseInt(specSelect.dataset.selectedSpec || 0);
+        populateDropdownsFromSpecId( selectedSpecId, levels, courses, specs);
+    }
+
+    function clearOptions(select) {
+        select.innerHTML = '<option value="">Select</option>';
+    }
+
+
+        clearOptions(levelSelect);
+        levels.forEach(level => {
+            const option = new Option(level.name, level.level_id);
+            levelSelect.add(option);
+        });
+
+
+    // When Level changes
+    levelSelect.addEventListener('change', function () {
+        const selectedLevelId = parseInt(this.value);
+        clearOptions(courseSelect);
+        clearOptions(specSelect);
+
+        const filteredCourses = courses.filter(c => c.level_id === selectedLevelId);
+        filteredCourses.forEach(course => {
+            const option = new Option(course.name, course.course_id);
+            courseSelect.add(option);
+        });
+    });
+
+    // When Course changes
+    courseSelect.addEventListener('change', function () {
+        const selectedCourseId = parseInt(this.value);
+        clearOptions(specSelect);
+
+        const filteredSpecs = specs.filter(s => s.course_id === selectedCourseId);
+        filteredSpecs.forEach(spec => {
+            const option = new Option(spec.name, spec.specification_id);
+            specSelect.add(option);
+        });
+    });
+}
+
+
+// Utility function to safely set a select's value after DOM render
+function forceSelectValue(select, value) {
+    setTimeout(() => {
+        const strValue = value.toString();
+        select.value = strValue;
+
+        if (select.value !== strValue) {
+            [...select.options].forEach((opt, i) => {
+                if (opt.value === strValue) {
+                    select.selectedIndex = i;
+                }
+            });
+        }
+
+        console.log(`Value set on <select name="${select.name}">:`, select.value);
+    }, 0);
+}
+
+function populateDropdownsFromSpecId( selectedSpecId, levels, courses, specs) {
+        console.log("populateDropdownsFromSpecId");
+    const levelSelect = document.querySelector('.edu-level');
+    const courseSelect = document.querySelector('.edu-course');
+    const specSelect = document.querySelector('.edu-spec');
+
+    if (!levelSelect || !courseSelect || !specSelect) {
+        console.warn("Missing dropdown(s) in form row", formRow);
+        return;
+    }
+
+    selectedSpecId = parseInt(selectedSpecId);
+    let selectedCourseId = 0;
+    let selectedLevelId = 0;
+
+    // Reverse lookup: spec → course → level
+    const selectedSpec = specs.find(s => parseInt(s.specification_id) === selectedSpecId);
+    if (selectedSpec) {
+        selectedCourseId = parseInt(selectedSpec.course_id);
+        const selectedCourse = courses.find(c => parseInt(c.course_id) === selectedCourseId);
+        if (selectedCourse) {
+            selectedLevelId = parseInt(selectedCourse.level_id);
+        }
+    }
+
+    console.log("Spec ID:", selectedSpecId);
+    console.log("Course ID:", selectedCourseId);
+    console.log("Level ID:", selectedLevelId);
+
+    function clearOptions(select) {
+        select.innerHTML = '<option value="">Select</option>';
+    }
+
+    // 🟩 Populate Levels
+    clearOptions(levelSelect);
+    levels.forEach(level => {
+        const option = new Option(level.name, level.level_id.toString());
+        levelSelect.add(option);
+    });
+    forceSelectValue(levelSelect, selectedLevelId);
+
+    // 🟦 Populate Courses based on selected level
+    clearOptions(courseSelect);
+    const filteredCourses = courses.filter(c => parseInt(c.level_id) === selectedLevelId);
+    filteredCourses.forEach(course => {
+        const option = new Option(course.name, course.course_id.toString());
+        courseSelect.add(option);
+    });
+    forceSelectValue(courseSelect, selectedCourseId);
+
+    // 🟨 Populate Specs based on selected course
+    clearOptions(specSelect);
+    const filteredSpecs = specs.filter(s => parseInt(s.course_id) === selectedCourseId);
+    filteredSpecs.forEach(spec => {
+        const option = new Option(spec.name, spec.specification_id.toString());
+        specSelect.add(option);
+    });
+    forceSelectValue(specSelect, selectedSpecId);
+
+    // 🔄 Setup change events for cascading dropdown updates
+    levelSelect.onchange = function () {
+        const newLevelId = parseInt(this.value);
+        clearOptions(courseSelect);
+        clearOptions(specSelect);
+
+        const updatedCourses = courses.filter(c => parseInt(c.level_id) === newLevelId);
+        updatedCourses.forEach(course => {
+            const option = new Option(course.name, course.course_id.toString());
+            courseSelect.add(option);
+        });
+    };
+
+    courseSelect.onchange = function () {
+        const newCourseId = parseInt(this.value);
+        clearOptions(specSelect);
+
+        const updatedSpecs = specs.filter(s => parseInt(s.course_id) === newCourseId);
+        updatedSpecs.forEach(spec => {
+            const option = new Option(spec.name, spec.specification_id.toString());
+            specSelect.add(option);
+        });
+    };
+}
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %}  Setup dynamically drop down for multiple select in skills  {% endcomment %}
+
+    function setupMultiSelect(selectId = 'multi-select-skills' , searchInputId = 'search-skills', tagsContainerId = 'selected-tags-skills', dropdownId = 'dropdown-skills', newQualInputId = 'new-skills') {
+        console.log("Setup dynamically drop down");
+          const select = document.querySelector(`#${selectId}`);
+        const searchInput = document.querySelector(`#${searchInputId}`);
+        const tagsContainer = document.querySelector(`#${tagsContainerId}`);
+        const dropdown = document.querySelector(`#${dropdownId}`);
+        const newQualInput = document.querySelector(`#${newQualInputId}`);
+
+        let selectedValues = [];
+        let newItems = [];
+
+        function getOptions() {
+            return Array.from(select.options);
+        }
+
+        function renderDropdown(filteredOptions = getOptions()) {
+            if (searchInput !== document.activeElement && searchInput.value.trim() === "") {
+                dropdown.style.display = "none";
+                return;
+            }
+
+            dropdown.innerHTML = '';
+            const fragment = document.createDocumentFragment();
+
+            filteredOptions.forEach(option => {
+                if (!selectedValues.includes(option.value)) {
+                    const item = document.createElement('div');
+                    item.className = 'dropdown-item';
+                    item.textContent = option.text;
+                    item.dataset.value = option.value;
+                    item.addEventListener('click', () => {
+                        selectExistingOption(option);
+                        dropdown.style.display = "none";
+                    });
+                    fragment.appendChild(item);
+                }
+            });
+
+            dropdown.appendChild(fragment);
+            dropdown.style.display = filteredOptions.length > 0 ? "block" : "none";
+        }
+
+        function addTag(text, isNew = false, value = null) {
+            const tag = document.createElement('div');
+            tag.className = 'tag';
+            tag.textContent = text;
+
+            const remove = document.createElement('span');
+            remove.className = 'remove-tag';
+            remove.textContent = '×';
+            remove.addEventListener('click', () => {
+                tag.remove();
+                if (isNew) {
+                    newItems = newItems.filter(val => val !== text);
+                    updateNewInput();
+                } else {
+                    const opt = select.querySelector(`option[value="${value}"]`);
+                    if (opt) opt.selected = false;
+                    selectedValues = selectedValues.filter(val => val !== value);
+                    newItems = newItems.filter(val => val !== value);
+                    updateNewInput();
+                }
+                renderDropdown();
+            });
+
+            tag.appendChild(remove);
+            tagsContainer.appendChild(tag);
+        }
+
+        function selectExistingOption(option) {
+            if (!selectedValues.includes(option.value)) {
+                selectedValues.push(option.value);
+                //option.selected = true;
+                newItems.push(option.value);
+                updateNewInput();
+                addTag(option.value, false, option.value);
+                renderDropdown();
+            }
+        }
+
+        function selectNewOption(text) {
+            if (!newItems.includes(text)) {
+                newItems.push(text);
+                updateNewInput();
+                addTag(text, true);
+            }
+        }
+
+        function updateNewInput() {
+            newQualInput.value = newItems.join(',');
+        }
+
+        searchInput.addEventListener('focus', () => {
+            const query = searchInput.value.toLowerCase();
+            const filtered = getOptions().filter(opt => opt.text.toLowerCase().includes(query));
+            renderDropdown(filtered);
+        });
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase();
+            const filtered = getOptions().filter(opt => opt.text && opt.text.toLowerCase().includes(query));
+            renderDropdown(filtered);
+        });
+
+        searchInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const inputValue = searchInput.value.trim();
+                if (inputValue === '') return;
+
+                const existingOption = getOptions().find(opt => opt.text.toLowerCase() === inputValue.toLowerCase());
+                if (existingOption) {
+                    selectExistingOption(existingOption);
+                } else {
+                    selectNewOption(inputValue);
+                }
+
+                searchInput.value = '';
+            }
+        });
+
+
+
+        // Add a global click-outside listener only once (optimized)
+searchInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        const inputValue = searchInput.value.trim();
+        if (inputValue === '') return;
+
+        const existingOption = getOptions().find(opt => opt.text.toLowerCase() === inputValue.toLowerCase());
+        if (existingOption) {
+            selectExistingOption(existingOption);
+        } else {
+            selectNewOption(inputValue);
+        }
+
+        // Clear input and hide dropdown
+        searchInput.value = '';
+        dropdown.style.display = "none";
+    }
+});
+
+
+
+
+// Prepopulate from hidden input (match against select options if possible)
+const existingSkillsRaw = newQualInput.value.trim();
+if (existingSkillsRaw) {
+    const skillList = existingSkillsRaw
+        .split(',')
+        .map(s => s.trim())
+        .filter(s => s !== '');
+
+    skillList.forEach(skill => {
+        const existingOption = getOptions().find(opt =>
+            opt.text.toLowerCase() === skill.toLowerCase() ||
+            opt.value.toLowerCase() === skill.toLowerCase()
+        );
+
+            console.log(existingOption);
+        if (existingOption) {
+            // Mark the option as selected
+            existingOption.selected = true;
+
+            // Add to selectedValues and tag
+            if (!selectedValues.includes(existingOption.value)) {
+                selectedValues.push(existingOption.value);
+                newItems.push(existingOption.value);
+                addTag(existingOption.value, false, existingOption.value);
+            }
+        } 
+        else{
+            // Custom/new skill
+            if (!newItems.includes(skill)) {
+                newItems.push(skill);
+                console.log("Add new");
+                addTag(skill, true);
+            }
+        }
+    });
+
+    updateNewInput(); // Sync hidden input
+}
+    }
+
 </script>
- 
+
     {% endblock content %}

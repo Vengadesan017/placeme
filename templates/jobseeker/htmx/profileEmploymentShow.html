@@ -1,0 +1,65 @@
+                    <div class="employement-heading">
+                        <h4>Employment</h4>
+                        <div class="employement-add-div">
+                        <a href="#"
+                            hx-post="#"
+                            hx-vals='{"get_employment_form": ""}'
+                            hx-target="#HtmxModal"
+                            hx-trigger="click"
+                            hx-swap="innerHTML"
+                            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                            hx-on="htmx:beforeRequest: startLoading();
+                                htmx:afterRequest: stopLoading();
+                                htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
+                        <i class="fa-solid fa-square-plus"></i>
+                        </a>
+                        </div>
+                    </div>
+                    
+                    {% if my_employment %}
+                    <div class="employement-flex1">
+                        <div class="employement-play">
+                            <p class="employement-role1">Company</p>
+                            <p class="employement-company1">Designation</p>
+                        </div>
+                        <div class="employement-date-div1">
+                            <p class="employement-date1">Time period</p>
+                            <p class="employement-time1">Employment type</p>
+                        </div>
+                    </div>
+                    {% for emp in my_employment %}
+                    <div class="employement-flex">
+                        <div class="employement-play">
+                        <a href="#"
+                        hx-post="#"
+                        hx-vals='{"get_employment_form": "{{ emp.work_company_id }}"}'
+                        hx-target="#HtmxModal"
+                        hx-trigger="click"
+                        hx-swap="innerHTML"
+                        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                        hx-on="htmx:beforeRequest: startLoading();
+                            htmx:afterRequest: stopLoading();
+                            htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
+                            <p><p class="employement-role">{{emp.company_name|default_if_none:''}} <i class='fa-solid fa-pencil'></i></p>
+                            
+                        </a>                            
+                            <p class="employement-company">{{emp.company_role|default_if_none:''}}</p>
+                        </div>
+                        <div class="employement-date-div">
+                            <p class="employement-date"><i style='font-size: smaller;'>
+                             {{emp.get_experience_duration }} 
+                            </i> / {{emp.doj|date:'M Y'|default_if_none:''}} - {% if emp.currently %} Present {% else %} {{emp.dol|date:'M Y'|default_if_none:''}} {% endif %} </p>
+                            <p class="employement-time">{{emp.type_id|default_if_none:''}}</p>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                    {% else %}
+                    <div class="education-name2-1">
+                        <div class="education-name2-1-col">
+                            <a href="#" class="open-modal-btn" data-modal-id="EmpModal" >Add</a>
+
+                        </div>
+                    </div>
+                    {% endif %}
+

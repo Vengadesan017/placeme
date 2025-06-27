@@ -1,0 +1,52 @@
+
+
+                            <div class="Preferred-text-div" id="PreferredTextDiv">
+                            <ul class="key-list-ul" id="keyUl">
+                                {% if location_list %}
+                                {% for loc in location_list %}
+                                {% if loc %}                                
+                                <li class="key-list-li">
+                                    {{ loc }}
+
+                                </li>
+                                {% else %}
+                                {% endif%}
+                                {% endfor %}
+                                <a href="#"
+                                    hx-post="#"
+                                    hx-vals='{"get_location_form": ""}'
+                                    hx-target="#HtmxModal"
+                                    hx-trigger="click"
+                                    hx-swap="innerHTML"
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                    hx-on="htmx:beforeRequest: startLoading();
+                                        htmx:afterRequest: stopLoading();
+                                        htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
+                                     <i class='fa-solid fa-pencil'></i>
+                                    </a>
+                                {% else %}
+                                <li class="key-list-li">
+                                    
+                                                                    <a href="#"
+                                    hx-post="#"
+                                    hx-vals='{"get_location_form": ""}'
+                                    hx-target="#HtmxModal"
+                                    hx-trigger="click"
+                                    hx-swap="innerHTML"
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                    hx-on="htmx:beforeRequest: startLoading();
+                                        htmx:afterRequest: stopLoading();
+                                        htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
+                                        Add your preferred location
+
+                                    </a>
+                                </li>
+                                {% endif %}
+                                
+                            </ul>
+                        </div>
+                            <div class="Preferred-btn-dic">
+                                <button class="Preferred-more-btn" id="PreferredMoreBtn">More <i class="fa-solid fa-arrow-right"></i></button>
+                                <button class="Preferred-close-btn" id="PreferredCloseBtn">Close <i class="fa-solid fa-xmark"></i></button>
+                            </div>
+

@@ -1,0 +1,83 @@
+                    <div class="career-heading">
+                        <h4>Compensation and benefits</h4>
+                        <div class="career-add-div">
+                                <a href="#"
+                            hx-post="#"
+                            hx-vals='{"get_career_form": ""}'
+                            hx-target="#HtmxModal"
+                            hx-trigger="click"
+                            hx-swap="innerHTML"
+                            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                            hx-on="htmx:beforeRequest: startLoading();
+                                htmx:afterRequest: stopLoading();
+                                htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                        </div>
+                    </div>
+                    <div class="career-info-list">
+<div class="career-info-list-1">
+    <div class="career-info-list-1-1">
+        <h4>Current CTC</h4>
+        <p>
+            {{ candidate.present_ctc_amount|floatformat:0|default_if_none:"N/A" }}
+            {{ candidate.get_present_ctc_type_display|default_if_none:"" }}
+        </p>
+    </div>
+
+    <div class="career-info-list-1-1">
+        <h4>Current Take Home</h4>
+        <p>
+            {{ candidate.present_take_home_amount|floatformat:0|default_if_none:"N/A" }}
+            {{ candidate.get_present_take_home_type_display|default_if_none:"" }}
+        </p>
+    </div>
+
+    <div class="career-info-list-1-1">
+        <h4>Total Work Experience</h4>
+        <p>
+            {% if candidate.work_experience_years or candidate.work_experience_months %}
+                {{ candidate.work_experience_years|default:0 }} yr 
+                {{ candidate.work_experience_months|default:0 }} mon
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+<div class="career-info-list-2">
+    <div class="career-info-list-2-1">
+        <h4>Expected CTC</h4>
+        <p>
+            {{ candidate.expected_ctc_amount|floatformat:0|default_if_none:"N/A" }}
+            {{ candidate.get_expected_ctc_type_display|default_if_none:"" }}
+        </p>
+    </div>
+
+    <div class="career-info-list-2-1">
+        <h4>Expected Take Home</h4>
+        <p>
+            {{ candidate.expected_take_home_amount|floatformat:0|default_if_none:"N/A" }}
+            {{ candidate.get_expected_take_home_type_display|default_if_none:"" }}
+        </p>
+    </div>
+
+    <div class="career-info-list-2-1">
+        <h4>Notice Period</h4>
+        <p>
+            {% if candidate.notice_period %}
+                {{ candidate.get_notice_period_display }}
+                {% if candidate.notice_period_negotiable %}
+                    <span>(Negotiable)</span>
+                {% endif %}
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+
+
+                    </div>

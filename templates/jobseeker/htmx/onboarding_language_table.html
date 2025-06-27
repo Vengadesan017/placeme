@@ -2,7 +2,7 @@
 {% csrf_token %}
             <!-- Modal Header -->
             <div class="modal-header">
-                <h3 class="modal-title">Add or Edit Your Known Languages</h3>
+                <h3 class="modal-title">Known Languages</h3>
                 {% comment %} <button
                     type="button"
                     class="btn-close close-modal-btn"
@@ -38,7 +38,7 @@
                                     </thead>
                                     <tbody class="language-body">
                                     {% for lan in languages %}
-                              {% if language_form.instance.language_id == lan.language_id %}
+                              {% if language_form.instance.user_language_id == lan.user_language_id %}
                                   {% include 'jobseeker/htmx/onboarding_language_save.html' %}
                               {% else %}
                                     <tr>
@@ -52,7 +52,7 @@
                                       formnovalidate
                                           class="btn btn-warning btn-sm"
                                           type="button"
-                                          name="save_language" 
+                                          name="edit_language" 
                                           value="{{ lan.user_language_id }}"
                                           hx-post="#"
                                           hx-target="#language-modal-body"
@@ -105,15 +105,16 @@
 
                 {% endif %}
 
-                <button type="button" class="btn btn-primary btn-save" id="save-add-another-btn" style="display:none;">Save and Add Another</button>
+
                 <button
                     type="button"
                     class="btn btn-primary btn-save close-modal-btn"
-                    id="closePreferLanguageEditModalButton"
+                    id=""
                     hx-get="{% url 'job_seeker:onboarding_htmx_language_show_partial' %}"
-                    hx-target="#onboarding-language-td"
+                    hx-target="#my_language"
                     hx-swap="innerHTML"
-                    hx-on="htmx:afterRequest: closeLanguageModal()"
+                    hx-on="htmx:afterRequest: closeHtmxModalButton()"
                 >Close</button>
             </div>
 </form>
+

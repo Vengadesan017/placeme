@@ -1,0 +1,168 @@
+
+    <div class="modal-dialog">
+        <form method="post" action="#" 
+                    hx-post="#"
+            hx-vals='{"career_save": ""}'
+            hx-target="#career-info"
+            hx-swap="innerHTML"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+            hx-on="htmx:beforeRequest: startLoading();
+                htmx:afterRequest: stopLoading();
+                htmx:afterOnLoad: checkIfFullPage(event);closeHtmxModalButton();"
+                >
+            {% csrf_token %}
+        <div class="modal-content">
+    
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h3 class="modal-title">Edit your Career Info</h3>
+            <button type="button" class="btn-close close-modal-btn" onclick="closeHtmxModalButton()"><i class='fas fa-times edit'></i></button>
+        </div>
+    
+        <!-- Modal Body -->
+        <div class="modal-body">
+        <div class="margin20">
+        <div class="">
+
+            <table class="modal-table">
+            <tr>
+                <td><b>Current CTC</b></td>
+                <td>
+                    <input type="text" name="present_ctc_amount" oninput="formatIndianNumber(this)" class="modal-half-input" 
+                        value="{{ career_form.initial.present_ctc_amount|default_if_none:'' }}">
+                    <select name="present_ctc_type" id="id_present_ctc_type" class="modal-half-input">
+                        <option value="">Select Payment Type</option>
+                        {% for value, label in career_form.fields.present_ctc_type.choices %}
+                            <option value="{{ value }}" {% if value == career_form.initial.present_ctc_type %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td><b>Current Take-Home</b></td>
+                <td>
+                    <input type="text" name="present_take_home_amount" oninput="formatIndianNumber(this)" class="modal-half-input"
+                        value="{{ career_form.initial.present_take_home_amount|default_if_none:'' }}">
+                    <select name="present_take_home_type" id="id_present_take_home_type" class="modal-half-input">
+                        <option value="">Select Payment Type</option>
+                        {% for value, label in career_form.fields.present_take_home_type.choices %}
+                            <option value="{{ value }}" {% if value == career_form.initial.present_take_home_type %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td><b>Expected CTC</b></td>
+                <td>
+                    <input type="text" name="expected_ctc_amount" oninput="formatIndianNumber(this)" class="modal-half-input"
+                        value="{{ career_form.initial.expected_ctc_amount|default_if_none:'' }}">
+                    <select name="expected_ctc_type" id="id_expected_ctc_type" class="modal-half-input">
+                        <option value="">Select Payment Type</option>
+                        {% for value, label in career_form.fields.expected_ctc_type.choices %}
+                            <option value="{{ value }}" {% if value == career_form.initial.expected_ctc_type %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td><b>Expected Take-Home</b></td>
+                <td>
+                    <input type="text" name="expected_take_home_amount" oninput="formatIndianNumber(this)" class="modal-half-input"
+                        value="{{ career_form.initial.expected_take_home_amount|default_if_none:'' }}">
+                    <select name="expected_take_home_type" id="id_expected_take_home_type" class="modal-half-input">
+                        <option value="">Select Payment Type</option>
+                        {% for value, label in career_form.fields.expected_take_home_type.choices %}
+                            <option value="{{ value }}" {% if value == career_form.initial.expected_take_home_type %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td><b>Notice Period</b></td>
+                <td>
+                    <select name="notice_period" id="id_notice_period" class="modal-half-input">
+                        <option value="">Choose Notice Period</option>
+                        {% for value, label in career_form.fields.notice_period.choices %}
+                            <option value="{{ value }}" {% if value == career_form.initial.notice_period %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <label>
+                        <input type="checkbox" name="notice_period_negotiable" id="id_notice_period_negotiable"
+                            {% if career_form.initial.notice_period_negotiable %}checked{% endif %}>
+                        Is Negotiable
+                    </label>
+                </td>
+            </tr>
+
+            <tr>
+                <td><b>Work Experience</b></td>
+                <td>
+                    <input type="number" name="work_experience_years" class="modal-half-input"
+                        value="{{ career_form.initial.work_experience_years|default_if_none:'' }}" placeholder="Years">
+                    <input type="number" name="work_experience_months" class="modal-half-input"
+                        value="{{ career_form.initial.work_experience_months|default_if_none:'' }}" placeholder="Months">
+                </td>
+            </tr>
+
+            </table>
+
+        </div>
+        </div>
+        </div>
+    
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+            <button type="submit" name="career_save" class="model-btn-save" id="">Save</button>
+        </div>
+    
+        </div>
+    </form>
+    </div>
+
+    <script>
+function formatIndianNumber(input) {
+   // Get value and remove all commas
+    let value = input.value.replace(/,/g, '');
+
+    // Exit early if not a number
+    if (isNaN(value) || value === '') return;
+
+    // Split integer and decimal parts
+    let parts = value.split('.');
+    let integer = parts[0];
+    let decimal = parts.length > 1 ? '.' + parts[1] : '';
+
+    // Format integer part as per Indian number system
+    let lastThree = integer.slice(-3);
+    let rest = integer.slice(0, -3);
+
+    if (rest !== '') {
+        lastThree = ',' + lastThree;
+    }
+
+    let formatted = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + decimal;
+
+    // Save caret position from the end
+    let caretFromEnd = input.value.length - input.selectionStart;
+
+    input.value = formatted;
+
+    // Restore caret to original position
+    let newCaretPosition = input.value.length - caretFromEnd;
+    input.setSelectionRange(newCaretPosition, newCaretPosition);
+}
+</script>

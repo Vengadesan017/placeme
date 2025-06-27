@@ -1,0 +1,171 @@
+{% load static %}         
+
+                    <div class="info-profile-mv">
+
+                        <div class="pic-div-mv">
+                    {% if candidate.profile_pic %}
+                    <img src="{{candidate.profile_pic.url }}" class="pic-photo" alt="profile pic" width="100%">
+                {% else %}
+                    <img src="{% static 'img/image.png' %}" class="pic-photo" alt="profile pic" width="100%">
+                {% endif %}
+
+
+                            <button class="btn-mv">+</button>
+                        </div>
+
+
+                        <div class="info-name-mv">
+
+
+
+                            <div class="info-name1-mv">
+                                <!-- mod -->
+                                <div class="name-div-mv">
+                                    <h1 id="userName">Vengadesan G <a href="##"
+                                            class="open-modal-btn" data-modal-id="PersonalModal"> <i
+                                                class="fa-solid fa-pencil"></i></a></h1>
+
+                                </div>
+
+                            </div>
+                            <div class="info-date-mv">
+                                <p class="update-p-mv">Last Updated -</p>
+                                <p class="date-mv"> Jan. 25, 2025</p>
+                            </div>
+
+
+                        </div>
+                        
+
+                    </div>
+                <div class="info-name">
+
+
+
+                    <div class="info-name1">
+                        <!-- mod -->
+                        <div class="name-div">
+                            <h1 id="userName">{{ candidate.first_name }} {{ candidate.last_name }} 
+                                <a href="#"
+                                    {% comment %} class="open-modal-btn" {% endcomment %}
+                                    {% comment %} data-modal-id="HtmxModal" {% endcomment %}
+                                    hx-post="#"
+                                    hx-vals='{"get_personal_form": ""}'
+                                    hx-target="#HtmxModal"
+                                    hx-trigger="click"
+                                    hx-swap="innerHTML"
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                    hx-on="htmx:beforeRequest: startLoading();
+                                        htmx:afterRequest: stopLoading();
+                                        htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
+                                     <i class='fa-solid fa-pencil'></i>
+                                    </a>
+                                </h1>
+                            
+                        </div>
+                    </div>
+                    <div class="info-date">
+                        <p class="update-p">Last Updated -</p>
+                        <p class="date"> {{ candidate.last_update }}</p>
+                    </div>
+
+
+                </div>
+
+                <div class="detail-main">
+                    <div class="detail-1">
+
+
+
+                        <div class="gender-box">
+                            <ul class="gender-box-ul">
+                                <li>
+                                    <div class="gender-box-person">
+                                        <i class="fa-solid fa-user"></i>
+                                        <p>
+                                            {% if candidate.gender %}
+                                                {{ candidate.gender }}
+                                            {% else %}
+                                            <a href="#" class="open-modal-btn" data-modal-id="PersonalModal" >Add Gender</a>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="gender-box-date">
+                                        <i class="fa-solid fa-calendar-week"></i>
+                                        <p>
+                                            {% if candidate.dob %}
+                                                {{ candidate.dob|date:'d-m-Y' }}
+                                            {% else %}
+                                            <a href="#" class="open-modal-btn" data-modal-id="PersonalModal" >Add DOB</a>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </li>
+                                <!-- mod -->
+                                
+                            </ul>
+                        </div>
+
+                        
+
+
+
+
+                        <div class="phone-box">
+                            <ul class="phone-box-ul">
+                                <li>
+                                    <div class="phone-box-person">
+                                        <i class="fa-solid fa-phone"></i>
+                                        <p>{{ candidate.user.mobile_no|default_if_none:'' }}</p>
+                                    </div>
+                                </li>
+                                <!-- mod -->
+                                <li>
+                                    <div class="phone-box-date">
+                                        <i class="fa-solid fa-envelope"></i>
+                                        <div class="email-div">
+                                            <p class="email" id="email">{{ candidate.user.email|default_if_none:'' }}</p>
+                                        </div>
+                                    </div>
+                                </li> 
+                            </ul>
+                        </div>
+                        <div class="gender-box1">
+                            <ul class="gender-box-ul1">
+                                
+                                <li>
+                                    <div class="gender-box-place">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                        <p>
+                                           
+                                            {% if candidate.city and candidate.state and candidate.country %}
+                                            {{ candidate.city }}, {{ candidate.state }}, {{ candidate.country }}
+                                            {% else %}
+                                            <a href="#" class="open-modal-btn" data-modal-id="PersonalModal" >Add Location</a>
+                                            {% endif %}  
+                                                                              
+                                        </p>
+                                    </div>
+                                </li>
+                                
+                                
+                            </ul>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+                   
+
+                </div>
+
+
+
+
+ 

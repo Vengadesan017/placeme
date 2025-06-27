@@ -1,0 +1,71 @@
+                    <div class="key-headline">
+                        <h4>Key Skills</h4>
+                        
+                        <div class="add-div">
+                                <a href="#"
+                                    hx-post="#"
+                                    hx-vals='{"get_skill_form": ""}'
+                                    hx-target="#HtmxModal"
+                                    hx-trigger="click"
+                                    hx-swap="innerHTML"
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                    hx-on="htmx:beforeRequest: startLoading();
+                                        htmx:afterRequest: stopLoading();
+                                        htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
+                                     <i class="fa-solid fa-square-plus"></i>
+                                    </a>
+                        </div>
+                    </div>
+                    <div class="key-list">
+                        <div class="key-list-div">
+                            <ul class="key-list-ul" id="keyUl">
+                                {% if skills_list %}
+                                {% for skill in skills_list %}
+                                {% if skill %}                                
+                                <li class="key-list-li">
+                                    {{ skill }}
+
+                                </li>
+                                {% else %}
+                                {% endif%}
+                                {% endfor %}
+                                <a href="#"
+                                    hx-post="#"
+                                    hx-vals='{"get_skill_form": ""}'
+                                    hx-target="#HtmxModal"
+                                    hx-trigger="click"
+                                    hx-swap="innerHTML"
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                    hx-on="htmx:beforeRequest: startLoading();
+                                        htmx:afterRequest: stopLoading();
+                                        htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
+                                     <i class='fa-solid fa-pencil'></i>
+                                    </a>
+                                {% else %}
+                                <li class="key-list-li">
+                                    No skills provided,
+                                                                    <a href="#"
+                                    hx-post="#"
+                                    hx-vals='{"get_skill_form": ""}'
+                                    hx-target="#HtmxModal"
+                                    hx-trigger="click"
+                                    hx-swap="innerHTML"
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                    hx-on="htmx:beforeRequest: startLoading();
+                                        htmx:afterRequest: stopLoading();
+                                        htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
+                                        Add key skills
+
+                                    </a>
+                                </li>
+                                {% endif %}
+                                
+                            </ul>
+                        </div>
+                        <div class="key-list-more">
+
+                            <!-- mod -->
+                            <button class="more-btn" id="skill-more">More <i class="fa-solid fa-arrow-right"></i></button>
+                            <button class="close-btn" id="skill-close">Close <i class="fa-solid fa-xmark"></i></i></button>
+                        </div>
+                    </div>

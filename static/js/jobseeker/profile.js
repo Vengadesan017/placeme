@@ -28,7 +28,7 @@ PreferredMoreBtn.addEventListener('click', () => {
     PreferredCloseBtn.style.display = 'inline-block';
 })
 PreferredCloseBtn.addEventListener('click', () => {
-    PreferredTextDiv.style.height = '25px';
+    PreferredTextDiv.style.height = '50px';
     PreferredCloseBtn.style.display = 'none';
     PreferredMoreBtn.style.display = 'inline-block';
 })

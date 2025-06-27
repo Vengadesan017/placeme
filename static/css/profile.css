@@ -27,8 +27,8 @@ body{
 
 .left-container {
 
-  /* width: 350px; */
-  width: 25%; /* 350 / 1200 * 100 */
+  min-width: 305px;
+  /*width: 30%; /* 350 / 1200 * 100 */
   /* background-color: rgb(9, 241, 29); */
   background-color: #ffffff;
   margin-top: 40px;

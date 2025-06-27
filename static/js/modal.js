@@ -4,14 +4,26 @@
             const modalId = this.dataset.modalId;
             const modal = document.getElementById(modalId);
 
-    
-            modal.style.display = 'block';
+            modal.classList.remove('hide');
+        modal.style.display = 'block';
+        // Trigger reflow to enable transition
+        void modal.offsetWidth;
+        modal.classList.add('show');
+            // modal.style.display = 'block';
         });
     });
     
     document.querySelectorAll('.close-modal-btn').forEach(btn => {
         btn.addEventListener('click', function () {
-            this.closest('.modal').style.display = 'none';
+            // this.closest('.modal').style.display = 'none';
+        const modal = this.closest('.modal');
+        if (modal) {
+            modal.classList.remove('show');
+            modal.classList.add('hide');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 500); // Match your CSS animation duration
+        }
         });
     });
     
@@ -28,12 +40,31 @@
         }
     }
 
-function closeLanguageModal() {
-    const modal = document.getElementById('PreferLanguageModal');
+function closeHtmxModalButton() {
+    const modal = document.getElementById('HtmxModal');
     if (modal) {
         modal.style.display = 'none';
+            modal.classList.remove('show');
+            modal.classList.add('hide');
         document.body.classList.remove('modal-open');
         const backdrop = document.querySelector('.modal-backdrop');
         if (backdrop) backdrop.remove();
     }
 }
+
+function openHtmxModalButton() {
+        const modal = document.getElementById('HtmxModal');
+        if (modal) {
+            modal.classList.remove('hide');
+        modal.style.display = 'block';
+        // Trigger reflow to enable transition
+        void modal.offsetWidth;
+        modal.classList.add('show');
+                // modal.style.display = 'block';
+    
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) backdrop.add();
+
+            
+        }
+    }

@@ -1,0 +1,103 @@
+
+        <div class="modal-dialog">       
+                <form
+                        hx-post="#"
+            hx-target="#employment"
+            hx-swap="innerHTML"
+            hx-on="htmx:beforeRequest: startLoading();
+                htmx:afterRequest: stopLoading();
+                htmx:afterOnLoad: checkIfFullPage(event);closeHtmxModalButton();"
+                >
+                {% csrf_token %}
+            <div class="modal-content">
+        
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 class="modal-title">Education</h3>
+                <button type="button" class="btn-close close-modal-btn" id="closeEduModalButton" onclick="closeHtmxModalButton()"><i class='fas fa-times edit'></i></button>
+            </div>
+        
+            <!-- Modal Body -->
+            <div class="modal-body">
+            <div class="margin20">
+            <div class="">
+                <table class="modal-table">
+                    <tr> 
+                        <td><b>Company name</b></td>
+                        <td>
+                            <input type="text" name="company_name" id="" value="{{ employment_form.initial.company_name|default_if_none:'' }}" placeholder="Enter the company name" required/></td>       
+                        </td>
+                    </tr>
+                    <tr> 
+                        <td><b>Designation</b></td>
+                        <td>
+                            <input type="text" name="company_role" id="" value="{{ employment_form.initial.company_role|default_if_none:'' }}" placeholder="Enter your Designation" required/></td>          
+                    </td>
+                    </tr>
+                    <tr> 
+                        <td><b>Work type</b></td>
+                        <td>
+                            <select name="type_id" id="id_type_id" required>
+                                <option value="">Select work Type</option>
+                                {% for option in employment_form.fields.type_id.queryset %}
+                                    <option value="{{ option.pk }}" {% if option.pk == employment_form.initial.type_id %}selected{% endif %}>
+                                        {{ option }}
+                                    </option>
+                                {% endfor %}
+                            </select>       
+                    </td>
+                    </tr>
+                    <tr> 
+                        <td><b>Time period</b></td>
+                        <td>
+                            <input type="month" name="doj" id="" class="modal-half-input" value="{{ employment_form.initial.doj|date:'Y-m'|default_if_none:'' }}" placeholder="Enter DOJ" />
+                             to 
+                            <input type="month" class="modal-half-input" name="dol" id="" value="{{ employment_form.initial.dol|date:'Y-m'|default_if_none:'' }}" placeholder="Enter DOL" /></td>
+                    </tr>
+                    <tr> 
+                        <td></td>
+                        <td><label for="currently">
+
+                            <input type="checkbox" name="currently" id="currently" class="" {% if employment_form.initial.currently %}checked{% endif %} placeholder="Enter DOJ" />
+                            I am Currently working here
+                        </label>
+                            <td>
+                    </tr>
+                    <td><b>Reason for leaving</b></td>
+                        <td>
+                            <input type="text" name="reason_for_leaving" id="" value="{{ employment_form.initial.reason_for_leaving|default_if_none:'' }}" placeholder="Reason for leaving job" /></td>
+                    </tr>
+                </table>
+
+            </div>
+            </div>
+            </div>
+        
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                {% comment %} <button type="submit" name="profile_education_create" class="model-btn-save" id="">Save</button> {% endcomment %}
+                {% if employment_form.instance.work_company_id %}
+                
+                <button type="submit" 
+                    formnovalidate
+                    name="employment_delete"
+                class="model-btn-delete"
+                    value="{{ employment_form.instance.work_company_id|default:'' }}"
+                    hx-include="this"
+                >Delete</button>
+                {% endif %}
+            <button type="submit" 
+            
+                name="employment_save"
+            class="model-btn-save"
+                value="{{ employment_form.instance.work_company_id|default:'' }}"
+                hx-include="this"
+            >Save</button>
+
+            </div>
+        
+            </div>
+        </form>
+        </div>
+
+

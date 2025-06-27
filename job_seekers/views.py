@@ -11,14 +11,14 @@ from django.core.paginator import Paginator
 from django.core.files.storage import default_storage
 
 from credentials.models import Users
-from recruiters.models import Jobs , Locations, Qualifications , OfferLetters
+from recruiters.models import Jobs , Locations, Qualifications , OfferLetters, DistrictForLoc, StateForLoc
 from .models import Candidates, JobApplications, Onboarding, EducationMap , UserLanguages,\
-    UserLocations, LevelForEdu, CourseForEdu, Skills, Employment, Internship, Bookmarks, \
+     LevelForEdu, CourseForEdu, Skills, Employment, Internship, Bookmarks, \
         Familys, SpecificationForEdu ,EducationType 
 from .forms import CandidatePersonalUpdateForm, CandidateEducationUpdateForm, OnboardingCandidatePersonalForm,\
         OnboardingPersonalForm ,CandidateLanguageUpdateForm, CandidateLocationUpdateForm, CandidateCareerUpdateForm,\
         CandidateEmploymentUpdateForm, CandidateIntenshipUpdateForm, OnboardingFamilyForm, \
-        ResumeForm, ProfileForm,IdentityForm
+        ResumeForm, ProfileForm, IdentityForm, CandidateSummaryUpdateForm, CandidateSkillUpdateForm
 from .serializers import JobsCardSerializer, TitleSerializer, LocationSerializer
 from .services import apply_filter_in_job,get_filter_from_job,search_job
 from .decorators import is_onboarding
@@ -100,26 +100,170 @@ def Home(request):
 def Profile(request):
     try:
         candidate = Candidates.objects.get(user=request.user)
-        if request.method == 'POST':
-            if 'profile_personal_edit' in request.POST:
+        if request.method == 'POST' and request.htmx:
+            context = {}
+            template_name = None
+            # -------- Form loading handlers --------
+            if 'get_personal_form' in request.POST:
+                context['candidate_form'] = CandidatePersonalUpdateForm(instance=candidate)
+                template_name = 'jobseeker/htmx/profilePersonalSave.html'
+            elif 'get_summary_form' in request.POST:
+                context['summary_form'] = CandidateSummaryUpdateForm(instance=candidate)
+                template_name = 'jobseeker/htmx/profileSummarySave.html'
+            elif 'get_education_form' in request.POST:
+                if pk := request.POST.get('get_education_form'):
+                    instance = get_object_or_404(EducationMap, candidate=candidate, edu_map_id=pk)
+                    context['education_form'] = CandidateEducationUpdateForm(instance=instance)
+                else:
+                    context['education_form'] = CandidateEducationUpdateForm()
+                template_name = 'jobseeker/htmx/profileEducationSave.html'
+            elif 'get_skill_form' in request.POST:
+                context['skills'] = Skills.objects.all()
+                context['my_skills'] = candidate.skill
+                template_name = 'jobseeker/htmx/profileSkillSave.html'
+            elif 'get_language_form' in request.POST:
+                context['my_languages'] = UserLanguages.objects.filter(candidate=candidate)
+                template_name = 'jobseeker/htmx/profileLanguageModal.html'
+            elif 'get_location_form' in request.POST:
+                context['states'] = StateForLoc.objects.all()
+                context['districts'] = DistrictForLoc.objects.all()
+                context['my_location'] = candidate.preferred_location
+                template_name = 'jobseeker/htmx/profileLocationSave.html'
+            elif 'get_employment_form' in request.POST:
+                if pk := request.POST.get('get_employment_form'):
+                    instance = get_object_or_404(Employment, candidate=candidate, work_company_id=pk)
+                    context['employment_form'] = CandidateEmploymentUpdateForm(instance=instance)
+                else:
+                    context['employment_form'] = CandidateEmploymentUpdateForm()
+                template_name = 'jobseeker/htmx/profileEmploymentSave.html'
+            elif 'get_career_form' in request.POST:
+                context['career_form'] = CandidateCareerUpdateForm(instance=candidate)
+                template_name = 'jobseeker/htmx/profileCareerSave.html'
+            elif 'get_resume_form' in request.POST:
+                template_name = 'jobseeker/htmx/profileResumeSave.html'
+                
+                
+            if 'personal_save' in request.POST:
                 form = CandidatePersonalUpdateForm(request.POST, instance=candidate)
                 if form.is_valid():
                     form.save()
-                    # messages.info(request, 'Your profile has been updated successfully.')
-                    
                 else:
                     print("Form errors:", form.errors)
                     form_errors_to_messages(request, form)
-
-            elif 'profile_education_create' in request.POST:
-                form = CandidateEducationUpdateForm(request.POST)
+                context['candidate'] = candidate
+                template_name = 'jobseeker/htmx/profilePersonalShow.html'
+            elif 'summary_save' in request.POST:
+                form = CandidateSummaryUpdateForm(request.POST, instance=candidate)
                 if form.is_valid():
-                    form.save(candidate=candidate)
-                    messages.info(request, 'Your New Education has been added successfully.')
-                    
+                    form.save()
                 else:
                     print("Form errors:", form.errors)
                     form_errors_to_messages(request, form)
+                context['candidate'] = candidate
+                template_name = 'jobseeker/htmx/profileSummaryShow.html'
+            elif 'education_save' in request.POST or 'education_delete' in request.POST:
+                if pk := request.POST.get('education_delete'):
+                    instance = get_object_or_404(EducationMap, candidate=candidate, edu_map_id=pk)
+                    instance.delete()
+                else:
+                    if pk := request.POST.get('education_save'):
+                        instance = get_object_or_404(EducationMap, candidate=candidate, edu_map_id = pk)
+                        form = CandidateEducationUpdateForm(request.POST, request.FILES,instance=instance)
+                    else:
+                        form = CandidateEducationUpdateForm(request.POST, request.FILES)
+                    if form.is_valid():
+                        form.save(candidate=candidate)
+                    else:
+                        print("Form errors:", form.errors)
+                        form_errors_to_messages(request, form)
+                context['my_education'] =  EducationMap.objects.filter(candidate=candidate).order_by('-year_of_passing')
+                template_name = 'jobseeker/htmx/profileEducationShow.html'
+            elif 'skill_save' in request.POST:
+                form = CandidateSkillUpdateForm(request.POST, instance=candidate)
+                if form.is_valid():
+                    form.save()
+                else:
+                    print("Form errors:", form.errors)
+                    form_errors_to_messages(request, form)
+                context['skills_list'] = [skill.strip() for skill in candidate.skill.split(',')] if candidate.skill else []
+                template_name = 'jobseeker/htmx/profileSkillShow.html'    
+            elif 'save_language' in request.POST or 'edit_language' in request.POST or 'delete_language' in request.POST or 'add_row_lang' in request.POST:      
+                context['language_form'] = CandidateLanguageUpdateForm()
+                add_row = False
+                if 'save_language' in request.POST:
+                    if pk := request.POST.get('save_language'):
+                        print(pk)
+                        instance = get_object_or_404(UserLanguages, candidate=candidate, user_language_id=pk)
+                        form = CandidateLanguageUpdateForm(request.POST,instance=instance)
+                    else:
+                        form = CandidateLanguageUpdateForm(request.POST)
+                    if form.is_valid():
+                        form.save(candidate=candidate)
+                    else:
+                        print("Form errors:", form.errors)
+                        form_errors_to_messages(request, form)
+                elif 'edit_language' in request.POST:
+                    if pk := request.POST.get('edit_language'):
+                        instance = get_object_or_404(UserLanguages, candidate=candidate, user_language_id=pk)
+                        context['language_form'] = CandidateLanguageUpdateForm(instance=instance)
+                elif 'delete_language' in request.POST:
+                    if pk := request.POST.get('delete_language'):
+                        instance = get_object_or_404(UserLanguages, candidate=candidate, user_language_id=pk)
+                        instance.delete()
+                elif 'add_row_lang' in request.POST:
+                    add_row = True
+                context['my_languages'] = UserLanguages.objects.filter(candidate=candidate)
+                context['add_row'] = add_row
+                template_name = 'jobseeker/htmx/profileLanguageTable.html'
+            elif 'location_save' in request.POST:
+                form = CandidateLocationUpdateForm(request.POST, instance=candidate)
+                if form.is_valid():
+                    form.save()
+                else:
+                    print("Form errors:", form.errors)
+                    form_errors_to_messages(request, form)
+                context['location_list'] = [loc.strip() for loc in candidate.preferred_location.split(',')] if candidate.preferred_location else []
+                template_name = 'jobseeker/htmx/profileLocationShow.html'    
+            elif 'employment_save' in request.POST or 'employment_delete' in request.POST:
+                if pk := request.POST.get('employment_delete'):
+                    instance = get_object_or_404(Employment, candidate=candidate, work_company_id=pk)
+                    instance.delete()
+                else:
+                    if pk := request.POST.get('employment_save'):
+                        instance = get_object_or_404(Employment, candidate=candidate, work_company_id = pk)
+                        form = CandidateEmploymentUpdateForm(request.POST, request.FILES,instance=instance)
+                    else:
+                        form = CandidateEmploymentUpdateForm(request.POST, request.FILES)
+                    if form.is_valid():
+                        form.save(candidate=candidate)
+                    else:
+                        print("Form errors:", form.errors)
+                        form_errors_to_messages(request, form)
+                context['my_employment'] =  Employment.objects.filter(candidate=candidate).order_by('-dol')
+                template_name = 'jobseeker/htmx/profileEmploymentShow.html'
+            elif 'career_save' in request.POST:
+                form = CandidateCareerUpdateForm(request.POST, instance=candidate)
+                if form.is_valid():
+                    form.save()
+                else:
+                    print("Form errors:", form.errors)
+                    form_errors_to_messages(request, form)
+                context['candidate'] = candidate
+                template_name = 'jobseeker/htmx/profileCareerShow.html'
+            elif 'resume_save' in request.POST:
+                form = ResumeForm(request.POST, request.FILES, instance= candidate)
+                if form.is_valid():
+                    form.save()
+                else:
+                    print("Form errors:", form.errors)
+                    form_errors_to_messages(request, form)
+                context['candidate'] = candidate
+                template_name = 'jobseeker/htmx/profileResumeShow.html'
+                
+# 
+# 
+# 
+
             elif 'upload_resume' in request.POST:
                 form = ResumeForm(request.POST, request.FILES, instance= candidate)
                 if form.is_valid():
@@ -233,16 +377,20 @@ def Profile(request):
                 else:
                     print("Form errors:", form.errors)
                     form_errors_to_messages(request,form)
-            return redirect("job_seeker:profile")
+                    
+            # -------- Final HTMX return --------
+            if template_name:
+                return render(request, template_name, context)                    
+            else :
+                return redirect("job_seeker:profile")
                     
 
 
         new_education = CandidateEducationUpdateForm()
         new_employment = CandidateEmploymentUpdateForm()
         new_internship = CandidateIntenshipUpdateForm()
-        education = EducationMap.objects.filter(candidate=candidate)
+        education = EducationMap.objects.filter(candidate=candidate).order_by('-year_of_passing')
         language = UserLanguages.objects.filter(candidate=candidate)
-        location = UserLocations.objects.filter(candidate=candidate)
         employment = Employment.objects.filter(candidate=candidate).order_by('-dol')
         internship = Internship.objects.filter(candidate=candidate)
         # new_language = CandidateLanguageUpdateForm()
@@ -255,28 +403,33 @@ def Profile(request):
         level = LevelForEdu.objects.all()
         course = CourseForEdu.objects.all()
         years = range(2000, 2030)
-
+        levels = list(LevelForEdu.objects.all().values('level_id', 'name'))
+        courses = list(CourseForEdu.objects.all().values('course_id', 'name', 'level_id'))
+        specs = list(SpecificationForEdu.objects.all().values('specification_id', 'name', 'course_id'))
 
         skills_list = [skill.strip() for skill in candidate.skill.split(',')] if candidate.skill else []
+        location_list = [loc.strip() for loc in candidate.preferred_location.split(',')] if candidate.preferred_location else []
         context = {
             'candidate': candidate,
             'skills_list': skills_list,
-            'education': education,
-            'employment': employment,
+            'location_list': location_list,
+            'my_education': education,
+            'my_employment': employment,
             'internship': internship,
             'new_education': new_education,
             'new_employment': new_employment,
             'new_internship': new_internship,
-            'language': language,
-            'location': location,
+            'my_languages': language,
             # 'new_language': new_language,
             # 'new_location': new_location,
             # 'profile': profile,
             # 'resume':resume,
-            'level':level,
-            'course':course,
             'years' :years,
-            'skills' : skills
+            'skills' : skills,
+            'levels':levels,
+            'courses':courses,
+            'specs':specs,
+            'years' : range(2000, 2030),
             # 'doc':doc
         }
         return render(request,'jobseeker/profile.html',context)
@@ -859,6 +1012,14 @@ def HTMXOnboardingLanguages(request):
     if request.htmx:
         languages = UserLanguages.objects.filter(candidate=candidate)
         return render(request,"jobseeker/htmx/onboarding_language_show.html",context={'languages':languages,})
+    else:
+        return redirect("job_seeker:profile")
+
+def HTMXOnProfileLanguages(request):
+    candidate = Candidates.objects.get(user=request.user)
+    if request.htmx:
+        languages = UserLanguages.objects.filter(candidate=candidate)
+        return render(request,"jobseeker/htmx/profileLanguageShow.html",context={'my_languages':languages,})
     else:
         return redirect("job_seeker:profile")
 

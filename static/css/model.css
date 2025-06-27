@@ -12,7 +12,8 @@
     height: 100%;
     /* Full height */
     /* overflow: auto; Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.4);
+    transition: opacity 0.4s ease, background-color 0.4s ease;
+    background-color: rgba(0, 0, 0, 0.05); /* Light to start */
     /* Black w/ opacity */
     transition: all 0.9s ease;
 }
@@ -109,6 +110,21 @@
     transition: all .5s;
 }
 
+.model-btn-delete {
+    color: white;
+    margin: 0 10px 0 0;
+    padding: 8px 15px;
+    background-color: #d9534f;
+    /* border-color: #d43f3a; */
+    border: none;
+    color: white;
+    border-radius: 5px;
+    font-size: medium;
+    cursor: pointer;
+    height: fit-content;
+    transition: all .5s;
+}
+
 .btn-save:hover {
     background-color: #FFBD03;
     border-color: #FFBD03;
@@ -128,20 +144,20 @@
 }
 
 /* Show the modal with opacity transition */
-.modal.show {
+/* .modal.show {
     display: block;
     opacity: 1;
     animation: fadeIn 0.5s ease;
-}
+} */
 
 /* Hide the modal with opacity transition */
-.modal.hide {
+/* .modal.hide {
     opacity: 0;
     animation: fadeOut 0.5s ease;
-}
+} */
 
 /* Keyframes for the fade-in effect */
-@keyframes fadeIn {
+/* @keyframes fadeIn {
     from {
         opacity: 0;
         transform: translateY(-30px);
@@ -151,10 +167,10 @@
         opacity: 1;
         transform: translateY(0);
     }
-}
+} */
 
 /* Keyframes for the fade-out effect */
-@keyframes fadeOut {
+/* @keyframes fadeOut {
     from {
         opacity: 1;
         transform: translateY(0);
@@ -164,7 +180,7 @@
         opacity: 0;
         transform: translateY(-30px);
     }
-}
+} */
 
 
 .modal-body {
@@ -173,7 +189,7 @@
     input[type="number"],
     input[type="email"],
     input[type="date"],
-    textarea,
+    input[type="month"],
     select {
         width: 90%;
         padding: 10px;
@@ -186,10 +202,24 @@
         transition: border-color 0.3s ease;
     }
 
+    textarea .pro-summary-textarea {
+        width: 100%;
+        height: 140px;
+        padding: 10px;
+        margin: 10px 0 10px 0;
+        border: none;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        color: #333;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease;
+    }
+
     input[type="text"]:focus,
     input[type="email"]:focus,
     input[type="date"]:focus,
-    textarea,
+    input[type="month"]:focus,
+    textarea:focus,
     select:focus {
         border-color: #5c6bc0;
         outline: none;
@@ -197,17 +227,21 @@
 
     input[type="text"]::placeholder,
     input[type="email"]::placeholder,
-    textarea,
-    input[type="date"]::placeholder {
+    textarea::placeholder,
+    input[type="date"]::placeholder, 
+    input[type="month"]::placeholder,label {
         color: #aaa;
     }
 
-    input[type="date"] {
+    input[type="date"],
+    input[type="month"],
+    input[type="checkbox"],
+     {
         padding: 9px;
     }
 
     select {
-        height: 40px;
+        /* height: 40px; */
     }
 
     div label {
@@ -310,4 +344,81 @@ input[type="file"]::file-selector-button {
   font-weight: 600;
   font-size: 16px;
   pointer-events: none; 
+}
+
+/* .modal.show {
+    display: block;
+    opacity: 1;
+    animation: fadeIn 0.5s ease;
+}
+
+.modal.hide {
+    opacity: 0;
+    animation: fadeOut 0.5s ease;
+} */
+
+/* Show modal with full opacity and background */
+.modal.show {
+    display: block;
+    opacity: 1;
+    pointer-events: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Darker fade target */
+}
+
+.modal.hide {
+    opacity: 0;
+    pointer-events: none;
+    background-color: rgba(0, 0, 0, 0.05); /* Optional: light fade back */
+}
+
+.modal {
+    display: none;
+    opacity: 0;
+    pointer-events: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1050;
+    background-color: rgba(0, 0, 0, 0.05); 
+    /* backdrop-filter: blur(2px);  */
+    transition: opacity 0.5s ease, background-color 0.5s ease;
+}
+
+.modal.show {
+    opacity: 1;
+    pointer-events: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal.hide {
+    opacity: 0;
+    pointer-events: none;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* .modal-dialog {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.3s ease;
+    opacity: 1;
+} */
+
+.modal.show .modal-dialog {
+    opacity: 1;
+}
+
+.modal.hide .modal-dialog {
+    opacity: 0;
+}
+
+.modal-half-input{
+    width: 35% !important;
+    margin: 10px 20px !important;
 }

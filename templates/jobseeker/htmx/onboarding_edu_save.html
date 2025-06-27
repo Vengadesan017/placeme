@@ -6,8 +6,7 @@
     </select>
     </td>
     <td>
-        <select class="form-control edu-course" name="course"
-                required>
+        <select class="form-control edu-course" name="course" required>
             <option value="">Select Degree</option>
         </select>
     </td>
@@ -44,9 +43,9 @@
 
                         <select class="form-control" id="id_year_of_joining" name="year_of_passing" required>
                             <option value="">End Year</option>
-                            {% for value, label in education_form.fields.year_of_joining.choices %}
+                            {% for value, label in education_form.fields.year_of_passing.choices %}
                                 <option value="{{ value }}"
-                                    {% if value == education_form.initial.year_of_joining %}selected{% endif %}>
+                                    {% if value == education_form.initial.year_of_passing %}selected{% endif %}>
                                     {{ label }}
                                 </option>
                             {% endfor %}

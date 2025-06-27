@@ -10,6 +10,25 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 YEAR_CHOICES = [(year, year) for year in range(2000, 2031)]
+NOTICE_PERIOD_CHOICES = [
+    ('immediate', 'Immediate Joiner'),
+    ('15_days', '15 Days'),
+    ('30_days', '30 Days'),
+    ('45_days', '45 Days'),
+    ('60_days', '60 Days'),
+    ('90_days', '90 Days'),
+    ('more_90', 'More than 90 Days'),
+]
+SALARY_TYPE_CHOICES = [
+    ('per_year', 'Per Year'),
+    ('per_month', 'Per Month'),
+    ('per_week', 'Per Week'),
+    ('per_day', 'Per Day'),
+    ('per_hour', 'Per Hour'),
+    ('one_time', 'One-Time Payment'),
+    ('not_disclosed', 'Not Disclosed'),
+]
+
 
 def path_by_user_id(user_id: int):
     user_id_int = user_id + 100000000
@@ -79,7 +98,6 @@ class Candidates(models.Model):
     country = models.CharField(max_length=100, blank=True, null=True)
     state = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
-    languages = models.CharField(max_length=255, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
     pincode = models.IntegerField(null=True, blank=True)
     marital_status = models.CharField(max_length=20, choices=[('Single', 'Single'), ('Married', 'Married')], blank=True, null=True)
@@ -109,21 +127,26 @@ class Candidates(models.Model):
 
     
     # Work Experience
-    present_ctc = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    present_take_home = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    expected_ctc = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    expected_take_home = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    present_ctc_amount = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
+    present_ctc_type = models.CharField(max_length=20, choices=SALARY_TYPE_CHOICES, blank=True, null=True)
+    present_take_home_amount = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
+    present_take_home_type = models.CharField(max_length=20, choices=SALARY_TYPE_CHOICES, blank=True, null=True)
+    expected_ctc_amount = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
+    expected_ctc_type = models.CharField(max_length=20, choices=SALARY_TYPE_CHOICES, blank=True, null=True)
+    expected_take_home_amount = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
+    expected_take_home_type = models.CharField(max_length=20, choices=SALARY_TYPE_CHOICES, blank=True, null=True)
     monthly_incentive = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True) 
     other_yearly_pay = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True) 
-    monthly_incentive = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True) 
-    skill = models.TextField(blank=True, null=True)
+    skill = models.TextField(max_length=300,blank=True, null=True)
     present_designation = models.CharField(max_length=200, blank=True, null=True)
-    work_experience = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
-    notice_period = models.IntegerField(null=True,blank=True)
+    work_experience_years = models.PositiveIntegerField(null=True, blank=True)
+    work_experience_months = models.PositiveIntegerField(null=True, blank=True)
+    notice_period = models.CharField(max_length=20,choices=NOTICE_PERIOD_CHOICES,blank=True,null=True)    
+    notice_period_negotiable = models.BooleanField(default=False)   
     is_rotate_shift = models.BooleanField(default=False)
-    preferred_location = models.CharField(max_length=100, blank=True, null=True)
+    preferred_location = models.CharField(max_length=255, blank=True, null=True)
     is_relocate = models.BooleanField(default=False)
-    professional_summary = models.TextField(blank=True, null=True)
+    professional_summary = models.TextField(max_length=500,blank=True, null=True)
 
     # Additional info
     is_email_verified = models.BooleanField(default=False)
@@ -460,6 +483,7 @@ class Employment(models.Model):
     company_role = models.CharField(max_length=200)
     doj = models.DateField(null=True,blank=True)
     dol = models.DateField(null=True, blank=True)
+    currently = models.BooleanField(default=False)
     reason_for_leaving = models.TextField(null=True,blank=True)
     type_id = models.ForeignKey('EmployemntType',on_delete=models.CASCADE, related_name='employment_type',null=True,blank=True)
     doc = models.FileField(upload_to=upload_onboarding, blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'pdf']),validate_file_size])
@@ -467,7 +491,13 @@ class Employment(models.Model):
     def get_experience_duration(self):
         if not self.doj:
             return ""
-        end_date = self.dol or date.today()
+
+        # Use today if 'currently' is True, else use dol
+        end_date = date.today() if self.currently else self.dol
+
+        if not end_date or self.doj > end_date:
+            return "Invalid data"
+
         delta = relativedelta(end_date, self.doj)
         years = delta.years
         months = delta.months
@@ -508,6 +538,7 @@ class EducationMap(models.Model):
     institute = models.CharField(max_length=200, null=True, blank=True)
     year_of_joining = models.IntegerField(choices=YEAR_CHOICES, null=True, blank=True)
     year_of_passing = models.IntegerField(choices=YEAR_CHOICES, null=True, blank=True)
+    currently = models.BooleanField(default=False)    
     score = models.CharField(max_length=20,null=True,blank=True)
     type_id = models.ForeignKey('EducationType',on_delete=models.CASCADE, related_name='edu_type_map',null=True,blank=True)
     doc = models.FileField(upload_to=upload_onboarding, blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'Pdf']),validate_file_size])
@@ -522,14 +553,15 @@ class EducationMap(models.Model):
 
 
 # =====================================EducationName Map End========================================================
-# =====================================Locations begin========================================================
+# ===================================== user prefered Locations begin========================================================
 
-class UserLocations(models.Model):
-    user_location_id = models.AutoField(primary_key=True)
-    candidate = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='user_location', null=True, blank=True)
-    location = models.CharField(max_length=200, null=True, blank=True)
+# unused
+# class UserLocations(models.Model):
+#     user_location_id = models.AutoField(primary_key=True)
+#     candidate = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='user_location', null=True, blank=True)
+#     location = models.CharField(max_length=200, null=True, blank=True)
 
-    def __str__(self):
-        return f"{self.location}"
+#     def __str__(self):
+#         return f"{self.location}"
 
 # =====================================Locations End========================================================

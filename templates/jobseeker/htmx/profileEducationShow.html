@@ -1,0 +1,64 @@
+<div class="education-name1">
+  <h4>Education</h4>
+  <div class="add-div">                                
+    <a href="#"
+        hx-post="#"
+        hx-vals='{"get_education_form": ""}'
+        hx-target="#HtmxModal"
+        hx-trigger="click"
+        hx-swap="innerHTML"
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        hx-on="htmx:beforeRequest: startLoading();
+            htmx:afterRequest: stopLoading();
+            htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
+    <i class="fa-solid fa-square-plus"></i>
+    </a>
+  </div>
+</div>
+<div class="education-name2">
+    {% for edu in my_education %}
+      <div class="education-name2-1">
+        <div class="education-name2-1-col">
+          <a href="#"
+        hx-post="#"
+        hx-vals='{"get_education_form": "{{ edu.edu_map_id }}"}'
+        hx-target="#HtmxModal"
+        hx-trigger="click"
+        hx-swap="innerHTML"
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        hx-on="htmx:beforeRequest: startLoading();
+            htmx:afterRequest: stopLoading();
+            htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
+            <h2>{{ edu.institute|default_if_none:'' }} <i class='fa-solid fa-pencil'></i></h2>
+            
+          </a>
+          <p>{{ edu.edu_id|default_if_none:'' }}</p>
+        </div>
+        <div class="employement-date-div">
+          <p class="employement-date">
+            {{ edu.year_of_passing|default_if_none:'' }}
+          </p>
+          <p class="employement-time">{{ edu.type_id|default_if_none:'' }}</p>
+        </div>
+        {% comment %} <div class="education-name2-1-date">
+          <p>{{ edu.year_of_passing }}</p>
+          <p>{{ edu.type_id }}</p>
+        </div> {% endcomment %}
+      </div>
+  {% empty %}
+    <div class="education-name2-1">
+      <div class="education-name2-1-col">
+            <a href="#"
+        hx-post="#"
+        hx-vals='{"get_education_form": ""}'
+        hx-target="#HtmxModal"
+        hx-trigger="click"
+        hx-swap="innerHTML"
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        hx-on="htmx:beforeRequest: startLoading();
+            htmx:afterRequest: stopLoading();
+            htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">Add your educational qualifications</a>
+      </div>
+    </div>
+  {% endfor %}
+</div>

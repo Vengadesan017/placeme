@@ -1,0 +1,75 @@
+
+
+        <div class="modal-dialog" id="HtmxModalBody">
+        <form method="post" action="#">
+            {% csrf_token %}
+        <div class="modal-content show">
+    
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h3 class="modal-title">Professional Summary</h3>
+            <button type="button" class="btn-close close-modal-btn" onclick="closeHtmxModalButton()">
+             <i class='fas fa-times edit'></i></button>
+        </div>
+    
+        <!-- Modal Body -->
+        <div class="modal-body">
+        <div class="margin20">
+        <div class="">
+
+             
+                    <div class="summary-data-container">
+                        {% comment %} <p>Please enter your professional summary (limit: 500 words):</p> {% endcomment %}
+                            <textarea class="pro-summary-textarea" maxlength="500" id="count-words" name="professional_summary" placeholder="Write about your skills, achievements, goals...">{{ summary_form.initial.professional_summary|default:'' }}</textarea>
+                            <div class="counter" id="char-count">0 / 500 words</div>
+                    </div>
+
+
+        </div>
+        </div>
+        </div>
+    
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+            <button type="submit" 
+            name="summary_save" 
+            class="model-btn-save"
+            hx-post="#"
+            hx-vals='{"summary_save": ""}'
+            hx-target="#professional-summary"
+            hx-swap="innerHTML"
+            hx-on="htmx:beforeRequest: startLoading();
+                htmx:afterRequest: stopLoading();
+                htmx:afterOnLoad: checkIfFullPage(event);closeHtmxModalButton();"
+            >Save</button>
+            
+        </div>
+    
+        </div>
+    </form>
+    </div>
+
+   <script>
+(function() {
+    // Delay a bit to ensure DOM elements are there
+    setTimeout(function () {
+        const textarea = document.getElementById("count-words");
+        const charCountDisplay = document.getElementById("char-count");
+
+        if (textarea && charCountDisplay) {
+            const maxLength = textarea.maxLength > 0 ? textarea.maxLength : 500;
+
+            const updateCount = function () {
+                const text = textarea.value;
+                const charCount = text.length;
+                charCountDisplay.textContent = `${charCount} / ${maxLength} characters`;
+
+                charCountDisplay.style.color = charCount > maxLength ? "red" : "#555";
+            };
+
+            textarea.addEventListener("input", updateCount);
+            updateCount();  // run on load
+        }
+    }, 50);  // slight delay to wait for HTMX to insert content
+})();
+</script>

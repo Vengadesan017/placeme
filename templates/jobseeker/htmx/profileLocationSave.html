@@ -1,0 +1,212 @@
+
+        <div class="modal-dialog">
+            <form method="post" action="#">
+                {% csrf_token %}
+            <div class="modal-content">
+        
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 class="modal-title">Preferred Location</h3>
+                <button type="button" class="btn-close close-modal-btn" id="closeSkillEditModalButton"  onclick="closeHtmxModalButton()"><i class='fas fa-times edit'></i></button>
+            </div>
+        
+            <!-- Modal Body -->
+            <div class="modal-body">
+            <div class="margin20">
+            <div class="">
+                <table class="modal-table">
+                    {% comment %} <div class="key-list">
+                        <div class="key-list-div">
+                            <ul class="key-list-ul" id="keyUl">
+                                {% if skills_list %}
+                                {% for skill in skills_list %}
+                                {% if skill %}                                
+                                <li class="key-list-li">
+                                    {{ skill }}
+
+                                </li>
+                                {% else %}
+                                {% endif%}
+                                {% endfor %}
+                                {% else %}
+                                <li class="key-list-li">
+                                    No skills provided,
+                                   <a href="">Add key skills</a>
+                                </li>
+                                {% endif %}
+                                
+                            </ul>
+                        </div>
+                    </div> {% endcomment %}
+                    <tr> 
+
+                        <td>    <div class="hieght">
+
+
+                            <div class="multi-select-container admin-input" id="skills-wrapper">
+                                <div class="selected-tags" id="selected-tags-skills"></div>
+                                <div>
+
+                                    <input type="text" class="search-input" id="search-skills" placeholder="Search or add your Key Skills..." autocomplete="off">
+                                    <div class="dropdown-list" id="dropdown-skills"></div>
+
+                                </div>
+                            </div>  
+                            <select name="" id="multi-select-skills" hidden multiple>
+                                {% for state in states %}
+                                    <option value="{{ state.name }}">
+                                        {{ state }}
+                                    </option>
+                                {% endfor %}
+                                {% for district in districts %}
+                                    <option value="{{ district.name }}">
+                                        {{ district }}
+                                    </option>
+                                {% endfor %}
+                            </select>           
+                                    <input type="hidden" name="preferred_location" id="new-skills" value="{{my_location}}"> 
+                        </div>
+                        </td>
+                    </tr>
+
+
+                </table>
+
+            </div>
+            </div>
+            </div>
+        
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+            <button type="submit" name="location_save" class="model-btn-save"
+                hx-post="#"
+                hx-vals='{"location_save": ""}'
+                hx-target="#locations"
+                hx-swap="innerHTML"
+                hx-on="htmx:beforeRequest: startLoading();
+                    htmx:afterRequest: stopLoading();
+                    htmx:afterOnLoad: checkIfFullPage(event);closeHtmxModalButton();"                
+                >Save</button>
+            </div>
+        
+            </div>
+        </form>
+
+        </div>
+
+        
+<style>
+
+    
+
+.modal-body {
+    input[type="text"]{ 
+        border: none;
+        border-bottom: 1px solid #ccc;
+    }
+}
+
+.multi-select-container {
+  width: 100%;
+/*  margin: 10px 0;
+  font-family: sans-serif;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  min-height: 46px;
+  padding: 6px 10px;  */
+
+
+
+
+}
+
+
+/* Tags container */
+.selected-tags {
+     display: flex;
+    gap: 5px;
+    /* flex: 1 1 auto; */
+    min-width: 0;
+    /* align-items: center; */
+
+    overflow: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 200px;
+}
+
+/* Individual tag styles */
+.tag {
+     padding: 4px 8px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    height: 38px;
+    width: fit-content;
+    border-radius: 50px;   
+  background-color: #FFBD03;
+  color: #000;
+  border: 1px solid #FFBD03;
+
+}
+
+/* Close button inside tag */
+.tag button {
+  margin-left: 6px;
+  background: transparent;
+  color: #000;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Search input */
+.search-input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  min-width: 120px;      /* Prevents it from getting too small */
+  flex: 1 1 0%;           /* ⬅️ This is the key */
+  padding: 6px 4px;
+  background: transparent;
+}
+
+
+
+/* Dropdown list styles */
+.dropdown-list {
+  position: absolute;
+  top: 80%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 1051;
+  border-radius: 4px;
+  margin-top: 2px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+  background: #f0f0f0;
+}
+
+
+
+
+</style>
+
+<script>
+
+
+
+</script>

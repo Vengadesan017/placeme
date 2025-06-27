@@ -1,0 +1,130 @@
+    <div class="modal-dialog">
+        <div class="modal-content" id="language-modal-body"> 
+        {% include 'jobseeker/htmx/profileLanguageTable.html' %}
+
+        </div>
+    </div>
+    
+
+    <style>
+.btn-warning {
+    color: #fff;
+    background-color: #f0ad4e;
+    border-color: #eea236;
+
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+    i{
+            color: #fff;
+    }
+}
+.btn-danger {
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #d43f3a;
+
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+    i{
+            color: #fff;
+    }
+}
+    .known-lans{
+        display:flex;
+        
+    }
+
+    label.can-lan{
+      display:flex !important;
+      flex-direction: row-reverse;
+      margin:10px;
+    }
+
+    .btn-bottom{
+            margin: 0 15px 15px 0;
+    }
+
+.language-table-wrapper {
+    overflow-x: auto;
+    {% comment %} min-width: 730px; {% endcomment %}
+    border: 1px solid #ccc;
+    overflow-y: auto;
+}
+
+.modal .language-table {
+    min-width: 730px; /* Ensure both tables are same width */
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.modal .language-table th,
+.modal .language-table td {
+
+    text-align: center;
+
+
+}
+
+/* Column-specific widths */
+.lang-col {
+    width: 25%;
+}
+
+.ability-col {
+    width: 11%;
+}
+
+.prof-col {
+    width: 20%;
+}
+
+.action-col {
+    width: 22%;
+}
+
+
+
+.modal-body {
+    min-height: 300px;
+}
+.modal-body div label {
+        display: inline-block;
+        margin-right: unset;
+
+}
+.dynamictbl td{
+  font-size: 14px;
+  vertical-align: middle;
+}   
+
+.form-control-half{
+  width: 45%;
+}
+
+    </style>

@@ -1,0 +1,36 @@
+
+    <div class="languages-ul-div">
+
+        <table class="language-table">
+            {% if my_languages %}
+            <thead>
+                <tr>
+                    <th class="">Languages</th>
+                    <th class="">Speak</th>
+                    <th>Read</th>
+                    <th>Write</th>
+                    <th>Proficiency Level</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for lan in my_languages %}
+            <tr>
+                <td>{{lan.language_id}}
+                <td>{% if lan.can_speak %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}</td>
+                <td>{% if lan.can_read %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}</td>
+                <td>{% if lan.can_write %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}</td>
+                <td>{{lan.proficiency|default_if_none:''}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            {% else %}
+                    <a href="#" class="open-modal-btn" data-modal-id="PreferModal" >Add</a>
+            {% endif %}
+
+        </table>
+
+    </div>
+    <div class="key-list-more">
+        <!-- <button class="more-btn">Check <i class="fa-solid fa-arrow-right"></i></button> -->
+    </div>
+    

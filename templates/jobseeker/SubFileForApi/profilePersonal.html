@@ -1,15 +1,15 @@
 
-<!-- The Modal for ==========personal Info===================== -->
 <div class="modal" id="PersonalModal">
-    <div class="modal-dialog">
+        <div class="modal-dialog" id="HtmxModalBody">
         <form method="post" action="#">
             {% csrf_token %}
-        <div class="modal-content">
+        <div class="modal-content show">
     
         <!-- Modal Header -->
         <div class="modal-header">
             <h3 class="modal-title">Edit your Personal Info</h3>
-            <button type="button" class="btn-close close-modal-btn" id="closePersonalModalButton"><i class='fas fa-times edit'></i></button>
+            <button type="button" class="btn-close close-modal-btn" onclick="closeHtmxModalButton()">
+             <i class='fas fa-times edit'></i></button>
         </div>
     
         <!-- Modal Body -->
@@ -20,57 +20,57 @@
             <table class="modal-table">
                 <tr> 
                     <td><b>First name</b></td>
-                    <td><input type="text" id="firstname" name="first_name" value="{{ candidate.first_name|default_if_none:'' }}" required></td>
+                    <td><input type="text" id="firstname" name="first_name" value="{{ candidate_form.initial.first_name|default_if_none:'' }}" required></td>
                 </tr>
                 <tr> 
                     <td><b>Last name</b></td>
-                    <td><input type="text" id="lastname" name="last_name" value="{{ candidate.last_name|default_if_none:'' }}" required></td>
+                    <td><input type="text" id="lastname" name="last_name" value="{{ candidate_form.initial.last_name|default_if_none:'' }}" required></td>
                 </tr>
                 <tr> 
                     <td><b>Email</b></td>
-                    <td><input type="text" id="email" name="email" value="{{ candidate.user.email|default_if_none:'' }}" disabled></td>
+                    <td><input type="text" id="email" value="{{ candidate_form.instance.user.email|default_if_none:'' }}" disabled></td>
                 </tr>
                 <tr> 
                     <td><b>Phone No</b></td>
-                    <td><input type="text" id="no" name="no" value="{{ candidate.user.mobile_no|default_if_none:'' }}" disabled></td>
+                    <td><input type="text" id="no" value="{{ candidate_form.instance.user.mobile_no|default_if_none:'' }}" disabled></td>
                 </tr>
                 <tr> 
                     <td><b>Date of birth</b></td>
                     <td>
-                        {% if candidate.dob %}
-                            <input type="date" id="dob" name="dob" value="{{ candidate.dob|date:'Y-m-d'|default_if_none:'' }}" disabled>
+                        {% if candidate_form.initial.dob %}
+                            <input type="date" id="dob" name="dob" value="{{ candidate_form.initial.dob|date:'Y-m-d'|default_if_none:'' }}" disabled>
                         {% else %}
-                        <input type="date" id="dob" name="dob" value="{{ candidate.dob|date:'Y-m-d'|default_if_none:'' }}" >
+                        <input type="date" id="dob" name="dob" value="{{ candidate_form.initial.dob|date:'Y-m-d'|default_if_none:'' }}" >
                         {% endif %}   
                     </td>
                 </tr>
                 <tr> 
                     <td><b>Country</b></td>
-                    <td><input type="text" id="country" name="country" value="{{ candidate.country|default_if_none:'' }}"></td>
+                    <td><input type="text" id="country" name="country" value="{{ candidate_form.initial.country|default_if_none:'' }}"></td>
                 </tr>
                 <tr> 
                     <td><b>State</b></td>
-                    <td><input type="text" id="state" name="state" value="{{ candidate.state|default_if_none:'' }}"></td>
+                    <td><input type="text" id="state" name="state" value="{{ candidate_form.initial.state|default_if_none:'' }}"></td>
                 </tr>
                 <tr> 
                     <td><b>City</b></td>
-                    <td><input type="text" id="city" name="city" value="{{ candidate.city|default_if_none:'' }}"></td>
+                    <td><input type="text" id="city" name="city" value="{{ candidate_form.initial.city|default_if_none:'' }}"></td>
                 </tr>
                 <tr> 
                     <td><b>Gender</b></td>
                     <td><select id="gender" name="gender">
                         <option value="">Select</option>
-                        <option value="Male" {% if candidate.gender == 'Male' %}selected{% endif %}>Male</option>
-                        <option value="Female" {% if candidate.gender == 'Female' %}selected{% endif %}>Female</option>
-                        <option value="Other" {% if candidate.gender == 'Other' %}selected{% endif %}>Other</option>
+                        <option value="Male" {% if candidate_form.initial.gender == 'Male' %}selected{% endif %}>Male</option>
+                        <option value="Female" {% if candidate_form.initial.gender == 'Female' %}selected{% endif %}>Female</option>
+                        <option value="Other" {% if candidate_form.initial.gender == 'Other' %}selected{% endif %}>Other</option>
                     </select></td>
                 </tr>
                 <tr> 
                     <td><b>Marital Status</b></td>
                     <td><select id="marital_status" name="marital_status">
                         <option value="">Select</option>
-                        <option value="Single" {% if candidate.marital_status == 'Single' %}selected{% endif %}>Single</option>
-                        <option value="Married" {% if candidate.marital_status == 'Married' %}selected{% endif %}>Married</option>
+                        <option value="Single" {% if candidate_form.initial.marital_status == 'Single' %}selected{% endif %}>Single</option>
+                        <option value="Married" {% if candidate_form.initial.marital_status == 'Married' %}selected{% endif %}>Married</option>
                     </select></td>
                 </tr>
                 {% comment %} <tr> 
@@ -81,8 +81,8 @@
                     <td><b>Work status</b></td>
                     <td><select id="work_status" name="work_status">
                         <option value="">Select</option>
-                        <option value="Fresher" {% if candidate.work_status == 'Fresher' %}selected{% endif %}>Fresher</option>
-                        <option value="Experienced" {% if candidate.work_status == 'Experienced' %}selected{% endif %}>Experienced</option>
+                        <option value="Fresher" {% if candidate_form.initial.work_status == 'Fresher' %}selected{% endif %}>Fresher</option>
+                        <option value="Experienced" {% if candidate_form.initial.work_status == 'Experienced' %}selected{% endif %}>Experienced</option>
                     </select></td>
                 </tr>
             </table>
@@ -93,10 +93,12 @@
     
         <!-- Modal Footer -->
         <div class="modal-footer">
-            <button type="submit" name="profile_personal_edit" class="model-btn-save" id="">Save</button>
+            <button type="submit" name="profile_personal_save" class="model-btn-save" id="">Save</button>
+            
         </div>
     
         </div>
     </form>
     </div>
-    </div>
+
+</div>

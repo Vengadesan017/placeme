@@ -1,0 +1,42 @@
+<div class="summary1">
+  <div class="summary-name2">
+    <h4>Professional Summary</h4>
+    <div class="add-div">
+            <a href="#"
+        {% comment %} class="open-modal-btn" {% endcomment %}
+        {% comment %} data-modal-id="HtmxModal" {% endcomment %}
+        hx-post="#"
+        hx-vals='{"get_summary_form": ""}'
+        hx-target="#HtmxModal"
+        hx-trigger="click"
+        hx-swap="innerHTML"
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        hx-on="htmx:beforeRequest: startLoading();
+            htmx:afterRequest: stopLoading();
+            htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
+                <i class="fa-solid fa-pen-to-square"></i>
+        </a>
+    </div>
+  </div>
+</div>
+<div class="summary-data-container1">
+    {% if candidate.professional_summary %}
+    <p>{{ candidate.professional_summary|default:'' }}</p>    
+        
+    {% else %}
+    <p> <a href="#"
+        {% comment %} class="open-modal-btn" {% endcomment %}
+        {% comment %} data-modal-id="HtmxModal" {% endcomment %}
+        hx-post="#"
+        hx-vals='{"get_summary_form": ""}'
+        hx-target="#HtmxModal"
+        hx-trigger="click"
+        hx-swap="innerHTML"
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        hx-on="htmx:beforeRequest: startLoading();
+            htmx:afterRequest: stopLoading();
+            htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
+                Add your Professional Summary 
+        </a> </p>
+    {% endif %}
+</div>

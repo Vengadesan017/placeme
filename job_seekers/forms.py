@@ -1,6 +1,6 @@
 from django import forms
 from .models import Candidates, Onboarding, EducationMap, UserLanguages,\
-    UserLocations, Employment, Internship, Familys,OnboardingDocumentRequirement,\
+    Employment, Internship, Familys,OnboardingDocumentRequirement,\
         SpecificationForEdu
 import datetime
 
@@ -10,7 +10,7 @@ class CandidatePersonalUpdateForm(forms.ModelForm):
         model = Candidates
         fields = [
             'first_name', 'last_name', 'gender', 'dob', 'linkedin_profile', 'country', 'state', 'city',
-            'marital_status','languages','work_status'
+            'marital_status','work_status'
         ]
         labels = {
             'first_name': 'First name',
@@ -22,8 +22,25 @@ class CandidatePersonalUpdateForm(forms.ModelForm):
             'state': 'State',
             'city': 'City',
             'marital_status': 'Marital status',
-            'languages': 'Languages known',
             'work_status': 'Current work status',
+        }
+class CandidateSummaryUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Candidates
+        fields = [
+            'professional_summary'
+        ]
+        labels = {
+            'professional_summary': 'Professional Summary',
+        }
+class CandidateSkillUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Candidates
+        fields = [
+            'skill'
+        ]
+        labels = {
+            'skill': 'Key Skills',
         }
 
 
@@ -31,13 +48,14 @@ class CandidateEducationUpdateForm(forms.ModelForm):
     class Meta:
         model = EducationMap
         fields = [
-             'edu_id', 'institute', 'year_of_passing','year_of_joining', 'score', 'type_id', 'doc'
+             'edu_id', 'institute', 'year_of_passing','year_of_joining', 'currently', 'score', 'type_id', 'doc'
         ]
         labels = {
             'edu_id': 'Education level',
             'institute': 'Institute name',
             'year_of_joining': 'Year of joining',
             'year_of_passing': 'Year of passing',
+            'currently': 'Currently',
             'score': 'Score / Grade',
             'type_id': 'Education type',
             'doc': 'Supporting document',
@@ -76,7 +94,7 @@ class OnboardingCandidatePersonalForm(forms.ModelForm):
         model = Candidates
         fields = [
             'first_name', 'last_name', 'gender', 'dob', 'marital_status', 
-            'country', 'state', 'city', 'languages', 'address', 'pincode', 
+            'country', 'state', 'city', 'address', 'pincode', 
             'linkedin_profile', 'profile_pic', 'resume'
         ]
         labels = {
@@ -88,7 +106,6 @@ class OnboardingCandidatePersonalForm(forms.ModelForm):
             'country': 'Country',
             'state': 'State',
             'city': 'City',
-            'languages': 'Languages known',
             'address': 'Address',
             'pincode': 'Pincode',
             'linkedin_profile': 'LinkedIn profile',
@@ -213,43 +230,58 @@ class CandidateLanguageUpdateForm(forms.ModelForm):
     
 class CandidateLocationUpdateForm(forms.ModelForm):
     class Meta:
-        model = UserLocations
+        model = Candidates
         fields = [
-             'location'
+             'preferred_location'
         ]
         labels = {
-            'location': 'Location',
+            'preferred_location': 'PreferedLocation',
         }
 
-    def save(self, commit=True, candidate=None):
-        instance = super().save(commit=False)
-        if candidate:
-            instance.candidate = candidate
-        if commit:
-            instance.save()
-        return instance
 
+
+class CommaDecimalField(forms.DecimalField):
+    def clean(self, value):
+        if isinstance(value, str):
+            value = value.replace(',', '')
+        return super().clean(value)
 class CandidateCareerUpdateForm(forms.ModelForm):
     class Meta:
         model = Candidates
         fields = [
-            'present_ctc',
-            'present_take_home',
-            'expected_ctc',
-            'expected_take_home',
+            'present_ctc_amount',
+            'present_take_home_amount',
+            'expected_ctc_amount',
+            'expected_take_home_amount',
+            'present_ctc_type',
+            'present_take_home_type',
+            'expected_ctc_type',
+            'expected_take_home_type',
             'notice_period',
-            'work_experience',
+            'notice_period_negotiable',
+            'work_experience_years',
+            'work_experience_months',
         ]
 
         labels = {
-            'present_ctc': 'Present CTC (Cost to Company)',
-            'present_take_home': 'Present take-home salary',
-            'expected_ctc': 'Expected CTC',
-            'expected_take_home': 'Expected take-home salary',
+            'present_ctc_amount': 'Present CTC (Cost to Company) amount',
+            'present_take_home_amount': 'Present take-home salary amount',
+            'expected_ctc_amount': 'Expected CTC amount',
+            'expected_take_home_amount': 'Expected take-home salary amount',
+            'present_ctc_type': 'Present CTC (Cost to Company) type',
+            'present_take_home_type': 'Present take-home salary type',
+            'expected_ctc_type': 'Expected CTC type',
+            'expected_take_home_type': 'Expected take-home salary type',
             'notice_period': 'Notice period',
-            'work_experience': 'Total work experience (in years)',
+            'notice_period_negotiable': 'Negotiable Notice period',
+            'work_experience_years': 'Work experience years',
+            'work_experience_months': 'Work experience months',
         }
-
+    # Override specific fields using custom field
+    present_ctc_amount = CommaDecimalField(required=False, max_digits=10, decimal_places=2)
+    present_take_home_amount = CommaDecimalField(required=False, max_digits=10, decimal_places=2)
+    expected_ctc_amount = CommaDecimalField(required=False, max_digits=10, decimal_places=2)
+    expected_take_home_amount = CommaDecimalField(required=False, max_digits=10, decimal_places=2)
 
 class CandidateEmploymentUpdateForm(forms.ModelForm):
     class Meta:
@@ -259,9 +291,11 @@ class CandidateEmploymentUpdateForm(forms.ModelForm):
             'company_role',
             'doj',
             'dol',
+            'currently',
             'type_id',
             'reason_for_leaving',
             'doc',
+            
         ]
 
         labels = {
@@ -269,6 +303,7 @@ class CandidateEmploymentUpdateForm(forms.ModelForm):
             'company_role': 'Role/Designation',
             'doj': 'Date of joining',
             'dol': 'Date of leaving',
+            'currently': 'Currently',
             'type_id': 'Employment type',
             'reason_for_leaving': 'Reason for leaving',
             'doc': 'Relieving/Experience document',
