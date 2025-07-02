@@ -1,9 +1,8 @@
-
     <div class="modal-dialog">
         <form method="post" action="#" 
                     hx-post="#"
-            hx-vals='{"resume_save": ""}'
-            hx-target="#resume"
+            hx-vals='{"profile_pic_save": ""}'
+            hx-target=".my-profile-pic"
             hx-swap="innerHTML"
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
             hx-on="htmx:beforeRequest: startLoading();
@@ -15,7 +14,7 @@
     
         <!-- Modal Header -->
         <div class="modal-header">
-            <h3 class="modal-title">Upload Resume</h3>
+            <h3 class="modal-title">Upload Profle Photo</h3>
             <button type="button" class="btn-close close-modal-btn" onclick="closeHtmxModalButton()" id="closeResumeModalButton"><i class='fas fa-times edit'></i></button>
         </div>
     
@@ -30,11 +29,11 @@
 
                         <td>
                         <div class="upload-box">
-                        <label for="resume" id="fileLabel">Choose Resume</label>
-                        <input type="file" name="resume" onchange="updateFileLabel(this)" id="resume-file" accept=".pdf,.doc,.docx" />
+                        <label for="profile_pic" id="fileLabel">Choose Profile Photo</label>
+                        <input type="file" name="profile_pic" onchange="updateFileLabel(this)" id="Upload-file" accept=".png,.jpeg,.jpg" />
                         </div>
                     </tr>
-                    <tr><td><b>Supported formats: PDF, DOC, DOCX up to 5MB</b></td></tr>
+                    <tr><td><b>Supported formats: JPG, JPEG, PNG up to 5MB</b></td></tr>
              </tbody>
             </table>
 
@@ -44,7 +43,7 @@
     
         <!-- Modal Footer -->
         <div class="modal-footer">
-            <button type="submit" name="resume_save" class="model-btn-save" id="">Save</button>
+            <button type="submit" name="profile_pic_save" class="model-btn-save" id="">Save</button>
         </div>
     
         </div>
@@ -57,18 +56,18 @@
     const file = input.files[0];
 
     if (!file) {
-      label.textContent = 'Choose File';
+      label.textContent = 'Choose Profile Picture';
       return;
     }
 
-    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    const allowedTypes =  ['image/png', 'image/jpeg'];
     const maxSize = 5 * 1024 * 1024; // 5MB in bytes
 
     // Check file type
     if (!allowedTypes.includes(file.type)) {
-      displayHtmxMessages('Unsupported file type. Please upload a PDF, DOC, or DOCX file.');
+      displayHtmxMessages('Unsupported file type. Please upload a PNG or JPG file.');
       input.value = ''; // clear the input
-      label.textContent = 'Choose Resume';
+      label.textContent = 'Choose Profile Picture';
       return;
     }
 
@@ -76,7 +75,7 @@
     if (file.size > maxSize) {
       displayHtmxMessages('File too large. Maximum size is 5MB.');
       input.value = ''; // clear the input
-      label.textContent = 'Choose Resume';
+      label.textContent = 'Choose File';
       return;
     }
 
@@ -86,4 +85,5 @@
 
 
 </script>
+
 

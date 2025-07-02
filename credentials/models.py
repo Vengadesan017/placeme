@@ -23,7 +23,7 @@ class CustomUserManager(BaseUserManager):
 class Users(AbstractBaseUser, PermissionsMixin):
     userid = models.AutoField(primary_key=True)
     email = models.EmailField(unique=True)
-    mobile_no = models.CharField(max_length=15, unique=True)
+    mobile_no = models.CharField(max_length=15, unique=True, null=True, blank=True)
     password = models.CharField(max_length=128)
     joined_date = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(blank=True, null=True)

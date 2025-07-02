@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404, NoReverseMatch, reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Count, Case, When, Q, CharField
@@ -18,11 +18,11 @@ from .models import Candidates, JobApplications, Onboarding, EducationMap , User
 from .forms import CandidatePersonalUpdateForm, CandidateEducationUpdateForm, OnboardingCandidatePersonalForm,\
         OnboardingPersonalForm ,CandidateLanguageUpdateForm, CandidateLocationUpdateForm, CandidateCareerUpdateForm,\
         CandidateEmploymentUpdateForm, CandidateIntenshipUpdateForm, OnboardingFamilyForm, \
-        ResumeForm, ProfileForm, IdentityForm, CandidateSummaryUpdateForm, CandidateSkillUpdateForm
+        ResumeForm, ProfileForm, IdentityForm, CandidateSummaryUpdateForm, CandidateSkillUpdateForm, OfferResponseForm
 from .serializers import JobsCardSerializer, TitleSerializer, LocationSerializer
 from .services import apply_filter_in_job,get_filter_from_job,search_job
 from .decorators import is_onboarding
-from .utils import form_errors_to_messages
+from .utils import form_errors_to_messages, form_errors_to_messages_htmx
 
 from django.views.decorators.csrf import csrf_exempt
 
@@ -51,13 +51,14 @@ def safe_reverse(name):
 
 def Home(request):
     try:
-        
         if request.user.is_authenticated:
             candidate = Candidates.objects.get(user=request.user)
 
             context = {
                 "upload_resume_url": safe_reverse("job_seeker:profile"),
                 "complete_profile_url": safe_reverse("job_seeker:profile"),
+                "saved_url": reverse("job_seeker:status", kwargs={"page": "saved"}),
+                "applied_url": reverse("job_seeker:status", kwargs={"page": "applied"}),
                 "review_offer_url": safe_reverse("review_offer"),
                 "onboarding_url": safe_reverse("review_offer"),
                 "check_attendance_url": safe_reverse("check_attendance"),
@@ -77,7 +78,6 @@ def Home(request):
                 accepted_at__isnull=True,
                 rejected_at__isnull=True
             ).values_list("id", flat=True).first()
-            print(offer_letter_id)
             if offer_letter_id:
                 context['review_offer_url'] = reverse("job_seeker:status", kwargs={
                     'page': 'offered',
@@ -85,13 +85,6 @@ def Home(request):
                 })
         else:
             context = {}
-        # jobs_titles = Jobs.objects.values_list('title', flat=True) \
-        #     .annotate(job_count=Count('title')) \
-        #     .order_by('-job_count')[:5]
-        # # jobs_titles = Jobs.objects.values_list('title', flat=True).distinct()
-        # context = {
-        #     'jobs_titles': jobs_titles,
-        # }
         return render(request,'jobseeker/home.html',context)
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
@@ -141,6 +134,8 @@ def Profile(request):
                 template_name = 'jobseeker/htmx/profileCareerSave.html'
             elif 'get_resume_form' in request.POST:
                 template_name = 'jobseeker/htmx/profileResumeSave.html'
+            elif 'get_profile_form' in request.POST:
+                template_name = 'jobseeker/htmx/profilePictureSave.html'
                 
                 
             if 'personal_save' in request.POST:
@@ -149,7 +144,10 @@ def Profile(request):
                     form.save()
                 else:
                     print("Form errors:", form.errors)
-                    form_errors_to_messages(request, form)
+                    errors = form_errors_to_messages_htmx(form, level='error')
+                    return JsonResponse(errors, status=400)
+
+
                 context['candidate'] = candidate
                 template_name = 'jobseeker/htmx/profilePersonalShow.html'
             elif 'summary_save' in request.POST:
@@ -158,7 +156,8 @@ def Profile(request):
                     form.save()
                 else:
                     print("Form errors:", form.errors)
-                    form_errors_to_messages(request, form)
+                    errors = form_errors_to_messages_htmx(form, level='error')
+                    return JsonResponse(errors, status=400)
                 context['candidate'] = candidate
                 template_name = 'jobseeker/htmx/profileSummaryShow.html'
             elif 'education_save' in request.POST or 'education_delete' in request.POST:
@@ -175,7 +174,8 @@ def Profile(request):
                         form.save(candidate=candidate)
                     else:
                         print("Form errors:", form.errors)
-                        form_errors_to_messages(request, form)
+                        errors = form_errors_to_messages_htmx(form, level='error')
+                        return JsonResponse(errors, status=400)
                 context['my_education'] =  EducationMap.objects.filter(candidate=candidate).order_by('-year_of_passing')
                 template_name = 'jobseeker/htmx/profileEducationShow.html'
             elif 'skill_save' in request.POST:
@@ -184,7 +184,8 @@ def Profile(request):
                     form.save()
                 else:
                     print("Form errors:", form.errors)
-                    form_errors_to_messages(request, form)
+                    errors = form_errors_to_messages_htmx(form, level='error')
+                    return JsonResponse(errors, status=400)
                 context['skills_list'] = [skill.strip() for skill in candidate.skill.split(',')] if candidate.skill else []
                 template_name = 'jobseeker/htmx/profileSkillShow.html'    
             elif 'save_language' in request.POST or 'edit_language' in request.POST or 'delete_language' in request.POST or 'add_row_lang' in request.POST:      
@@ -201,7 +202,8 @@ def Profile(request):
                         form.save(candidate=candidate)
                     else:
                         print("Form errors:", form.errors)
-                        form_errors_to_messages(request, form)
+                        errors = form_errors_to_messages_htmx(form, level='error')
+                        return JsonResponse(errors, status=400)
                 elif 'edit_language' in request.POST:
                     if pk := request.POST.get('edit_language'):
                         instance = get_object_or_404(UserLanguages, candidate=candidate, user_language_id=pk)
@@ -221,7 +223,8 @@ def Profile(request):
                     form.save()
                 else:
                     print("Form errors:", form.errors)
-                    form_errors_to_messages(request, form)
+                    errors = form_errors_to_messages_htmx(form, level='error')
+                    return JsonResponse(errors, status=400)
                 context['location_list'] = [loc.strip() for loc in candidate.preferred_location.split(',')] if candidate.preferred_location else []
                 template_name = 'jobseeker/htmx/profileLocationShow.html'    
             elif 'employment_save' in request.POST or 'employment_delete' in request.POST:
@@ -238,7 +241,8 @@ def Profile(request):
                         form.save(candidate=candidate)
                     else:
                         print("Form errors:", form.errors)
-                        form_errors_to_messages(request, form)
+                        errors = form_errors_to_messages_htmx(form, level='error')
+                        return JsonResponse(errors, status=400)
                 context['my_employment'] =  Employment.objects.filter(candidate=candidate).order_by('-dol')
                 template_name = 'jobseeker/htmx/profileEmploymentShow.html'
             elif 'career_save' in request.POST:
@@ -247,7 +251,8 @@ def Profile(request):
                     form.save()
                 else:
                     print("Form errors:", form.errors)
-                    form_errors_to_messages(request, form)
+                    errors = form_errors_to_messages_htmx(form, level='error')
+                    return JsonResponse(errors, status=400)
                 context['candidate'] = candidate
                 template_name = 'jobseeker/htmx/profileCareerShow.html'
             elif 'resume_save' in request.POST:
@@ -256,128 +261,21 @@ def Profile(request):
                     form.save()
                 else:
                     print("Form errors:", form.errors)
-                    form_errors_to_messages(request, form)
+                    errors = form_errors_to_messages_htmx(form, level='error')
+                    return JsonResponse(errors, status=400)
                 context['candidate'] = candidate
                 template_name = 'jobseeker/htmx/profileResumeShow.html'
+            elif 'profile_pic_save' in request.POST:
+                form = ProfileForm(request.POST, request.FILES, instance= candidate)
+                if form.is_valid():
+                    form.save()
+                else:
+                    print("Form errors:", form.errors)
+                    errors = form_errors_to_messages_htmx(form, level='error')
+                    return JsonResponse(errors, status=400)
+                context['candidate'] = candidate
+                template_name = 'jobseeker/htmx/profilePictureShow.html'
                 
-# 
-# 
-# 
-
-            elif 'upload_resume' in request.POST:
-                form = ResumeForm(request.POST, request.FILES, instance= candidate)
-                if form.is_valid():
-                    form.save(candidate=candidate, user = request.user)
-                    messages.info(request, 'Your Resume Uploaded successfully')
-                    
-                else:
-                    print("Form errors:", form.errors)
-                    form_errors_to_messages(request,form)
-            elif 'upload_profile' in request.POST:
-                form = ProfileForm(request.POST, request.FILES,instance=candidate)
-                if form.is_valid():
-                    candidate = form.save(commit=False)
-
-                    if 'profile_pic' in request.FILES:
-                        # Delete old profile picture
-                        if candidate.profile_pic and default_storage.exists(candidate.profile_pic.name):
-                            default_storage.delete(candidate.profile_pic.name)
-
-                        # Assign the new file
-                        candidate.profile_pic = request.FILES['profile_pic']
-
-                    candidate.save()
-                    messages.info(request, "Profile picture updated successfully.")
-                    
-                else:
-                    print("Form errors:", form.errors)
-                    form_errors_to_messages(request, form)
-
-            elif 'SelectEducation' in request.POST:
-                index = request.POST.get("SelectEducation")
-                educationEdit = CandidateEducationUpdateForm(request.POST, instance=EducationMap.objects.filter(candidate=candidate)[index-1])
-                # if form.is_valid():
-                #     form.save()
-                #     messages.info(request, 'Your profile has been updated successfully.')
-                    
-                # else:
-                #     print("Form errors:", form.errors)
-                #     form_errors_to_messages(request, form)
-            elif 'profile_education_edit' in request.POST:
-                form = CandidateEducationUpdateForm(request.POST, instance=EducationMap.objects.filter(candidate=candidate))
-                if form.is_valid():
-                    form.save()
-                    messages.info(request, 'Your profile has been updated successfully.')
-                    
-                else:
-                    print("Form errors:", form.errors)
-                    form_errors_to_messages(request, form)
-
-
-            elif 'profile_skill_edit' in request.POST:
-                new_skill = request.POST.get('new_skill')  # Get new skill from the request
-                if new_skill or new_skill.strip():
-                    if candidate.add_skill(new_skill) :  # Use the method to add the skill
-                        messages.info(request, 'Skill was successfully added')
-                    else :
-                        messages.warning(request, 'Already existing skill')
-                        return redirect('job_seeker:profile')
-                    
-                else:
-                    form_errors_to_messages(request, 'No skills selected')
-
-            elif 'profile_preference_edit' in request.POST:
-                if request.POST.get('language_id'):
-                    form = CandidateLanguageUpdateForm(request.POST)
-                    if form.is_valid():
-                        form.save(candidate=candidate)
-                        messages.info(request, 'Language was successfully added.')
-
-                    else:
-                        print("Form errors:", form.errors)
-                        form_errors_to_messages(request, form)
-
-                if request.POST.get('location'):
-                    form = CandidateLocationUpdateForm(request.POST)
-                    if form.is_valid():
-                        form.save(candidate=candidate)
-                        messages.info(request, 'Location was successfully added.')
-
-                    else:
-                        print("Form errors:", form.errors)
-                        form_errors_to_messages(request, form)
-       
-                        
-            elif 'profile_employment_create' in request.POST:
-                form = CandidateEmploymentUpdateForm(request.POST)
-                if form.is_valid():
-                    form.save(candidate=candidate)
-                    messages.info(request, 'Your Education has been updated successfully.')
-                    
-                else:
-                    print("Form errors:", form.errors)
-                    form_errors_to_messages(request, form)
-
-            elif 'profile_internship_create' in request.POST:
-                form = CandidateIntenshipUpdateForm(request.POST)
-                if form.is_valid():
-                    form.save(candidate=candidate)
-                    messages.info(request, 'Your Internship has been updated successfully.')
-                    
-                else:
-                    print("Form errors:", form.errors)
-                    form_errors_to_messages(request, form)
-
-            elif 'profile_career_edit' in request.POST:
-                form = CandidateCareerUpdateForm(request.POST, instance=candidate)
-                if form.is_valid():
-                    form.save()
-                    messages.info(request, 'Your career data has been updated successfully.')
-                    
-                else:
-                    print("Form errors:", form.errors)
-                    form_errors_to_messages(request,form)
-                    
             # -------- Final HTMX return --------
             if template_name:
                 return render(request, template_name, context)                    
@@ -385,24 +283,10 @@ def Profile(request):
                 return redirect("job_seeker:profile")
                     
 
-
-        new_education = CandidateEducationUpdateForm()
-        new_employment = CandidateEmploymentUpdateForm()
-        new_internship = CandidateIntenshipUpdateForm()
         education = EducationMap.objects.filter(candidate=candidate).order_by('-year_of_passing')
         language = UserLanguages.objects.filter(candidate=candidate)
         employment = Employment.objects.filter(candidate=candidate).order_by('-dol')
-        internship = Internship.objects.filter(candidate=candidate)
-        # new_language = CandidateLanguageUpdateForm()
-        # new_location = CandidateLocationUpdateForm()
-        skills = Skills.objects.all()
-        # profile = ProfileForm()
-        # resume = ResumeForm()
-        
 
-        level = LevelForEdu.objects.all()
-        course = CourseForEdu.objects.all()
-        years = range(2000, 2030)
         levels = list(LevelForEdu.objects.all().values('level_id', 'name'))
         courses = list(CourseForEdu.objects.all().values('course_id', 'name', 'level_id'))
         specs = list(SpecificationForEdu.objects.all().values('specification_id', 'name', 'course_id'))
@@ -415,22 +299,11 @@ def Profile(request):
             'location_list': location_list,
             'my_education': education,
             'my_employment': employment,
-            'internship': internship,
-            'new_education': new_education,
-            'new_employment': new_employment,
-            'new_internship': new_internship,
             'my_languages': language,
-            # 'new_language': new_language,
-            # 'new_location': new_location,
-            # 'profile': profile,
-            # 'resume':resume,
-            'years' :years,
-            'skills' : skills,
             'levels':levels,
             'courses':courses,
             'specs':specs,
-            'years' : range(2000, 2030),
-            # 'doc':doc
+
         }
         return render(request,'jobseeker/profile.html',context)
     except Exception as e:
@@ -452,10 +325,6 @@ def Search(request):
             }
             return render(request, 'jobseeker/jobs.html', context)
         
-        # # Apply filter
-        # if request.method == "POST":
-        #     if 'filter_jobs' in request.POST:
-        #         jobs = apply_filter_in_job(request,jobs)
 
         # Apply Pagination
         paginator = Paginator(jobs, 10)  # Show 20 jobs per page
@@ -489,12 +358,8 @@ def Job(request):
         else:
             applied = False
             login = False 
-                
-
-        # skills_list = [skill.strip() for skill in job.skills.split(',')] if job.skills else []
         context = {
             'job': job,
-            # 'skills_list':skills_list,
             'applied': applied,
             'login':login
         }
@@ -508,17 +373,14 @@ def Apply(request):
     try:
         if request.method == 'POST':
             if "apply-job" in request.POST:
-                # slug = request.POST.get('slug') 
                 slug = request.POST.get('slug') 
                 title = request.POST.get('title') 
                 job = Jobs.objects.get(slug=slug)
                 candidate = Candidates.objects.get(user=request.user)
-                # user_id = candidate.user_id
                 JobApplications.objects.create(
                     candidate=candidate,
                     job=job
                 )
-                # job = Jobs.objects.get(slug=slug)
                 job.increment_applied_count()
                 messages.info(request, f'You have successfully applied to {title} job')
                 referer_url = request.META.get('HTTP_REFERER')
@@ -526,7 +388,6 @@ def Apply(request):
                     return redirect(referer_url)
                 else:
                     return redirect('job_seeker:home')
-                # return redirect('job_seeker:status', page="applied")
         return redirect('job_seeker:home')
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
@@ -544,7 +405,7 @@ def Bookmark(request):
                 exist = Bookmarks.objects.filter(job=job,candidate=candidate)
                 if exist:
                     exist.delete()
-                    messages.info(request, f'Job unsaved successfully')
+                    messages.info(request, f'Job unsaved successfully.')
                     candidate.increment_bookmarks_count(False)
                 elif candidate.bookmarks_count <15:
                     b = Bookmarks.objects.create(
@@ -553,11 +414,11 @@ def Bookmark(request):
                     )
                     if b:
                         candidate.increment_bookmarks_count(True)
-                        messages.info(request, f'Job saved successfully')
+                        messages.info(request, f'Job saved successfully.')
                     else:
-                        messages.info(request, f'Not able to save the job')
+                        messages.info(request, f'Failed to save the job.')
                 else :
-                    messages.error(request, f'Job has not able to save. You reached your usage limit.')  
+                    messages.error(request, f'You have reached your bookmark limit (15). Please unsave an old job to add a new one.')  
 
 
                 referer_url = request.META.get('HTTP_REFERER')
@@ -574,132 +435,87 @@ def Bookmark(request):
 def Status(request, page, id=None):
     try:
         candidate=Candidates.objects.get(user=request.user)
-        applied_list = ['Applied' ,'Viewed' ,'Shortlisted' ,'Selected' ]
-        offered_list = ['Selected', 'Offered', 'Accepted', 'Rejected' ,'Hired' ]
+        if request.method == "POST":
+            job_application_id = request.POST.get('application_id')
+            offer_letter_id = request.POST.get('offer_id')
+
+            application = get_object_or_404(JobApplications, id=job_application_id, candidate=candidate)
+            offer = get_object_or_404(OfferLetters, offers_id=offer_letter_id, application=application)
+
+            form = OfferResponseForm(request.POST, instance=offer)
+
+            if form.is_valid():
+                try:
+                    with transaction.atomic():
+                        offer = form.save(commit=False)
+                        offer.is_acknowledged = True
+                        if form.cleaned_data['accept']:
+                            offer.approve_at = timezone.now()
+                            offer.approve_by = candidate
+                            application.status = 'Accepted'
+                            application.accepted_at = timezone.now()
+                        elif form.cleaned_data['decline']:
+                            offer.approve_at = None
+                            offer.approve_by = None
+                            application.status = 'Rejected'
+                            application.rejected_at = timezone.now()
+
+                        offer.save()
+                        application.save()
+
+                        messages.success(request, "Your response has been recorded.")
+                        return redirect('job_seeker:status', page='offered')
+
+                except Exception as e:
+                    print(f"[ERROR] {e}")
+                    messages.error(request, "Something went wrong while processing your response.")
+                    return redirect('job_seeker:status', page='offered')
+            else:
+                messages.error(request, "There was an error in your submission.")
+                return redirect("job_seeker:profile", page='offered')
+                
         job_status = False
         onboarding_id = False
         offer = False
-        # if request.method == "POST":
-        #     if "view_appiled_status" in request.POST:
-        #         id = request.POST.get("id")
-        #         job_status = JobApplications.objects.filter(id=id,candidate=candidate).first()
-
-        #     elif "view_offered_status" in request.POST:
-        #         id = request.POST.get("id")
-        #         job_status = JobApplications.objects.filter(id=id,candidate=candidate).first()
-        #         onboarding_id = Onboarding.objects.filter(candidate=candidate,job_post=job_status.id).values_list('Onbording_id').first()
-        if page and id:
-            if page == 'applied':
-                job_status = JobApplications.objects.filter(id=id,candidate=candidate).first()
-
-            if page == 'offered' and job_status:
-                onboarding_id = Onboarding.objects.filter(candidate=candidate,job_post=job_status.id).values_list('Onbording_id',flat=True).first()
+        # Try to get job_status directly if id is provided
+        if page == 'applied' and id:
+            job_status = JobApplications.objects.filter(id=id, candidate=candidate).first()
+        elif page == 'offered' and id:
+            job_status = JobApplications.objects.filter(id=id, candidate=candidate).first()
+            if job_status:
+                onboarding_id = Onboarding.objects.filter(candidate=candidate, job_post=job_status.id).values_list('Onbording_id', flat=True).first()
 
 
-        bookmarks = Bookmarks.objects.filter(candidate=candidate).values_list('job')
+        # Get job-related lists
+        bookmarks = Bookmarks.objects.filter(candidate=candidate).values_list('job', flat=True)
         jobs = Jobs.objects.filter(job_id__in=bookmarks)
         job_applications = JobApplications.objects.filter(candidate=candidate)
         applied = job_applications.filter(offered_at__isnull=True)
         offered = job_applications.filter(offered_at__isnull=False)
 
 
+        # Fallback job_status if not found above
         if not job_status:
-            if page == "applied":
-                if applied.exists():
-                    job_status = applied[0]
-                    
-            elif page == "offered":
-                if offered.exists():
-                    job_status = offered[0]
-                    onboarding_id = Onboarding.objects.filter(candidate=candidate,job_post=job_status.id).values().first()
-                    id = job_status.id
-        if not onboarding_id:
-            onboarding_id = False
-        # else:
-        #     print(onboarding_id)
-        #     onboarding_id = onboarding_id[0]
+            job_status = applied.first() if page == 'applied' else offered.first() if page == 'offered' else None
+            if page == 'offered' and job_status:
+                onboarding_id = Onboarding.objects.filter(candidate=candidate, job_post=job_status.id).values().first()
 
-        # for offer letter
-        if job_status:
-            if page == 'offered' and job_status.offer_id :
-                # offer = get_object_or_404(OfferLetters, offers_id=job_status.offer_id)
+        # Mark offer as viewed (Optional)
+        if job_status and page == 'offered' and job_status.offer_id:
+            offer = job_status.offer_id
+            if not offer.is_view:
+                offer.is_view = True
+                offer.viewed_at = timezone.now()
+                offer.save()
 
-                # Mark as viewed if not yet
-                if not job_status.offer_id.is_view:
-                    job_status.offer_id.is_view = True
-                    job_status.offer_id.viewed_at = timezone.now()
-                    job_status.offer_id.save()
-
-        if request.method == "POST":
-            job_application_id = request.POST.get('application_id')
-            offer_letter_id = request.POST.get('offer_id')
-            response_message = request.POST.get('response', '')
-            acknowledgment = request.POST.get('acknowledgment') == 'on'
-            accept = 'accept' in request.POST
-            decline = 'decline' in request.POST
-
-            # Ensure both exist
-            application = JobApplications.objects.filter(id=job_application_id, candidate=candidate).first()
-            offer = OfferLetters.objects.filter(offers_id=offer_letter_id).first() if application else None
-
-            if not application or not offer:
-                messages.error(request, 'Application or Offer Letter not found.')
-                return redirect('job_seeker:status', page='offered')
-
-            if not acknowledgment:
-                messages.error(request, 'You must acknowledge the terms and conditions.')
-                return redirect('job_seeker:status', page='offered')
-
-            try:
-                with transaction.atomic():
-                    # Update OfferLetter
-                    offer.response = response_message
-                    offer.is_acknowledged = True
-                    if accept:
-                        offer.approve_at = timezone.now()
-                        offer.approve_by = request.user.candidate
-                    else:
-                        offer.approve_at = None
-                        offer.approve_by = None
-                    offer.save()
-
-                    # Update JobApplications
-                    if accept:
-                        application.status = 'Accepted'
-                        application.accepted_at = timezone.now()
-                    elif decline:
-                        application.status = 'Rejected'
-                        application.rejected_at = timezone.now()
-                    application.save()
-
-                messages.success(request, "Your response has been recorded.")
-                return redirect('job_seeker:status', page='offered')
-
-            except Exception as e:
-                messages.error(request, f"Something went wrong: ")
-                print(f"Error at {e}")
-                return redirect('job_seeker:status', page='offered')
-        # if request.method == "POST":
-        #     action = request.POST.get("action")
-        #     if action == "accept" and not offer.is_accepted:
-        #         offer.is_accepted = True
-        #         offer.accepted_at = timezone.now()
-        #         offer.save()
-        #         messages.success(request, "You have accepted the offer.")
-        #     elif action == "decline" and not offer.is_accepted:
-        #         offer.is_accepted = False
-        #         offer.accepted_at = None
-        #         offer.save()
-        #         messages.info(request, "You have declined the offer.")
 
         context = {
             'bookmarks': jobs,
             'applied': applied,
             'offered': offered,
-            'applied': applied,
             'job_status': job_status,
             'offer': offer,
-            'onboarding_id':onboarding_id,
+            'onboarding_id':onboarding_id or False,
             'page': page, 
         }
         return render(request,'jobseeker/status.html',context)
@@ -714,13 +530,9 @@ def OnboardingCandidate(request,onboarding_id, page):
     
     try:
         candidate = Candidates.objects.get(user=request.user)
-        # context = {
-        #     'onboarding_obj':onboarding,
-        # }
         family_form = OnboardingFamilyForm()
         if request.method == 'POST':
             if 'personal' in request.POST:
-                    
                 candidate_form = OnboardingCandidatePersonalForm(request.POST, request.FILES, instance=Candidates.objects.get(user=request.user))
                 onboarding_form = OnboardingPersonalForm(request.POST, request.FILES, instance=Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id))
                 page = "family"

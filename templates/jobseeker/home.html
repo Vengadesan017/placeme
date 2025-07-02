@@ -53,14 +53,7 @@ Search Job
     </div>
 </div>
 </form>
-{% if messages %}
-{% for message in messages %}
-  <div class='alert alert-{{ message.tags }}'>
-    <span class="closebtn">&times;</span>
-      {{ message|safe }}
-  </div>    
-{% endfor %}
-{% endif %}
+
 
 {% if upload_resume_url or complete_profile_url or review_offer_url %}
 <div class="dream-job-header">
@@ -68,17 +61,30 @@ Search Job
 </div>
 <div class="home-ads">
     <div class="action-button-container">
+        {% if complete_profile_url %}
+        <a href="{{ complete_profile_url }}" class="action-btn color2">
+            <div class="btn-content"><i class="fas fa-user-check"></i><span>Complete Profile</span></div>
+        </a>
+        {% endif %}
+        
         {% if upload_resume_url %}
         <a href="{{ upload_resume_url }}" class="action-btn color1">
             <div class="btn-content"><i class="fas fa-file-upload"></i><span>Upload Resume</span></div>
         </a>
         {% endif %}
 
-        {% if complete_profile_url %}
-        <a href="{{ complete_profile_url }}" class="action-btn color2">
-            <div class="btn-content"><i class="fas fa-user-check"></i><span>Complete Profile</span></div>
+        {% if saved_url %}
+        <a href="{{ saved_url }}" class="action-btn color5">
+            <div class="btn-content"><i class="fas fa-bookmark"></i><span>Saved Jobs</span></div>
         </a>
         {% endif %}
+
+        {% if applied_url %}
+        <a href="{{ applied_url }}" class="action-btn color6">
+            <div class="btn-content"><i class="fas fa-clipboard-check"></i><span>Applied Jobs</span></div>
+        </a>
+        {% endif %}
+
 
         {% if review_offer_url %}
         <a href="{{ review_offer_url }}" class="action-btn color3">

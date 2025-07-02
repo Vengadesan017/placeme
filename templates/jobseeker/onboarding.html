@@ -52,6 +52,9 @@
       color: #000;
       border: #ffbd03;
     }
+    .btn{
+      margin: 2px;
+    }
   .btn-primary:active , .btn-primary:focus {
     background-color: #141b5f;
       color: #fff;
@@ -201,14 +204,6 @@
                 </li> {% endcomment %}
               </ul>
             </div>
-            {% if messages %}
-            {% for message in messages %}
-                <div class='alert alert-{{ message.tags }}'>
-                <span class="closebtn">&times;</span>
-                    {{ message|safe }}
-                </div>    
-            {% endfor %}  
-            {% endif %}
             <div class="panel-body">
               <div class="tab-content">
                 {% if page == 'personal' %}

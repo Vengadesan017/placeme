@@ -23,10 +23,10 @@
             <div class="">
                 <table class="modal-table">
                     <tr> 
-                        <td><b>Education Level</b></td>
+                        <td><b>Branch</b></td>
                         <td>
                             <select class="edu-level" name="level" id="id_edu_id" required>
-                                <option value="">Select Education Level</option>
+                                <option value="">Select Education Branch</option>
                             </select>            
                         </td>
                     </tr>
@@ -144,4 +144,170 @@
         </form>
         </div>
 
+        
+<script>
 
+function setupDropdowns() {
+    console.log("setupDropdowns");
+    const levels = JSON.parse(document.getElementById('level-data').textContent);
+    const courses = JSON.parse(document.getElementById('course-data').textContent);
+    const specs = JSON.parse(document.getElementById('spec-data').textContent);
+
+    const levelSelect = document.querySelector('.edu-level');
+    const courseSelect = document.querySelector('.edu-course');
+    const specSelect = document.querySelector('.edu-spec');
+
+    if (!levelSelect || !courseSelect || !specSelect) {
+        console.warn("Dropdown(s) not found: setupDropdowns() aborted");
+        return;
+    }
+
+    if (specSelect.dataset.selectedSpec){
+        const selectedSpecId = parseInt(specSelect.dataset.selectedSpec || 0);
+        populateDropdownsFromSpecId( selectedSpecId, levels, courses, specs);
+    }
+
+    function clearOptions(select) {
+        select.innerHTML = '<option value="">Select</option>';
+    }
+
+
+        clearOptions(levelSelect);
+        levels.forEach(level => {
+            const option = new Option(level.name, level.level_id);
+            levelSelect.add(option);
+        });
+
+
+    // When Level changes
+    levelSelect.addEventListener('change', function () {
+        const selectedLevelId = parseInt(this.value);
+        clearOptions(courseSelect);
+        clearOptions(specSelect);
+
+        const filteredCourses = courses.filter(c => c.level_id === selectedLevelId);
+        filteredCourses.forEach(course => {
+            const option = new Option(course.name, course.course_id);
+            courseSelect.add(option);
+        });
+    });
+
+    // When Course changes
+    courseSelect.addEventListener('change', function () {
+        const selectedCourseId = parseInt(this.value);
+        clearOptions(specSelect);
+
+        const filteredSpecs = specs.filter(s => s.course_id === selectedCourseId);
+        filteredSpecs.forEach(spec => {
+            const option = new Option(spec.name, spec.specification_id);
+            specSelect.add(option);
+        });
+    });
+}
+
+
+// Utility function to safely set a select's value after DOM render
+function forceSelectValue(select, value) {
+    setTimeout(() => {
+        const strValue = value.toString();
+        select.value = strValue;
+
+        if (select.value !== strValue) {
+            [...select.options].forEach((opt, i) => {
+                if (opt.value === strValue) {
+                    select.selectedIndex = i;
+                }
+            });
+        }
+
+        console.log(`Value set on <select name="${select.name}">:`, select.value);
+    }, 0);
+}
+
+function populateDropdownsFromSpecId( selectedSpecId, levels, courses, specs) {
+        console.log("populateDropdownsFromSpecId");
+    const levelSelect = document.querySelector('.edu-level');
+    const courseSelect = document.querySelector('.edu-course');
+    const specSelect = document.querySelector('.edu-spec');
+
+    if (!levelSelect || !courseSelect || !specSelect) {
+        console.warn("Missing dropdown(s) in form row", formRow);
+        return;
+    }
+
+    selectedSpecId = parseInt(selectedSpecId);
+    let selectedCourseId = 0;
+    let selectedLevelId = 0;
+
+    // Reverse lookup: spec → course → level
+    const selectedSpec = specs.find(s => parseInt(s.specification_id) === selectedSpecId);
+    if (selectedSpec) {
+        selectedCourseId = parseInt(selectedSpec.course_id);
+        const selectedCourse = courses.find(c => parseInt(c.course_id) === selectedCourseId);
+        if (selectedCourse) {
+            selectedLevelId = parseInt(selectedCourse.level_id);
+        }
+    }
+
+    console.log("Spec ID:", selectedSpecId);
+    console.log("Course ID:", selectedCourseId);
+    console.log("Level ID:", selectedLevelId);
+
+    function clearOptions(select) {
+        select.innerHTML = '<option value="">Select</option>';
+    }
+
+    // 🟩 Populate Levels
+    clearOptions(levelSelect);
+    levels.forEach(level => {
+        const option = new Option(level.name, level.level_id.toString());
+        levelSelect.add(option);
+    });
+    forceSelectValue(levelSelect, selectedLevelId);
+
+    // 🟦 Populate Courses based on selected level
+    clearOptions(courseSelect);
+    const filteredCourses = courses.filter(c => parseInt(c.level_id) === selectedLevelId);
+    filteredCourses.forEach(course => {
+        const option = new Option(course.name, course.course_id.toString());
+        courseSelect.add(option);
+    });
+    forceSelectValue(courseSelect, selectedCourseId);
+
+    // 🟨 Populate Specs based on selected course
+    clearOptions(specSelect);
+    const filteredSpecs = specs.filter(s => parseInt(s.course_id) === selectedCourseId);
+    filteredSpecs.forEach(spec => {
+        const option = new Option(spec.name, spec.specification_id.toString());
+        specSelect.add(option);
+    });
+    forceSelectValue(specSelect, selectedSpecId);
+
+    // 🔄 Setup change events for cascading dropdown updates
+    levelSelect.onchange = function () {
+        const newLevelId = parseInt(this.value);
+        clearOptions(courseSelect);
+        clearOptions(specSelect);
+
+        const updatedCourses = courses.filter(c => parseInt(c.level_id) === newLevelId);
+        updatedCourses.forEach(course => {
+            const option = new Option(course.name, course.course_id.toString());
+            courseSelect.add(option);
+        });
+    };
+
+    courseSelect.onchange = function () {
+        const newCourseId = parseInt(this.value);
+        clearOptions(specSelect);
+
+        const updatedSpecs = specs.filter(s => parseInt(s.course_id) === newCourseId);
+        updatedSpecs.forEach(spec => {
+            const option = new Option(spec.name, spec.specification_id.toString());
+            specSelect.add(option);
+        });
+    };
+}
+
+
+
+</script>

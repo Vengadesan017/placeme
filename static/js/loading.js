@@ -30,5 +30,5 @@ function checkIfFullPage(event) {
     }
 }
 
-htmx.on("htmx:responseError", (e) => console.error("HTMX Response Error:", e.detail));
-htmx.on("htmx:sendError", (e) => console.error("HTMX Send Error:", e.detail));
+// htmx.on("htmx:responseError", (e) => console.error("HTMX Response Error:", e.detail));
+// htmx.on("htmx:sendError", (e) => console.error("HTMX Send Error:", e.detail));

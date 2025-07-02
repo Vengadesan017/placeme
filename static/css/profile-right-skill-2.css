@@ -3,6 +3,7 @@
   height: auto;
   /* background-color: rgb(231, 157, 67); */
   padding-top: 10px;
+  padding-bottom: 7px;
 }
 
 .Perference-heading {
@@ -209,6 +210,7 @@ thead tr td{
   /* background-color: rgb(53, 201, 201); */
   padding-top: 10px;
   margin-top: 10px;
+  margin-bottom: 15px;
   border-top: 1px solid #d0d0d0;
 }
 
@@ -442,6 +444,7 @@ thead tr td{
   display: flex;
   /* background-color: indianred; */
   margin-top: -10px;
+  margin-bottom: 5px;
   min-height: 40px;
   height: auto;
 }

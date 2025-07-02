@@ -1,13 +1,14 @@
+{% if applied %}
 <section class="dev-list" id="applied">
-  <div class="left">
-    {% if applied %}
-      <div class="buttons">
-        <a class="button active">All (10)</a>
-        <a class="button">Applied (5)</a>
-        <button class="button">Recuiter action (5)</button>
-      </div>
 
-      {% for job in applied %}
+  <div class="left">
+    
+    <div class="buttons">
+      <a class="button active">All</a>
+      <a class="button">Applied</a>
+      <button class="button">Recuiter action</button>
+    </div>
+    {% for job in applied %}
         <a href="{% url 'job_seeker:status' page='applied' id=job.id %}">
           <div class="dev-detail-2 {% if job_status == job %}active{% endif %}">
             <div class="dev-detail-2-inside">
@@ -43,15 +44,10 @@
             </div>
           </div>
         </a>
+        {% empty %}
+
+      
       {% endfor %}
-    {% else %}
-      <div class="buttons">
-        <a class="button active">All (0)</a>
-        <a class="button">Applied (0)</a>
-        <button class="button">Recuiter action (0)</button>
-      </div>
-      <a href="{% url 'job_seeker:home' %}">No data found. Click here to search.</a>
-    {% endif %}
   </div>
 
   <!-- ---------right side dev-info------------------------------------------------------------------->
@@ -60,6 +56,7 @@
       <div class="right-dev-info">
         <div class="right-dev-info-fixed-1">
           <!-- dev-name-company-and about-job -->
+          {% if job_status %}
           <div class="right-dev-info-fixed-1-1">
             <div class="right-dev-info-fixed-1-part1">
               <h1 class="right-fixied-name">{{ job_status.job.title }}</h1>
@@ -131,6 +128,9 @@
               </ul>
             </div>
           </div>
+          {% else %}
+            No status found
+          {% endif %}
         </div>
         <!-- completed fixed right box -->
         <!-- recommendation box text -->
@@ -258,3 +258,12 @@
     </div>
   </div>
 </section>
+  {% else %}
+<div class="center-from-top">
+
+    
+<center><a href="{% url 'job_seeker:home' %}">No Applied jobs. Tap here to discover your next great opportunity!</a></center>
+
+    </div>  
+  {% endif %}
+

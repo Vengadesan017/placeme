@@ -1,7 +1,7 @@
 from django import forms
 from .models import Candidates, Onboarding, EducationMap, UserLanguages,\
     Employment, Internship, Familys,OnboardingDocumentRequirement,\
-        SpecificationForEdu
+        SpecificationForEdu, OfferLetters
 import datetime
 
 
@@ -434,3 +434,26 @@ class IdentityForm(forms.ModelForm):
                     print(f"⚠ Field '{field_name}' not found in form fields!")
         else:
             print("No company")
+            
+
+class OfferResponseForm(forms.ModelForm):
+    acknowledgment = forms.BooleanField(required=True, label="I acknowledge the terms and conditions")
+    accept = forms.BooleanField(required=False)
+    decline = forms.BooleanField(required=False)
+
+    class Meta:
+        model = OfferLetters
+        fields = ['response']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        accept = cleaned_data.get('accept')
+        decline = cleaned_data.get('decline')
+
+        if not (accept or decline):
+            raise forms.ValidationError("You must either accept or decline the offer.")
+
+        if accept and decline:
+            raise forms.ValidationError("You cannot both accept and decline the offer.")
+
+        return cleaned_data

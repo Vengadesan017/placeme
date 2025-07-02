@@ -64,9 +64,11 @@
   /* background-color: cornflowerblue; */
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
-  margin-bottom: 5px;
 
+}
+
+.education-name2-1{
+  margin-bottom: 15px;
 }
 
 .education-name2-1-col {
@@ -103,7 +105,7 @@
   height: auto;
   /* background-color: bisque; */
   padding-top: 10px;
-  padding-bottom: 10px;
+  padding-bottom: 15px;
   position: relative;
   border-top: 1px solid #d0d0d0;
   border-bottom: 1px solid #d0d0d0;

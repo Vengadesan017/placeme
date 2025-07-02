@@ -1,60 +1,87 @@
-/* .alert {
-    margin: 2px;
-    padding: 5px;
+  /* .alert {
+      margin: 2px;
+      padding: 5px;
 
-    border-radius: 5px;
-    position: relative;
+      border-radius: 5px;
+      position: relative;
+      font-size: 16px;
+      border: 1px solid transparent;
+      transition: opacity 0.6s;
+      width: initial;
+  }
+
+
+  .alert-info {
+      background-color: #09c134;
+      color: #ffffff;
+      border-color: #09c134;
+      text-align: center;
+  }
+
+
+
+  .alert-warning {
+      background-color: #efbf1d;
+      color: #ffffff;
+      border-color: #efbf1d;
+      text-align: center;
+  }
+
+  .alert-error {
+      background-color: #ff0015;
+      color: #ffffff;
+      border-color: #ff0019;
+      text-align: center;
+  }
+
+  .closebtn {
+      margin: 5px 5px 5px 10px;
+      color: #fff;
+      float: right;
+      font-size: 20px;
+      font-weight: bold;
+      line-height: 20px;
+      cursor: pointer;
+      transition: color 0.3s;
+  }
+
+  .closebtn:hover {
+      color: black;
+  } */
+
+  /* Base Alert Style (Position + Animation) */
+  /* .alert {
+    position: fixed;
+    top: 90px;
+    right: 20px;
+    margin: 10px;
+    z-index: 1050;
+    min-width: 300px;
+    max-width: 400px;
+    padding: 15px 40px 15px 15px;
+    border-radius: 6px;
     font-size: 16px;
-    border: 1px solid transparent;
-    transition: opacity 0.6s;
-    width: initial;
-}
+    font-weight: 500;
+    animation: fadeInRight 0.4s ease-out;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  } */
 
-
-.alert-info {
-    background-color: #09c134;
-    color: #ffffff;
-    border-color: #09c134;
-    text-align: center;
-}
-
-
-
-.alert-warning {
-    background-color: #efbf1d;
-    color: #ffffff;
-    border-color: #efbf1d;
-    text-align: center;
-}
-
-.alert-error {
-    background-color: #ff0015;
-    color: #ffffff;
-    border-color: #ff0019;
-    text-align: center;
-}
-
-.closebtn {
-    margin: 5px 5px 5px 10px;
-    color: #fff;
-    float: right;
-    font-size: 20px;
-    font-weight: bold;
-    line-height: 20px;
-    cursor: pointer;
-    transition: color 0.3s;
-}
-
-.closebtn:hover {
-    color: black;
-} */
-
-/* Base Alert Style (Position + Animation) */
-.alert {
+/* Container that holds all alerts and is fixed to the top-right */
+#alert-container {
   position: fixed;
   top: 90px;
   right: 20px;
   z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* spacing between alerts */
+  align-items: flex-end; /* align alerts to the right */
+}
+
+/* Individual alerts should be relative inside container */
+.alert {
+  position: relative; /* <- changed from fixed to relative */
   min-width: 300px;
   max-width: 400px;
   padding: 15px 40px 15px 15px;
@@ -63,72 +90,79 @@
   font-weight: 500;
   animation: fadeInRight 0.4s ease-out;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-/* Animation for entry */
-@keyframes fadeInRight {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
 
-/* Close Button */
-.closebtn {
-  position: absolute;
-  top: 8px;
-  right: 12px;
-  color: #000;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  background: none;
-  border: none;
-  outline: none;
-}
-  .alert-hide {
-    opacity: 0;
-    transform: translateX(20px);
+  /* Animation for entry */
+  @keyframes fadeInRight {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 
-/* Hover effect for close */
-.closebtn:hover {
-  color: #333;
-}
+  /* Close Button */
+  .closebtn {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    color: #000;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+  }
+    .alert-hide {
+      opacity: 0;
+      transform: translateX(20px);
+    }
 
-/* Success Message */
-.alert-success {
-  background-color: #d4edda;
-  color: #155724;
-  border-left: 6px solid #28a745;
-}
-.alert-info {
-  background-color: #d4edda;
-  color: #155724;
-  border-left: 6px solid #28a745;
-}
+  /* Hover effect for close */
+  .closebtn:hover {
+    color: #333;
+  }
 
-/* Error / Danger Message */
-.alert-danger {
-  background-color: #f8d7da;
-  color: #721c24;
-  border-left: 6px solid #dc3545;
-}
+  /* Success Message */
+  .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-left: 6px solid #28a745;
+  }
+  .alert-info {
+    background-color: #d4edda;
+    color: #155724;
+    border-left: 6px solid #28a745;
+  }
 
-/* Warning Message */
-.alert-warning {
-  background-color: #fff3cd;
-  color: #856404;
-  border-left: 6px solid #ffc107;
-}
+  /* Error / Danger Message */
+  .alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 6px solid #dc3545;
+  }
+  .alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 6px solid #dc3545;
+  }
 
-/* Info Message */
-/* .alert-info {
-  background-color: #d1ecf1;
-  color: #0c5460;
-  border-left: 6px solid #17a2b8;
-} */
+  /* Warning Message */
+  .alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border-left: 6px solid #ffc107;
+  }
+
+  /* Info Message */
+  /* .alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border-left: 6px solid #17a2b8;
+  } */

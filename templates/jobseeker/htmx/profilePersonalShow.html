@@ -3,14 +3,13 @@
                     <div class="info-profile-mv">
 
                         <div class="pic-div-mv">
-                    {% if candidate.profile_pic %}
-                    <img src="{{candidate.profile_pic.url }}" class="pic-photo" alt="profile pic" width="100%">
-                {% else %}
-                    <img src="{% static 'img/image.png' %}" class="pic-photo" alt="profile pic" width="100%">
-                {% endif %}
+                            <div class="my-profile-pic">
+
+                                {% include "jobseeker/htmx/profilePictureShow.html" %}
+                            </div>
 
 
-                            <button class="btn-mv">+</button>
+                            {% comment %} <button class="btn-mv">+</button> {% endcomment %}
                         </div>
 
 

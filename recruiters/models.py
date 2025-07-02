@@ -48,7 +48,7 @@ def path_by_user_id(user_id: int):
 def validate_file_size(file):
     max_size = 1024 * 1024 * 5 # 5 MB limit
     if file.size > max_size:
-        raise ValidationError("File size must be under 200KB.")
+        raise ValidationError("File size must be under 5MB.")
 
 def upload_company_kyc_doc(instance, filename):
     Company_path = path_by_user_id(instance.company_id)    

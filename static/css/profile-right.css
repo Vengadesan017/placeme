@@ -130,12 +130,12 @@
 
 }
 
-.fa-pencil {
+/* .fa-pencil {
   font-size: 20px;
   margin-top: 13px;
   margin-left: 2px;
 
-}
+} */
 
 .detial-div-name-mv p {
   font-size: 12px;
@@ -194,10 +194,10 @@
 }
 
 .fa-pencil {
-  font-size: 20px;
+  font-size: 16px;
   margin-top: 13px;
   margin-left: 2px;
-  color: #555;
+  color: #ccc;
 
 }
 
@@ -660,7 +660,7 @@
 }
 
 .summary-data-container1 p{
-      max-width: 700px;
+      /* max-width: 700px; */
       height: 90px;
       font-size: 14px;
       line-height: 1.3em;

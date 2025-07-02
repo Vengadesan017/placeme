@@ -1,8 +1,8 @@
 
     <div class="languages-ul-div">
 
+        {% if my_languages %}
         <table class="language-table">
-            {% if my_languages %}
             <thead>
                 <tr>
                     <th class="">Languages</th>
@@ -23,11 +23,11 @@
             </tr>
             {% endfor %}
             </tbody>
+        </table>
             {% else %}
-                    <a href="#" class="open-modal-btn" data-modal-id="PreferModal" >Add</a>
+                    <a href="#" class="open-modal-btn" data-modal-id="PreferModal" >Add your known Languages</a>
             {% endif %}
 
-        </table>
 
     </div>
     <div class="key-list-more">

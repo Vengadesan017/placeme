@@ -185,15 +185,7 @@ need to use comman id
       </div>
 
     {% if page_obj %}
-      <div class="job-container" id="job-details">
-        {% if messages %}
-        {% for message in messages %}
-          <div class='alert alert-{{ message.tags }}'>
-            <span class="closebtn">&times;</span>
-              {{ message|safe }}
-          </div>    
-        {% endfor %}
-      {% endif %}    
+      <div class="job-container" id="job-details"> 
 
         {% if page_obj %}
           <span class="total-jobs">

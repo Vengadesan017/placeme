@@ -56,7 +56,7 @@ def path_by_user_id(user_id: int):
 def validate_file_size(file):
     max_size = 1024 * 1024 * 5  # 5MB limit
     if file.size > max_size:
-        raise ValidationError("File size must be under 200KB.")
+        raise ValidationError("File size must be under 5MB.")
 
 def upload_profile_pic(instance, filename):
     user = getattr(instance, 'user', None)
@@ -108,7 +108,7 @@ class Candidates(models.Model):
         ]
     )
     resume = models.FileField(upload_to=upload_profile_resume, null=True, blank=True, validators=[
-            FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'pdf']),
+            FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx']),
             validate_file_size
         ]
     )

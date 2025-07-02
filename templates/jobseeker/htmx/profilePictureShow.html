@@ -1,0 +1,20 @@
+{% load static %}
+{% if candidate.profile_pic %}
+                    <img src="{{candidate.profile_pic.url }}" class="pic-photo" alt="profile pic" width="100%">
+                {% else %}
+                    <img src="{% static 'img/image.png' %}" class="pic-photo" alt="profile pic" width="100%">
+                {% endif %}
+                    {% comment %} <button class="btn">+</button> {% endcomment %}
+                <a href="#"
+                class="open-modal-btn btn"
+                hx-post="#"
+                hx-vals='{"get_profile_form": ""}'
+                hx-target="#HtmxModal"
+                hx-trigger="click"
+                hx-swap="innerHTML"
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                hx-on="htmx:beforeRequest: startLoading();
+                    htmx:afterRequest: stopLoading();
+                    htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
+                    <i class="fas fa-plus"></i>
+                </a>

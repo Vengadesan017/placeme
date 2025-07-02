@@ -43,14 +43,7 @@
 
 <div class="container">     
     <div class="company-in-job">
-        {% if messages %}
-        {% for message in messages %}
-          <div class='alert alert-{{ message.tags }}'>
-            <span class="closebtn">&times;</span>
-              {{ message|safe }}
-          </div>    
-        {% endfor %}
-      {% endif %}         
+        
         <div class="fixed">
         <div class="company-details">
             <h1>{{ job.title }}</h1>

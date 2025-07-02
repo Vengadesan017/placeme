@@ -3,16 +3,15 @@
             <!-- Modal Header -->
             <div class="modal-header">
                 <h3 class="modal-title">Known Languages</h3>
-                {% comment %} <button
+                <button
                     type="button"
                     class="btn-close close-modal-btn"
-                    id="closePreferLanguageEditModalButton"
                     hx-get="{% url 'job_seeker:onboarding_htmx_language_show_partial' %}"
-                    hx-target="#onboarding-language-td"
+                    hx-target="#my_language"
                     hx-swap="innerHTML"
-                    hx-on="htmx:afterRequest: closeOpenedModal()"
+                    hx-on="htmx:afterRequest: closeHtmxModalButton()"
                     ><i class='fas fa-times edit'></i>
-                </button> {% endcomment %}
+                </button>
             </div>
 
             <!-- Modal Body -->
@@ -106,7 +105,7 @@
                 {% endif %}
 
 
-                <button
+                {% comment %} <button
                     type="button"
                     class="btn btn-primary btn-save close-modal-btn"
                     id=""
@@ -114,7 +113,7 @@
                     hx-target="#my_language"
                     hx-swap="innerHTML"
                     hx-on="htmx:afterRequest: closeHtmxModalButton()"
-                >Close</button>
+                >Close</button> {% endcomment %}
             </div>
 </form>
 

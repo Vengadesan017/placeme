@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'load_data',  
     'django_htmx',
+    'django_cleanup.apps.CleanupConfig',    
 ]
 
 AUTHENTICATION_BACKENDS = [

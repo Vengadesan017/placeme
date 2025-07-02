@@ -28,7 +28,7 @@
     <div class="career-info-list-1-1">
         <h4>Current Take Home</h4>
         <p>
-            {{ candidate.present_take_home_amount|floatformat:0|default_if_none:"N/A" }}
+            {{ candidate.present_take_home_amount|floatformat:0|default_if_none:"" }}
             {{ candidate.get_present_take_home_type_display|default_if_none:"" }}
         </p>
     </div>
@@ -36,11 +36,10 @@
     <div class="career-info-list-1-1">
         <h4>Total Work Experience</h4>
         <p>
-            {% if candidate.work_experience_years or candidate.work_experience_months %}
-                {{ candidate.work_experience_years|default:0 }} yr 
-                {{ candidate.work_experience_months|default:0 }} mon
-            {% else %}
-                N/A
+            {% if candidate.work_experience_years %}
+                {{ candidate.work_experience_years|default:0 }} years
+            {% elif candidate.work_experience_months %}
+                {{ candidate.work_experience_months|default:0 }} months
             {% endif %}
         </p>
     </div>
@@ -50,7 +49,7 @@
     <div class="career-info-list-2-1">
         <h4>Expected CTC</h4>
         <p>
-            {{ candidate.expected_ctc_amount|floatformat:0|default_if_none:"N/A" }}
+            {{ candidate.expected_ctc_amount|floatformat:0|default_if_none:"" }}
             {{ candidate.get_expected_ctc_type_display|default_if_none:"" }}
         </p>
     </div>
@@ -58,7 +57,7 @@
     <div class="career-info-list-2-1">
         <h4>Expected Take Home</h4>
         <p>
-            {{ candidate.expected_take_home_amount|floatformat:0|default_if_none:"N/A" }}
+            {{ candidate.expected_take_home_amount|floatformat:0|default_if_none:"" }}
             {{ candidate.get_expected_take_home_type_display|default_if_none:"" }}
         </p>
     </div>
@@ -72,7 +71,7 @@
                     <span>(Negotiable)</span>
                 {% endif %}
             {% else %}
-                N/A
+                
             {% endif %}
         </p>
     </div>

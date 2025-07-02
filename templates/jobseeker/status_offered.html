@@ -1,9 +1,10 @@
+
+{% if offered %}
 <section class="dev-list" id="offered">
   <div class="left">
-    {% if offered %}
       <div class="buttons">
-        <a class="button">My offers</a>
-      </div>
+    <a class="button active">My Offers</a>
+  </div>
       {% for job in offered %}
         <a href="{% url 'job_seeker:status' page='offered' id=job.id %}">
           <div class="dev-detail-2 {% if job_status == job %}active{% endif %}">
@@ -47,18 +48,12 @@
           </div>
         </a>
       {% endfor %}
-    {% else %}
-      <div class="buttons">
-        <a class="button active">All (0)</a>
-        <a class="button">Applied (0)</a>
-        <button class="button">Recuiter action (0)</button>
-      </div>
-      <a href="{% url 'job_seeker:home' %}">No data found. Click here to search.</a>
-    {% endif %}
+
   </div>
 
   <!-- -right side dev-info- -->
   <div class="right">
+    {% if job_status %}
     <div class="right-insert">
       <div class="right-dev-info">
         <div class="right-dev-info-fixed-1">
@@ -257,14 +252,7 @@
                     <p class="info">No offer letter uploaded.</p>
                   {% endif %}
 
-                  {% if not job_status.accepted_at and not job_status.rejected_at %}
-                    <div class="button-group">
-                      <a href="#" class="open-modal-btn btn btn-accept" data-modal-id="AcceptModal">Accept</a>
-                      <a href="#" class="open-modal-btn btn btn-decline" data-modal-id="DeclineModal">Decline</a>
-                    </div>
-                    {% include 'jobseeker/SubFileForApi/statusAccept.html' %}
-                    {% include 'jobseeker/SubFileForApi/statusDecline.html' %}
-                  {% endif %}
+
                   {% include 'jobseeker/SubFileForApi/statusOfferLetter.html' %}
                 </div>
               </div>
@@ -273,5 +261,17 @@
         </div>
       </div>
     </div>
+    {% else %}
+    No status found      
+    {% endif %}
+
   </div>
 </section>
+  {% else %}
+<div class="center-from-top">
+
+    
+<center><a href="{% url 'job_seeker:home' %}">No Offers jobs. Tap here to discover your next great opportunity!</a></center>
+
+    </div>  
+  {% endif %}

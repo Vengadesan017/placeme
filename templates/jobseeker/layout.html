@@ -14,8 +14,10 @@
     <link rel="stylesheet" href="{% static 'css/error.css' %}" />
     <link rel="stylesheet" href="{% static 'css/recruiters/footer.css' %}" />
     <link rel="stylesheet" href="{% static 'css/notification.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/loading.css' %}">    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="{% static 'js/loading.js' %}" defer></script>    
     <style>
       *{
           font-size: 16px;
@@ -98,7 +100,25 @@
         </nav>
       </div>
     </header>
-
+                <!--   js error handling, python error handling and loading field -->
+                    <div id="api-message"></div>
+                    <div id="loading-screen">
+                    <div class="loader-wrapper">
+                        <div class="loader"></div>
+                        <span class="loading-text">Loading, please wait...</span>
+                    </div>
+                    </div>
+                    <div id="alert-container">
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class='alert alert-{{ message.tags }}'>
+                        <span class="closebtn">&times;</span>
+                        {{ message|safe }}
+                    </div>    
+                    {% endfor %}
+                {% endif %}
+                    </div>
+                <!--   error -->
     {% block content %}
 
     {% endblock %}
