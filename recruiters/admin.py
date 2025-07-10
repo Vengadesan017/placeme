@@ -16,6 +16,7 @@ admin.site.register(StateForLoc)
 admin.site.register(DistrictForLoc)
 
 # positions
+admin.site.register(PositionGroup)
 admin.site.register(Positions)
 admin.site.register(HireRequests)
 admin.site.register(EmployeePositionManager)

@@ -20,9 +20,20 @@
                             <div class="info-name1-mv">
                                 <!-- mod -->
                                 <div class="name-div-mv">
-                                    <h1 id="userName">Vengadesan G <a href="##"
-                                            class="open-modal-btn" data-modal-id="PersonalModal"> <i
-                                                class="fa-solid fa-pencil"></i></a></h1>
+                                    <h1 id="userName">Vengadesan G 
+                                <a href="#"
+                                    {% comment %} class="open-modal-btn" {% endcomment %}
+                                    {% comment %} data-modal-id="HtmxModal" {% endcomment %}
+                                    hx-post="#"
+                                    hx-vals='{"get_personal_form": ""}'
+                                    hx-target="#HtmxModal"
+                                    hx-trigger="click"
+                                    hx-swap="innerHTML"
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                    hx-on="htmx:beforeRequest: startLoading();
+                                        htmx:afterRequest: stopLoading();
+                                        htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
+                                         <i class="fa-solid fa-pencil"></i></a></h1>
 
                                 </div>
 

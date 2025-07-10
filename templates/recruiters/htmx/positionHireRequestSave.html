@@ -1,0 +1,417 @@
+
+        <div class="modal-dialog">       
+                <form
+                        hx-post="#"
+            hx-target="#table-container"
+            hx-swap="innerHTML">
+                {% csrf_token %}
+            <div class="modal-content">
+        
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 class="modal-title">Hire Request</h3>
+                <button type="button" class="btn-close close-modal-btn" id="closeEduModalButton" onclick="closeHtmxModalButton()"><i class='fas fa-times edit'></i></button>
+            </div>
+        
+            <!-- Modal Body -->
+            <div class="modal-body">
+            <div class="margin20">
+            <div class="">
+                <table class="modal-table">
+        <tr>
+            <td><b>Position</b></td>
+            <td>
+                <input type="text" class="search-input" id="search-location" value="{{position_obj.position_title}} ({{position_obj.position_code}})" placeholder="" autocomplete="off" disabled>
+            </td>
+        </tr>
+        <tr>
+            <td><b>No. of HireRequest</b></td>
+            <td>
+                <input type="number" name="count" id="id_position_title"
+                    value="1" min="1" max="{{position_obj.total_positions}}" required />
+            </td>
+        </tr>
+
+                </table>
+
+            </div>
+            </div>
+            </div>
+        
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                {% comment %} <button type="submit" name="profile_education_create" class="model-btn-save" id="">Save</button> {% endcomment %}
+
+            <button type="submit" 
+            
+                name="hire_request_create"
+            class="model-btn-save"
+                value="{{ position_obj.position_group_id|default:'' }}"
+                hx-include="this"
+            >Create</button>
+
+            </div>
+        
+            </div>
+        </form>
+        </div>
+
+        
+<script>
+
+
+    const multiSelectConfigs = [
+        ['multi-select-location', 'search-location', 'selected-tags-location', 'dropdown-location', 'new-locations']
+    ];
+
+    fetch('./../api/create-position-form/')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            function appendOptions(dataList, selectId) {
+                const select = document.getElementById(selectId);
+                const existingValues = new Set(Array.from(select.options).map(opt => opt.value));
+                const fragment = document.createDocumentFragment();
+
+                dataList.forEach(item => {
+                    if (!existingValues.has(item.id.toString())) {
+                        const option = document.createElement('option');
+                        option.value = item.id;
+                        option.textContent = item.name;
+                        fragment.appendChild(option);
+                    }
+                });
+
+                select.appendChild(fragment);
+            }
+
+            appendOptions(data.locations, 'multi-select-location');
+
+            // Initialize multi-selects AFTER data is loaded
+            multiSelectConfigs.forEach(config => setupMultiSelect(...config));
+        })
+        .catch(error => {
+            console.error('Error loading dropdown data:', error);
+        });
+
+    function setupMultiSelect(selectId, searchInputId, tagsContainerId, dropdownId, newQualInputId) {
+        const select = document.querySelector(`#${selectId}`);
+        const searchInput = document.querySelector(`#${searchInputId}`);
+        const tagsContainer = document.querySelector(`#${tagsContainerId}`);
+        const dropdown = document.querySelector(`#${dropdownId}`);
+        const newQualInput = document.querySelector(`#${newQualInputId}`);
+
+        let selectedValues = [];
+        let newItems = [];
+
+        function getOptions() {
+            return Array.from(select.options);
+        }
+
+        function renderDropdown(filteredOptions = getOptions()) {
+            if (searchInput !== document.activeElement && searchInput.value.trim() === "") {
+                dropdown.style.display = "none";
+                return;
+            }
+
+            dropdown.innerHTML = '';
+            const fragment = document.createDocumentFragment();
+
+            filteredOptions.forEach(option => {
+                if (!selectedValues.includes(option.value)) {
+                    const item = document.createElement('div');
+                    item.className = 'dropdown-item';
+                    item.textContent = option.text;
+                    item.dataset.value = option.value;
+                    item.addEventListener('click', () => {
+                        selectExistingOption(option);
+                        dropdown.style.display = "none";
+                    });
+                    fragment.appendChild(item);
+                }
+            });
+
+            dropdown.appendChild(fragment);
+            dropdown.style.display = filteredOptions.length > 0 ? "block" : "none";
+        }
+
+        function addTag(text, isNew = false, value = null) {
+            const tag = document.createElement('div');
+            tag.className = 'tag';
+            tag.textContent = text;
+
+            const remove = document.createElement('span');
+            remove.className = 'remove-tag';
+            remove.textContent = '×';
+            remove.addEventListener('click', () => {
+                tag.remove();
+                if (isNew) {
+                    newItems = newItems.filter(val => val !== text);
+                    updateNewInput();
+                } else {
+                    const opt = select.querySelector(`option[value="${value}"]`);
+                    if (opt) opt.selected = false;
+                    selectedValues = selectedValues.filter(val => val !== value);
+                }
+                renderDropdown();
+            });
+
+            tag.appendChild(remove);
+            tagsContainer.appendChild(tag);
+        }
+
+        function selectExistingOption(option) {
+            if (!selectedValues.includes(option.value)) {
+                selectedValues.push(option.value);
+                option.selected = true;
+                addTag(option.text, false, option.value);
+                renderDropdown();
+            }
+        }
+
+        function selectNewOption(text) {
+            if (!newItems.includes(text)) {
+                newItems.push(text);
+                updateNewInput();
+                addTag(text, true);
+            }
+        }
+
+        function updateNewInput() {
+            newQualInput.value = newItems.join(',');
+        }
+
+        searchInput.addEventListener('focus', () => {
+            const query = searchInput.value.toLowerCase();
+            const filtered = getOptions().filter(opt => opt.text.toLowerCase().includes(query));
+            renderDropdown(filtered);
+        });
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase();
+            const filtered = getOptions().filter(opt => opt.text && opt.text.toLowerCase().includes(query));
+            renderDropdown(filtered);
+        });
+
+        searchInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const inputValue = searchInput.value.trim();
+                if (inputValue === '') return;
+
+                const existingOption = getOptions().find(opt => opt.text.toLowerCase() === inputValue.toLowerCase());
+                if (existingOption) {
+                    selectExistingOption(existingOption);
+                } else {
+                    selectNewOption(inputValue);
+                }
+
+                searchInput.value = '';
+            }
+        });
+
+        // Add a global click-outside listener only once (optimized)
+        document.addEventListener('click', function (e) {
+            if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = "none";
+            }
+        });
+    }
+
+
+
+
+
+</script>
+
+
+<script>
+    function initializeQuillEditor() {
+                   // <!-- Init Quill for description-->
+                var quill = new Quill('#editor-container', {
+                    theme: 'snow'
+                });
+                
+                const charCountDisplay = document.getElementById('char-count');
+                const hiddenInput = document.getElementById('hidden-description');
+                const maxLength = 2000;
+                
+                quill.on('text-change', function () {
+                    const plainText = quill.getText().trim();
+                    const charCount = plainText.length;
+                    
+                    // Update character count display
+                    charCountDisplay.textContent = `${charCount}/${maxLength} characters`;
+                    charCountDisplay.style.color = charCount > maxLength ? 'red' : '#555';
+                    
+                    // Update hidden input with HTML content
+                    hiddenInput.value = quill.root.innerHTML;
+                });
+            }
+
+function formatIndianNumber(input) {
+   // Get value and remove all commas
+    let value = input.value.replace(/,/g, '');
+
+    // Exit early if not a number
+    if (isNaN(value) || value === '') return;
+
+    // Split integer and decimal parts
+    let parts = value.split('.');
+    let integer = parts[0];
+    let decimal = parts.length > 1 ? '.' + parts[1] : '';
+
+    // Format integer part as per Indian number system
+    let lastThree = integer.slice(-3);
+    let rest = integer.slice(0, -3);
+
+    if (rest !== '') {
+        lastThree = ',' + lastThree;
+    }
+
+    let formatted = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + decimal;
+
+    // Save caret position from the end
+    let caretFromEnd = input.value.length - input.selectionStart;
+
+    input.value = formatted;
+
+    // Restore caret to original position
+    let newCaretPosition = input.value.length - caretFromEnd;
+    input.setSelectionRange(newCaretPosition, newCaretPosition);
+}
+</script>
+<style>
+    {% comment %} div#editor-container, .ql-toolbar {
+        width: 90%;
+        margin: 10px 0 10px 20px ;
+    } {% endcomment %}
+    .textarea-div {
+        width: 90%;
+        margin: 10px 0 10px 20px ;
+    }
+
+
+.admin-input {
+    width: 60%;
+    min-height: 40px;
+    padding-left: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        border: none;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin: 10px 0 10px 20px !important;
+}
+
+.multi-select-container {
+  width: 80%;
+/*  margin: 10px 0;
+  font-family: sans-serif;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  min-height: 46px;
+  padding: 6px 10px;  */
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;  /* Allow wrapping */
+  gap: 5px;
+
+
+}
+
+
+/* Tags container */
+.selected-tags {
+  display: flex;
+  flex-wrap: wrap; /* allow multiple rows if needed */
+  gap: 5px;
+ /* flex: 1 1 auto; */  /* allow it to grow AND shrink */
+  min-width: 0;     /* allow shrinking */
+  align-items: center;
+}
+
+/* Individual tag styles */
+.tag {
+  padding: 6px 10px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  border-radius: 50px;
+  background-color: #FFBD03;
+  color: #000;
+  border: 1px solid #FFBD03;
+  white-space: nowrap;
+}
+
+/* Close button inside tag */
+.tag button {
+  margin-left: 6px;
+  background: transparent;
+  color: #000;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Search input */
+.search-input {
+  border: none !important;
+  margin: unset !important;
+  outline: none;
+  font-size: 14px;
+  min-width: 120px;      /* Prevents it from getting too small */
+  flex: 1 1 0%;           /* ⬅️ This is the key */
+  padding: 6px 4px;
+  background: transparent;
+}
+
+
+
+/* Dropdown list styles */
+.dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 1051;
+  border-radius: 4px;
+  margin-top: 2px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+  background: #f0f0f0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</style>
+
+
+
+
+

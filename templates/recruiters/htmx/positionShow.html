@@ -1,0 +1,89 @@
+<table class="recruiters-table">
+  <thead>
+    <tr>
+      <th class="recruiters-th">Position</th>
+      <th class="recruiters-th">No. of opening</th>
+      <th class="recruiters-th">Active Hirerequest</th>
+      <th class="recruiters-th">Offered candidates</th>
+      <th class="recruiters-th">Joined candidates</th>
+      <th class="recruiters-th">Status</th>
+      <th class="recruiters-th">Department</th>
+      <th class="recruiters-th">Budget</th>
+      <th class="recruiters-th">JD</th>
+      <th class="recruiters-th">Actions</th>
+    </tr>
+  </thead>
+  <tbody id="table-body">
+    {% for position in position_groups %}
+      <tr>
+        {% comment %} <td class="recruiters-td">
+          <div class="checkbox-container">
+            <input type="checkbox" id="checkbox-2" />
+            <a href="#">
+              <div class="major"></div>
+              <div class="minor"></div>
+            </a>
+          </div>
+        </td> {% endcomment %}
+        <td class="recruiters-td">
+          <a href="#">
+            <div class="major">{{ position.position_title }}</div>
+            <div class="minor">{{ position.position_code }}</div>
+          </a>
+        </td>
+        <td class="recruiters-td">{{ position.total_positions }}</td>
+        <td class="recruiters-td">
+          <a href="#"
+            {% comment %} class="open-modal-btn" {% endcomment %}
+            {% comment %} data-modal-id="HtmxModal" {% endcomment %}
+            hx-post="#"
+            hx-vals='{"edit_hire_request_form": "{{ position.position_group_id }}"}'
+            hx-target="#HtmxModal"
+            hx-trigger="click"
+            hx-swap="innerHTML"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+            
+            {{ position.hiring_need }}
+            <i class="fa-solid fa-pencil"></i>
+                </a>
+        </td>
+        <td class="recruiters-td">{{ position.total_offered }}</td>
+        <td class="recruiters-td">{{ position.total_joined }}</td>
+        <td class="recruiters-td">
+          {% if position.approved_by %}
+            Approved
+          {% else %}
+            Waiting for approval
+          {% endif %}
+        </td>
+        <td class="recruiters-td">{{ position.department|default:'' }}</td>
+        <td class="recruiters-td">{{ position.budget|default:'' }}
+          {{ position.get_budget_type_display|default:'' }}</td>
+        <td class="recruiters-td" onclick="toggleDescription(this)">{{ position.jd|truncatechars:10|safe|default:'' }}</td>
+
+        <td class="recruiters-td">
+          <a href="#" class="action-btn edit-btn"
+            hx-post="#"
+            hx-vals='{"get_position_form": "{{ position.position_group_id }}"}'
+            hx-target="#HtmxModal"
+            hx-trigger="click"
+            hx-swap="innerHTML"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+            >Edit</a>
+          
+        </td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="6">
+          <center>Sorry No records found!</center>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="6">
+          <center>Lets create Position and generate the hire request to post the job vacancy post</center>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

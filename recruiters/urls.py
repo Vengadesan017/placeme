@@ -29,4 +29,5 @@ urlpatterns = [
     # API
     path('api/position-manager/',views.APIPositionManager,name='api_position_manager'),
     path('api/create-job-form/',views.APICreatePostForm,name='api_create_job_form'),
+    path('api/create-position-form/',views.APICreatePositionForm,name='api_create_position_form'),
 ]

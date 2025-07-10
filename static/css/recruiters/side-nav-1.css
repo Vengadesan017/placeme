@@ -52,7 +52,7 @@
         min-height: 1300px;
         height: auto;
         width: 80px;
-        z-index: 3;
+        z-index: 1;
     }
     .nav-div a{
         color: #FFFFFF;
@@ -200,7 +200,7 @@
     .r-left{
         height: 100vh;
         width: 60px;
-        z-index: 3;
+        z-index: 1;
     }
     .nav-div a{
         color: #FFFFFF;

@@ -38,9 +38,8 @@ class HireRequestSerializer(serializers.ModelSerializer):
 # for create job post form server options
 class LocationSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source='location_id')
-    name = serializers.CharField(source='location')
-    name = serializers.CharField(source='display_name')  
-    
+    name = serializers.ReadOnlyField(source='display_label')
+
     class Meta:
         model = Locations
         fields = ['id', 'name']

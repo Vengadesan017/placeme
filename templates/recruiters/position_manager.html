@@ -1,911 +1,439 @@
-
-{% extends "recruiters/layout.html" %}
+{% extends 'recruiters/layout.html' %}
 
 {% block title %}
-Position Manager
-{% endblock title %}
+  Position Manager
+{% endblock %}
 {% load static %}
 {% block statics %}
-<link rel="stylesheet" href="{% static 'css/recruiters/post-left.css' %}">
-<link rel="stylesheet" href="{% static 'css/recruiters/post-right.css' %}">
-<link rel="stylesheet" href="{% static 'css/recruiters/post-filter-mobile.css' %}">
+  <link rel="stylesheet" href="{% static 'css/recruiters/post-left.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/recruiters/post-right.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/recruiters/post-filter-mobile.css' %}" />
 
-<link rel="stylesheet" href="{% static 'css/recruiters/table.css' %}">
-
-<link rel="stylesheet" href="{% static 'css/model.css' %}">
-<link rel="stylesheet" href="{% static 'css/loading.css' %}">
-{% comment %} <link rel="stylesheet" href="{% static 'css/recruiters/old/create-job.css' %}"> {% endcomment %}
-
-<script src="{% static 'js/recruiters/post.js' %}" defer></script>
-<script src="{% static 'js/recruiters/table.js' %}" defer></script>
-<script src="{% static 'js/recruiters/post-form-submit.js' %}" defer></script>
-<script src="{% static 'js/loading.js' %}" defer></script>
-<style>
+  <link rel="stylesheet" href="{% static 'css/recruiters/table.css' %}" />
 
 
-/* new dropdown button  */
-.dropbtn {
+  {% comment %} <link rel="stylesheet" href="{% static 'css/recruiters/old/create-job.css' %}" /> {% endcomment %}
 
+  <script src="{% static 'js/recruiters/post.js' %}" defer></script>
+  <script src="{% static 'js/recruiters/table.js' %}" defer></script>
+  <script src="{% static 'js/recruiters/post-form-submit.js' %}" defer></script>
+
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.min.js"></script>
+  <style>
+    /* new dropdown button  */
+    .dropbtn {
+      background-color: #141b5f;
+      color: #ffffff;
+      color: white;
+      padding: 2px 13px;
+      font-size: 24px;
+      border: none;
+      border-radius: 6px;
+      transition: all 0.5s;
+    }
     
-    background-color: #141b5f;
-    color: #ffffff;    
-    color: white;
-    padding: 2px 13px;
-    font-size: 24px;
-    border: none;
-    border-radius: 6px;
-    transition: all .5s;
-  }
-  
-  .dropdown {
-    position: relative;
-    display: block;
-  }
-  
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    right: 0px;
-    background-color: #f1f1f1;
-    width: 300px;
-  
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-  }
-  
-  .dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    width: fit-content;
-    cursor: pointer;
-    width: 100%;
-  }
-  
-  .dropdown-content a:hover {background-color: #ddd;}
-  
-  .dropdown:hover .dropdown-content {display: block;}
-  
-  .dropdown:hover .dropbtn {background-color: #ffbd03;}
+    .dropdown {
+      position: relative;
+      display: block;
+    }
+    
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0px;
+      background-color: #f1f1f1;
+      width: 300px;
+    
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+    
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      width: fit-content;
+      cursor: pointer;
+      width: 100%;
+    }
+    
+    .dropdown-content a:hover {
+      background-color: #ddd;
+    }
+    
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    
+    .dropdown:hover .dropbtn {
+      background-color: #ffbd03;
+    }
+    
+    .count-card {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 15px;
+      font-size: 14px;
+      color: #fff;
+      background: #141b5f;
+      border: none;
+    
+      transition: all 0.3s;
+      border-radius: 50px;
+      margin: 2px 16px 2px 0px;
+      text-decoration: none;
+    }
 
-  
 
- .count-card{
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 15px;
-    font-size: 14px;
-    color: #fff;
-    background: #141b5f;
-    border: none;
 
-    transition: all 0.3s;
-    border-radius: 50px;
-    margin: 2px 16px 2px 0px;
-    text-decoration: none;
- } 
-</style>
-{% endblock statics %}
-
+    {% comment %} for this page only {% endcomment %}
+    .list-right-table{
+      width: 95%;
+    }
+  </style>
+{% endblock %}
 
 {% block content %}
-
-
- 
-
-
-
-          <div class="r-right-down-main">
-            <div class="r-down-main">
-                <div class="list-main">
-                    <div class="list-left">
-                        
-                        <div class="form">
-                            <form method="post" action="#">
-                                <div class="filters-div">
-                                    <i class="fa-solid fa-arrow-down-wide-short"></i>
-                                    <h1>Filters</h1>
-                                </div>
-                                <div class="input-div">
-                                   <input type="text" class="input" placeholder="Hire request, HR ID.."/> 
-
-                                </div>
-
-                                <div class="job-status-div">
-                                    <div class="job-status-div-text">
-                                        <p>Hire Request</p>
-
-
-                                    </div>
-                                    <div class="checkbox-div">
-                                        <div class="checkbox-1">
-                                            <div class="checkbox-1-1">
-                                               <input type="checkbox" class="input-check"/>
-                                               <p>Web developer</p> 
-                                            </div>
-                                            <div class="checkbox-1-count"><p>103</p>
-                                                <i class="fa-solid fa-angle-down" id="job-open"></i>
-                                            </div>
-                                        </div>
-
-
-
-                                        <div class="show-info-div" id="show-info-div">
-                                            <div class="checkbox-1">
-                                                <div class="checkbox-1-1">
-                                                   <input type="checkbox" class="input-check"/>
-                                                   <p>Backend developer</p> 
-                                                </div>
-                                                <div class="checkbox-1-count">
-                                                    <p>1001</p>
-                                                </div>
-                                            </div> 
-
-                                            <div class="checkbox-1">
-                                                <div class="checkbox-1-1">
-                                                   <input type="checkbox" class="input-check"/>
-                                                   <p>FrontEnd developer</p> 
-                                                </div>
-                                                <div class="checkbox-1-count">
-                                                    <p>1002</p>
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-
-                                        <div class="checkbox-1">
-                                            <div class="checkbox-1-1">
-                                               <input type="checkbox" class="input-check"/>
-                                               <p>SQL Administrator</p> 
-                                            </div>
-                                            <div class="checkbox-1-count">
-                                                <p>101</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="checkbox-1">
-                                            <div class="checkbox-1-1">
-                                               <input type="checkbox" class="input-check"/>
-                                               <p>Cloud Engineer</p> 
-                                            </div>
-                                            <div class="checkbox-1-count">
-                                                <p>102</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-
-
-
-                                    
-
-                                </div>
-
-
-
-
-                               
-
-
-
-
-                                
-
-
-
-                                
-
-                            </form>
-
-                        </div>
-                        
-
-
-
-
-
-
-
-                    </div>
-                    <div class="list-right-table">
-                        <div class="right-div-table">
-                            <div class="new-hire-request-search">
-                                <div class="new-hire-request-parent">
-
-                                        <select class="new-hire-request-div" name="" id="">
-                                            <option value="All Hire Request">All Hire Request</option>
-                                            <option value="New Hire Request">New Hire Request</option>
-                                            <option value="Opened Hire Request">Opened Hire Request</option>
-                                            <option value="Closed Hire Request">Closed Hire Request</option>
-                                        </select>
-
-                                    <div class="dev-text">
-                                        <p>web Developer , support Engineer</p>
-
-                                    </div>
-                                    <div class="checkbox-1-table">
-                                        {% comment %} <div class="checkbox-1-1-table">
-                                           <input type="checkbox" class="input-check"/>
-                                           <p>select All</p> 
-                                        </div>
-                                        <div class="checkbox-1-count-table">
-                                            <button>Delete</button>
-                                        </div> {% endcomment %}
-                                        <div class="count-card">Opened Position 3 / 5</div>
-                                        <div class="count-card">Opened Hire request 3 / 5</div>
-                                    </div>
-                                </div>
-                                
-
-
-                                <div class="new-hire-request-parent">
-                                    
-                                    <div class="navigation-header-input-div-table">
-                                        <input type="text" placeholder="Search" id="count-words"/>
-                                        <i class="fa-solid fa-magnifying-glass"></i>
-                                    </div>
-                                    <div class="input-count-btn">
-                                        <div class="input-count-div">
-                                            {% comment %} <p id="char-count">0/500 char</p> {% endcomment %}
-                                        </div>
-                                            <div class="dropdown">
-                                                <button class="dropbtn">+</button>
-                                                <div class="dropdown-content">
-                                                  <a href="#" id="openNewPositionModel" class="open-modal-btn" data-modal-id="newPositionModel" >New Position</a>
-                                                  <a href="#" id="openNewHireRequest" class="open-modal-btn" data-modal-id="newHireRequest" >New Hire Request</a>
-                                                </div>
-                                              </div>
-
-
-                                    </div>
-                                </div>
-
-                                
-                            </div>
-
-                            <div class="table-container">
-                                {% if positions or hire_requests %}
-                                <table class="recruiters-table">
-                                  <thead>
-                                    <tr>
-                                      <th  class="recruiters-th">Hire Request</th>
-                                      <th  class="recruiters-th">Position</th>
-                                      <th  class="recruiters-th">Created Date</th>
-                                      <th  class="recruiters-th">Deadline</th>
-                                      <th  class="recruiters-th">Status</th>
-                                      <th  class="recruiters-th">Description</th>
-                                      {% comment %} <th  class="recruiters-th">Action</th> {% endcomment %}
-                                    </tr>
-                                  </thead>
-                                  <tbody id="table-body">
-                                    {% for position in positions %}
-                                    <tr>
-                                      <td  class="recruiters-td">
-                                        <div class="checkbox-container">
-                                          <input type="checkbox" id="checkbox-2">
-                                          <a href="#">
-                                            <div class="major"></div>
-                                            <div class="minor"></div>
-                                          </div>
-                                        </a>
-                                      </td>
-                                      <td  class="recruiters-td">
-                                        <a href="#">
-                                            <div class="major">{{position.position_title}}</div>
-                                            <div class="minor">{{position.position_code}}</div>
-                                        </a>
-                                        </div>
-                                      </td>
-                                      <td  class="recruiters-td"></td>
-                                      <td  class="recruiters-td"></td>
-                                      <td  class="recruiters-td"></td>
-                                      <td class="recruiters-td description" onclick="toggleDescription(this)">
-                                        {{position.description}}
-                                      </td>
-
-                                     {% comment %}   <td  class="recruiters-td">
-                                        <a href="#" class="action-btn edit-btn">Edit</a>
-                                        <a href="#" class="action-btn delete-btn">Delete</a>
-                                      </td> {% endcomment %}
-                                    </tr>
-                                    {% endfor %}
-                                    {% for hire_request in hire_requests %}
-                                    <tr>
-                                      <td  class="recruiters-td">
-                                        <div class="checkbox-container">
-                                          <input type="checkbox" id="checkbox-2">
-                                          <a href="#">
-                                              <div class="major">{{hire_request.position.position_title}}</div>
-                                              <div class="minor">{{hire_request.hire_request_code}}</div>
-                                            </div>
-                                        </a>
-                                    </td>
-                                    <td  class="recruiters-td">
-                                        <a href="#">
-                                            <div class="major">{{hire_request.position.position_title}}</div>
-                                            <div class="minor">{{hire_request.position.position_code}}</div>
-                                        </a>
-                                        </div>
-                                      </td>
-                                      <td  class="recruiters-td">{{hire_request.created_at|date}}</td>
-                                      <td  class="recruiters-td">{{hire_request.deadline|date}}</td>
-                                      <td  class="recruiters-td">
-                                        {% if hire_request.is_open %}
-                                            Hiring Needed
-                                        {% else%}
-                                            Closed
-                                        {% endif%}
-
-                                      </td>
-                                      <td class="recruiters-td description" onclick="toggleDescription(this)">
-                                        {{hire_request.position.description}}
-                                        </td>
-                                      {% comment %} 
-
-                                      <td  class="recruiters-td">
-                                        <a href="#" class="action-btn edit-btn">Edit</a>
-                                        <a href="#" class="action-btn delete-btn">Delete</a>
-                                      </td> {% endcomment %}
-                                    </tr>
-                                    {% endfor %}
-
-
-                                  </tbody>
-                                </table>
-                                {% else %}
-                                <table class="recruiters-table">
-                                  <thead>
-                                    <tr>
-                                      <th  class="recruiters-th">Hire Request</th>
-                                      <th  class="recruiters-th">Position</th>
-                                      <th  class="recruiters-th">Created Date</th>
-                                      <th  class="recruiters-th">Deadline</th>
-                                      <th  class="recruiters-th">Status</th>
-                                      <th  class="recruiters-th">Description</th>
-                                      {% comment %} <th  class="recruiters-th">Action</th> {% endcomment %}
-                                    </tr>
-                                  </thead>
-                                  <tbody id="table-body">
-
-                                    <tr><td colspan="6"><center>Sorry No records found!</center></td></tr>
-                                    <tr><td colspan="6"><center>Lets create Position and generate the hire request to post the job vacancy post</center></td></tr>
-                                  </tbody>
-                                </table>
-                                {% endif %}
-                            </div>
-
-
-
-
-
-
-                            
-                        </div>
-                    </div>
-
+  <div class="r-right-down-main">
+    <div class="r-down-main">
+      <div class="list-main">
+
+        <div class="list-right-table">
+          <div class="right-div-table">
+            {% comment %} <div class="new-hire-request-search">
+              <div class="new-hire-request-parent">
+                <select class="new-hire-request-div" name="" id="">
+                  <option value="All Hire Request">All Hire Request</option>
+                  <option value="New Hire Request">New Hire Request</option>
+                  <option value="Opened Hire Request">Opened Hire Request</option>
+                  <option value="Closed Hire Request">Closed Hire Request</option>
+                </select>
+
+                <div class="dev-text">
+                  <p>web Developer , support Engineer</p>
                 </div>
+                <div class="checkbox-1-table">
+                  {% comment %} <div class="checkbox-1-1-table">
+                    <input type="checkbox" class="input-check" />
+                    <p>select All</p>
+                  </div>
+                  <div class="checkbox-1-count-table">
+                    <button>Delete</button>
+                  </div>
+                   <div class="count-card">Opened Position 3 / 5</div>
+                  <div class="count-card">Opened Hire request 3 / 5</div> 
+                </div>
+              </div>
 
-
-
-                
+              <div class="new-hire-request-parent">
+                <div class="navigation-header-input-div-table">
+                  <input type="text" placeholder="Search" id="count-words" />
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <div class="input-count-btn">
+                  <div class="input-count-div">
+                    {% comment %} <p id="char-count">0/500 char</p>
+                  </div>
+                  <div class="dropdown">
+                    <button class="dropbtn">+</button>
+                    <div class="dropdown-content">
+                      <a href="#" id="openNewPositionModel" class="open-modal-btn" data-modal-id="newPositionModel">New Position</a>
+                      <a href="#" id="openNewHireRequest" class="open-modal-btn" data-modal-id="newHireRequest">New Hire Request</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> {% endcomment %}
+            <div class="flex-end">
+              <button class="top-button"
+                 hx-post="#"
+                hx-vals='{"get_position_form": ""}'
+                hx-target="#HtmxModal"
+                hx-trigger="click"
+                hx-swap="innerHTML"
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+              >Create Position</button>
             </div>
-
-
-
+            <div class="table-container" id="table-container">
+              {% include 'recruiters/htmx/positionShow.html' %}
             </div>
-
-
-    {% endblock content %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    {% block mobile_view %}
-    <div class="m1-filter-div" id="m1-filter-div">
-        <div class="m-list-left">
-                            
-            <div class="form">
-                <form method="post" action="#">
-                    <div class="filters-div">
-                        <i class="fa-solid fa-arrow-down-wide-short"></i>
-                        <h1>Filters</h1>
-                        <div class="x-mark" id="x-mark" onclick="mobileView(false)">
-                            <p class="X">X</p>
-                        </div>
-                    </div>
-                    
-                    <div class="input-div">
-                       <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
-
-                    </div>
-
-                    <div class="job-status-div">
-                        <div class="job-status-div-text">
-                            <p>Job Status</p>
-                            <i class="fa-solid fa-angle-down"></i>
-
-                        </div>
-                        <div class="checkbox-div">
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>Active Jobs</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>1</p>
-                                </div>
-                            </div>
-
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>Expired Jobs</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>1</p>
-                                </div>
-                            </div>
-
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>Closed Jobs</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>2</p>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-
-
-
-                        
-
-                    </div>
-
-
-
-
-                    <div class="job-status-div-2">
-                        <div class="job-status-div-text">
-                            <p>Job Posted By</p>
-                            <i class="fa-solid fa-angle-down"></i>
-
-                        </div>
-                        <div class="input-div-down">
-                            <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
-                        </div>
-                        <div class="checkbox-div">
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>Recruiter name</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>1</p>
-                                </div>
-                            </div>
-
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>Recruiter name</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>1</p>
-                                </div>
-                            </div>
-
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>Recruiter name</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>2</p>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-
-
-
-                        
-
-                    </div>
-
-
-
-
-                    <div class="job-status-div-3">
-                        <div class="job-status-div-text">
-                            <p>Job Tittle</p>
-                            <i class="fa-solid fa-angle-down"></i>
-
-                        </div>
-                        <div class="input-div-down">
-                            <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
-                        </div>
-                        <div class="checkbox-div">
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>App developer</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>1</p>
-                                </div>
-                            </div>
-
-                            
-                        </div>
-
-
-
-
-
-
-                        
-
-                    </div>
-
-
-
-                    
-
-                </form>
-
-            </div>
-            
-
-
-
-
-
-
-
+          </div>
         </div>
-
+      </div>
     </div>
+  </div>
 
-    {% include "recruiters/SubFileForApi/position-new.html" %}
-    {% include "recruiters/SubFileForApi/position-new-hire-request.html" %}
 
-    
-<script src="{% static 'js/recruiters/position-manager.js' %}"></script>
-<script src="{% static 'js/cookie/js.cookie.min.js' %}"></script>
 
+{% endblock %}
+
+{% block mobile_view %}
+  <div class="m1-filter-div" id="m1-filter-div">
+    <div class="m-list-left">
+      <div class="form">
+        <form method="post" action="#">
+          <div class="filters-div">
+            <i class="fa-solid fa-arrow-down-wide-short"></i>
+            <h1>Filters</h1>
+            <div class="x-mark" id="x-mark" onclick="mobileView(false)">
+              <p class="X">X</p>
+            </div>
+          </div>
+
+          <div class="input-div">
+            <input type="text" class="input" placeholder=" Search Title,Job Id..." />
+          </div>
+
+          <div class="job-status-div">
+            <div class="job-status-div-text">
+              <p>Job Status</p>
+              <i class="fa-solid fa-angle-down"></i>
+            </div>
+            <div class="checkbox-div">
+              <div class="checkbox-1">
+                <div class="checkbox-1-1">
+                  <input type="checkbox" class="input-check" />
+                  <p>Active Jobs</p>
+                </div>
+                <div class="checkbox-1-count">
+                  <p>1</p>
+                </div>
+              </div>
+
+              <div class="checkbox-1">
+                <div class="checkbox-1-1">
+                  <input type="checkbox" class="input-check" />
+                  <p>Expired Jobs</p>
+                </div>
+                <div class="checkbox-1-count">
+                  <p>1</p>
+                </div>
+              </div>
+
+              <div class="checkbox-1">
+                <div class="checkbox-1-1">
+                  <input type="checkbox" class="input-check" />
+                  <p>Closed Jobs</p>
+                </div>
+                <div class="checkbox-1-count">
+                  <p>2</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="job-status-div-2">
+            <div class="job-status-div-text">
+              <p>Job Posted By</p>
+              <i class="fa-solid fa-angle-down"></i>
+            </div>
+            <div class="input-div-down">
+              <input type="text" class="input" placeholder=" Search Title,Job Id..." />
+            </div>
+            <div class="checkbox-div">
+              <div class="checkbox-1">
+                <div class="checkbox-1-1">
+                  <input type="checkbox" class="input-check" />
+                  <p>Recruiter name</p>
+                </div>
+                <div class="checkbox-1-count">
+                  <p>1</p>
+                </div>
+              </div>
+
+              <div class="checkbox-1">
+                <div class="checkbox-1-1">
+                  <input type="checkbox" class="input-check" />
+                  <p>Recruiter name</p>
+                </div>
+                <div class="checkbox-1-count">
+                  <p>1</p>
+                </div>
+              </div>
+
+              <div class="checkbox-1">
+                <div class="checkbox-1-1">
+                  <input type="checkbox" class="input-check" />
+                  <p>Recruiter name</p>
+                </div>
+                <div class="checkbox-1-count">
+                  <p>2</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="job-status-div-3">
+            <div class="job-status-div-text">
+              <p>Job Tittle</p>
+              <i class="fa-solid fa-angle-down"></i>
+            </div>
+            <div class="input-div-down">
+              <input type="text" class="input" placeholder=" Search Title,Job Id..." />
+            </div>
+            <div class="checkbox-div">
+              <div class="checkbox-1">
+                <div class="checkbox-1-1">
+                  <input type="checkbox" class="input-check" />
+                  <p>App developer</p>
+                </div>
+                <div class="checkbox-1-count">
+                  <p>1</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {% include 'recruiters/SubFileForApi/position-new.html' %}
+  {% include 'recruiters/SubFileForApi/position-new-hire-request.html' %}
+
+  <script src="{% static 'js/recruiters/position-manager.js' %}"></script>
+  <script src="{% static 'js/cookie/js.cookie.min.js' %}"></script>
+
+{% comment %} for JD {% endcomment %}
 <script>
-  
-
-
-document.addEventListener("DOMContentLoaded", function () {
-  handleFormSubmit('create-new-position-id');
-  handleFormSubmit('create-new-hire-request-id');
-});
-
-    {% comment %} 
-     {% endcomment %}
-
-
-
-     //
-
-     function formatDate(dateString) {
-      if (!dateString) return '';
-      const date = new Date(dateString);
-      return date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-      });
-    }
-///    
-let selectedPositionIds = [];
-
-function updatePositionDropdown(positions, containerId = 'position-wrapper') {
-  const container = document.getElementById(containerId);
-  container.innerHTML = '';
-
-  const tagsContainer = document.createElement('div');
-  tagsContainer.className = 'selected-tags';
-
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.className = 'search-input';
-  input.placeholder = 'Search positions...';
-
-  const dropdown = document.createElement('div');
-  dropdown.className = 'dropdown-list';
-
-  container.appendChild(tagsContainer);
-  container.appendChild(input);
-  container.appendChild(dropdown);
-
-  function renderDropdown(query = '') {
-    dropdown.innerHTML = '';
-    const filtered = positions.filter(pos =>
-      `${pos.position_title} - ${pos.position_code}`.toLowerCase().includes(query.toLowerCase()) &&
-      !selectedPositionIds.includes(pos.position_id)
-    );
-
-    if (filtered.length === 0) {
-      const noItem = document.createElement('div');
-      noItem.className = 'dropdown-item';
-      noItem.textContent = 'No matches';
-      dropdown.appendChild(noItem);
-      return;
-    }
-
-    filtered.forEach(pos => {
-      const item = document.createElement('div');
-      item.className = 'dropdown-item';
-      item.textContent = `${pos.position_title} - ${pos.position_code}`;
-      item.onclick = () => {
-        selectedPositionIds.push(pos.position_id);
-        renderTags();
-        input.value = '';
-        renderDropdown();
-      };
-      dropdown.appendChild(item);
-    });
-  }
-
-  function renderTags() {
-    tagsContainer.innerHTML = '';
-  
-    selectedPositionIds.forEach(id => {
-      const pos = positions.find(p => p.position_id === id);
-  
-      if (!pos) return; // 🔐 Safe check: skip if position not found
-  
-      const tag = document.createElement('div');
-      tag.className = 'tag';
-      tag.textContent = `${pos.position_title}`;
-  
-      const removeBtn = document.createElement('button');
-      removeBtn.textContent = '×';
-      removeBtn.onclick = () => {
-        selectedPositionIds = selectedPositionIds.filter(pid => pid !== id);
-        renderTags();
-        renderDropdown(input.value);
-      };
-  
-      tag.appendChild(removeBtn);
-      tagsContainer.appendChild(tag);
-    });
-  
-    // Update the hidden input
-    const hiddenInput = document.getElementById('selected_positions_input');
-    hiddenInput.value = selectedPositionIds.join(',');
-  }
-  
-  
-
-  input.addEventListener('input', () => {
-    renderDropdown(input.value);
+  document.body.addEventListener('htmx:beforeRequest', function (event) {
+    startLoading();  
   });
 
-  input.addEventListener('focus', () => {
-    renderDropdown(input.value);
+  document.body.addEventListener('htmx:afterRequest', function (event) {
+    stopLoading();  
   });
 
-  document.addEventListener('click', (e) => {
-    if (!container.contains(e.target)) {
-      dropdown.innerHTML = '';
+  document.body.addEventListener('htmx:afterOnLoad', function (event) {
+    checkIfFullPage(event);        
+    const responseTarget = event.detail.target;
+
+
+    // Check if modal dialog is present in the injected response
+    if (responseTarget.querySelector('.modal-dialog')) {
+        console.log('Opening modal...');
+        openHtmxModalButton();
+    } else {
+        console.log('Closing modal...');
+        closeHtmxModalButton();
     }
+
+
+
   });
-}
-
-function clearSelections() {
-  selectedPositionIds = [];
-  const hiddenInput = document.getElementById('selected_positions_input');
-  hiddenInput.value = '';
-
-}
+</script>  
+  
+  <script>
 
 
-// This just shows what was selected
-function logSelected() {
-  alert('Selected Position IDs: ' + selectedPositionIds.join(', '));
-}
-
-
-// Show selected values
-function logSelected() {
-  const selectedValues = Array.from(document.getElementById('id_type_id').selectedOptions)
-                              .map(opt => opt.value);
-  alert('Selected Position IDs: ' + selectedValues.join(', '));
-}
-
-// Initialize dropdown on load
-{% comment %} updatePositionDropdown(positions);   {% endcomment %}
-
-
-function getPositions(){
-
-      if (typeof window.startLoading === 'function') {
-        startLoading(); 
-    }
-    else{
-      console.log("startLoading is not found.. Till it not download from server.");
-    }
-
-     fetch('./../api/position-manager/')
-     .then(res => res.json())
-     .then(data => {
-       const tableBody = document.getElementById('table-body');
-       tableBody.innerHTML = ''; // clear existing rows
-   
-       const { positions, hire_requests } = data;
-       updatePositionDropdown(positions);
-       // Render positions
-       positions.forEach(position => {
-         const row = `
-           <tr>
-             <td class="recruiters-td">
-               <div class="checkbox-container">
-                 <input type="checkbox" id="checkbox-${position.position_id}">
-                 <a href="#">
-                   <div class="major"></div>
-                   <div class="minor"></div>
-                 </a>
-               </div>
-             </td>
-             <td class="recruiters-td">
-               <a href="#">
-                 <div class="major">${position.position_code}</div>
-                 <div class="minor">${position.position_code}</div>
-               </a>
-             </td>
-             <td class="recruiters-td"></td>
-             <td class="recruiters-td"></td>
-             <td class="recruiters-td"></td>
-             <td class="recruiters-td description" onclick="toggleDescription(this)">
-               ${position.description || ''}
-             </td>
-           </tr>
-         `;
-         tableBody.insertAdjacentHTML('beforeend', row);
-       });
-       // Render hire requests
-       hire_requests.forEach(hr => {
-
-         const row = `
-           <tr>
-             <td class="recruiters-td">
-               <div class="checkbox-container">
-                 <input type="checkbox" id="checkbox-${hr.hire_request_codes}">
-                 <a href="#">
-                   <div class="major">${hr.position.position_title}</div>
-                   <div class="minor">${hr.hire_request_code}</div>
-                 </a>
-               </div>
-             </td>
-             <td class="recruiters-td">
-               <a href="#">
-                 <div class="major">${hr.position.position_title}</div>
-                 <div class="minor">${hr.position.position_code}</div>
-               </a>
-             </td>
-             <td class="recruiters-td">${formatDate(hr.created_at)}</td>
-             <td class="recruiters-td">${formatDate(hr.deadline)}</td>
-             <td class="recruiters-td">
-               ${hr.is_open ? 'Hiring Needed' : 'Closed'}
-             </td>
-             <td class="recruiters-td description" onclick="toggleDescription(this)">
-               ${hr.position.description || ''}
-             </td>
-           </tr>
-         `;
-         tableBody.insertAdjacentHTML('beforeend', row);
-
-       });
-     })
-     .catch(error => console.error('Error loading table data:', error))
-     .finally(() => {
-          if (typeof window.stopLoading === 'function') {
-            stopLoading(); 
+    document.body.addEventListener('htmx:responseError', function (event) {
+      const xhr = event.detail.xhr
+      const contentType = xhr.getResponseHeader('Content-Type')
+    
+      if (contentType && contentType.includes('application/json')) {
+        let messages
+        try {
+          messages = JSON.parse(xhr.responseText)
+        } catch (e) {
+          messages = { Error: { messages: ['An unknown error occurred.'], level: 'error' } }
         }
-        else{
-          console.log("stopLoading is not found.. Till it not download from server.");
-        }
-    });
+    
+        // Call your message display function
+        displayHtmxMessages(messages)
+        console.log(messages)
+      } else {
+        console.warn('Expected JSON response, got:', xhr.responseText)
+        // Optional fallback for HTML or plain text errors
+        displayHtmxMessages({
+          Server: {
+            messages: [xhr.responseText || 'Unexpected error occurred.'],
+            level: 'error'
+          }
+        })
+        console.log(messages)
+      }
+    })
+    
+    document.body.addEventListener('htmx:afterSwap', function (event) {
+      // Optional: limit to only the modal content
+      if (event.target.id === 'HtmxModal') {
 
-    clearSelections()
+        // Delay execution slightly to allow DOM to fully render
+        setTimeout(() => {
+          if (typeof initializeQuillEditor === 'function') {
+            initializeQuillEditor();
+          }
+          if (typeof displayData === 'function') {
+            displayData();
+          } // run your initialization
+        }, 50) // 50ms is usually safe
+      }
+    })
+  </script>
+
+  <style>
+    .multi-select-container {
+      width: inherit;
+      margin: 10px 0 10px 0;
+      font-family: sans-serif;
+      position: relative;
     }
-
-    getPositions();
-
-
-
-  
-</script>
-
-
-
-<style>
-.multi-select-container {
-  width: inherit;
-  margin: 10px 0 10px 0;
-  font-family: sans-serif;
-  position: relative;
-}
-
-.selected-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 5px;
-}
-
-.tag {
-
-  padding: 4px 8px;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-    height: 38px;
-    border-radius: 50px;
-    background-color: #FFBD03;
-    color: #000000;
-    border-color: #FFBD03;
-}
-
-.tag button {
-  margin-left: 5px;
-  background: transparent;
-  color: #000;
-  border: none;
-  cursor: pointer;
-}
-
-.search-input {
-  width: 100%;
-  padding: 6px;
-  box-sizing: border-box;
-}
-
-.dropdown-list {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: white;
-  border: 1px solid #ccc;
-  max-height: 150px;
-  overflow-y: auto;
-  z-index: 1051;
-}
-
-.dropdown-item {
-  padding: 6px;
-  cursor: pointer;
-}
-
-.dropdown-item:hover {
-  background: #f0f0f0;
-}
-</style>
-
-
-{% endblock mobile_view %}
+    
+    .selected-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 5px;
+    }
+    
+    .tag {
+      padding: 4px 8px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      height: 38px;
+      border-radius: 50px;
+      background-color: #ffbd03;
+      color: #000000;
+      border-color: #ffbd03;
+    }
+    
+    .tag button {
+      margin-left: 5px;
+      background: transparent;
+      color: #000;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 6px;
+      box-sizing: border-box;
+    }
+    
+    .dropdown-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ccc;
+      max-height: 150px;
+      overflow-y: auto;
+      z-index: 1051;
+    }
+    
+    .dropdown-item {
+      padding: 6px;
+      cursor: pointer;
+    }
+    
+    .dropdown-item:hover {
+      background: #f0f0f0;
+    }
+  </style>
+{% endblock %}

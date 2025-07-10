@@ -111,12 +111,6 @@
             </div>
         </div>
         <div class="right-container">
-                    <div id="loading-screen">
-                    <div class="loader-wrapper">
-                        <div class="loader"></div>
-                        <span class="loading-text">Loading, please wait...</span>
-                    </div>
-                    </div>
           <div class="info-container" id="personal-info">
                 {% include "jobseeker/htmx/profilePersonalShow.html" %}
             </div>
@@ -222,9 +216,7 @@
 {{ courses|json_script:"course-data" }}
 {{ specs|json_script:"spec-data" }}
 
-<div class="modal" id="HtmxModal">
 
-</div>
 
         
     <script src="{% static 'js/jobseeker/profile.js' %}"></script>
@@ -268,9 +260,14 @@ document.body.addEventListener('htmx:responseError', function (event) {
         // Delay execution slightly to allow DOM to fully render
         setTimeout(() => {
             console.log("Calling setupDropdowns after delay");
-            setupDropdowns();   
-
-            setupMultiSelect();          // run your initialization
+            if (typeof setupDropdowns === 'function') {
+                setupDropdowns();
+            }
+            console.log(typeof setupDropdowns);
+            console.log(typeof setupMultiSelect);
+            if (typeof setupMultiSelect === 'function') {
+                setupMultiSelect();
+            }        // run your initialization
 
         }, 50); // 50ms is usually safe
     }

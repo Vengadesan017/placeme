@@ -36,7 +36,7 @@
         height: auto;
         width: 200px;
         /* changes--------------------- */
-        z-index: 3;
+        z-index: 1;
     }
     .nav-div a{
         color: #FFFFFF;
@@ -224,7 +224,7 @@
         height: auto;
         width: 200px;
         /* changes--------------------------------- */
-        z-index: 3;
+        z-index: 1;
     }
     .nav-div a{
         color: #FFFFFF;
@@ -415,7 +415,7 @@
         height: auto;
         width: 200px;
         /* changes----------------------- */
-        z-index: 3;
+        z-index: 1;
     }
     .nav-div a{
         color: #FFFFFF;

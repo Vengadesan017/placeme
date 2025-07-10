@@ -1,8 +1,10 @@
 from django.utils.timezone import now
 from django import forms
-from recruiters.models import Locations , Companies, Jobs, Positions, HireRequests, Benefits
+from recruiters.models import Locations , Companies, Jobs, Positions,\
+    HireRequests, Benefits, PositionGroup
 from job_seekers.models import Skills, SpecificationForEdu
 from django.db.models import Count
+from job_seekers.forms import CommaDecimalField
 
 class CreateCompanyForm(forms.ModelForm):
     class Meta:
@@ -195,13 +197,65 @@ class CreateJobs(forms.ModelForm):
             instance.save()
         return instance
     
+class PositionGroupForm(forms.ModelForm):
+    class Meta:
+        model = PositionGroup
+        fields = [
+            # 'company',
+            'position_code',
+            'position_title',
+            'jd',
+            'budget',
+            'budget_type',
+            'department',
+            'cost_center',
+            'locations',
+            'Supervisor',
+            'hrbp',
+            'hrms',
+            'division',
+            'updated_by',
+        ]
+        labels = {
+            # 'company': 'Company',
+            'position_code': 'Position Code',
+            'position_title': 'Position Title',
+            'jd': 'Job Description',
+            'budget': 'Budget',
+            'budget_type': 'Budget Type',
+            'department': 'Department',
+            'cost_center': 'Cost Center',
+            'locations': 'Locations',
+            'Supervisor': 'Supervisor',
+            'hrbp': 'HR Business Partner',
+            'hrms': 'HRMS',
+            'division': 'Division',
+            'updated_by': 'updated_by',
+        }
+
+
+        
+    def save(self, commit=True, company=None,created_by=None):
+        instance = super().save(commit=False)
+        if company:
+            instance.company = company
+        if created_by:
+            instance.created_by = created_by
+        if commit:
+            instance.save()
+        return instance
+    budget = CommaDecimalField(required=False, max_digits=10, decimal_places=2)    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['position_code'].disabled = True
+
 class CreatePosition(forms.ModelForm):
     class Meta:
         model = Positions
-        fields = ['position_title', 'description', 'remarks']
+        fields = [ 'remarks']
         labels = {
             'position': 'Position',
-            'description': 'Description',
+            # 'description': 'Description',
             'remarks': 'Remarks',
         }
 

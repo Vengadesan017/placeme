@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="{% static 'css/recruiters/footer.css' %}" />
     <link rel="stylesheet" href="{% static 'css/error.css' %}" />
     <link rel="stylesheet" href="{% static 'css/notification.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/model.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/loading.css' %}" />    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -30,7 +32,10 @@
     <script src="{% static 'js/error.js' %}" defer></script>
     <script src="{% static 'js/jobseeker/notification.js' %}" defer></script>
     <script src="{% static 'js/modal.js' %}" defer></script>
+    <script src="{% static 'js/loading.js' %}" defer></script>
     {% comment %} <script src="https://www.google.com/recaptcha/api.js" async defer></script> {% endcomment %}
+    <script src="{% static 'js/htmx/2_0_5.min.js' %}" defer></script>
+
     <style>
         *{
             font-size: 14px;
@@ -42,6 +47,20 @@
 
         }
 
+        .flex-end{
+            display: flex;
+            justify-content: flex-end;
+        }
+        .top-button{
+                margin: 0 0 0 10px;
+                padding: 8px 20px;
+                font-size: 16px;
+                border-radius: 6px;
+                border: none;
+                background-color: #141b5f;
+                color: #ffffff;
+                cursor: pointer;
+        }
     </style>     
   </head>
   <body>
@@ -251,26 +270,35 @@
                 
 
 
+
+                {% block content %}
+
+                {% endblock %}
                 <!--   js error handling, python error handling and loading field -->
-                    <div id="api-message" style="display: none;position: relative; top:70px;"></div>
+                    <div id="api-message"></div>
                     <div id="loading-screen">
                     <div class="loader-wrapper">
                         <div class="loader"></div>
                         <span class="loading-text">Loading, please wait...</span>
                     </div>
                     </div>
+                    <div id="alert-container">
                     {% if messages %}
                     {% for message in messages %}
-                    <div class='alert alert-{{ message.tags }}' style="position: relative; top:70px;">
+                    <div class='alert alert-{{ message.tags }}'>
                         <span class="closebtn">&times;</span>
-                        {{ message }}
+                        {{ message|safe }}
                     </div>    
                     {% endfor %}
                 {% endif %}
+                    </div>
                 <!--   error -->
-                {% block content %}
 
-                {% endblock %}
+                <!-- model for htmx -->
+                 <div class="modal" id="HtmxModal">
+
+                </div>
+                <!-- -->
                 <footer class="about">
                     <div class="about-main">
                         <div class="company">

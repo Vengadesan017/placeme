@@ -29,6 +29,16 @@ EXPERIENCE_CHOICES = [
     (30, "40+ years"),
 ]
 
+SALARY_TYPE_CHOICES = [
+    ('per_year', 'Per Year'),
+    ('per_month', 'Per Month'),
+    ('per_week', 'Per Week'),
+    ('per_day', 'Per Day'),
+    ('per_hour', 'Per Hour'),
+    ('one_time', 'One-Time Payment'),
+    ('not_disclosed', 'Not Disclosed'),
+]
+
 
 def path_by_user_id(user_id: int):
     user_id_int = user_id + 100000000
@@ -355,7 +365,9 @@ class Locations(models.Model):
             
     @property
     def display_name(self):
-        return str(self)
+        if self.district and self.location.lower() != self.district.name.lower():
+            return f"{self.location} - {self.district.name}"
+        return self.location
 # =====================================Location End========================================================
 # =====================================Benefits begin========================================================
 class Benefits(models.Model):
@@ -412,31 +424,30 @@ class Qualifications(models.Model):
     
 # =====================================Job Qualifications End========================================================
 # =====================================Position Manager Begin========================================================
-
-
-class Positions(models.Model):
-    position_id = models.AutoField(primary_key=True)
+class PositionGroup(models.Model):
+    position_group_id = models.AutoField(primary_key=True)
     company = models.ForeignKey(Companies, on_delete=models.CASCADE)
+    position_code = models.PositiveIntegerField(blank=True,null=True)   # unique per company
     position_title = models.CharField(max_length=255)
-    position_code = models.PositiveIntegerField(blank=True,null=True) 
-    # status  = models.CharField(max_length=100, choices=[  # need to change
-    #     ('Full-time', 'Hiring-Needed'),
-    #     ('Open', 'Open'),
-    #     ('Close', 'Close')
-
-    # ], blank=True, null=True)
-    description = models.TextField(null=True, blank=True)
-    remarks = models.CharField(max_length=255,blank=True,null=True)
+    jd = models.TextField(null=True, blank=True)
+    budget = models.DecimalField(max_digits=12, decimal_places=2,null=True, blank=True)
+    budget_type = models.CharField(max_length=20, choices=SALARY_TYPE_CHOICES, blank=True, null=True)
+    department = models.CharField(max_length=255, null=True, blank=True)
+    cost_center = models.CharField(max_length=255,null=True, blank=True)
+    locations = models.ManyToManyField('recruiters.Locations', related_name='location_map_plm')
+    Supervisor = models.CharField(max_length=255,null=True, blank=True)
+    hrbp = models.CharField(max_length=255,null=True, blank=True)
+    hrms = models.CharField(max_length=255,null=True, blank=True)
+    division = models.CharField(max_length=255,null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='create_position', null=True, blank=True)
+    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='create_position_grp', null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
-    upadted_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_position', null=True, blank=True)    
-    deadline = models.DateTimeField(blank=True,null=True)   # not needed
-    is_open = models.BooleanField(default=True)
-    is_active = models.BooleanField(default=True)
+    updated_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_position_grp', null=True, blank=True)  
+    approved_at = models.DateTimeField(auto_now=True,blank=True, null=True)
+    approved_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='approve3_position_grp', null=True, blank=True)  
 
     class Meta:
-        unique_together = ('company', 'position_code')  # Ensures no duplicate serial numbers for each company
+        unique_together = ('company', 'position_code')
 
     def __str__(self):
         return f"{self.position_title} - {self.position_code}"
@@ -448,42 +459,62 @@ class Positions(models.Model):
                 # # Find the maximum serial_number for the company and increment by 1
                 # last_position = PositionManager.objects.filter(company=self.company).aggregate(Max('position_code'))
                 # max_serial_number = last_position['position_code__max']
-                last_position = Positions.objects.filter(company=self.company).order_by('-position_code').values_list('position_code', flat=True).first()
+                last_position = PositionGroup.objects.filter(company=self.company).order_by('-position_code').values_list('position_code', flat=True).first()
                 self.position_code = last_position + 1 if last_position else 1001
                 
                 # Save the new PositionManager instance
-                super(Positions, self).save(*args, **kwargs)
-
+                super(PositionGroup, self).save(*args, **kwargs)
         else:
-            super(Positions, self).save(*args, **kwargs)
+            super(PositionGroup, self).save(*args, **kwargs)
+    
+class Positions(models.Model):
+    position_id = models.AutoField(primary_key=True)
+    position_group = models.ForeignKey(PositionGroup, on_delete=models.CASCADE, related_name='positions', null=True, blank=True)   
+    employee_id = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='employee_in_position', null=True, blank=True)
+    hire_date = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='create_position', null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
+    upadted_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_position', null=True, blank=True)    
+    is_open = models.BooleanField(default=True)
+    is_fill = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
+    remarks = models.CharField(max_length=255,blank=True,null=True)
+
+
+    def __str__(self):
+        return f"{self.position_group} - {self.position_id}"
+
 
 class HireRequests(models.Model):
     hire_request_id = models.AutoField(primary_key=True)
     company = models.ForeignKey(Companies, on_delete=models.CASCADE)
-    position = models.ForeignKey(Positions, on_delete=models.CASCADE)
+    position_group = models.ForeignKey(PositionGroup, on_delete=models.CASCADE, related_name='position_grp_in_hr', null=True, blank=True)    
+    position = models.ForeignKey(Positions, on_delete=models.CASCADE, related_name='position_in_hr', blank=True, null=True)
     hire_request_code = models.PositiveIntegerField(blank=True,null=True)  # generate and validate
-    # status  = models.CharField(max_length=100, choices=[  # need to change
-    #     ('Open', 'Open'),
-    #     ('Close', 'Close')
-
-    # ], blank=True, null=True)
     employee_id = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='employee_in_hirerequest', null=True, blank=True)
     hire_date = models.DateTimeField(null=True, blank=True)
     leave_date = models.DateTimeField(null=True, blank=True)
     remarks = models.CharField(max_length=255,blank=True,null=True)
+    reason_for_leaving = models.CharField(max_length=255,blank=True,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='create_hire_request', null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True,null=True)
     upadted_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_hire_request', null=True, blank=True)    
     deadline = models.DateTimeField(blank=True,null=True)
     is_open = models.BooleanField(default=True)
+    is_approve = models.BooleanField(default=False)
+    is_reject = models.BooleanField(default=False)
+    is_offered = models.BooleanField(default=False)
+    is_hire = models.BooleanField(default=False)
+    is_leave = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ('company', 'hire_request_code')
 
     def __str__(self):
-        return f"{self.position.position_title} - {self.hire_request_code}"
+        return f"{self.position_group.position_title} - {self.hire_request_code}"
         return f"{self.hire_request_code} - {self.position.position_title} ({self.company.company_name})"
 
     def save(self, *args, **kwargs):

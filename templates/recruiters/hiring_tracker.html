@@ -1,1072 +1,504 @@
-
-{% extends "recruiters/layout.html" %}
+{% extends 'recruiters/layout.html' %}
 
 {% block title %}
-Offer candidate and onboard them
-{% endblock title %}
+  Position Manager
+{% endblock %}
 {% load static %}
 {% block statics %}
-<link rel="stylesheet" href="{% static 'css/recruiters/post-left.css' %}">
-<link rel="stylesheet" href="{% static 'css/recruiters/post-right.css' %}">
-<link rel="stylesheet" href="{% static 'css/recruiters/post-filter-mobile.css' %}">
-<link rel="stylesheet" href="{% static 'css/recruiters/admin_ribbon.css' %}">
-<link rel="stylesheet" href="{% static 'css/jobs.css' %}">
-{% comment %} <link rel="stylesheet" href="{% static 'css/recruiters/old/create-job.css' %}"> {% endcomment %}
+  <link rel="stylesheet" href="{% static 'css/recruiters/post-left.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/recruiters/post-right.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/recruiters/post-filter-mobile.css' %}" />
 
-<script src="{% static 'js/recruiters/post.js' %}" defer></script>
-{% comment %} <script src="{% static 'js/jobseeker/search-bar-recommandation.js' %}" defer></script> {% endcomment %}
-<style>
+  <link rel="stylesheet" href="{% static 'css/recruiters/table.css' %}" />
 
-    .kyc-card{
-        background-color: #fff;
-        width: 100%;
-        height: 100%;
-        border-radius: 20px;
-        padding: 20px 20px;
-        margin-bottom: 20px;
-    }
-    
-    .total-candidates{
-        display: block;
-        font-size: .7rem;
-        margin: 10px 0;
-    }
-    
-    .description {
-        font-size: 13px;
-        color: #666;
-        line-height: 1.5;
-        height: calc(1.5em * 1.3);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-    }
-    .form{
-        border: none;
-        box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
-    }
-    .job-card{
-        margin-bottom: 20px;
-    }
-    
-    
-</style>
-{% endblock statics %}
 
+  {% comment %} <link rel="stylesheet" href="{% static 'css/recruiters/old/create-job.css' %}" /> {% endcomment %}
+
+  <script src="{% static 'js/recruiters/post.js' %}" defer></script>
+  <script src="{% static 'js/recruiters/table.js' %}" defer></script>
+  <script src="{% static 'js/recruiters/post-form-submit.js' %}" defer></script>
+
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.min.js"></script>
+  <style>
+    /* new dropdown button  */
+    .dropbtn {
+      background-color: #141b5f;
+      color: #ffffff;
+      color: white;
+      padding: 2px 13px;
+      font-size: 24px;
+      border: none;
+      border-radius: 6px;
+      transition: all 0.5s;
+    }
+    
+    .dropdown {
+      position: relative;
+      display: block;
+    }
+    
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0px;
+      background-color: #f1f1f1;
+      width: 300px;
+    
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+    
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      width: fit-content;
+      cursor: pointer;
+      width: 100%;
+    }
+    
+    .dropdown-content a:hover {
+      background-color: #ddd;
+    }
+    
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    
+    .dropdown:hover .dropbtn {
+      background-color: #ffbd03;
+    }
+    
+    .count-card {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 15px;
+      font-size: 14px;
+      color: #fff;
+      background: #141b5f;
+      border: none;
+    
+      transition: all 0.3s;
+      border-radius: 50px;
+      margin: 2px 16px 2px 0px;
+      text-decoration: none;
+    }
+  </style>
+{% endblock %}
 
 {% block content %}
-
-
- 
-
-
-
-          <div class="r-right-down-main">
-            <div class="r-down-main">
-                <div class="list-main">
-                    <div class="list-left">
-                        
-                        <div class="form">
-                            <form method="post" action="#">
-                                <div class="filters-div">
-                                    <i class="fa-solid fa-arrow-down-wide-short"></i>
-                                    <h1>Filters</h1>
-                                </div>
-                                    {% comment %} <button name="filter_jobs" type="submit" class="filter-button">Filter</button> {% endcomment %}
-
-                                    <div class="job-status-div">
-                                        <div class="job-status-div-text">
-                                            <p>Job Posts</p>
-    
-    
-                                        </div>
-                                        <div class="input-div-down">
-                                            <input type="text" class="input" placeholder="Search by location"/> 
-                                        </div>
-                                        <div class="checkbox-div">
-                                            <div class="checkbox-1">
-                                                <div class="checkbox-1-1">
-                                                   <input type="checkbox" class="input-check"/>
-                                                   <p>Software developer(1002)</p> 
-                                                </div>
-                                                <div class="checkbox-1-count">
-                                                    <p>1</p>
-                                                </div>
-                                            </div>
-                                            <div class="checkbox-1">
-                                                <div class="checkbox-1-1">
-                                                   <input type="checkbox" class="input-check"/>
-                                                   <p>Software developer(1002)</p> 
-                                                </div>
-                                                <div class="checkbox-1-count">
-                                                    <p>1</p>
-                                                </div>
-                                            </div>
-                                            <div class="checkbox-1">
-                                                <div class="checkbox-1-1">
-                                                   <input type="checkbox" class="input-check"/>
-                                                   <p>Software developer(1002)</p> 
-                                                </div>
-                                                <div class="checkbox-1-count">
-                                                    <p>1</p>
-                                                </div>
-                                            </div>
-                                            <div class="checkbox-1">
-                                                <div class="checkbox-1-1">
-                                                   <input type="checkbox" class="input-check"/>
-                                                   <p>Software developer(1002)</p> 
-                                                </div>
-                                                <div class="checkbox-1-count">
-                                                    <p>1</p>
-                                                </div>
-                                            </div>
-                                            <div class="checkbox-1">
-                                                <div class="checkbox-1-1">
-                                                   <input type="checkbox" class="input-check"/>
-                                                   <p>Software developer(1002)</p> 
-                                                </div>
-                                                <div class="checkbox-1-count">
-                                                    <p>1</p>
-                                                </div>
-                                            </div>
-                                            <div class="checkbox-1">
-                                                <div class="checkbox-1-1">
-                                                   <input type="checkbox" class="input-check"/>
-                                                   <p>Software developer(1002)</p> 
-                                                </div>
-                                                <div class="checkbox-1-count">
-                                                    <p>1</p>
-                                                </div>
-                                            </div>
-                                            <div class="checkbox-1">
-                                                <div class="checkbox-1-1">
-                                                   <input type="checkbox" class="input-check"/>
-                                                   <p>Software developer(1002)</p> 
-                                                </div>
-                                                <div class="checkbox-1-count">
-                                                    <p>1</p>
-                                                </div>
-                                            </div>
-    
-                                            <div class="checkbox-1">
-                                                <div class="checkbox-1-1">
-                                                   <input type="checkbox" class="input-check"/>
-                                                   <p>Software Engineer</p> 
-                                                </div>
-                                                <div class="checkbox-1-count">
-                                                    <p>1</p>
-                                                </div>
-                                            </div>
-    
-                                            <div class="checkbox-1">
-                                                <div class="checkbox-1-1">
-                                                   <input type="checkbox" class="input-check"/>
-                                                   <p>Software designer</p> 
-                                                </div>
-                                                <div class="checkbox-1-count">
-                                                    <p>2</p>
-                                                </div>
-                                            </div>
-                                        </div>
-    
-
-                                    </div>
-
-
-                            {% comment %}  {% endcomment %}
-                            <div class="job-status-div-2">
-                                <div class="job-status-div-text">
-                                    <p>Status</p>
-
-                                </div>
-
-                                <div class="checkbox-div">
-                                    <div class="checkbox-1">
-                                        <div class="checkbox-1-1">
-                                        <input type="checkbox" class="input-check"/>
-                                        <p>Applied</p> 
-                                        </div>
-                                        <div class="checkbox-1-count">
-                                            <p>1</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="checkbox-1">
-                                        <div class="checkbox-1-1">
-                                        <input type="checkbox" class="input-check"/>
-                                        <p>Viewed</p> 
-                                        </div>
-                                        <div class="checkbox-1-count">
-                                            <p>1</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="checkbox-1">
-                                        <div class="checkbox-1-1">
-                                        <input type="checkbox" class="input-check"/>
-                                        <p>Shortlisted</p> 
-                                        </div>
-                                        <div class="checkbox-1-count">
-                                            <p>2</p>
-                                        </div>
-                                    </div>
-                                    <div class="checkbox-1">
-                                        <div class="checkbox-1-1">
-                                        <input type="checkbox" class="input-check"/>
-                                        <p>Interviewes</p> 
-                                        </div>
-                                        <div class="checkbox-1-count">
-                                            <p>2</p>
-                                        </div>
-                                    </div>
-                                    <div class="checkbox-1">
-                                        <div class="checkbox-1-1">
-                                        <input type="checkbox" class="input-check"/>
-                                        <p>Selected</p> 
-                                        </div>
-                                        <div class="checkbox-1-count">
-                                            <p>2</p>
-                                        </div>
-                                    </div>
-                                    <div class="checkbox-1">
-                                        <div class="checkbox-1-1">
-                                        <input type="checkbox" class="input-check"/>
-                                        <p>Offered</p> 
-                                        </div>
-                                        <div class="checkbox-1-count">
-                                            <p>2</p>
-                                        </div>
-                                    </div>
-                                    <div class="checkbox-1">
-                                        <div class="checkbox-1-1">
-                                        <input type="checkbox" class="input-check"/>
-                                        <p>Rejected</p> 
-                                        </div>
-                                        <div class="checkbox-1-count">
-                                            <p>2</p>
-                                        </div>
-                                    </div>
-                                    <div class="checkbox-1">
-                                        <div class="checkbox-1-1">
-                                        <input type="checkbox" class="input-check"/>
-                                        <p>Hired</p> 
-                                        </div>
-                                        <div class="checkbox-1-count">
-                                            <p>2</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
-
-
-
-                                
-
-                            </div>
-                            {% comment %}  {% endcomment %}
-
-                                    {% comment %} <button name="filter_jobs" type="submit" class="filter-button">Filter</button> {% endcomment %}
-
-                                    <div class="job-status-div">
-                                        <div class="job-status-div-text">
-                                            <p>Other candidates</p>
-    
-    
-                                        </div>
-                                        <div class="checkbox-div">
-                                            <div class="checkbox-1">
-                                                <div class="checkbox-1-1">
-                                                   <input type="checkbox" class="input-check"/>
-                                                   <p>Saved</p> 
-                                                </div>
-                                                <div class="checkbox-1-count">
-                                                    <p>1</p>
-                                                </div>
-                                            </div>
-    
-                                            <div class="checkbox-1">
-                                                <div class="checkbox-1-1">
-                                                   <input type="checkbox" class="input-check"/>
-                                                   <p>Unlisted</p> 
-                                                </div>
-                                                <div class="checkbox-1-count">
-                                                    <p>1</p>
-                                                </div>
-                                            </div>
-    
-                                        </div>
-    
-    
-    
-    
-    
-    
-                                        
-    
-                                    </div>
-
-                                    <button name="filter_jobs" type="submit" class="filter-button">Filter</button>
-
-
-
-                                
-
-                            </form>
-
-                        </div>
-                        
-
-
-
-
-
-
-
-                    </div>
-                    <div class="list-right">
-                        <div class="right-div">
-                            <div class="m-right-top">
-                                <button class="text buttons">+ Publish vacancy</button>
-                            </div>
-
-                            <section class="navigation-header" style="margin-bottom: 15px;">
-                                <div class="navigation-header-1">
-                                        {% comment %} <a class="navigation-header-1-1 {% if request.resolver_match.kwargs.page == 'package' %}active{% endif %}" href="{% url 'recruiters:admin_control' page="package" %}">All candidates</a>
-                                        <a class="navigation-header-1-1 {% if request.resolver_match.kwargs.page == 'subuser' %}active{% endif %}" href="{% url 'recruiters:admin_control' page="subuser" %}">Offered</a>
-                                        <a class="navigation-header-1-1 {% if request.resolver_match.kwargs.page == 'activity' %}active{% endif %}" href="{% url 'recruiters:admin_control' page="activity" %}">Onboarding</a> {% endcomment %}
-                                        <a class="navigation-header-1-1 {% if request.resolver_match.url_name == 'hiring_tracker' %}active{% endif %}" href="{% url 'recruiters:hiring_tracker'  %}">All candidates</a>
-                                        <a class="navigation-header-1-1 {% if request.resolver_match.kwargs.page == 'subuser' %}active{% endif %}" href="{% url 'recruiters:hiring_tracker' %}">Offered</a>
-                                        <a class="navigation-header-1-1 {% if request.resolver_match.kwargs.page == 'activity' %}active{% endif %}" href="{% url 'recruiters:hiring_tracker' %}">Onboarding</a>
-                                </div>
-                                <div class="navigation-header-2">
-                                    <div class="navigation-header-input-div">
-                                        <input type="text" placeholder="Search">
-                                        <i class="fa-solid fa-magnifying-glass"></i>
-                                    </div>
-                                    
-                                </div>
-                            </section>
-
-
-
-{% comment %} 
-
-                            <div class="right-middle">
-                                <div class="select">
-                               <input type="checkbox" class="check"/>
-                                    <p>Select All</p> 
-                                </div>
-                                <select class="post-date-clicking">
-                                    <option>Posted date: newest</option>
-                                    <option>Posted date: oldest</option>
-                                    <option>Job title: A - Z</option>
-                                    <option>Job title: Z - A</option>
-                                </select>
-
-                            </div> {% endcomment %}
-
-                            <span class="total-candidates">
-                                1 - 5 of 5 
-                                <strong>General Manager</strong> Roles
-                            </span>
-
-{% comment %} 
-                            <div class="right-box-1">
-                                <div class="right-box-1-content">
-                                    <div class="c-box-1">
-                                        <div class="support">
-                                            <div class="input-text">
-                                            <input type="checkbox" class="check"/> 
-                                                <div class="c-1-text">
-                                                    <p class="text-1">Support Engineer</p>
-                                                    <p class="text-2">Ahmedabad</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="Expired">
-                                            <p>Expired</p>
-                                            <i class="fa-regular fa-clock"></i>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="c-box-2">
-                                        <div class="num-1">
-                                            <p class="num">7</p>
-                                            <p class="num-text">Viewed</p>
-                                        </div>
-                                        <div class="num-2">
-                                            <p class="num">7</p>
-                                            <p class="num-text">Action</p>
-                                        </div>
-                                        <div class="num-3">
-                                            <p class="num">54</p>
-                                            <p class="num-text">Applied</p>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="c-box-3">
-                                        <div class="Report">
-                                            <p>Report</p>
-                                            <i class="fa-solid fa-ellipsis-vertical" id="c-3-show"></i>
-                                        </div>
-                                        <div class="c-3-postion" id="c-3-post">
-                                            <div class="c-3-postion-1">
-                                                <a>Preview Post</a>
-                                            </div>
-                                            <div class="c-3-postion-2">
-                                                <a>Close vacancy</a>
-                                            </div>
-                                        </div>
-                                        <div class="date">
-                                            <p>Post By Me:20 Jan 2025</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="hightlight">
-                                    <p class="one">The job posting has expired would you like to .</p>
-                                    <p></p>
-
-                                    <p class="underline two">Repost it </p><p></p>
-                                    <p class="three">. or </p><p></p>
-                                    <p class="underline four"> . Closed it ?</p>
-                                </div>
-                            </div>
- {% endcomment %}
-
-
-
-
-
-
- <div class="job-card">
-    <div class="job-header">
-        <div>
-            <h2>Naveen M</h2>
-            <p class="company-name">General Manager</p>
-        </div>
-        
-        {% comment %} <div onclick="window.location='/status/applied';" class="apply-job">View</div> {% endcomment %}
-        <div onclick="#" class="apply-job">View</div>
-        
-    </div>
-
-    <div class="job-details">
-
-          <p class="details-row">
-            <span><i class="fas fa-briefcase"></i>2 years 4 months</span>
-            <span><i class="fa fa-indian-rupee-sign"></i>35000/Month</span>
-            <span><i class="fa fa-gener"></i>Gender : Male</span>
-            <span><i class="fa fa-age"></i>Age : 25</span>
-          </p>
-        <div class="skills">
-            
-
-            <span class="key-skills">Strategic planning</span>
-            <span class="key-skills">Financial Management</span>
-            <span class="key-skills">Interpersonal communication</span>
-            <span class="key-skills">Decision-making</span>
-        </div>
-        <p3 class="description">
-            <span style="display: inline-block;width: 20%;">Education</span>
-            <span style="display: inline-block;width: 70%;">Diplamo/ITI , Don bosco disloma and polytechnic college , 2022</span>
-
-        </p3>
-        <p3 class="description">
-            <span style="display: inline-block;width: 20%;">Pref. Location</span>
-            <span style="display: inline-block;width: 70%;">Chennai , Prefer to relocate</span>
-
-        </p3>
-        <p3 class="description">
-            <span style="display: inline-block;width: 20%;">known languages </span>
-            <span style="display: inline-block;width: 70%;">English(R,W,S) , Tamil(R,W,S) , Hindi(S)</span>
-
-        </p3>
-    </div>
-
-    <div class="job-footer">
-        <span>Last seen : 1&nbsp;week, 3&nbsp;days ago</span>
-        <span>Last update : 1&nbsp;week, 3&nbsp;days ago</span>
-        <form method="POST" action="/bookmark/">
-            <input type="hidden" name="csrfmiddlewaretoken" value="aXbM0paAFEsbcLgIuSmqrY4TbD8IKhjYqOvWLNCBdtFvq3tj6RKDKhAMnkk7llHA">
-            <input type="hidden" value="web-msi-fe2dfff8" name="slug">
-            <input type="checkbox" id="save4" class="bookmark-checkbox">
-            <label for="save4">
-                <button type="submit" class="save_job" name="save_job"><i class="fa-solid fa-user-slash bookmark-icon"></i><span class="save-text">Unlist<span></span></span></button>
-                
-            </label>
-            <span class="divider"></span>
-            <input type="checkbox" id="save4" class="bookmark-checkbox">
-            <label for="save4">
-                <button type="submit" class="save_job" name="save_job"><i class="fa-solid fa-bookmark bookmark-icon"></i><span class="save-text">Save<span></span></span></button>
-                
-            </label>
-        </form>
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-
-{% comment %}  {% endcomment %}
- <div class="job-card">
-    <div class="job-header">
-        <div>
-            <h2>Suresh B</h2>
-            <p class="company-name">General Manager</p>
-        </div>
-        
-        {% comment %} <div onclick="window.location='/status/applied';" class="apply-job">View</div> {% endcomment %}
-        <div onclick="#" class="apply-job">View</div>
-        
-    </div>
-
-    <div class="job-details">
-
-          <p class="details-row">
-            <span><i class="fas fa-briefcase"></i>2 years 4 months</span>
-            <span><i class="fa fa-indian-rupee-sign"></i>35000/Month</span>
-            <span><i class="fa fa-gener"></i>Gender : Male</span>
-            <span><i class="fa fa-age"></i>Age : 25</span>
-          </p>
-        <div class="skills">
-            
-
-            <span class="key-skills">Strategic planning</span>
-            <span class="key-skills">Financial Management</span>
-            <span class="key-skills">Interpersonal communication</span>
-            <span class="key-skills">Decision-making</span>
-        </div>
-        <p3 class="description">
-            <span style="display: inline-block;width: 20%;">Education</span>
-            <span style="display: inline-block;width: 70%;">Diplamo/ITI , Don bosco disloma and polytechnic college , 2022</span>
-
-        </p3>
-        <p3 class="description">
-            <span style="display: inline-block;width: 20%;">Pref. Location</span>
-            <span style="display: inline-block;width: 70%;">Chennai , Prefer to relocate</span>
-
-        </p3>
-        <p3 class="description">
-            <span style="display: inline-block;width: 20%;">known languages </span>
-            <span style="display: inline-block;width: 70%;">English(R,W,S) , Tamil(R,W,S) , Hindi(S)</span>
-
-        </p3>
-    </div>
-
-    <div class="job-footer">
-        <span>Last seen : 1&nbsp;week, 3&nbsp;days ago</span>
-        <span>Last update : 1&nbsp;week, 3&nbsp;days ago</span>
-        <form method="POST" action="/bookmark/">
-            <input type="hidden" name="csrfmiddlewaretoken" value="aXbM0paAFEsbcLgIuSmqrY4TbD8IKhjYqOvWLNCBdtFvq3tj6RKDKhAMnkk7llHA">
-            <input type="hidden" value="web-msi-fe2dfff8" name="slug">
-            <input type="checkbox" id="save4" class="bookmark-checkbox">
-            <label for="save4">
-                <button type="submit" class="save_job" name="save_job"><i class="fa-solid fa-user-slash bookmark-icon"></i><span class="save-text">Unlist<span></span></span></button>
-                
-            </label>
-            <span class="divider"></span>
-            <input type="checkbox" id="save4" class="bookmark-checkbox">
-            <label for="save4">
-                <button type="submit" class="save_job" name="save_job"><i class="fa-solid fa-bookmark bookmark-icon"></i><span class="save-text">Save<span></span></span></button>
-                
-            </label>
-        </form>
-        
-    </div>
-</div>
-{% comment %}  {% endcomment %}
-
-{% comment %}  {% endcomment %}
- <div class="job-card">
-    <div class="job-header">
-        <div>
-            <h2>Seger B</h2>
-            <p class="company-name">General Manager</p>
-        </div>
-        
-        {% comment %} <div onclick="window.location='/status/applied';" class="apply-job">View</div> {% endcomment %}
-        <div onclick="#" class="apply-job">View</div>
-        
-    </div>
-
-    <div class="job-details">
-
-          <p class="details-row">
-            <span><i class="fas fa-briefcase"></i>2 years 4 months</span>
-            <span><i class="fa fa-indian-rupee-sign"></i>35000/Month</span>
-            <span><i class="fa fa-gener"></i>Gender : Male</span>
-            <span><i class="fa fa-age"></i>Age : 25</span>
-          </p>
-        <div class="skills">
-            
-
-            <span class="key-skills">Strategic planning</span>
-            <span class="key-skills">Financial Management</span>
-            <span class="key-skills">Interpersonal communication</span>
-            <span class="key-skills">Decision-making</span>
-        </div>
-        <p3 class="description">
-            <span style="display: inline-block;width: 20%;">Education</span>
-            <span style="display: inline-block;width: 70%;">Diplamo/ITI , Don bosco disloma and polytechnic college , 2022</span>
-
-        </p3>
-        <p3 class="description">
-            <span style="display: inline-block;width: 20%;">Pref. Location</span>
-            <span style="display: inline-block;width: 70%;">Chennai , Prefer to relocate</span>
-
-        </p3>
-        <p3 class="description">
-            <span style="display: inline-block;width: 20%;">known languages </span>
-            <span style="display: inline-block;width: 70%;">English(R,W,S) , Tamil(R,W,S) , Hindi(S)</span>
-
-        </p3>
-    </div>
-
-    <div class="job-footer">
-        <span>Last seen : 1&nbsp;week, 3&nbsp;days ago</span>
-        <span>Last update : 1&nbsp;week, 3&nbsp;days ago</span>
-        <form method="POST" action="/bookmark/">
-            <input type="hidden" name="csrfmiddlewaretoken" value="aXbM0paAFEsbcLgIuSmqrY4TbD8IKhjYqOvWLNCBdtFvq3tj6RKDKhAMnkk7llHA">
-            <input type="hidden" value="web-msi-fe2dfff8" name="slug">
-            <input type="checkbox" id="save4" class="bookmark-checkbox">
-            <label for="save4">
-                <button type="submit" class="save_job" name="save_job"><i class="fa-solid fa-user-slash bookmark-icon"></i><span class="save-text">Unlist<span></span></span></button>
-                
-            </label>
-            <span class="divider"></span>
-            <input type="checkbox" id="save4" class="bookmark-checkbox">
-            <label for="save4">
-                <button type="submit" class="save_job" name="save_job"><i class="fa-solid fa-bookmark bookmark-icon"></i><span class="save-text">Save<span></span></span></button>
-                
-            </label>
-        </form>
-        
-    </div>
-</div>
-{% comment %}  {% endcomment %}
- <div class="job-card">
-    <div class="job-header">
-        <div>
-            <h2>Rohit S</h2>
-            <p class="company-name">General Manager</p>
-        </div>
-        
-        {% comment %} <div onclick="window.location='/status/applied';" class="apply-job">View</div> {% endcomment %}
-        <div onclick="#" class="apply-job">View</div>
-        
-    </div>
-
-    <div class="job-details">
-
-          <p class="details-row">
-            <span><i class="fas fa-briefcase"></i>2 years 4 months</span>
-            <span><i class="fa fa-indian-rupee-sign"></i>35000/Month</span>
-            <span><i class="fa fa-gener"></i>Gender : Male</span>
-            <span><i class="fa fa-age"></i>Age : 25</span>
-          </p>
-        <div class="skills">
-            
-
-            <span class="key-skills">Strategic planning</span>
-            <span class="key-skills">Financial Management</span>
-            <span class="key-skills">Interpersonal communication</span>
-            <span class="key-skills">Decision-making</span>
-        </div>
-        <p3 class="description">
-            <span style="display: inline-block;width: 20%;">Education</span>
-            <span style="display: inline-block;width: 70%;">Diplamo/ITI , Don bosco disloma and polytechnic college , 2022</span>
-
-        </p3>
-        <p3 class="description">
-            <span style="display: inline-block;width: 20%;">Pref. Location</span>
-            <span style="display: inline-block;width: 70%;">Chennai , Prefer to relocate</span>
-
-        </p3>
-        <p3 class="description">
-            <span style="display: inline-block;width: 20%;">known languages </span>
-            <span style="display: inline-block;width: 70%;">English(R,W,S) , Tamil(R,W,S) , Hindi(S)</span>
-
-        </p3>
-    </div>
-
-    <div class="job-footer">
-        <span>Last seen : 1&nbsp;week, 3&nbsp;days ago</span>
-        <span>Last update : 1&nbsp;week, 3&nbsp;days ago</span>
-        <form method="POST" action="/bookmark/">
-            <input type="hidden" name="csrfmiddlewaretoken" value="aXbM0paAFEsbcLgIuSmqrY4TbD8IKhjYqOvWLNCBdtFvq3tj6RKDKhAMnkk7llHA">
-            <input type="hidden" value="web-msi-fe2dfff8" name="slug">
-            <input type="checkbox" id="save4" class="bookmark-checkbox">
-            <label for="save4">
-                <button type="submit" class="save_job" name="save_job"><i class="fa-solid fa-user-slash bookmark-icon"></i><span class="save-text">Unlist<span></span></span></button>
-                
-            </label>
-            <span class="divider"></span>
-            <input type="checkbox" id="save4" class="bookmark-checkbox">
-            <label for="save4">
-                <button type="submit" class="save_job" name="save_job"><i class="fa-solid fa-bookmark bookmark-icon"></i><span class="save-text">Save<span></span></span></button>
-                
-            </label>
-        </form>
-        
-    </div>
-</div>
-{% comment %}  {% endcomment %}
- <div class="job-card">
-    <div class="job-header">
-        <div>
-            <h2>Sumesh V</h2>
-            <p class="company-name">General Manager</p>
-        </div>
-        
-        {% comment %} <div onclick="window.location='/status/applied';" class="apply-job">View</div> {% endcomment %}
-        <div onclick="#" class="apply-job">View</div>
-        
-    </div>
-
-    <div class="job-details">
-
-          <p class="details-row">
-            <span><i class="fas fa-briefcase"></i>2 years 4 months</span>
-            <span><i class="fa fa-indian-rupee-sign"></i>35000/Month</span>
-            <span><i class="fa fa-gener"></i>Gender : Male</span>
-            <span><i class="fa fa-age"></i>Age : 25</span>
-          </p>
-        <div class="skills">
-            
-
-            <span class="key-skills">Strategic planning</span>
-            <span class="key-skills">Financial Management</span>
-            <span class="key-skills">Interpersonal communication</span>
-            <span class="key-skills">Decision-making</span>
-        </div>
-        <p3 class="description">
-            <span style="display: inline-block;width: 20%;">Education</span>
-            <span style="display: inline-block;width: 70%;">Diplamo/ITI , Don bosco disloma and polytechnic college , 2022</span>
-
-        </p3>
-        <p3 class="description">
-            <span style="display: inline-block;width: 20%;">Pref. Location</span>
-            <span style="display: inline-block;width: 70%;">Chennai , Prefer to relocate</span>
-
-        </p3>
-        <p3 class="description">
-            <span style="display: inline-block;width: 20%;">known languages </span>
-            <span style="display: inline-block;width: 70%;">English(R,W,S) , Tamil(R,W,S) , Hindi(S)</span>
-
-        </p3>
-    </div>
-
-    <div class="job-footer">
-        <span>Last seen : 1&nbsp;week, 3&nbsp;days ago</span>
-        <span>Last update : 1&nbsp;week, 3&nbsp;days ago</span>
-        <form method="POST" action="/bookmark/">
-            <input type="hidden" name="csrfmiddlewaretoken" value="aXbM0paAFEsbcLgIuSmqrY4TbD8IKhjYqOvWLNCBdtFvq3tj6RKDKhAMnkk7llHA">
-            <input type="hidden" value="web-msi-fe2dfff8" name="slug">
-            <input type="checkbox" id="save4" class="bookmark-checkbox">
-            <label for="save4">
-                <button type="submit" class="save_job" name="save_job"><i class="fa-solid fa-user-slash bookmark-icon"></i><span class="save-text">Unlist<span></span></span></button>
-                
-            </label>
-            <span class="divider"></span>
-            <input type="checkbox" id="save4" class="bookmark-checkbox">
-            <label for="save4">
-                <button type="submit" class="save_job" name="save_job"><i class="fa-solid fa-bookmark bookmark-icon"></i><span class="save-text">Save<span></span></span></button>
-                
-            </label>
-        </form>
-        
-    </div>
-</div>
-{% comment %}  {% endcomment %}
-
-
-
-
-
-
-
-
-{% comment %} 
-
-                            <div class="right-box-1">
-                                <div class="right-box-1-content">
-                                    <div class="c-box-1">
-                                        <div class="support">
-                                            <div class="input-text">
-                                              <input type="checkbox" class="check"/> 
-                                                <div class="c-1-text">
-                                                    <p class="text-1">Support Engineer</p>
-                                                    <p class="text-2">Ahmedabad</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="Expired">
-                                            <p>Expired</p>
-                                            <i class="fa-regular fa-clock"></i>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="c-box-2">
-                                        <div class="num-1">
-                                            <p class="num">7</p>
-                                            <p class="num-text">Viewed</p>
-                                        </div>
-                                        <div class="num-2">
-                                            <p class="num">7</p>
-                                            <p class="num-text">Action</p>
-                                        </div>
-                                        <div class="num-3">
-                                            <p class="num">54</p>
-                                            <p class="num-text">Applied</p>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="c-box-3">
-                                        <div class="Report">
-                                            <p>Report</p>
-                                            <i class="fa-solid fa-ellipsis-vertical" id="c-3-show"></i>
-                                        </div>
-                                        <div class="c-3-postion" id="c-3-post">
-                                            <div class="c-3-postion-1">
-                                                <a>Preview Post</a>
-                                            </div>
-                                            <div class="c-3-postion-2">
-                                                <a>Close vacancy</a>
-                                            </div>
-                                        </div>
-                                        <div class="date">
-                                            <p>Post By Me:20 Jan 2025</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="hightlight">
-                                    <p class="one">The job posting has expired would you like to .</p>
-                                    <p></p>
-
-                                    <p class="underline two">Repost it </p><p></p>
-                                    <p class="three">. or </p><p></p>
-                                    <p class="underline four"> . Closed it ?</p>
-                                </div>
-                            </div> {% endcomment %}
-
-                            
-                        </div>
-                    </div>
-
+  <div class="r-right-down-main">
+    <div class="r-down-main">
+      <div class="list-main">
+        <div class="list-left">
+          <div class="form">
+            <form method="post" action="#">
+              <div class="filters-div">
+                <i class="fa-solid fa-arrow-down-wide-short"></i>
+                <h1>Filters</h1>
+              </div>
+              <div class="input-div">
+                <input type="text" class="input" placeholder="Hire request, HR ID.." />
+              </div>
+
+              <div class="job-status-div">
+                <div class="job-status-div-text">
+                  <p>Hire Request</p>
                 </div>
-
-
-
-
-
-                
-            </div>
-
-
-
-            </div>
-
-
-    {% endblock content %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    {% block mobile_view %}
-    <div class="m1-filter-div" id="m1-filter-div">
-        <div class="m-list-left">
-                            
-            <div class="form">
-                <form method="post" action="#">
-                    <div class="filters-div">
-                        <i class="fa-solid fa-arrow-down-wide-short"></i>
-                        <h1>Filters</h1>
-                        <div class="x-mark" id="x-mark" onclick="mobileView(false)">
-                            <p class="X">X</p>
-                        </div>
+                <div class="checkbox-div">
+                  <div class="checkbox-1">
+                    <div class="checkbox-1-1">
+                      <input type="checkbox" class="input-check" />
+                      <p>Web developer</p>
                     </div>
-                    
-                    <div class="input-div">
-                       <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
+                    <div class="checkbox-1-count">
+                      <p>103</p>
+                      <i class="fa-solid fa-angle-down" id="job-open"></i>
+                    </div>
+                  </div>
 
+                  <div class="show-info-div" id="show-info-div">
+                    <div class="checkbox-1">
+                      <div class="checkbox-1-1">
+                        <input type="checkbox" class="input-check" />
+                        <p>Backend developer</p>
+                      </div>
+                      <div class="checkbox-1-count">
+                        <p>1001</p>
+                      </div>
                     </div>
 
-                    <div class="job-status-div">
-                        <div class="job-status-div-text">
-                            <p>Job Status</p>
-                            <i class="fa-solid fa-angle-down"></i>
-
-                        </div>
-                        <div class="checkbox-div">
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>Active Jobs</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>1</p>
-                                </div>
-                            </div>
-
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>Expired Jobs</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>1</p>
-                                </div>
-                            </div>
-
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>Closed Jobs</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>2</p>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-
-
-
-                        
-
+                    <div class="checkbox-1">
+                      <div class="checkbox-1-1">
+                        <input type="checkbox" class="input-check" />
+                        <p>FrontEnd developer</p>
+                      </div>
+                      <div class="checkbox-1-count">
+                        <p>1002</p>
+                      </div>
                     </div>
+                  </div>
 
-
-
-
-                    <div class="job-status-div-2">
-                        <div class="job-status-div-text">
-                            <p>Job Posted By</p>
-                            <i class="fa-solid fa-angle-down"></i>
-
-                        </div>
-                        <div class="input-div-down">
-                            <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
-                        </div>
-                        <div class="checkbox-div">
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>Recruiter name</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>1</p>
-                                </div>
-                            </div>
-
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>Recruiter name</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>1</p>
-                                </div>
-                            </div>
-
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>Recruiter name</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>2</p>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-
-
-
-                        
-
+                  <div class="checkbox-1">
+                    <div class="checkbox-1-1">
+                      <input type="checkbox" class="input-check" />
+                      <p>SQL Administrator</p>
                     </div>
-
-
-
-
-                    <div class="job-status-div-3">
-                        <div class="job-status-div-text">
-                            <p>Job Tittle</p>
-                            <i class="fa-solid fa-angle-down"></i>
-
-                        </div>
-                        <div class="input-div-down">
-                            <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
-                        </div>
-                        <div class="checkbox-div">
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>App developer</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>1</p>
-                                </div>
-                            </div>
-
-                            
-                        </div>
-
-
-
-
-
-
-                        
-
+                    <div class="checkbox-1-count">
+                      <p>101</p>
                     </div>
+                  </div>
 
-
-
-                    
-
-                </form>
-
-            </div>
-            
-
-
-
-
-
-
-
+                  <div class="checkbox-1">
+                    <div class="checkbox-1-1">
+                      <input type="checkbox" class="input-check" />
+                      <p>Cloud Engineer</p>
+                    </div>
+                    <div class="checkbox-1-count">
+                      <p>102</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
+        <div class="list-right-table">
+          <div class="right-div-table">
+            {% comment %} <div class="new-hire-request-search">
+              <div class="new-hire-request-parent">
+                <select class="new-hire-request-div" name="" id="">
+                  <option value="All Hire Request">All Hire Request</option>
+                  <option value="New Hire Request">New Hire Request</option>
+                  <option value="Opened Hire Request">Opened Hire Request</option>
+                  <option value="Closed Hire Request">Closed Hire Request</option>
+                </select>
 
+                <div class="dev-text">
+                  <p>web Developer , support Engineer</p>
+                </div>
+                <div class="checkbox-1-table">
+                  {% comment %} <div class="checkbox-1-1-table">
+                    <input type="checkbox" class="input-check" />
+                    <p>select All</p>
+                  </div>
+                  <div class="checkbox-1-count-table">
+                    <button>Delete</button>
+                  </div>
+                   <div class="count-card">Opened Position 3 / 5</div>
+                  <div class="count-card">Opened Hire request 3 / 5</div> 
+                </div>
+              </div>
+
+              <div class="new-hire-request-parent">
+                <div class="navigation-header-input-div-table">
+                  <input type="text" placeholder="Search" id="count-words" />
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <div class="input-count-btn">
+                  <div class="input-count-div">
+                    {% comment %} <p id="char-count">0/500 char</p>
+                  </div>
+                  <div class="dropdown">
+                    <button class="dropbtn">+</button>
+                    <div class="dropdown-content">
+                      <a href="#" id="openNewPositionModel" class="open-modal-btn" data-modal-id="newPositionModel">New Position</a>
+                      <a href="#" id="openNewHireRequest" class="open-modal-btn" data-modal-id="newHireRequest">New Hire Request</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> {% endcomment %}
+            <div class="flex-end">
+              <button class="top-button"
+                 hx-post="#"
+                hx-vals='{"get_position_form": ""}'
+                hx-target="#HtmxModal"
+                hx-trigger="click"
+                hx-swap="innerHTML"
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+              >Create Position</button>
+            </div>
+            <div class="table-container" id="table-container">
+              {% include 'recruiters/htmx/positionShow.html' %}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-{% endblock mobile_view %}
+
+
+{% endblock %}
+
+{% block mobile_view %}
+  <div class="m1-filter-div" id="m1-filter-div">
+    <div class="m-list-left">
+      <div class="form">
+        <form method="post" action="#">
+          <div class="filters-div">
+            <i class="fa-solid fa-arrow-down-wide-short"></i>
+            <h1>Filters</h1>
+            <div class="x-mark" id="x-mark" onclick="mobileView(false)">
+              <p class="X">X</p>
+            </div>
+          </div>
+
+          <div class="input-div">
+            <input type="text" class="input" placeholder=" Search Title,Job Id..." />
+          </div>
+
+          <div class="job-status-div">
+            <div class="job-status-div-text">
+              <p>Job Status</p>
+              <i class="fa-solid fa-angle-down"></i>
+            </div>
+            <div class="checkbox-div">
+              <div class="checkbox-1">
+                <div class="checkbox-1-1">
+                  <input type="checkbox" class="input-check" />
+                  <p>Active Jobs</p>
+                </div>
+                <div class="checkbox-1-count">
+                  <p>1</p>
+                </div>
+              </div>
+
+              <div class="checkbox-1">
+                <div class="checkbox-1-1">
+                  <input type="checkbox" class="input-check" />
+                  <p>Expired Jobs</p>
+                </div>
+                <div class="checkbox-1-count">
+                  <p>1</p>
+                </div>
+              </div>
+
+              <div class="checkbox-1">
+                <div class="checkbox-1-1">
+                  <input type="checkbox" class="input-check" />
+                  <p>Closed Jobs</p>
+                </div>
+                <div class="checkbox-1-count">
+                  <p>2</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="job-status-div-2">
+            <div class="job-status-div-text">
+              <p>Job Posted By</p>
+              <i class="fa-solid fa-angle-down"></i>
+            </div>
+            <div class="input-div-down">
+              <input type="text" class="input" placeholder=" Search Title,Job Id..." />
+            </div>
+            <div class="checkbox-div">
+              <div class="checkbox-1">
+                <div class="checkbox-1-1">
+                  <input type="checkbox" class="input-check" />
+                  <p>Recruiter name</p>
+                </div>
+                <div class="checkbox-1-count">
+                  <p>1</p>
+                </div>
+              </div>
+
+              <div class="checkbox-1">
+                <div class="checkbox-1-1">
+                  <input type="checkbox" class="input-check" />
+                  <p>Recruiter name</p>
+                </div>
+                <div class="checkbox-1-count">
+                  <p>1</p>
+                </div>
+              </div>
+
+              <div class="checkbox-1">
+                <div class="checkbox-1-1">
+                  <input type="checkbox" class="input-check" />
+                  <p>Recruiter name</p>
+                </div>
+                <div class="checkbox-1-count">
+                  <p>2</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="job-status-div-3">
+            <div class="job-status-div-text">
+              <p>Job Tittle</p>
+              <i class="fa-solid fa-angle-down"></i>
+            </div>
+            <div class="input-div-down">
+              <input type="text" class="input" placeholder=" Search Title,Job Id..." />
+            </div>
+            <div class="checkbox-div">
+              <div class="checkbox-1">
+                <div class="checkbox-1-1">
+                  <input type="checkbox" class="input-check" />
+                  <p>App developer</p>
+                </div>
+                <div class="checkbox-1-count">
+                  <p>1</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  {% include 'recruiters/SubFileForApi/position-new.html' %}
+  {% include 'recruiters/SubFileForApi/position-new-hire-request.html' %}
+
+  <script src="{% static 'js/recruiters/position-manager.js' %}"></script>
+  <script src="{% static 'js/cookie/js.cookie.min.js' %}"></script>
+
+{% comment %} for JD {% endcomment %}
+<script>
+  document.body.addEventListener('htmx:beforeRequest', function (event) {
+    startLoading();  
+  });
+
+  document.body.addEventListener('htmx:afterRequest', function (event) {
+    stopLoading();  
+  });
+
+  document.body.addEventListener('htmx:afterOnLoad', function (event) {
+    checkIfFullPage(event);        
+    const responseTarget = event.detail.target;
+
+
+    // Check if modal dialog is present in the injected response
+    if (responseTarget.querySelector('.modal-dialog')) {
+        console.log('Opening modal...');
+        openHtmxModalButton();
+    } else {
+        console.log('Closing modal...');
+        closeHtmxModalButton();
+    }
+
+
+
+  });
+</script>  
+  
+  <script>
+
+
+    document.body.addEventListener('htmx:responseError', function (event) {
+      const xhr = event.detail.xhr
+      const contentType = xhr.getResponseHeader('Content-Type')
+    
+      if (contentType && contentType.includes('application/json')) {
+        let messages
+        try {
+          messages = JSON.parse(xhr.responseText)
+        } catch (e) {
+          messages = { Error: { messages: ['An unknown error occurred.'], level: 'error' } }
+        }
+    
+        // Call your message display function
+        displayHtmxMessages(messages)
+        console.log(messages)
+      } else {
+        console.warn('Expected JSON response, got:', xhr.responseText)
+        // Optional fallback for HTML or plain text errors
+        displayHtmxMessages({
+          Server: {
+            messages: [xhr.responseText || 'Unexpected error occurred.'],
+            level: 'error'
+          }
+        })
+        console.log(messages)
+      }
+    })
+    
+    document.body.addEventListener('htmx:afterSwap', function (event) {
+      // Optional: limit to only the modal content
+      if (event.target.id === 'HtmxModal') {
+
+        // Delay execution slightly to allow DOM to fully render
+        setTimeout(() => {
+          if (typeof initializeQuillEditor === 'function') {
+            initializeQuillEditor();
+          }
+          if (typeof displayData === 'function') {
+            displayData();
+          } // run your initialization
+        }, 50) // 50ms is usually safe
+      }
+    })
+  </script>
+
+  <style>
+    .multi-select-container {
+      width: inherit;
+      margin: 10px 0 10px 0;
+      font-family: sans-serif;
+      position: relative;
+    }
+    
+    .selected-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 5px;
+    }
+    
+    .tag {
+      padding: 4px 8px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      height: 38px;
+      border-radius: 50px;
+      background-color: #ffbd03;
+      color: #000000;
+      border-color: #ffbd03;
+    }
+    
+    .tag button {
+      margin-left: 5px;
+      background: transparent;
+      color: #000;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 6px;
+      box-sizing: border-box;
+    }
+    
+    .dropdown-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ccc;
+      max-height: 150px;
+      overflow-y: auto;
+      z-index: 1051;
+    }
+    
+    .dropdown-item {
+      padding: 6px;
+      cursor: pointer;
+    }
+    
+    .dropdown-item:hover {
+      background: #f0f0f0;
+    }
+  </style>
+{% endblock %}
