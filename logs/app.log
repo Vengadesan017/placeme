@@ -7740,3 +7740,4 @@ TypeError: 'RelatedManager' object is not iterable
 [2025-07-11 12:31:39,855] [INFO] [django.utils.autoreload] C:\Users\User\Desktop\Hiring Platform Project\SourceCode\placeme\placeme\settings.py changed, reloading.
 [2025-07-11 12:31:41,028] [INFO] [django.utils.autoreload] Watching for file changes with StatReloader
 [2025-07-11 12:32:22,595] [INFO] [django.utils.autoreload] C:\Users\User\Desktop\Hiring Platform Project\SourceCode\placeme\placeme\settings.py changed, reloading.
+[2025-07-11 12:32:23,417] [INFO] [django.utils.autoreload] Watching for file changes with StatReloader
