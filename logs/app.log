@@ -7737,3 +7737,6 @@ TypeError: 'RelatedManager' object is not iterable
 [2025-07-11 12:28:11,824] [INFO] [django.server] "GET /static/js/script.js HTTP/1.1" 200 468
 [2025-07-11 12:28:11,824] [INFO] [django.server] "GET /static/js/modal.js HTTP/1.1" 200 2324
 [2025-07-11 12:28:11,832] [INFO] [django.server] "GET /static/js/error.js HTTP/1.1" 200 3832
+[2025-07-11 12:31:39,855] [INFO] [django.utils.autoreload] C:\Users\User\Desktop\Hiring Platform Project\SourceCode\placeme\placeme\settings.py changed, reloading.
+[2025-07-11 12:31:41,028] [INFO] [django.utils.autoreload] Watching for file changes with StatReloader
+[2025-07-11 12:32:22,595] [INFO] [django.utils.autoreload] C:\Users\User\Desktop\Hiring Platform Project\SourceCode\placeme\placeme\settings.py changed, reloading.
