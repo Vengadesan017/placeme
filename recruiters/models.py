@@ -500,13 +500,14 @@ class HireRequests(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='create_hire_request', null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True,null=True)
-    upadted_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_hire_request', null=True, blank=True)    
+    updated_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_hire_request', null=True, blank=True)    
     deadline = models.DateTimeField(blank=True,null=True)
     is_open = models.BooleanField(default=True)
     is_approve = models.BooleanField(default=False)
     is_reject = models.BooleanField(default=False)
     is_offered = models.BooleanField(default=False)
     is_hire = models.BooleanField(default=False)
+    is_join = models.BooleanField(default=False)
     is_leave = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
@@ -535,8 +536,41 @@ class HireRequests(models.Model):
 
         else:
             super(HireRequests, self).save(*args, **kwargs)
+    def get_status_display(self):
+        from job_seekers.models import Onboarding  
 
+        if self.is_reject:
+            return "Approval Rejected"
+        if self.is_leave:
+            return "Employee Leaved"
+        if self.is_join:
+            return "Employee Joined"
+        if self.is_hire:
+            return "Joining Awaited"
 
+        onboarding = None
+        if self.employee_id and self.company:
+            onboarding = Onboarding.objects.filter(candidate=self.employee_id, company=self.company).first()
+
+        if onboarding:
+            if not onboarding.completed_date:
+                return "Waiting for Candidate to Complete onboarding"
+            if onboarding.completed_date and not onboarding.verified:
+                return "Waiting for Onboarding Approval"
+            if onboarding.verified and not self.is_hire:
+                return "Verify Onboarding"
+
+        if self.employee_id and not self.is_approve:
+            return "Waiting for Approval"
+        if not self.employee_id and self.is_open:
+            return "Candidate Needed"
+        if not self.is_open:
+            return "Awaiting Job Post"
+        return "Closed"
+    def get_tat_days(self):
+        if self.hire_date and self.created_at:
+            return (self.hire_date.date() - self.created_at.date()).days
+        return ""
 
 class EmployeePositionManager(models.Model):  # not needed merge to hire request
     employee_position_id = models.AutoField(primary_key=True)

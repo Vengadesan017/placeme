@@ -3,7 +3,7 @@
         btn.addEventListener('click', function () {
             const modalId = this.dataset.modalId;
             const modal = document.getElementById(modalId);
-
+            console.log()
             modal.classList.remove('hide');
         modal.style.display = 'block';
         // Trigger reflow to enable transition

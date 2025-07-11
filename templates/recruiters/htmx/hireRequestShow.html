@@ -1,0 +1,94 @@
+<table class="recruiters-table">
+  <thead>
+    <tr>
+      <th class="recruiters-th">Hire request</th>
+      <th class="recruiters-th">Opened at</th>
+      <th class="recruiters-th">Candidate</th>
+      <th class="recruiters-th">Status</th>
+      <th class="recruiters-th">TAT</th>
+      <th class="recruiters-th">Actions</th>
+    </tr>
+  </thead>
+  <tbody id="table-body">
+    {% for hire_request in hire_request_obj %}
+      <tr>
+        {% comment %} <td class="recruiters-td">
+          <div class="checkbox-container">
+            <input type="checkbox" id="checkbox-2" />
+            <a href="#">
+              <div class="major"></div>
+              <div class="minor"></div>
+            </a>
+          </div>
+        </td> {% endcomment %}
+        <td class="recruiters-td">
+          <a href="#">
+            <div class="major">{{ hire_request.hire_request_code }}</div>
+            <div class="minor">
+              {{ hire_request.position_group.position_title }} -
+              {{ hire_request.position_group.position_code }}
+            </div>
+          </a>
+        </td>
+        <td class="recruiters-td">{{ hire_request.created_at|date:"d M Y" }}</td>
+        <td class="recruiters-td">
+          {% if not hire_request.is_join %}
+            
+          <a href="#"
+            {% comment %} class="open-modal-btn" {% endcomment %}
+            {% comment %} data-modal-id="HtmxModal" {% endcomment %}
+            hx-post="#"
+            hx-vals='{"edit_candidate_in_hiring_form": "{{ hire_request.hire_request_id }}"}'
+            hx-target="#HtmxModal"
+            hx-trigger="click"
+            hx-swap="innerHTML"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+            <div class="major">
+              {{ hire_request.employee_id.first_name|default:'Assign candidate' }}
+              {{ hire_request.employee_id.last_name|default:'' }}
+              <i class="fa-solid fa-pencil"></i>
+            </div>
+            <div class="minor">
+             {{ hire_request.employee_id.user.email|default:'' }}
+            </div>
+                </a>
+            {% else %}
+            <div class="major">
+              {{ hire_request.employee_id.first_name|default:'' }}
+              {{ hire_request.employee_id.last_name|default:'' }}
+            </div>
+            <div class="minor">
+             {{ hire_request.employee_id.user.email|default:'' }}
+            </div>
+          {% endif %}
+        </td>
+        <td class="recruiters-td">{{ hire_request.get_status_display }}</td>
+        <td class="recruiters-td">{{ hire_request.get_tat_days }}</td>
+
+
+        <td class="recruiters-td">
+          <a href="#" class="action-btn edit-btn"
+            hx-post="#"
+            hx-vals='{"get_hire_request_form": "{{ hire_request.hire_request_id }}"}'
+            hx-target="#HtmxModal"
+            hx-trigger="click"
+            hx-swap="innerHTML"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+            >Edit</a>
+          
+        </td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="6">
+          <center>Sorry No records found!</center>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="6">
+          <center>Lets create Position and generate the hire request to post the job vacancy post</center>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

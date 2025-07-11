@@ -1,4 +1,6 @@
-                    <div class="career-heading">
+{% load currency_filters %}
+
+                        <div class="career-heading">
                         <h4>Compensation and benefits</h4>
                         <div class="career-add-div">
                                 <a href="#"
@@ -19,8 +21,8 @@
 <div class="career-info-list-1">
     <div class="career-info-list-1-1">
         <h4>Current CTC</h4>
-        <p>
-            {{ candidate.present_ctc_amount|floatformat:0|default_if_none:"N/A" }}
+        <p> <i class="fa fa-inr"></i>
+            {{ candidate.present_ctc_amount|inr_format  }}
             {{ candidate.get_present_ctc_type_display|default_if_none:"" }}
         </p>
     </div>
@@ -28,7 +30,8 @@
     <div class="career-info-list-1-1">
         <h4>Current Take Home</h4>
         <p>
-            {{ candidate.present_take_home_amount|floatformat:0|default_if_none:"" }}
+            <i class="fa fa-inr"></i>
+            {{ candidate.present_take_home_amount|inr_format  }}
             {{ candidate.get_present_take_home_type_display|default_if_none:"" }}
         </p>
     </div>
@@ -38,7 +41,8 @@
         <p>
             {% if candidate.work_experience_years %}
                 {{ candidate.work_experience_years|default:0 }} years
-            {% elif candidate.work_experience_months %}
+            {% endif %}
+            {% if candidate.work_experience_months %}
                 {{ candidate.work_experience_months|default:0 }} months
             {% endif %}
         </p>
@@ -49,7 +53,8 @@
     <div class="career-info-list-2-1">
         <h4>Expected CTC</h4>
         <p>
-            {{ candidate.expected_ctc_amount|floatformat:0|default_if_none:"" }}
+            <i class="fa fa-inr"></i>
+            {{ candidate.expected_ctc_amount|inr_format  }}
             {{ candidate.get_expected_ctc_type_display|default_if_none:"" }}
         </p>
     </div>
@@ -57,7 +62,8 @@
     <div class="career-info-list-2-1">
         <h4>Expected Take Home</h4>
         <p>
-            {{ candidate.expected_take_home_amount|floatformat:0|default_if_none:"" }}
+            <i class="fa fa-inr"></i>
+            {{ candidate.expected_take_home_amount|inr_format  }}
             {{ candidate.get_expected_take_home_type_display|default_if_none:"" }}
         </p>
     </div>

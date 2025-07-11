@@ -135,11 +135,7 @@
                 </div>
                 <div class="Perference" id="preference">
                     <div class="Perference-heading">
-                        <h4>Preference</h4>
-                    </div>
-                    <div class="languages">
-                        <div class="flex-space-between">
-                            <h4>Known Languages</h4>
+                        <h4>Language proficiency</h4>
                             <div class="add-div">
                         <a href="#"
                         hx-post="#"
@@ -154,14 +150,15 @@
                                 <i class="fa-solid fa-pen-to-square"></i>
                         </a>
                             </div>
-                        </div>
+                    </div>
+                    <div class="languages">
+
                         <div class="languages-row" id="my_language">
                             {% include "jobseeker/htmx/profileLanguageShow.html" %}
                         </div>
-                        
-                    
-                        <div class="flex-space-between">
-                        <h4>Preferred location</h4>
+                    </div>
+                        <div class="Perference-heading">
+                        <h4>Preferred locations</h4>
                         <div class="add-div">
                                 <a href="#"
                                     hx-post="#"
@@ -183,7 +180,7 @@
                         
                          
                     </div>
-                </div>
+                {% comment %} </div> {% endcomment %}
 
 
 

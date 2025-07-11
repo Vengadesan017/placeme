@@ -115,7 +115,10 @@ def Profile(request):
                 context['my_skills'] = candidate.skill
                 template_name = 'jobseeker/htmx/profileSkillSave.html'
             elif 'get_language_form' in request.POST:
-                context['my_languages'] = UserLanguages.objects.filter(candidate=candidate)
+                user_languages = UserLanguages.objects.filter(candidate=candidate)
+                context['my_languages'] = user_languages
+                if not user_languages.exists():
+                    context['language_form'] = CandidateLanguageUpdateForm()
                 template_name = 'jobseeker/htmx/profileLanguageModal.html'
             elif 'get_location_form' in request.POST:
                 context['states'] = StateForLoc.objects.all()
@@ -440,7 +443,9 @@ def Status(request, page, id=None):
             offer_letter_id = request.POST.get('offer_id')
 
             application = get_object_or_404(JobApplications, id=job_application_id, candidate=candidate)
+            print(application)
             offer = get_object_or_404(OfferLetters, offers_id=offer_letter_id, application=application)
+            print(offer)
 
             form = OfferResponseForm(request.POST, instance=offer)
 
@@ -471,8 +476,9 @@ def Status(request, page, id=None):
                     messages.error(request, "Something went wrong while processing your response.")
                     return redirect('job_seeker:status', page='offered')
             else:
-                messages.error(request, "There was an error in your submission.")
-                return redirect("job_seeker:profile", page='offered')
+                print("Form errors:", form.errors)
+                form_errors_to_messages(request, form)
+                return redirect("job_seeker:status", page='offered')
                 
         job_status = False
         onboarding_id = False

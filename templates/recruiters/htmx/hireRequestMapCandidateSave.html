@@ -9,7 +9,7 @@
         
             <!-- Modal Header -->
             <div class="modal-header">
-                <h3 class="modal-title">Position</h3>
+                <h3 class="modal-title">Hire Request</h3>
                 <button type="button" class="btn-close close-modal-btn" id="closeEduModalButton" onclick="closeHtmxModalButton()"><i class='fas fa-times edit'></i></button>
             </div>
         
@@ -19,165 +19,60 @@
             <div class="">
                 <table class="modal-table">
         <tr>
-            <td><b>Title</b></td>
+            <td><b>Position</b></td>
             <td>
-                <input type="text" name="position_title" id="id_position_title"
-                    value="{{ position_form.initial.position_title|default_if_none:'' }}" required />
+                <input type="text" class="search-input" id="position-group-display"
+                    value="{{ hire_request_form.instance.position_group.position_title }} ({{ hire_request_form.instance.position_group.position_code }})"
+                    placeholder="" autocomplete="off" disabled>
             </td>
         </tr>
         <tr>
-            <td><b>No. of openings</b></td>
+            <td><b>Hire Request</b></td>
             <td>
-                <input type="number" name="count" id="id_position_title"
-                    value="{{position_obj.total_positions}}" min="1" max="100" required />
+                <input type="text" class="search-input" id="search-location" value="{{hire_request_form.instance.hire_request_code}}" placeholder="" autocomplete="off" disabled>
             </td>
         </tr>
         <tr>
-            <td><b>Locations</b></td>
+            <td><b>Candidates</b></td>
             <td>
-                            <div class="multi-select-container admin-input" id="location-wrapper">
-                                <div class="selected-tags" id="selected-tags-location">
-                                </div>
-                                <input type="text" class="search-input" id="search-location" placeholder="Search or add locations..." autocomplete="off">
-                                <div class="dropdown-list" id="dropdown-location"></div>
-                            </div>
-
-                            <select class="company-input" id="multi-select-location" name="locations" style="display: none;"
-                             data-selected-loc="{{ selected_loc_ids }}" multiple>
-                                {% comment %} {% for loc in form.location_id.field.queryset %}
-                                    <option value="{{ loc.pk }}">{{ loc }}</option>
-                                {% endfor %}   {% endcomment %}
-                            </select> 
-                            <input type="hidden" name="new_locations" id="new-locations">
-                            {% if not position_obj %}
-                            <label for="currently">
-                                <input type="checkbox" name="group_all" id="currently" class="" placeholder="Enter DOJ" />
-                                Create unique position ID for each locations
-                            </label>
-                            
-                            {% endif %}
-                {% comment %} <select name="locations" id="id_locations" multiple>
-                    {% for loc in position_form.fields.locations.queryset %}
-                        <option value="{{ loc.pk }}"
-                            {% if loc in position_form.initial.locations %}
-                                selected
-                            {% endif %}
-                        >{{ loc }}</option>
-                    {% endfor %}
-                </select> {% endcomment %}
+            <select name="employee_id" id="id_edu_id" required>
+                <option value="">Select Candidate</option>
+                {% for option in hire_request_form.fields.employee_id.queryset %}
+                    <option value="{{ option.pk }}" {% if option.pk == hire_request_form.initial.employee_id %}selected{% endif %}>
+                        {{ option }}
+                    </option>
+                {% endfor %}
+            </select>
+            
             </td>
         </tr>
         <tr>
-            <td><b>Job Description</b></td>
+            <td><b>Status</b></td>
             <td>
+                <select name="status" id="status" required class="form-select w-full rounded-md border-gray-300">
+                {% if not hire_request_form.instance.is_offered and not hire_request_form.instance.is_hire %}
+                    <option value="offered" selected>Selected</option>
+                    <option value="hire">Hired</option>
+                    <option value="join">Joined</option>
+                {% elif hire_request_form.instance.is_offered and not hire_request_form.instance.is_hire %}
+                    <option value="offered" selected>Selected</option>
+                    <option value="hire">Hired</option>
+                    <option value="join">Joined</option>
+                {% elif hire_request_form.instance.is_hire and not hire_request_form.instance.is_join %}
+                    <option value="hire" selected>Hired</option>
+                    <option value="join">Joined</option>
+                {% elif hire_request_form.instance.is_hire and hire_request_form.instance.is_join %}
+                    <option value="join" selected>Joined</option>
 
-                            <div class="textarea-div">
-                                <input type="hidden" name="jd" id="hidden-description" value="{{ position_form.initial.jd|default_if_none:'' }}" required>
-                                <div id="editor-container" style="height: 200px;"></div>
-                                <p id="char-count">0/2000 characters</p>
-                            </div>
+                {% endif %}
+                    <option value="leave">Leave the position</option>
+                    <option value="approve">Approve Candidate**</option>
+                    <option value="reject">Reject Approval**</option>
+                
 
+                </select>
             </td>
         </tr>
-
-        <tr>
-            <td><b>Budget</b></td>
-            <td>
-                <input type="text" name="budget" id="id_budget" class="modal-half-input" oninput="formatIndianNumber(this)"
-                    value="{{ position_form.initial.budget|default_if_none:'' }}" />
-
-                                        <select name="budget_type" id="id_budget_type" class="modal-half-input">
-                        <option value="">Select Payment Type</option>
-                        {% for value, label in position_form.fields.budget_type.choices %}
-                            <option value="{{ value }}" {% if value == position_form.initial.budget_type %}selected{% endif %}>
-                                {{ label }}
-                            </option>
-                        {% endfor %}
-                    </select>
-            </td>
-        </tr>
-
-        <tr>
-            <td><b>Department</b></td>
-            <td>
-                <input type="text" name="department" id="id_department"
-                    value="{{ position_form.initial.department|default_if_none:'' }}" />
-            </td>
-        </tr>
-        <tr>
-            <td><b>Division</b></td>
-            <td>
-                <input type="text" name="division" id="id_division"
-                    value="{{ position_form.initial.division|default_if_none:'' }}" />
-            </td>
-        </tr>
-        <tr>
-            <td><b>Cost Center</b></td>
-            <td>
-                <input type="text" name="cost_center" id="id_cost_center"
-                    value="{{ position_form.initial.cost_center|default_if_none:'' }}" />
-            </td>
-        </tr>
-
-        <tr>
-            <td><b>Supervisor</b></td>
-            <td>
-                <input type="text" name="Supervisor" id="id_Supervisor"
-                    value="{{ position_form.initial.Supervisor|default_if_none:'' }}" />
-            </td>
-        </tr>
-
-        <tr>
-            <td><b>HRBP</b></td>
-            <td>
-                <input type="text" name="hrbp" id="id_hrbp"
-                    value="{{ position_form.initial.hrbp|default_if_none:'' }}" />
-            </td>
-        </tr>
-        <tr>
-            <td><b>HRMS</b></td>
-            <td>
-                <input type="text" name="hrms" id="id_hrms"
-                    value="{{ position_form.initial.hrms|default_if_none:'' }}" />
-            </td>
-        </tr>
-
-
-
-
-
-
-
-
-                    {% comment %} <tr> 
-                        <td><b>Course duration</b></td>
-                        <td>
-                            <select id="id_year_of_passing" class="modal-half-input" name="year_of_joining" required>
-                                <option value="">Select Starting Year</option>
-                            {% for value, label in education_form.fields.year_of_joining.choices %}
-                                <option value="{{ value }}"
-                                    {% if value == education_form.initial.year_of_joining %}selected{% endif %}>
-                                    {{ label }}
-                                </option>
-                            {% endfor %}
-                            </select>
-                            to
-                            <select id="id_year_of_passing" class="modal-half-input" name="year_of_passing" required>
-                                <option value="">Select Ending Year</option>
-                            {% for value, label in education_form.fields.year_of_passing.choices %}
-                                <option value="{{ value }}"
-                                    {% if value == education_form.initial.year_of_passing %}selected{% endif %}>
-                                    {{ label }}
-                                </option>
-                            {% endfor %}
-                            </select>
-                        </td>
-                    </tr> {% endcomment %}
-
-                    {% comment %} <tr> 
-                        <td><b>Doc</b></td>
-                        <td><input type="text" id="city" name="city" value="{{ candidate.city|default_if_none:'' }}"></td>
-                    </tr> {% endcomment %}
 
                 </table>
 
@@ -188,21 +83,12 @@
             <!-- Modal Footer -->
             <div class="modal-footer">
                 {% comment %} <button type="submit" name="profile_education_create" class="model-btn-save" id="">Save</button> {% endcomment %}
-                {% if position_obj.position_group_id %}
-                
-                <button type="submit" 
-                    formnovalidate
-                    name="position_delete"
-                class="model-btn-delete"
-                    value="{{ position_obj.position_group_id|default:'' }}"
-                    hx-include="this"
-                >Close Position</button>
-                {% endif %}
+
             <button type="submit" 
             
-                name="position_save"
+                name="hire_request_map_candidate"
             class="model-btn-save"
-                value="{{ position_obj.position_group_id|default:'' }}"
+                value="{{ hire_request_form.instance.hire_request_id|default:'' }}"
                 hx-include="this"
             >Save</button>
 
@@ -215,14 +101,15 @@
         
 <script>
 
-    /*
+
     const multiSelectConfigs = [
         ['multi-select-location', 'search-location', 'selected-tags-location', 'dropdown-location', 'new-locations']
-    ]; */
+    ];
 
     fetch('./../api/create-position-form/')
         .then(response => response.json())
         .then(data => {
+            console.log(data);
             function appendOptions(dataList, selectId) {
                 const select = document.getElementById(selectId);
                 const existingValues = new Set(Array.from(select.options).map(opt => opt.value));
@@ -242,44 +129,8 @@
 
             appendOptions(data.locations, 'multi-select-location');
 
-
-            // disply data
-       // Preselect locations based on data attribute
-        const select = document.getElementById('multi-select-location');
-        const selectedIds = select.dataset.selectedLoc
-            ? select.dataset.selectedLoc.split(',').map(id => id.trim())
-            : [];
-
-        const selectedTagsContainer = document.getElementById('selected-tags-location');
-
-        selectedIds.forEach(id => {
-            const option = select.querySelector(`option[value="${id}"]`);
-            if (option) {
-                option.selected = true;
-
-                // Add tag visually
-                const tag = document.createElement('div');
-                tag.className = 'tag';
-                tag.textContent = option.textContent;
-
-                const remove = document.createElement('span');
-                remove.className = 'remove-tag';
-                remove.textContent = '×';
-                remove.addEventListener('click', () => {
-                    tag.remove();
-                    option.selected = false;
-                });
-
-                tag.appendChild(remove);
-                selectedTagsContainer.appendChild(tag);
-            }
-        });            
-            // disply data
-
             // Initialize multi-selects AFTER data is loaded
-            // multiSelectConfigs.forEach(config => setupMultiSelect(...config));
-            setupMultiSelect('multi-select-location', 'search-location', 'selected-tags-location', 'dropdown-location', 'new-locations');
-
+            multiSelectConfigs.forEach(config => setupMultiSelect(...config));
         })
         .catch(error => {
             console.error('Error loading dropdown data:', error);
@@ -426,17 +277,7 @@
                 const charCountDisplay = document.getElementById('char-count');
                 const hiddenInput = document.getElementById('hidden-description');
                 const maxLength = 2000;
-
-                // Set editor content from hidden input
-                if (hiddenInput.value) {
-                    quill.root.innerHTML = hiddenInput.value;
-                    // Also update character count
-                    const plainText = quill.getText().trim();
-                    const charCount = plainText.length;
-                    charCountDisplay.textContent = `${charCount}/${maxLength} characters`;
-                    charCountDisplay.style.color = charCount > maxLength ? 'red' : '#555';
-                }
-
+                
                 quill.on('text-change', function () {
                     const plainText = quill.getText().trim();
                     const charCount = plainText.length;
@@ -481,9 +322,6 @@ function formatIndianNumber(input) {
     let newCaretPosition = input.value.length - caretFromEnd;
     input.setSelectionRange(newCaretPosition, newCaretPosition);
 }
-
-
-
 </script>
 <style>
     {% comment %} div#editor-container, .ql-toolbar {

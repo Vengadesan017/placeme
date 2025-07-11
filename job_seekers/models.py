@@ -183,7 +183,7 @@ class Candidates(models.Model):
             self.bookmarks_count -= 1
         self.save()
     def __str__(self):
-        return f'{self.first_name}'
+        return f'{self.first_name} {self.last_name} - {self.user.email}'
 
 # class Documents(models.Model):
 #     document_id = models.AutoField(primary_key=True)

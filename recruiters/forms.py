@@ -274,13 +274,14 @@ class CreatePosition(forms.ModelForm):
 class CreateHireRequest(forms.ModelForm):
     class Meta:
         model = HireRequests
-        fields = [ 'position', 'hire_request_code', 'employee_id', 
-                  'hire_date', 'leave_date', 'remarks', 'deadline', 'is_open', 'is_active']
+        fields = [ 'position', 'hire_request_code', 'employee_id', 'hire_request_code',
+                  'is_offered', 'is_approve', 'is_hire', 'is_join', 'is_approve', 'is_reject','is_leave',
+                  'hire_date', 'leave_date', 'remarks', 'deadline', 'is_open', 'is_active', 'updated_by']
 
         labels = {
             'position': 'Position',
             'hire_request_code': 'Hire request code',
-            'employee_id': 'Employee ID',
+            'employee_id': 'Candidate',
             'hire_date': 'Hire date',
             'leave_date': 'Leave date',
             'remarks': 'Remarks',
@@ -292,7 +293,9 @@ class CreateHireRequest(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         company = kwargs.pop('company', None)
         super().__init__(*args, **kwargs)
-
+        self.fields['hire_request_code'].disabled = True
+        self.fields['hire_date'].disabled = True
+        self.fields['hire_date'].disabled = True
         # If company is passed, filter positions based on that company
         if company:
             self.fields['position'].queryset = Positions.objects.filter(

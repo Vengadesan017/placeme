@@ -1,7 +1,7 @@
 {% extends 'recruiters/layout.html' %}
 
 {% block title %}
-  Hiring tracker
+  Position Manager
 {% endblock %}
 {% load static %}
 {% block statics %}
@@ -87,10 +87,6 @@
       text-decoration: none;
     }
   </style>
-  <script>
-
-</script>
-
 {% endblock %}
 
 {% block content %}
@@ -110,45 +106,61 @@
 
               <div class="job-status-div">
                 <div class="job-status-div-text">
-                  <p>Positions</p>
+                  <p>Hire Request</p>
                 </div>
                 <div class="checkbox-div">
-                  {% for position in position_grp_obj %}
-                  
-                  <div class="checkbox-1 toggle-hire-requests">
+                  <div class="checkbox-1">
                     <div class="checkbox-1-1">
                       <input type="checkbox" class="input-check" />
-                      <p>{{position.position_title}}</p>
+                      <p>Web developer</p>
                     </div>
                     <div class="checkbox-1-count">
-                      <p>{{position.position_code}}</p>
+                      <p>103</p>
                       <i class="fa-solid fa-angle-down" id="job-open"></i>
                     </div>
                   </div>
-                <div class="show-info-div"  id="show-info-div">
-                  {% for hire_request in position.position_grp_in_hr.all %}
-                    <div class="checkbox-1 ">
+
+                  <div class="show-info-div" id="show-info-div">
+                    <div class="checkbox-1">
                       <div class="checkbox-1-1">
                         <input type="checkbox" class="input-check" />
-                        <p>{{ hire_request.hire_request_code }}</p>
+                        <p>Backend developer</p>
                       </div>
                       <div class="checkbox-1-count">
-                        {% comment %} <p>{{ hire_request.created_at|date:"d M Y" }}</p> {% endcomment %}
+                        <p>1001</p>
                       </div>
                     </div>
-                  {% empty %}
+
                     <div class="checkbox-1">
-                      <p class="text-muted">No hire requests found for this position group.</p>
+                      <div class="checkbox-1-1">
+                        <input type="checkbox" class="input-check" />
+                        <p>FrontEnd developer</p>
+                      </div>
+                      <div class="checkbox-1-count">
+                        <p>1002</p>
+                      </div>
                     </div>
-                  {% endfor %}
-                </div>
-                  {% endfor %}
-                  
+                  </div>
 
+                  <div class="checkbox-1">
+                    <div class="checkbox-1-1">
+                      <input type="checkbox" class="input-check" />
+                      <p>SQL Administrator</p>
+                    </div>
+                    <div class="checkbox-1-count">
+                      <p>101</p>
+                    </div>
+                  </div>
 
-
-
-
+                  <div class="checkbox-1">
+                    <div class="checkbox-1-1">
+                      <input type="checkbox" class="input-check" />
+                      <p>Cloud Engineer</p>
+                    </div>
+                    <div class="checkbox-1-count">
+                      <p>102</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </form>
@@ -211,7 +223,7 @@
               >Create Position</button>
             </div> {% endcomment %}
             <div class="table-container" id="table-container">
-              {% include 'recruiters/htmx/hireRequestShow.html' %}
+              {% include 'recruiters/htmx/positionShow.html' %}
             </div>
           </div>
         </div>

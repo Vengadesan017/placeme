@@ -13,6 +13,7 @@ from django.db.models import IntegerField
 from django.db.models import Count, Q
 from django.db.models import Value as V
 from django.db.models.functions import Concat
+from django.utils import timezone
 
 from .forms import CreateCompanyForm, CreateCompanyKYCForm, CreatePosition, CreateHireRequest, CreateJobs, \
     PositionGroupForm
@@ -129,7 +130,7 @@ def AdvanceSearch(request):
 @login_required
 @is_recruiter
 @is_kyc
-def FindCandidates(request):
+def AllCandidates(request):
     candidate = Candidates.objects.get(user=request.user)
     company = Companies.objects.get(candidate=candidate)
     candidate_titles = Candidates.objects.values_list('present_designation', flat=True).distinct()
@@ -137,7 +138,20 @@ def FindCandidates(request):
         'titles': candidate_titles,
         'company':company
     }
-    return render(request,'recruiters/find_candidates.html',context)
+    return render(request,'recruiters/all_candidates.html',context)
+
+@login_required
+@is_recruiter
+@is_kyc
+def MyCandidates(request):
+    candidate = Candidates.objects.get(user=request.user)
+    company = Companies.objects.get(candidate=candidate)
+    candidate_titles = Candidates.objects.values_list('present_designation', flat=True).distinct()
+    context = {
+        'titles': candidate_titles,
+        'company':company
+    }
+    return render(request,'recruiters/my_candidates.html',context)
 
 @login_required
 @is_recruiter
@@ -156,12 +170,241 @@ def Candidate(request):
 @is_recruiter
 @is_kyc
 def HiringTracker(request):
-    candidate = Candidates.objects.get(user=request.user)
-    company = Companies.objects.get(candidate=candidate)
-    context = {
-        'company':company
-    }
-    return render(request,'recruiters/hiring_tracker.html',context)
+    try:
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+        # edit_candidate_in_hiring_form
+        if request.method == 'POST' and request.htmx:
+            context = {}
+            template_name = None
+            # -------- Form loading handlers --------
+            if 'get_hire_request_form' in request.POST:
+                pass
+                # if pk := request.POST.get('get_hire_request_form'):
+                #     instance = get_object_or_404(
+                #         PositionGroup.objects.annotate(total_positions=Count('positions', distinct=True)),
+                #         company=company,
+                #         position_group_id=pk
+                #     )   
+                #     # Extract location IDs from the many-to-many field
+                #     selected_location_ids = instance.locations.values_list('location_id', flat=True)
+                #     selected_loc_ids_str = ','.join(str(id) for id in selected_location_ids)
+                #     context['selected_loc_ids'] = selected_loc_ids_str
+                #     context['position_form'] = PositionGroupForm(instance=instance)
+                #     context['position_obj'] = instance
+                # else:
+                #     context['position_form'] = PositionGroupForm()
+                # template_name = 'recruiters/htmx/positionSave.html'
+            elif 'edit_candidate_in_hiring_form' in request.POST:
+                if pk := request.POST.get('edit_candidate_in_hiring_form'):
+                    instance = get_object_or_404(
+                        HireRequests,
+                        company=company,
+                        hire_request_id=pk
+                    )        
+                    context['hire_request_form'] = CreateHireRequest(instance=instance)
+                else:
+                    return JsonResponse("Something went wrong, try again.", status=400)
+                template_name = 'recruiters/htmx/hireRequestMapCandidateSave.html'
+                
+            if 'position_save' in request.POST:
+                if pk := request.POST.get('position_save'):
+                    instance = get_object_or_404(
+                        PositionGroup.objects.annotate(total_positions=Count('positions', distinct=True)),
+                        company=company,
+                        position_group_id=pk
+                    )
+                    
+                    try:
+                        desired_count = int(request.POST.get('count', 1))
+                        if desired_count < 1:
+                            desired_count = 1
+                    except ValueError:
+                        desired_count = 1
+
+                    form = PositionGroupForm(request.POST, instance=instance)
+                    if form.is_valid():
+                        group = form.save(commit=False)
+                        group.position_code = instance.position_code
+                        group.updated_by = candidate
+                        group.save()
+                        form.save_m2m()
+                        
+                        # Locations
+                        new_locations_raw = request.POST.get('new_locations', '')
+                        new_locations = [item.strip() for item in new_locations_raw.split(',') if item.strip()]
+                        for location_name in new_locations:
+                            try:
+                                location, created = Locations.objects.get_or_create(location=location_name, created_by=candidate)
+                                group.locations.add(location)
+                            except Exception as e:
+                                messages.error(request, f"Error saving location '{location_name}': {str(e)}")
+
+                        # for location in form.cleaned_data.get('location_id', []):
+                        #     group.locations.add(location)
+
+                        existing_count = instance.total_positions
+                        to_create = max(0, desired_count - existing_count)
+                        for _ in range(0,min(to_create, 100)):
+                            Positions.objects.create(position_group=group, created_by=candidate) 
+
+                    else:
+                        print("Form errors:", form.errors)
+                        errors = form_errors_to_messages_htmx(form, level='error')
+                        return JsonResponse(errors, status=400)
+                else:
+                    position_count = request.POST.get('count')
+                    # position_title = request.POST.get('position_title')
+                    try:
+                        position_count = int(position_count)
+                        if position_count <= 0:
+                            position_count = 1
+                    except ValueError:
+                        position_count = 1
+                    form = PositionGroupForm(request.POST)
+                    if form.is_valid():
+                        cleaned = form.cleaned_data
+                        # locations = cleaned['locations']
+                        group_all = request.POST.get('group_all')
+
+                        # Initialize locations list
+                        locations = set(cleaned.get('locations', []))
+                        
+                        # Handle new locations
+                        new_locations_raw = request.POST.get('new_locations', '')
+                        new_locations = [item.strip() for item in new_locations_raw.split(',') if item.strip()]
+                        for location_name in new_locations:
+                            try:
+                                location, _ = Locations.objects.get_or_create(location=location_name, created_by=candidate)
+                                locations.add(location)
+                            except Exception as e:
+                                messages.error(request, f"Error saving location '{location_name}': {str(e)}")
+                        
+                        # Common fields
+                        common_data = {
+                            'company': company,
+                            'position_title': cleaned['position_title'],
+                            'jd': cleaned['jd'],
+                            'budget': cleaned['budget'],
+                            'budget_type': cleaned['budget_type'],
+                            'department': cleaned['department'],
+                            'cost_center': cleaned['cost_center'],
+                            'Supervisor': cleaned['Supervisor'],
+                            'hrbp': cleaned['hrbp'],
+                            'hrms': cleaned['hrms'],
+                            'division': cleaned['division'],
+                            'created_by': candidate
+                        }
+
+                        if not group_all:
+                            group = PositionGroup.objects.create(**common_data)
+                            group.locations.set(locations)
+
+                            for _ in range(0,min(position_count,100)):
+                                position = Positions.objects.create(
+                                    position_group=group,
+                                    created_by=candidate
+                                )                             
+                        else:
+                            for location in locations:
+                                group = PositionGroup.objects.create(**common_data)
+                                group.locations.set([location])  # only this location                
+                                for _ in range(0,min(position_count,100)):
+                                    position = Positions.objects.create(
+                                        position_group=group,
+                                        created_by=candidate
+                                    )  
+                    else:
+                        print("Form errors:", form.errors)
+                        errors = form_errors_to_messages_htmx(form, level='error')
+                        return JsonResponse(errors, status=400)
+            elif pk := request.POST.get('hire_request_map_candidate'):
+                status = request.POST.get('status')
+                instance = get_object_or_404(HireRequests, hire_request_id=pk)
+
+                form = CreateHireRequest(request.POST, instance=instance)
+
+                if form.is_valid():
+                    hire_request = form.save(commit=False)
+
+                    if status == 'offered':
+                        hire_request.is_offered = True
+                    elif status == 'approve':
+                        hire_request.is_approve = True
+                    elif status == 'hire':
+                        hire_request.is_hire = True
+                        hire_request.hire_date = timezone.now()
+                    elif status == 'join':
+                        hire_request.is_join = True
+                    elif status == 'leave':
+                        hire_request.is_leave = True
+                        hire_request.leave_date = timezone.now()
+                    elif status == 'reject':
+                        hire_request.is_reject = True
+
+                    hire_request.hire_request_code = instance.hire_request_code
+                    hire_request.updated_by = candidate
+                    hire_request.save()
+                else:
+                    print("Form errors:", form.errors)
+                    errors = form_errors_to_messages_htmx(form, level='error')
+                    return JsonResponse(errors, status=400)                
+                        
+        
+
+            if not template_name:
+                hire_request_obj = HireRequests.objects.filter(company=company).annotate(
+                    status_order=Case(
+                        When(is_reject=True, then=Value(5)),
+                        When(is_leave=True, then=Value(3)), 
+                        When(is_hire=True, then=Value(4)),
+                        When(is_approve=True, then=Value(6)),
+                        When(Q(employee_id__isnull=False) & Q(is_open=True), then=Value(7)),  # candidate needed
+                        When(Q(employee_id__isnull=True) & Q(is_open=True) & Q(is_hire=False), then=Value(8)),  # candidate needed
+                        When(Q(employee_id__isnull=True) & Q(is_open=False), then=Value(2)),  # candidate needed
+                        When(is_open=False, then=Value(1)),   # show in last
+                        default=Value(99),
+                        output_field=IntegerField()
+                    )
+                ).order_by('status_order', '-created_at') 
+                # position_grp_obj = PositionGroup.objects.filter(company=company)
+                # context = {
+                #     'company':company,
+                #     'hire_request_obj':hire_requests
+                # }
+
+                context['hire_request_obj'] = hire_request_obj
+                template_name = 'recruiters/htmx/hireRequestShow.html'
+                
+            # -------- Final HTMX return --------
+            if template_name:
+                return render(request, template_name, context)                    
+    
+    
+        # 
+        hire_request_obj = HireRequests.objects.filter(company=company).annotate(
+            status_order=Case(
+                When(is_reject=True, then=Value(5)),
+                When(is_leave=True, then=Value(3)), 
+                When(is_hire=True, then=Value(4)),
+                When(is_approve=True, then=Value(6)),
+                When(Q(employee_id__isnull=False) & Q(is_open=True), then=Value(7)),  # candidate needed
+                When(Q(employee_id__isnull=True) & Q(is_open=True) & Q(is_hire=False), then=Value(8)),  # candidate needed
+                When(Q(employee_id__isnull=True) & Q(is_open=False), then=Value(2)),  # candidate needed
+                When(is_open=False, then=Value(1)),   # show in last
+                default=Value(99),
+                output_field=IntegerField()
+            )
+        ).order_by('status_order', '-created_at') 
+        position_grp_obj = PositionGroup.objects.filter(company=company)
+        context = {
+            'company':company,
+            'hire_request_obj':hire_request_obj,
+            'position_grp_obj':position_grp_obj
+        }
+        return render(request,'recruiters/hiring_tracker.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
 
 @login_required
 @is_recruiter

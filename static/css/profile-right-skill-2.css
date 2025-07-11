@@ -51,13 +51,13 @@
   display: flex;
   margin-top: 10px;
   margin-bottom: 15px;
-  margin-left: 60px;
-  justify-content: space-around;
+  /* margin-left: 60px; */
+  justify-content: center;
 
 }
 
 .languages-ul-div {
-  width: 75%;
+  width: 90%;
   display: flex;
   /* justify-content: center;
     align-items: center; */
