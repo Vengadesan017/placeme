@@ -201,12 +201,6 @@
 
 }
 
-.fa-inr {
-    color: #555;
-    font-size: 12px;
-
-}
-
 .detial-div-name {
   position: relative;
   width: 100%;
@@ -665,6 +659,7 @@
   color: #555;
 }
 
+
 .summary-data-container1 p{
       /* max-width: 700px; */
       height: 90px;
@@ -676,7 +671,7 @@
       color: #555;
       border-radius: 10px;
       margin-bottom: 10px;
-
+      
       /* Clamp to 3 lines */
       display: -webkit-box;
       -webkit-line-clamp: 4;       /* Limit to 3 lines */
@@ -736,6 +731,7 @@
 
 .resume1 {
   min-height: 130px;
+  height: auto;
   width: 100%;
   font-size: 20px;
   padding: 10px 20px;
@@ -761,15 +757,20 @@
 }
 
 .buttons-resume1 {
+  min-height: 50px;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  width: 500px;
+  flex-wrap: wrap;
+  /* background-color: #1e7e34; */
+  width: 100%;
   margin: auto;
   text-decoration: none;
   padding: 8px 16px;
   font-size: 14px;
   border-radius: 8px;
+  gap: 20px;
   color: #fff;
   transition: background-color 0.2s;
 }

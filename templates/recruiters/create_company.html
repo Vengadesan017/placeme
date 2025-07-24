@@ -23,7 +23,7 @@ Create Account for your company
             <div class="admin-div">
                 <div class="admin-name">
                     <p >Company name <span>*</span></p>
-                    <input type="text" class="admin-input" name="company_name" value="{{ createForm.initial.company_name|default_if_none:'' }}" placeholder="Enter Company name" required/>
+                    <input type="text" class="admin-input" name="company_name" value="{{ createForm.company_name.value|default_if_none:'' }}" placeholder="Enter Company name" required/>
                 </div>
                 <div class="admin-role">
                 <p >Company Type<span>*</span></p>
@@ -31,7 +31,7 @@ Create Account for your company
                     <option value="">Select Company Type</option>
                     {% for choice in createForm.fields.Company_type.choices %}
                     {% if choice.0 != "" %}
-                    <option value="{{ choice.0 }}" {% if choice.0 == createForm.initial.Company_type %}selected{% endif %}>
+                    <option value="{{ choice.0 }}" {% if choice.0 == createForm.Company_type.value %}selected{% endif %}>
                         {{ choice.1 }}
                     </option>
                     {% endif %}
@@ -48,7 +48,7 @@ Create Account for your company
                 </div>
                 <div class="admin-role">
                     <p>Admin Role <span>*</span></p>
-                    <input type="text" name="admin_role" class="admin-input" value="{{ createForm.initial.admin_role|default_if_none:'' }}" placeholder="General Manager / HR Manager....." required/>
+                    <input type="text" name="admin_role" class="admin-input" value="{{ createForm.admin_role.value|default_if_none:'' }}" placeholder="General Manager / HR Manager....." required/>
                 </div>
 
             </div>
@@ -56,11 +56,11 @@ Create Account for your company
             <div class="email-div">
                 <div class="email-name">
                     <p >Official e-mail ID<span>*</span></p>
-                    <input type="email" name="official_email" class="admin-input" value="{{ createForm.initial.official_email|default_if_none:'' }}" placeholder="example@mail.com" required/> 
+                    <input type="email" name="official_email" class="admin-input" value="{{ createForm.official_email.value|default_if_none:'' }}" placeholder="example@mail.com" required/> 
                 </div>
                 <div class="website">
                     <p>Contact No.<span>*</span></p>
-                    <input type="number" name="contact_no" class="admin-input" value="{{ createForm.initial.contact_no|default_if_none:'' }}" placeholder="Enter Contact number" required/>
+                    <input type="number" name="contact_no" class="admin-input" value="{{ createForm.contact_no.value|default_if_none:'' }}" placeholder="Enter Contact number" required/>
                 </div>
             </div>
 
@@ -76,17 +76,17 @@ Create Account for your company
                 </div>
                 <div class="website">
                     <p>City<span>*</span></p>
-                    <input type="text" name="city" value="{{ createForm.initial.city|default_if_none:'' }}" class="admin-input" placeholder="City name" required/>
+                    <input type="text" name="city" value="{{ createForm.city.value|default_if_none:'' }}" class="admin-input" placeholder="City name" required/>
                 </div>
             </div>
             <div class="email-div">
                 <div class="email-name">
                     <p>Permanent Address<span>*</span></p>
-                    <input type="text" name="permanent_address" value="{{ createForm.initial.permanent_address|default_if_none:'' }}" class="admin-input" placeholder="Registered address" required/> 
+                    <input type="text" name="permanent_address" value="{{ createForm.permanent_address.value|default_if_none:'' }}" class="admin-input" placeholder="Registered address" required/> 
                 </div>
                 <div class="website">
                     <p>Communication Address<span>*</span></p>
-                    <input type="text" name="communication_address" value="{{ createForm.initial.communication_address|default_if_none:'' }}" class="admin-input" placeholder="Communication address" required/>
+                    <input type="text" name="communication_address" value="{{ createForm.communication_address.value|default_if_none:'' }}" class="admin-input" placeholder="Communication address" required/>
                 </div>
             </div>
             {% comment %} <div class="admin-div">

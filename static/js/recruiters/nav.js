@@ -150,3 +150,27 @@ mobileMenuClose.addEventListener('click', function() {
 // Optional: To update layout if the window is resized
 window.addEventListener('resize', updateMenuLayout);
 window.addEventListener('resize', updateMenuLayoutClose);
+
+
+
+
+// for fileter subtion view
+document.querySelectorAll('.open-filter-sub-options').forEach(icon => {
+    icon.addEventListener('click', () => {
+        // Find the nearest parent ".checkbox-1"
+        const parentCheckbox = icon.closest('.checkbox-1');
+        
+        // The next sibling should be the related ".show-info-div"
+        const showInfoDiv = parentCheckbox.nextElementSibling;
+
+        // Check if it's a ".show-info-div"
+        if (showInfoDiv && showInfoDiv.classList.contains('show-info-div')) {
+            // Toggle its display
+            if (showInfoDiv.style.display === 'flex') {
+                showInfoDiv.style.display = 'none';
+            } else {
+                showInfoDiv.style.display = 'flex';
+            }
+        }
+    });
+});

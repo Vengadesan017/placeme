@@ -1,0 +1,114 @@
+{% load applicant_status %}
+
+
+<style>
+  .right-div-table, .new-hire-request-parent , .table-container{
+    background-color: unset;
+  }
+
+  .job-card{
+    margin: 20px;
+  }
+</style>
+    {% for app in applications %}
+
+ <div class="job-card">
+    <div class="job-header">
+        <div>
+              <div class="major">{{ app.candidate.first_name }} {{ app.candidate.last_name }}</div>
+              <div class="minor">
+                {{ app.candidate.user.email }}
+              </div>
+        </div>
+
+        
+        {% comment %} <div onclick="window.location='/status/applied';" class="apply-job">View</div> {% endcomment %}
+        <div onclick="#" class="apply-job">View</div>
+        
+    </div>
+
+    <div class="job-details">
+
+          <p class="details-row">
+            <span><i class="fas fa-briefcase"></i>2 years 4 months</span>
+            <span>Notice period : 10 days (Negotiable)</span>
+            <span><i class="fa fa-gener"></i>Gender : Male</span>
+            <span><i class="fa fa-age"></i>Age : 25</span>
+          </p>
+        <div class="skills">
+            
+
+            <span class="key-skills">Strategic planning</span>
+            <span class="key-skills">Financial Management</span>
+            <span class="key-skills">Interpersonal communication</span>
+            <span class="key-skills">Decision-making</span>
+        </div>
+        <p3 class="">
+            <span style="display: inline-block;width: 20%;">Education</span>
+            <span style="display: inline-block;width: 70%;">Diplamo/ITI , Don bosco disloma and polytechnic college , 2022</span>
+
+        </p3>
+        <p3 class="">
+            <span style="display: inline-block;width: 20%;">Pref. Location</span>
+            <span style="display: inline-block;width: 70%;">Chennai , Prefer to relocate</span>
+
+        </p3>
+        <p3 class="">
+            <span style="display: inline-block;width: 20%;">known languages </span>
+            <span style="display: inline-block;width: 70%;">English(R,W,S) , Tamil(R,W,S) , Hindi(S)</span>
+
+        </p3>
+    </div>
+
+    <div class="job-footer">
+      <span>
+
+        <div class="major">{{ app.job.title }}{{ hire_request.hire_request_code }}</div>
+        <div class="minor">
+          HRID :
+          {{ app.job.hire_request|default:'' }}
+        </div>
+      </span>
+      <span>
+        <div>
+              <div class="major">{{ app.status }}</div>
+              <div class="minor">{{ app|app_status_time }}</div>
+        </div>        
+      </span>
+      <span>
+
+        <form method="POST" action="/bookmark/">
+            <input type="hidden" name="csrfmiddlewaretoken" value="aXbM0paAFEsbcLgIuSmqrY4TbD8IKhjYqOvWLNCBdtFvq3tj6RKDKhAMnkk7llHA">
+            <input type="hidden" value="web-msi-fe2dfff8" name="slug">
+            <input type="checkbox" id="save4" class="bookmark-checkbox">
+            <label for="save4">
+                <button type="submit" class="save_job" name="save_job"><i class="fa-solid fa-user-slash bookmark-icon"></i><span class="save-text">Unlist<span></span></span></button>
+                
+            </label>  
+            <span class="divider"></span>
+            <input type="checkbox" id="save4" class="bookmark-checkbox">
+            <label for="save4">
+                <button type="submit" class="save_job" name="save_job"><i class="fa-solid fa-bookmark bookmark-icon"></i><span class="save-text">Save<span></span></span></button>
+                
+            </label>
+        </form>
+      </span>
+        
+    </div>
+</div>
+
+        {% empty %}
+        <tr></tr>
+        <tr></tr>
+            <tr><td colspan="4">
+          <center
+            hx-post="#"
+            hx-vals='{"get_hire_request_form": "{{ hire_request.hire_request_id }}"}'
+            hx-target="#HtmxModal"
+            hx-trigger="click"
+            hx-swap="innerHTML"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'          
+          >No applications found.</center></td></tr>
+        {% endfor %}
+
+

@@ -14,12 +14,13 @@ from django.db.models import Count, Q
 from django.db.models import Value as V
 from django.db.models.functions import Concat
 from django.utils import timezone
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from .forms import CreateCompanyForm, CreateCompanyKYCForm, CreatePosition, CreateHireRequest, CreateJobs, \
     PositionGroupForm
 from .models import Companies, Positions, HireRequests, Qualifications, Locations, Benefits, Jobs, \
     PositionGroup
-from job_seekers.models import Candidates, Skills, SpecificationForEdu
+from job_seekers.models import Candidates, Skills, SpecificationForEdu, JobApplications
 from .serializers import HireRequestSerializer, PositionSerializer, LocationSerializer, BenefitSerializer,\
     SkillSerializer, QualificationSerializer
 from .decorators import is_kyc, is_recruiter
@@ -49,6 +50,7 @@ import time
 def CreateCompany(request):
     try:
         candidate = Candidates.objects.get(user=request.user)
+        createForm = CreateCompanyForm()
         if request.method == "POST":
             if 'create_company' in request.POST:
                 form = CreateCompanyForm(request.POST)
@@ -64,8 +66,9 @@ def CreateCompany(request):
                     return redirect('recruiters:complete_kyc') 
                 else:
                     print("Form errors:", form.errors)
-                    messages.error(request, 'Please enter the valid data')
-        createForm = CreateCompanyForm()
+                    form_errors_to_messages(request, form)
+                    createForm = form
+        
         context = {
             'createForm': createForm,
             'candidate':candidate
@@ -80,6 +83,7 @@ def CompleteKYC(request):
     try:
         candidate = Candidates.objects.get(user=request.user)
         company = Companies.objects.get(candidate=candidate)
+        KYCForm = CreateCompanyKYCForm()
         if request.method == "POST":
             if 'upload_kyc' in request.POST:
                 form = CreateCompanyKYCForm(request.POST, request.FILES,instance=company)
@@ -89,8 +93,8 @@ def CompleteKYC(request):
                     return redirect('recruiters:complete_kyc') 
                 else:
                     print("Form errors:", form.errors)
-                    messages.error(request, 'Please enter the valid data')
-        KYCForm = CreateCompanyKYCForm()
+                    form_errors_to_messages(request, form)
+                    KYCForm = form
         if company.is_kyc_verified:
             return redirect('recruiters:home') 
         context = {
@@ -162,10 +166,77 @@ def Candidate(request):
     candidate_titles = Candidates.objects.values_list('present_designation', flat=True).distinct()
     context = {
         'titles': candidate_titles,
-        'company':company
+        'company':company,
+        'candidate': candidate
     }
     return render(request,'recruiters/candidate.html',context)
 
+@login_required
+@is_recruiter
+@is_kyc
+def MyApplicants(request):
+    try:
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+
+        # Get query parameters
+        status_filter = request.GET.get('status', '')
+        job_id = request.GET.get('job_id', '')
+        try:
+            page = int(request.GET.get('page', 1))
+            if page < 1:
+                page = 1
+        except (ValueError, TypeError):
+            page = 1
+
+        try:
+            page_size = int(request.GET.get('limit', 10))
+        except (ValueError, TypeError):
+            page_size = 10
+
+        # Fetch jobs posted by the company
+        company_jobs = Jobs.objects.filter(company=company)
+
+        applications = JobApplications.objects.filter(job__in=company_jobs).order_by('-applied_date')
+
+        if job_id:
+            applications = applications.filter(job__job_id=job_id)
+
+        if status_filter:
+            applications = applications.filter(status=status_filter)
+
+        # Paginate the filtered applications
+        paginator = Paginator(applications, page_size)
+        try:
+            applications_page = paginator.get_page(page)
+        except EmptyPage:
+            applications_page = paginator.get_page(1)
+
+        # Handle pagination info safely
+        start_index = applications_page.start_index() if paginator.count > 0 else 0
+        end_index = applications_page.end_index() if paginator.count > 0 else 0
+
+        statuses = [
+            'Applied', 'Viewed', 'Shortlisted', 'Interviewed', 'Selected',
+            'Offered', 'Accepted', 'Rejected', 'Hired'
+        ]
+
+        context = {
+            'applications': applications_page,
+            'statuses': statuses,
+            'status_filter': status_filter,
+            'job_id': job_id,
+            'posts': company_jobs,
+            'total': paginator.count,
+            'start_index': start_index,
+            'end_index': end_index,
+            'page_size': page_size,
+            'page_range': paginator.page_range,
+        }
+        return render(request,'recruiters/my_applicants.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
+    
 @login_required
 @is_recruiter
 @is_kyc
@@ -321,11 +392,21 @@ def HiringTracker(request):
             elif pk := request.POST.get('hire_request_map_candidate'):
                 status = request.POST.get('status')
                 instance = get_object_or_404(HireRequests, hire_request_id=pk)
-
+                
+                emp_id = False
+                if instance.employee_id:
+                    emp_id = instance.employee_id
                 form = CreateHireRequest(request.POST, instance=instance)
 
                 if form.is_valid():
                     hire_request = form.save(commit=False)
+
+
+
+                    if emp_id:
+                        hire_request.employee_id = emp_id
+
+
 
                     if status == 'offered':
                         hire_request.is_offered = True
@@ -876,7 +957,11 @@ def Post(request):
     try:
         candidate = Candidates.objects.get(user=request.user)
         company = Companies.objects.get(candidate=candidate)
-        posts = Jobs.objects.filter(company=company, is_draft=False).order_by('-created_at')
+        posts = Jobs.objects.filter(company=company, is_draft=False).annotate(
+            applicant_count=Count('job_applications'),
+            shortlisted_count=Count('job_applications', filter=Q(job_applications__status='Shortlisted')),
+            offered_count=Count('job_applications', filter=Q(job_applications__status='Offered'))
+        ).order_by('-created_at')
         # if request.method == "POST":
         #     if 'upload_kyc' in request.POST:
         #         form = CreateCompanyKYCForm(request.POST, request.FILES,instance=company)
@@ -932,6 +1017,27 @@ def CreatePost(request):
     try:
         candidate = Candidates.objects.get(user=request.user)
         company = Companies.objects.get(candidate=candidate)
+        
+        context = {}
+        form = CreateJobs(company=company)
+        if request.method == 'GET':
+            position_id = request.GET.get('position')
+            if position_id:
+                position = get_object_or_404(PositionGroup, position_group_id=position_id, company=company)
+                # Mapping fields from PositionGroup to CreateJobs form initial values
+                initial = {
+                    "position_grp": position.pk,  # This sets the ForeignKey to PositionGroup in Jobs model
+                    "title": position.position_title,
+                    "salary": position.budget,
+                    "salary_type": position.budget_type,
+                    "location_id": position.locations.all(),  # ManyToMany - can be pre-filled
+                    "description": position.jd,
+                }
+                selected_location_ids = position.locations.values_list('location_id', flat=True)
+                selected_loc_ids_str = ','.join(str(id) for id in selected_location_ids)
+                context['selected_loc_ids'] = selected_loc_ids_str
+                form = CreateJobs(initial=initial, company=company, position_group_id = position.position_group_id)
+            
         if request.method == 'POST':
             form = CreateJobs(request.POST, company = company)
             if form.is_valid():
@@ -1013,13 +1119,15 @@ def CreatePost(request):
                 # return redirect(f"{reverse('job_seeker:job')}?r={job.slug}")
                 
             else:
-                messages.error(request,form.errors)
-                return redirect('recruiters:create_post')
-        context = {
-            # 'KYCForm': KYCForm,
-            'company':company,
-            'form' : CreateJobs(request.POST or None, company=company)
-        }
+                form_errors_to_messages(request, form)
+                form = form
+                # return redirect('recruiters:create_post')
+
+
+        
+
+        context['company'] = company
+        context['form'] = form
         return render(request,'recruiters/post_create.html',context)
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)

@@ -1,7 +1,7 @@
 {% extends 'recruiters/layout.html' %}
 
 {% block title %}
-  Hiring tracker
+My Applicants
 {% endblock %}
 {% load static %}
 {% block statics %}
@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="{% static 'css/recruiters/post-filter-mobile.css' %}" />
 
   <link rel="stylesheet" href="{% static 'css/recruiters/table.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/jobs.css' %}" />
 
 
   {% comment %} <link rel="stylesheet" href="{% static 'css/recruiters/old/create-job.css' %}" /> {% endcomment %}
@@ -110,22 +111,22 @@
 
               <div class="job-status-div">
                 <div class="job-status-div-text">
-                  <p>Positions</p>
+                  <p>Post</p>
                 </div>
                 <div class="checkbox-div">
-                  {% for position in position_grp_obj %}
+                  {% for post in posts %}
                   
                   <div class="checkbox-1 toggle-hire-requests open-filter-sub-options">
                     <div class="checkbox-1-1">
                       <input type="checkbox" class="input-check" />
-                      <p>{{position.position_title}}</p>
+                      <p>{{post.title}}</p>
                     </div>
-                    <div class="checkbox-1-count">
+                    {% comment %} <div class="checkbox-1-count">
                       <p>{{position.position_code}}</p>
                       <i class="fa-solid fa-angle-down"></i>
-                    </div>
+                    </div> {% endcomment %}
                   </div>
-                <div class="show-info-div">
+                {% comment %} <div class="show-info-div">
                   {% for hire_request in position.position_grp_in_hr.all %}
                     <div class="checkbox-1 ">
                       <div class="checkbox-1-1">
@@ -133,7 +134,7 @@
                         <p>{{ hire_request.hire_request_code }}</p>
                       </div>
                       <div class="checkbox-1-count">
-                        {% comment %} <p>{{ hire_request.created_at|date:"d M Y" }}</p> {% endcomment %}
+                        
                       </div>
                     </div>
                   {% empty %}
@@ -141,7 +142,7 @@
                       <p class="text-muted">No hire requests found for this position.</p>
                     </div>
                   {% endfor %}
-                </div>
+                </div> {% endcomment %}
                   {% endfor %}
                   
 
@@ -158,15 +159,19 @@
           <div class="right-div-table">
             <div class="new-hire-request-search">
               <div class="new-hire-request-parent">
-                <select class="new-hire-request-div" name="" id="">
-                  <option value="All Hire Request">All Hire Request</option>
-                  <option value="New Hire Request">New Hire Request</option>
-                  <option value="Opened Hire Request">Opened Hire Request</option>
-                  <option value="Closed Hire Request">Closed Hire Request</option>
-                </select>
+              <select name="status" class="new-hire-request-div" id="status" onchange="this.form.submit()">
+                  <option value="">All Applicants</option>
+                  {% for status in statuses %}
+                      <option value="{{ status }}" {% if status == status_filter %}selected{% endif %}>
+                          {{ status }}
+                      </option>
+                  {% endfor %}
+              </select>
 
                 <div class="dev-text">
                   <p>Filter by Status</p>
+                  <p>Showing {{ start_index }} to {{ end_index }} of {{ total }} applications</p>
+
                 </div>
                 {% comment %} <div class="checkbox-1-table">
                   <div class="checkbox-1-1-table">
@@ -211,8 +216,95 @@
               >Create Position</button>
             </div> {% endcomment %}
             <div class="table-container" id="table-container">
-              {% include 'recruiters/htmx/hireRequestShow.html' %}
+              {% include 'recruiters/htmx/myApplicantsShow.html' %}              
             </div>
+<!-- Pagination Controls -->
+{% comment %} <div class="pagination">
+    {% if applications.has_previous %}
+        <a href="?status={{ status_filter }}&page={{ applications.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    <span>Page {{ applications.number }} of {{ applications.paginator.num_pages }}</span>
+
+    {% if applications.has_next %}
+        <a href="?status={{ status_filter }}&page={{ applications.next_page_number }}">Next</a>
+    {% endif %}
+</div> {% endcomment %}
+{% comment %}  {% endcomment %}
+<form method="get" id="pagination-form">
+    <!-- Hidden Filters -->
+    <input type="hidden" name="status" value="{{ status_filter }}">
+    <input type="hidden" name="job_id" value="{{ job_id }}">
+    <input type="hidden" name="page" id="page-input" value="{{ applications.number|default:1 }}">
+
+    <!-- Page Size Selector -->
+    <label for="limit">Show per page:</label>
+    <select name="limit" id="limit" onchange="document.getElementById('pagination-form').submit()">
+        <option value="10" {% if page_size == 10 %}selected{% endif %}>10</option>
+        <option value="20" {% if page_size == 20 %}selected{% endif %}>20</option>
+        <option value="50" {% if page_size == 50 %}selected{% endif %}>50</option>
+    </select>
+
+    <!-- Pagination Controls -->
+    {% if total > 0 %}
+    <div class="pagination" style="margin-top: 15px;">
+        <!-- First Page -->
+        {% if applications.has_previous %}
+            <button type="button" onclick="submitPage(1)">First</button>
+        {% else %}
+            <button type="button" disabled>First</button>
+        {% endif %}
+
+        <!-- Previous Page -->
+        {% if applications.has_previous %}
+            <button type="button" onclick="submitPage({{ applications.previous_page_number }})">Prev</button>
+        {% else %}
+            <button type="button" disabled>Prev</button>
+        {% endif %}
+
+        <!-- Page Numbers (±2 around current) -->
+        {% for num in page_range %}
+            {% if num >= applications.number|add:'-2' and num <= applications.number|add:'2' %}
+                {% if num == applications.number %}
+                    <strong>{{ num }}</strong>
+                {% else %}
+                    <button type="button" onclick="submitPage({{ num }})">{{ num }}</button>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+
+        <!-- Next Page -->
+        {% if applications.has_next %}
+            <button type="button" onclick="submitPage({{ applications.next_page_number }})">Next</button>
+        {% else %}
+            <button type="button" disabled>Next</button>
+        {% endif %}
+
+        <!-- Last Page -->
+        {% if applications.has_next %}
+            <button type="button" onclick="submitPage({{ applications.paginator.num_pages }})">Last</button>
+        {% else %}
+            <button type="button" disabled>Last</button>
+        {% endif %}
+    </div>
+    {% else %}
+        <p>No applications found for this job.</p>
+    {% endif %}
+</form>
+
+<!-- JavaScript Function to Set Page Value -->
+<script>
+    function submitPage(pageNum) {
+        document.getElementById('page-input').value = pageNum;
+        document.getElementById('pagination-form').submit();
+    }
+</script>
+
+
+{% comment %}  {% endcomment %}
+
+
+        {% comment %}  {% endcomment %}
           </div>
         </div>
       </div>

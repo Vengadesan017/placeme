@@ -254,7 +254,7 @@ Job vacancy post
                                                 {% comment %} <input type="checkbox" class="check"/> {% endcomment %}
                                                 <div class="c-1-text">
                                                     <p class="text-1">{{ post.title}}</p>
-                                                    <p class="text-2">{{ post.hire_request}}</p>
+                                                    <p class="text-2">{{ post.position_grp.position_title|default:''}} {{ post.hire_request.hire_request_code|default:''}}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -273,17 +273,34 @@ Job vacancy post
 
 
                                     <div class="c-box-2">
+                                        <!-- Views (non-clickable) -->
                                         <div class="num-1">
                                             <p class="num">{{ post.views }}</p>
-                                            <p class="num-text">Viewed</p>
+                                            <p class="num-text">Views</p>
                                         </div>
+
+                                        <!-- Applicants (Click to see all applicants for this job) -->
                                         <div class="num-3">
-                                            <p class="num">{{ post.applied_count}}</p>
-                                            <p class="num-text">Applied</p>
+                                            <a href="{% url 'recruiters:my_applicants' %}?job_id={{ post.job_id }}">
+                                                <p class="num">{{ post.applicant_count }}</p>
+                                                <p class="num-text">Applicants</p>
+                                            </a>
                                         </div>
+
+                                        <!-- Shortlisted (Click to see only shortlisted for this job) -->
+                                        <div class="num-1">
+                                            <a href="{% url 'recruiters:my_applicants' %}?job_id={{ post.job_id }}&status=Shortlisted">
+                                                <p class="num">{{ post.shortlisted_count }}</p>
+                                                <p class="num-text">Shortlisted</p>
+                                            </a>
+                                        </div>
+
+                                        <!-- Offered (Click to see only offered for this job) -->
                                         <div class="num-2">
-                                            <p class="num">0</p>
-                                            <p class="num-text">Action</p>
+                                            <a href="{% url 'recruiters:my_applicants' %}?job_id={{ post.job_id }}&status=Offered">
+                                                <p class="num">{{ post.offered_count }}</p>
+                                                <p class="num-text">Offered</p>
+                                            </a>
                                         </div>
                                     </div>
 
@@ -294,7 +311,7 @@ Job vacancy post
                                             <i class="fa-solid fa-ellipsis-vertical" id="c-3-show"></i>
                                         </div>
                                         <div class="c-3-postion" id="c-3-post">
-                                            <a href="/job/?r={{ post.slug }}" class="c-3-postion-1">
+                                            <a href="/job/?r={{ post.slug }}" class="c-3-postion-1" target="_blank">
                                                 Link
                                             </a>
                                             <div class="c-3-postion-2">

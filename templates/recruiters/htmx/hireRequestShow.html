@@ -32,7 +32,6 @@
         </td>
         <td class="recruiters-td">{{ hire_request.created_at|date:"d M Y" }}</td>
         <td class="recruiters-td">
-          {% if not hire_request.is_join %}
             
           <a href="#"
             {% comment %} class="open-modal-btn" {% endcomment %}
@@ -52,15 +51,6 @@
              {{ hire_request.employee_id.user.email|default:'' }}
             </div>
                 </a>
-            {% else %}
-            <div class="major">
-              {{ hire_request.employee_id.first_name|default:'' }}
-              {{ hire_request.employee_id.last_name|default:'' }}
-            </div>
-            <div class="minor">
-             {{ hire_request.employee_id.user.email|default:'' }}
-            </div>
-          {% endif %}
         </td>
         <td class="recruiters-td">{{ hire_request.get_status_display }}</td>
         <td class="recruiters-td">{{ hire_request.get_tat_days }}</td>
@@ -81,12 +71,26 @@
     {% empty %}
       <tr>
         <td colspan="6">
-          <center>Sorry No records found!</center>
+          <center
+            hx-post="#"
+            hx-vals='{"get_hire_request_form": "{{ hire_request.hire_request_id }}"}'
+            hx-target="#HtmxModal"
+            hx-trigger="click"
+            hx-swap="innerHTML"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'          
+          >Sorry No records found!</center>
         </td>
       </tr>
       <tr>
         <td colspan="6">
-          <center>Lets create Position and generate the hire request to post the job vacancy post</center>
+          <center
+            hx-post="#"
+            hx-vals='{"get_hire_request_form": "{{ hire_request.hire_request_id }}"}'
+            hx-target="#HtmxModal"
+            hx-trigger="click"
+            hx-swap="innerHTML"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+          >Lets create Position and generate the hire request to post the job vacancy post</center>
         </td>
       </tr>
     {% endfor %}

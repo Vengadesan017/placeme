@@ -75,13 +75,27 @@
       </tr>
     {% empty %}
       <tr>
-        <td colspan="6">
-          <center>Sorry No records found!</center>
+        <td colspan="10">
+          <center
+              hx-post="#"
+                hx-vals='{"get_position_form": ""}'
+                hx-target="#HtmxModal"
+                hx-trigger="click"
+                hx-swap="innerHTML"
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+          >Sorry No records found!</center>
         </td>
       </tr>
       <tr>
-        <td colspan="6">
-          <center>Lets create Position and generate the hire request to post the job vacancy post</center>
+        <td colspan="10">
+          <center                  
+              hx-post="#"
+                hx-vals='{"get_position_form": ""}'
+                hx-target="#HtmxModal"
+                hx-trigger="click"
+                hx-swap="innerHTML"
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                >Lets create Position and generate the hire request to post the job vacancy post</center>
         </td>
       </tr>
     {% endfor %}

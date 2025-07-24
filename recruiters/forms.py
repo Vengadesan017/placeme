@@ -75,14 +75,15 @@ class CreateJobs(forms.ModelForm):
     class Meta:
         model = Jobs
         fields = [
-            'hire_request', 'company', 'title', 'location_id', 'slug', 'description', 'benefit_id',
+             'company', 'title', 'location_id', 'slug', 'description', 'benefit_id',
             'employment_type', 'is_fixed_shift', 'is_rotational_shift', 'is_day_shift',
             'is_night_shift', 'is_onsite', 'is_work_from_home', 'is_hybrid', 'skills',
             'qualifications', 'min_experience', 'max_experience', 'salary','salary_type',
-            'last_date_to_apply', 'opening_count'
+            'last_date_to_apply', 'opening_count', 'hire_request', 'position_grp'
         ]
         labels = {
             'hire_request': 'Hire request',
+            'position_grp': 'Position',
             'company': 'Company',
             'title': 'Job title',
             'location_id': 'Job location',
@@ -110,7 +111,10 @@ class CreateJobs(forms.ModelForm):
         widgets = {
             'salary_type': forms.Select(attrs={
                 'class': 'admin-input-sel',
-                'style': 'width: 15%;',
+                # 'style': 'width: 35%;',
+            }),
+            'position_grp': forms.Select(attrs={
+                'class': 'admin-input-sel',
             }),
             'hire_request': forms.Select(attrs={
                 'class': 'admin-input-sel',
@@ -136,16 +140,21 @@ class CreateJobs(forms.ModelForm):
             # }),
         }
         
-        
-    def __init__(self, *args, **kwargs):
+    salary = CommaDecimalField(required=False, max_digits=10, decimal_places=2) 
+    def __init__(self, *args, position_group_id=None, **kwargs):
         
         company = kwargs.pop('company', None) 
         super().__init__(*args, **kwargs)
         
         if company:
-            self.fields['hire_request'].queryset = HireRequests.objects.filter(company=company, is_open=True, is_active=True)
+            self.fields['position_grp'].queryset = PositionGroup.objects.filter(company=company, is_active=True)
+            if position_group_id:
+                self.fields['hire_request'].queryset = HireRequests.objects.filter(company=company, position_group = position_group_id, is_open=True, is_active=True)
+            else:
+                self.fields['hire_request'].queryset = HireRequests.objects.filter(company=company, is_open=True, is_active=True)
 
         my_hire_request = list(self.fields['hire_request'].choices)
+        my_position_grp = list(self.fields['position_grp'].choices)
         
         self.fields['salary_type'].choices = [
             ('', 'Select the salary type...')
@@ -168,6 +177,12 @@ class CreateJobs(forms.ModelForm):
         ] +[
             ('', 'Anonymous job Posting (Without hire request)')
         ] + [choice for choice in my_hire_request if choice[0] != '']
+
+        self.fields['position_grp'].choices = [
+            ('', 'Select the Position')
+        ] +[
+            ('', 'Anonymous job Posting (Without Position)')
+        ] + [choice for choice in my_position_grp if choice[0] != '']
 
         # # return only 10 frequntly used posts
         # self.fields['location_id'].queryset = Locations.objects.annotate(
@@ -275,8 +290,7 @@ class CreateHireRequest(forms.ModelForm):
     class Meta:
         model = HireRequests
         fields = [ 'position', 'hire_request_code', 'employee_id', 'hire_request_code',
-                  'is_offered', 'is_approve', 'is_hire', 'is_join', 'is_approve', 'is_reject','is_leave',
-                  'hire_date', 'leave_date', 'remarks', 'deadline', 'is_open', 'is_active', 'updated_by']
+                  'hire_date', 'leave_date', 'remarks', 'deadline', 'updated_by']
 
         labels = {
             'position': 'Position',
@@ -293,6 +307,7 @@ class CreateHireRequest(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         company = kwargs.pop('company', None)
         super().__init__(*args, **kwargs)
+        # self.fields['employee_id'].disabled = True
         self.fields['hire_request_code'].disabled = True
         self.fields['hire_date'].disabled = True
         self.fields['hire_date'].disabled = True

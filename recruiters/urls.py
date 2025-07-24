@@ -8,6 +8,7 @@ urlpatterns = [
     path('advance-search/', views.AdvanceSearch,name='advance_search'),
     path('all-candidates/', views.AllCandidates,name='find_candidates'),
     path('my-candidates/', views.MyCandidates,name='my_candidate'),
+    path('my-applicants/', views.MyApplicants,name='my_applicants'),
     path('candidate/', views.Candidate,name='candidate'),
     path('create-company/',views.CreateCompany,name="create_company"),
     path('complete-kyc/',views.CompleteKYC,name="complete_kyc"),

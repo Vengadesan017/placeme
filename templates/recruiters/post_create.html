@@ -186,6 +186,11 @@ Job vacancy post
                 
                         <div class="company-div">
                             <div class="admin-name">
+                                <p>Position<span class="red-star">*</span></p>
+                                {{ form.position_grp}}
+                            </div>
+
+                            <div class="admin-name">
                                 <p>Hire Request<span class="red-star">*</span></p>
                                 {{ form.hire_request}}
                             </div>
@@ -194,7 +199,7 @@ Job vacancy post
                         <div class="company-div">
                             <div class="admin-name">
                                 <p>Job Title <span class="red-star">*</span></p>
-                                <input class="admin-input" name="title" placeholder="Enter Job title" required /> 
+                                <input class="admin-input" name="title" value="{{form.title.value|default:''}}" placeholder="Enter Job title" required /> 
                             </div>
                             <div class="admin-role">
                                 <p>Work Mode <span class="red-star">*</span></p>
@@ -223,7 +228,10 @@ Job vacancy post
                                 <div class="dropdown-list" id="dropdown-location"></div>
                             </div>
 
-                            <select class="company-input" id="multi-select-location" name="location_id" style="display: none;" multiple>
+                            <select class="company-input" id="multi-select-location"
+                             name="location_id" style="display: none;"
+                             data-selected-loc="{{ selected_loc_ids }}"
+                              multiple>
                                 {% comment %} {% for loc in form.location_id.field.queryset %}
                                     <option value="{{ loc.pk }}">{{ loc }}</option>
                                 {% endfor %}   {% endcomment %}
@@ -311,13 +319,23 @@ Job vacancy post
                         <div class="company-div">
                             <div class="email-name">
                                 <p>Salary <span class="red-star">*</span></p>
-                                <input class="admin-input-sel" name="salary" style="width: 45%;" type="number" step="0.01" min="0" placeholder="Enter salary in LPA" required />
-                                {{ form.salary_type }}
+                                <input class="admin-input-sel" name="salary"  type="text" value="{{form.salary.value}}" id="id_salary" oninput="formatIndianNumber(this)"min="0" placeholder="Enter salary in LPA" required />
                             </div>
                             <div class="website">
+                                {{ form.salary_type }}
+                                <label for="hide-salary">
+                                    <input type="checkbox" name="hide-salary" id="hide-salary" value="">Hide the salary in post
+                                </label>
+                            </div>
+                        </div>
+                        <div class="company-div">
+                            <div class="email-name">
                                 <p>Opening Count <span class="red-star">*</span></p>
                                 <input class="admin-input-sel" name="opening_count" type="number" min="1" required />
                             </div>
+                            {% comment %} <div class="website">
+
+                            </div> {% endcomment %}
                         </div>
                 
                         <div class="description">
@@ -325,7 +343,7 @@ Job vacancy post
                                 <p>Job Description <span class="red-star">*</span></p>
                             </div>
                             <div class="textarea-div">
-                                <input type="hidden" name="description" id="hidden-description" required>
+                                <input type="hidden" name="description" id="hidden-description" value="{{ form.initial.description|default_if_none:'' }}" required>
                                 <div id="editor-container" style="height: 200px;"></div>
                                 <p id="char-count">0/1000 characters</p>
                             </div>
@@ -375,10 +393,7 @@ Job vacancy post
 
 
 
-                <script>
- 
-                    </script>
-                    
+  
                     
 
                 
@@ -389,14 +404,27 @@ Job vacancy post
 
             <script>
                // <!-- Init Quill for description-->
+               initializeQuillEditor();
+    function initializeQuillEditor() {
+                   // <!-- Init Quill for description-->
                 var quill = new Quill('#editor-container', {
                     theme: 'snow'
                 });
                 
                 const charCountDisplay = document.getElementById('char-count');
                 const hiddenInput = document.getElementById('hidden-description');
-                const maxLength = 1000;
-                
+                const maxLength = 2000;
+
+                // Set editor content from hidden input
+                if (hiddenInput.value) {
+                    quill.root.innerHTML = hiddenInput.value;
+                    // Also update character count
+                    const plainText = quill.getText().trim();
+                    const charCount = plainText.length;
+                    charCountDisplay.textContent = `${charCount}/${maxLength} characters`;
+                    charCountDisplay.style.color = charCount > maxLength ? 'red' : '#555';
+                }
+
                 quill.on('text-change', function () {
                     const plainText = quill.getText().trim();
                     const charCount = plainText.length;
@@ -408,7 +436,41 @@ Job vacancy post
                     // Update hidden input with HTML content
                     hiddenInput.value = quill.root.innerHTML;
                 });
+            }
                 
+{% comment %} currency formating {% endcomment %}
+formatIndianNumber(document.getElementById('id_salary'));
+function formatIndianNumber(input) {
+   // Get value and remove all commas
+    let value = input.value.replace(/,/g, '');
+
+    // Exit early if not a number
+    if (isNaN(value) || value === '') return;
+
+    // Split integer and decimal parts
+    let parts = value.split('.');
+    let integer = parts[0];
+    let decimal = parts.length > 1 ? '.' + parts[1] : '';
+
+    // Format integer part as per Indian number system
+    let lastThree = integer.slice(-3);
+    let rest = integer.slice(0, -3);
+
+    if (rest !== '') {
+        lastThree = ',' + lastThree;
+    }
+
+    let formatted = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree + decimal;
+
+    // Save caret position from the end
+    let caretFromEnd = input.value.length - input.selectionStart;
+
+    input.value = formatted;
+
+    // Restore caret to original position
+    let newCaretPosition = input.value.length - caretFromEnd;
+    input.setSelectionRange(newCaretPosition, newCaretPosition);
+}
                 
                 
                // dynamic fixedShift
@@ -431,8 +493,32 @@ Job vacancy post
 
             
 
+
+
+
+
+
+
+
+
+
+
+document.getElementById("id_position_grp").addEventListener("change", function () {
+    const selectedId = this.value;
+    if (selectedId) {
+        window.location.href = `/recruiters/create-post/?position=${selectedId}`;
+    }
+    else {
+        window.location.href = `/recruiters/create-post/`;
+    }
+});
+
+
+
+
             </script>
 
+            
     {% endblock content %}
 
 
@@ -449,178 +535,6 @@ Job vacancy post
 
 
     {% block mobile_view %}
-    <div class="m1-filter-div" id="m1-filter-div">
-        <div class="m-list-left">
-                            
-            <div class="form">
-                <form method="post" action="#">
-                    <div class="filters-div">
-                        <i class="fa-solid fa-arrow-down-wide-short"></i>
-                        <h1>Filters</h1>
-                        <div class="x-mark" id="x-mark" onclick="mobileView(false)">
-                            <p class="X">X</p>
-                        </div>
-                    </div>
-                    
-                    <div class="input-div">
-                       <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
-
-                    </div>
-
-                    <div class="job-status-div">
-                        <div class="job-status-div-text">
-                            <p>Job Status</p>
-                            <i class="fa-solid fa-angle-down"></i>
-
-                        </div>
-                        <div class="checkbox-div">
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>Active Jobs</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>1</p>
-                                </div>
-                            </div>
-
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>Expired Jobs</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>1</p>
-                                </div>
-                            </div>
-
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>Closed Jobs</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>2</p>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-
-
-
-                        
-
-                    </div>
-
-
-
-
-                    <div class="job-status-div-2">
-                        <div class="job-status-div-text">
-                            <p>Job Posted By</p>
-                            <i class="fa-solid fa-angle-down"></i>
-
-                        </div>
-                        <div class="input-div-down">
-                            <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
-                        </div>
-                        <div class="checkbox-div">
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>Recruiter name</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>1</p>
-                                </div>
-                            </div>
-
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>Recruiter name</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>1</p>
-                                </div>
-                            </div>
-
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>Recruiter name</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>2</p>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-
-
-
-                        
-
-                    </div>
-
-
-
-
-                    <div class="job-status-div-3">
-                        <div class="job-status-div-text">
-                            <p>Job Tittle</p>
-                            <i class="fa-solid fa-angle-down"></i>
-
-                        </div>
-                        <div class="input-div-down">
-                            <input type="text" class="input" placeholder=" Search Title,Job Id..."/> 
-                        </div>
-                        <div class="checkbox-div">
-                            <div class="checkbox-1">
-                                <div class="checkbox-1-1">
-                                   <input type="checkbox" class="input-check"/>
-                                   <p>App developer</p> 
-                                </div>
-                                <div class="checkbox-1-count">
-                                    <p>1</p>
-                                </div>
-                            </div>
-
-                            
-                        </div>
-
-
-
-
-
-
-                        
-
-                    </div>
-
-
-
-                    
-
-                </form>
-
-            </div>
-            
-
-
-
-
-
-
-
-        </div>
-
-    </div>
-
 
 
     {% include "recruiters/SubFileForApi/post-new-preview.html" %}

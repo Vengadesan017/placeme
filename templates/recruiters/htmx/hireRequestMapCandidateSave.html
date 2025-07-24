@@ -35,13 +35,18 @@
         <tr>
             <td><b>Candidates</b></td>
             <td>
+                {% if hire_request_form.instance.is_join %}
+                                {{ hire_request_form.instance.employee_id }}
+                            {% else %}
             <select name="employee_id" id="id_edu_id" required>
-                <option value="">Select Candidate</option>
-                {% for option in hire_request_form.fields.employee_id.queryset %}
-                    <option value="{{ option.pk }}" {% if option.pk == hire_request_form.initial.employee_id %}selected{% endif %}>
-                        {{ option }}
-                    </option>
-                {% endfor %}
+
+                            <option value="">Select Candidate</option>
+                            {% for option in hire_request_form.fields.employee_id.queryset %}
+                                <option value="{{ option.pk }}" {% if option.pk == hire_request_form.initial.employee_id %}selected{% endif %}>
+                                    {{ option }}
+                                </option>
+                            {% endfor %}
+                {% endif %}
             </select>
             
             </td>
@@ -61,11 +66,11 @@
                 {% elif hire_request_form.instance.is_hire and not hire_request_form.instance.is_join %}
                     <option value="hire" selected>Hired</option>
                     <option value="join">Joined</option>
-                {% elif hire_request_form.instance.is_hire and hire_request_form.instance.is_join %}
+                {% elif hire_request_form.instance.is_join and not hire_request_form.instance.is_leave %}
                     <option value="join" selected>Joined</option>
-
-                {% endif %}
                     <option value="leave">Leave the position</option>
+                {% endif %}
+
                     <option value="approve">Approve Candidate**</option>
                     <option value="reject">Reject Approval**</option>
                 

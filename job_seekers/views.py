@@ -349,8 +349,14 @@ def Search(request):
 
 def Job(request):
     try:
-        job1 = request.GET.get('r', '')
-        job = Jobs.objects.get(slug=job1)
+        job_slug = request.GET.get('r', '')
+        job = Jobs.objects.get(slug=job_slug)
+
+        # Increment the view count atomically
+        Jobs.objects.filter(pk=job.pk).update(views=F('views') + 1)
+
+        # Refresh the object to get updated view count if needed
+        job.refresh_from_db()
         if request.user.is_authenticated:
             login = True
             check_applied = JobApplications.objects.filter(candidate=Candidates.objects.get(user=request.user), job=job.job_id)  

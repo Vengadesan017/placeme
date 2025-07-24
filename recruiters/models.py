@@ -179,6 +179,7 @@ class Jobs(models.Model):
     skills = models.ManyToManyField('job_seekers.Skills', related_name='job_post_skills', blank=True)
     qualifications = models.ManyToManyField('job_seekers.SpecificationForEdu', related_name='qualification_map')
     hire_request = models.ForeignKey('recruiters.HireRequests', related_name='job_post_hire_request',on_delete=models.PROTECT, blank=True, null=True)
+    position_grp = models.ForeignKey('recruiters.PositionGroup', related_name='job_post_position_grp',on_delete=models.PROTECT, blank=True, null=True)
     min_experience = models.IntegerField(
         choices=EXPERIENCE_CHOICES,
         blank=True,
@@ -190,14 +191,7 @@ class Jobs(models.Model):
         null=True
     )
     salary = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    salary_type  = models.CharField(max_length=10, choices=[
-        ('CTC', 'CTC'),
-        ('Take home', 'Take home'),
-        ('Per year', 'Per year'),
-        ('Per month', 'Per month'),
-        ('Per hour', 'Per hour') 
-
-    ],default='CTC', blank=True, null=True)
+    salary_type  = models.CharField(max_length=20, choices=SALARY_TYPE_CHOICES, blank=True, null=True)
     posted_date = models.DateTimeField(default=timezone.now)
     refreshed_date = models.DateTimeField(default=timezone.now)
     last_date_to_apply = models.DateTimeField(blank=True, null=True)
@@ -445,6 +439,7 @@ class PositionGroup(models.Model):
     updated_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_position_grp', null=True, blank=True)  
     approved_at = models.DateTimeField(auto_now=True,blank=True, null=True)
     approved_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='approve3_position_grp', null=True, blank=True)  
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ('company', 'position_code')

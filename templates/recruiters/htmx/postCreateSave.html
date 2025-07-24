@@ -1,11 +1,16 @@
-document.addEventListener('DOMContentLoaded', function () {
 
+
+
+
+
+
+
+<script>
+
+    /*
     const multiSelectConfigs = [
-        ['multi-select-qualifications', 'search-qualifications', 'selected-tags-qualifications', 'dropdown-qualifications', 'new-qualifications'],
-        ['multi-select-location', 'search-location', 'selected-tags-location', 'dropdown-location', 'new-locations'],
-        ['multi-select-skills', 'search-skills', 'selected-tags-skills', 'dropdown-skills', 'new-skills'],
-        ['multi-select-benefits', 'search-benefits', 'selected-tags-benefits', 'dropdown-benefits', 'new-benefits']
-    ];
+        ['multi-select-location', 'search-location', 'selected-tags-location', 'dropdown-location', 'new-locations']
+    ]; */
 
     fetch('./../api/create-job-form/')
         .then(response => response.json())
@@ -31,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
             appendOptions(data.skills, 'multi-select-skills');
             appendOptions(data.qualifications, 'multi-select-qualifications');
             appendOptions(data.benefits, 'multi-select-benefits');
+
 
             // disply data
        // Preselect locations based on data attribute
@@ -63,11 +69,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 selectedTagsContainer.appendChild(tag);
             }
         });            
-            // disply data end
-            
-            
+            // disply data
+
             // Initialize multi-selects AFTER data is loaded
-            multiSelectConfigs.forEach(config => setupMultiSelect(...config));
+            // multiSelectConfigs.forEach(config => setupMultiSelect(...config));
+            setupMultiSelect('multi-select-location', 'search-location', 'selected-tags-location', 'dropdown-location', 'new-locations');
+
         })
         .catch(error => {
             console.error('Error loading dropdown data:', error);
@@ -196,4 +203,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-});
+
+
+
+
+
+</script>
+

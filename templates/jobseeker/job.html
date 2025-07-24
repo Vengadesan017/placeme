@@ -81,7 +81,7 @@
                                 {{ job.location_id.all|join:", " }}
 
                             </li>
-                            <li><i class="fas fa-indian-rupee-sign"></i>{{ job.salary|floatformat:0 }} {{ job.salary_type }}</li>
+                            <li><i class="fas fa-indian-rupee-sign"></i>{{ job.salary|floatformat:0 }} {{ job.get_salary_type_display }}</li>
                             <li><i class="fas fa-calendar-alt"></i> {{ job.refreshed_date|timesince }} ago</li>
                           </ul>
                           

@@ -1,14 +1,3 @@
-let jobOpen = document.getElementById('job-open');
-jobOpen.addEventListener('click' , () => {
-    let showInfoDiv = document.getElementById('show-info-div')
-    if(showInfoDiv.style.display === "flex" || showInfoDiv.style.display === ""){
-        showInfoDiv.style.display = 'none';
-    }else if(showInfoDiv.style.display === "none"){
-        showInfoDiv.style.display = 'flex'
-    }else{
-        showInfoDiv.style.display = 'flex' 
-    }
-})
 
 
 
