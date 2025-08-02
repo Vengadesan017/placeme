@@ -161,7 +161,7 @@ class Jobs(models.Model):
     location_id = models.ManyToManyField('recruiters.Locations', related_name='location_map_jlm')
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     description = models.TextField()
-    benefit_id = models.ManyToManyField('recruiters.Benefits', related_name='benefit_map_jbm')    
+    benefit_id = models.ManyToManyField('recruiters.Benefits', related_name='benefit_map_jbm', null=True, blank=True)    
     employment_type  = models.CharField(max_length=100, choices=[
         ('Full-time', 'Full-time'),
         ('Part-time', 'Part-time'),
@@ -178,8 +178,8 @@ class Jobs(models.Model):
     is_hybrid = models.BooleanField(default=False)
     skills = models.ManyToManyField('job_seekers.Skills', related_name='job_post_skills', blank=True)
     qualifications = models.ManyToManyField('job_seekers.SpecificationForEdu', related_name='qualification_map')
-    hire_request = models.ForeignKey('recruiters.HireRequests', related_name='job_post_hire_request',on_delete=models.PROTECT, blank=True, null=True)
-    position_grp = models.ForeignKey('recruiters.PositionGroup', related_name='job_post_position_grp',on_delete=models.PROTECT, blank=True, null=True)
+    hire_request = models.ForeignKey('recruiters.HireRequests', related_name='job_post_hire_request',on_delete=models.CASCADE, blank=True, null=True)
+    position_grp = models.ForeignKey('recruiters.PositionGroup', related_name='job_post_position_grp',on_delete=models.CASCADE, blank=True, null=True)
     min_experience = models.IntegerField(
         choices=EXPERIENCE_CHOICES,
         blank=True,
@@ -199,7 +199,7 @@ class Jobs(models.Model):
     views = models.IntegerField(default=0)
     applied_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='create_job_post', null=True, blank=True)  
+    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE, related_name='create_job_post', null=True, blank=True)  
     is_draft = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_post_verified = models.BooleanField(default=False)
@@ -254,9 +254,9 @@ class OfferLetters(models.Model):
     is_acknowledged = models.BooleanField(default=False)
     response = models.CharField(max_length=255,blank=True,null=True)
     generated_at = models.DateTimeField(auto_now_add=True)
-    generated_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='generate_offer', null=True, blank=True)
+    generated_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE, related_name='generate_offer', null=True, blank=True)
     approve_at = models.DateTimeField(blank=True,null=True)
-    approve_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='approve_offer', null=True, blank=True)    
+    approve_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE, related_name='approve_offer', null=True, blank=True)    
 
     def __str__(self):
         return f"{self.company} - {self.offer_letter}"
@@ -434,11 +434,11 @@ class PositionGroup(models.Model):
     hrms = models.CharField(max_length=255,null=True, blank=True)
     division = models.CharField(max_length=255,null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='create_position_grp', null=True, blank=True)
+    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE, related_name='create_position_grp', null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
-    updated_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_position_grp', null=True, blank=True)  
+    updated_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE, related_name='update_position_grp', null=True, blank=True)  
     approved_at = models.DateTimeField(auto_now=True,blank=True, null=True)
-    approved_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='approve3_position_grp', null=True, blank=True)  
+    approved_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE, related_name='approve3_position_grp', null=True, blank=True)  
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -465,12 +465,12 @@ class PositionGroup(models.Model):
 class Positions(models.Model):
     position_id = models.AutoField(primary_key=True)
     position_group = models.ForeignKey(PositionGroup, on_delete=models.CASCADE, related_name='positions', null=True, blank=True)   
-    employee_id = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='employee_in_position', null=True, blank=True)
+    employee_id = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE, related_name='employee_in_position', null=True, blank=True)
     hire_date = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='create_position', null=True, blank=True)
+    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE, related_name='create_position', null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True, null=True)
-    upadted_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_position', null=True, blank=True)    
+    upadted_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE, related_name='update_position', null=True, blank=True)    
     is_open = models.BooleanField(default=True)
     is_fill = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
@@ -487,15 +487,15 @@ class HireRequests(models.Model):
     position_group = models.ForeignKey(PositionGroup, on_delete=models.CASCADE, related_name='position_grp_in_hr', null=True, blank=True)    
     position = models.ForeignKey(Positions, on_delete=models.CASCADE, related_name='position_in_hr', blank=True, null=True)
     hire_request_code = models.PositiveIntegerField(blank=True,null=True)  # generate and validate
-    employee_id = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='employee_in_hirerequest', null=True, blank=True)
+    employee_id = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE, related_name='employee_in_hirerequest', null=True, blank=True)
     hire_date = models.DateTimeField(null=True, blank=True)
     leave_date = models.DateTimeField(null=True, blank=True)
     remarks = models.CharField(max_length=255,blank=True,null=True)
     reason_for_leaving = models.CharField(max_length=255,blank=True,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='create_hire_request', null=True, blank=True)
+    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE, related_name='create_hire_request', null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True,null=True)
-    updated_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_hire_request', null=True, blank=True)    
+    updated_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE, related_name='update_hire_request', null=True, blank=True)    
     deadline = models.DateTimeField(blank=True,null=True)
     is_open = models.BooleanField(default=True)
     is_approve = models.BooleanField(default=False)
@@ -571,14 +571,14 @@ class EmployeePositionManager(models.Model):  # not needed merge to hire request
     employee_position_id = models.AutoField(primary_key=True)
     position = models.ForeignKey(Positions, on_delete=models.CASCADE)
     hire_request = models.ForeignKey(HireRequests, on_delete=models.CASCADE,blank=True,null=True)
-    employee_id = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='employee_in_position_manager', null=True, blank=True)
+    employee_id = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE, related_name='employee_in_position_manager', null=True, blank=True)
     hire_date = models.DateTimeField(null=True, blank=True)
     leave_date = models.DateTimeField(null=True, blank=True)
     remarks = models.CharField(max_length=255,blank=True,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='map_position', null=True, blank=True)
+    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE, related_name='map_position', null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
-    upadted_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_map_position', null=True, blank=True)    
+    upadted_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE, related_name='update_map_position', null=True, blank=True)    
     is_active = models.BooleanField(default=True)
 
 
@@ -591,17 +591,17 @@ class EmployeePositionManager(models.Model):  # not needed merge to hire request
 # =====================================Admin Control Begin========================================================
 class SubUsers(models.Model):
     subuser_id = models.AutoField(primary_key=True)
-    company = models.ForeignKey(Companies, on_delete=models.PROTECT, related_name='recruiters_company', null=True, blank=True) 
-    user = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='recruiters_subuser', null=True, blank=True) 
+    company = models.ForeignKey(Companies, on_delete=models.CASCADE, related_name='recruiters_company', null=True, blank=True) 
+    user = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE, related_name='recruiters_subuser', null=True, blank=True) 
     is_recruiter = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_payroll_maker = models.BooleanField(default=False)
     is_payroll_checker = models.BooleanField(default=False)
     remarks = models.CharField(max_length=255,blank=True,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='create_subusers', null=True, blank=True)
+    created_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE, related_name='create_subusers', null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
-    upadted_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.PROTECT, related_name='update_subuser', null=True, blank=True)    
+    upadted_by = models.ForeignKey('job_seekers.Candidates', on_delete=models.CASCADE, related_name='update_subuser', null=True, blank=True)    
     is_active = models.BooleanField(default=True)
 
 

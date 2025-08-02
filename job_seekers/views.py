@@ -179,7 +179,7 @@ def Profile(request):
                         print("Form errors:", form.errors)
                         errors = form_errors_to_messages_htmx(form, level='error')
                         return JsonResponse(errors, status=400)
-                context['my_education'] =  EducationMap.objects.filter(candidate=candidate).order_by('-year_of_passing')
+                context['my_education'] =  EducationMap.objects.filter(candidate=candidate).order_by(F('year_of_passing').asc(nulls_first=True))
                 template_name = 'jobseeker/htmx/profileEducationShow.html'
             elif 'skill_save' in request.POST:
                 form = CandidateSkillUpdateForm(request.POST, instance=candidate)
@@ -246,7 +246,7 @@ def Profile(request):
                         print("Form errors:", form.errors)
                         errors = form_errors_to_messages_htmx(form, level='error')
                         return JsonResponse(errors, status=400)
-                context['my_employment'] =  Employment.objects.filter(candidate=candidate).order_by('-dol')
+                context['my_employment'] =  Employment.objects.filter(candidate=candidate).order_by(F('dol').asc(nulls_first=True))
                 template_name = 'jobseeker/htmx/profileEmploymentShow.html'
             elif 'career_save' in request.POST:
                 form = CandidateCareerUpdateForm(request.POST, instance=candidate)
@@ -286,9 +286,9 @@ def Profile(request):
                 return redirect("job_seeker:profile")
                     
 
-        education = EducationMap.objects.filter(candidate=candidate).order_by('-year_of_passing')
+        education = EducationMap.objects.filter(candidate=candidate).order_by(F('year_of_passing').asc(nulls_first=True))
         language = UserLanguages.objects.filter(candidate=candidate)
-        employment = Employment.objects.filter(candidate=candidate).order_by('-dol')
+        employment = Employment.objects.filter(candidate=candidate).order_by(F('dol').asc(nulls_first=True))
 
         levels = list(LevelForEdu.objects.all().values('level_id', 'name'))
         courses = list(CourseForEdu.objects.all().values('course_id', 'name', 'level_id'))

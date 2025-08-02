@@ -36,7 +36,8 @@
         </div>
         <div class="employement-date-div">
           <p class="employement-date">
-            {{ edu.year_of_passing|default_if_none:'' }}
+            {{ edu.year_of_joining|default_if_none:'' }} - 
+            {{ edu.year_of_passing|default_if_none:'Present' }}
           </p>
           <p class="employement-time">{{ edu.type_id|default_if_none:'' }}</p>
         </div>

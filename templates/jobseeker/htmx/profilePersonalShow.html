@@ -20,7 +20,7 @@
                             <div class="info-name1-mv">
                                 <!-- mod -->
                                 <div class="name-div-mv">
-                                    <h1 id="userName">Vengadesan G 
+                                    <h1 id="userName">{{ candidate.first_name }} {{ candidate.last_name }} 
                                 <a href="#"
                                     {% comment %} class="open-modal-btn" {% endcomment %}
                                     {% comment %} data-modal-id="HtmxModal" {% endcomment %}
@@ -40,7 +40,7 @@
                             </div>
                             <div class="info-date-mv">
                                 <p class="update-p-mv">Last Updated -</p>
-                                <p class="date-mv"> Jan. 25, 2025</p>
+                                <p class="date"> {{ candidate.last_update }}</p>
                             </div>
 
 

@@ -34,7 +34,13 @@
                 <div class="pic-div">
                             <div class="my-profile-pic">
 
-                                {% include "jobseeker/htmx/profilePictureShow.html" %}
+
+{% if candidate.profile_pic %}
+                    <img src="{{candidate.profile_pic.url }}" class="pic-photo" alt="profile pic" width="100%">
+                {% else %}
+                    <img src="{% static 'img/image.png' %}" class="pic-photo" alt="profile pic" width="100%">
+                {% endif %}
+
                             </div>                    
 
                     {% comment %} <a href="#" class="open-modal-btn btn" data-modal-id="PictureModal" >+</a> {% endcomment %}
@@ -47,6 +53,12 @@
                         <li>
                             <div class="li-1">
                                 <div class="personal-div"><a href="#personal-info" class="profile-link">Personal Info</a></div>
+                                <div class="height"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="li-1">
+                                <div class="personal-div"><a href="#quick-actions" class="profile-link">Quick Actions</a></div>
                                 <div class="height"></div>
                             </div>
                         </li>
@@ -94,88 +106,400 @@
                                 <div class="height"></div>
                             </div>
                         </li>
-                        <li>
-                            <div class="li-1">
-                                <div class="personal-div"><a href="#resume" class="profile-link">Resume</a></div>
-                                <div class="height"></div>
-                            </div>
-                        </li>
                        </ul>
                     
-                </div>
-                <div class="logout-div">
-                    <div class="logout-btn-div">
-                        <a href="{% url 'auth:logout' %}" class="logout-btn">Logout</a>
-                    </div>
                 </div>
             </div>
         </div>
         <div class="right-container">
           <div class="info-container" id="personal-info">
-                {% include "jobseeker/htmx/profilePersonalShow.html" %}
-            </div>
 {% comment %}  {% endcomment %}
+                    <div class="info-profile-mv">
+
+                        <div class="pic-div-mv">
+                            <div class="my-profile-pic">
+
+{% if candidate.profile_pic %}
+                    <img src="{{candidate.profile_pic.url }}" class="pic-photo" alt="profile pic" width="100%">
+                {% else %}
+                    <img src="{% static 'img/image.png' %}" class="pic-photo" alt="profile pic" width="100%">
+                {% endif %}
 
 
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="info-name-mv">
+
+
+
+                            <div class="info-name1-mv">
+                                <!-- mod -->
+                                <div class="name-div-mv">
+                                    <h1 id="userName">{{ candidate.first_name }} {{ candidate.last_name }} </h1>
+
+                                </div>
+
+                            </div>
+                            <div class="info-date-mv">
+                                <p class="update-p-mv">Last Updated -</p>
+                                <p class="date"> {{ candidate.last_update }}</p>
+                            </div>
+
+
+                        </div>
+                        
+
+                    </div>
+                <div class="info-name">
+
+
+
+                    <div class="info-name1">
+                        <!-- mod -->
+                        <div class="name-div">
+                            <h1 id="userName">{{ candidate.first_name }} {{ candidate.last_name }} 
+                                </h1>
+                            
+                        </div>
+                    </div>
+                    <div class="info-date">
+                        <p class="update-p">Last Updated -</p>
+                        <p class="date"> {{ candidate.last_update }}</p>
+                    </div>
+
+
+                </div>
+
+                <div class="detail-main">
+                    <div class="detail-1">
+
+
+
+                        <div class="gender-box">
+                            <ul class="gender-box-ul">
+                                <li>
+                                    <div class="gender-box-person">
+                                        <i class="fa-solid fa-user"></i>
+                                        <p>
+                                            {% if candidate.gender %}
+                                                {{ candidate.gender }}
+                                            {% else %}
+
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="gender-box-date">
+                                        <i class="fa-solid fa-calendar-week"></i>
+                                        <p>
+                                            {% if candidate.dob %}
+                                                {{ candidate.dob|date:'d-m-Y' }}
+                                            {% else %}
+
+                                            
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </li>
+                                <!-- mod -->
+                                
+                            </ul>
+                        </div>
+
+                        
+
+
+
+
+                        <div class="phone-box">
+                            <ul class="phone-box-ul">
+                                <li>
+                                    <div class="phone-box-person">
+                                        <i class="fa-solid fa-phone"></i>
+                                        <p>{{ candidate.user.mobile_no|default_if_none:'' }}</p>
+                                    </div>
+                                </li>
+                                <!-- mod -->
+                                <li>
+                                    <div class="phone-box-date">
+                                        <i class="fa-solid fa-envelope"></i>
+                                        <div class="email-div">
+                                            <p class="email" id="email">{{ candidate.user.email|default_if_none:'' }}</p>
+                                        </div>
+                                    </div>
+                                </li> 
+                            </ul>
+                        </div>
+                        <div class="gender-box1">
+                            <ul class="gender-box-ul1">
+                                
+                                <li>
+                                    <div class="gender-box-place">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                        <p>
+                                           
+                                            {% if candidate.city and candidate.state and candidate.country %}
+                                            {{ candidate.city }}, {{ candidate.state }}, {{ candidate.country }}
+                                            {% else %}
+                                            {% endif %}  
+                                                                              
+                                        </p>
+                                    </div>
+                                </li>
+                                
+                                
+                            </ul>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+                   
+
+                </div>
+
+
+
+
+ 
+
+
+            </div>
+
+
+                <div class="resume1" id="quick-actions">
+
+                    <div class="resume-name1">
+                        <h4>Quick Actions</h4>
+                        <div class="buttons-resume1">
+            <a href="" class="action-btn" title="View Resume" target="_blank">
+                <i class="fas fa-unlock"></i> Unlock Profile
+            </a>
+            <a href="" class="action-btn" title="View Resume" target="_blank">
+                <i class="fas fa-cogs"></i> Make action
+            </a>
+            {% if candidate.resume and candidate.resume.name %}
+            <a href="{{ candidate.resume.url }}" class="action-btn" title="View Resume" target="_blank">
+                <i class="fas fa-eye"></i> View CV
+            </a>
+            <a href="{{ candidate.resume.url }}" class="action-btn" title="Download Resume" download>
+                <i class="fas fa-download"></i> Download CV
+            </a>
+            {% else %}
+            
+            {% endif %}
+            <a href="" class="action-btn" title="View Resume" target="_blank">
+                <i class="fas fa-tasks"></i> Add Remarks
+            </a>
+
+        </div>
+        <div class="buttons-resume1">
+            Previous Remarks : Not suitable in Budget (by ___@gmail.com at feb. 12)
+
+        </div>
+        <div class="buttons-resume1">
+            Previous Actions : like applied at : Viewed at: shortlist at:..
+
+        </div>
+    </div>
+
+            </div>
                 
             <div class="summary-container" id="professional-summary">
-                {% include "jobseeker/htmx/profileSummaryShow.html" %}
+<div class="summary1">
+  <div class="summary-name2">
+    <h4>Professional Summary</h4>
+    <div class="add-div">
+    </div>
+  </div>
+</div>
+<div class="summary-data-container1">
+    {% if candidate.professional_summary %}
+    <p>{{ candidate.professional_summary|default:'' }}</p>    
+        
+    {% else %}
+    <p>  </p>
+    {% endif %}
+</div>
+
                 
             </div>
             
-            {% comment %}  {% endcomment %}
+
             <div class="skill-container">
                 <div class="education"  id="education">
                     
-                    {% include "jobseeker/htmx/profileEducationShow.html" %}
+<div class="education-name1">
+  <h4>Education</h4>
+  <div class="add-div">                                
+
+  </div>
+</div>
+<div class="education-name2">
+    {% for edu in my_education %}
+      <div class="education-name2-1">
+        <div class="education-name2-1-col">
+
+            <h2>{{ edu.institute|default_if_none:'' }} </h2>
+            
+
+          <p>{{ edu.edu_id|default_if_none:'' }}</p>
+        </div>
+        <div class="employement-date-div">
+          <p class="employement-date">
+            {{ edu.year_of_passing|default_if_none:'' }}
+          </p>
+          <p class="employement-time">{{ edu.type_id|default_if_none:'' }}</p>
+        </div>
+        {% comment %} <div class="education-name2-1-date">
+          <p>{{ edu.year_of_passing }}</p>
+          <p>{{ edu.type_id }}</p>
+        </div> {% endcomment %}
+      </div>
+  {% empty %}
+    <div class="education-name2-1">
+      <div class="education-name2-1-col">
+        No Record Found
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
                 </div>
                 <div class="key-skills" id="skills">
                     
-                    {% include "jobseeker/htmx/profileSkillShow.html" %}
+                    <div class="key-headline">
+                        <h4>Key Skills</h4>
+                        
+                        <div class="add-div">
+                        </div>
+                    </div>
+                    <div class="key-list">
+                        <div class="key-list-div">
+                            <ul class="key-list-ul" id="keyUl">
+                                {% if skills_list %}
+                                {% for skill in skills_list %}
+                                {% if skill %}                                
+                                <li class="key-list-li">
+                                    {{ skill }}
+
+                                </li>
+                                {% else %}
+                                {% endif%}
+                                {% endfor %}
+
+                                {% else %}
+                                <li class="key-list-li">
+                                    No Record Found 
+                                </li>
+                                {% endif %}
+                                
+                            </ul>
+                        </div>
+                        <div class="key-list-more">
+
+                            <!-- mod -->
+                            <button class="more-btn" id="skill-more">More <i class="fa-solid fa-arrow-right"></i></button>
+                            <button class="close-btn" id="skill-close">Close <i class="fa-solid fa-xmark"></i></i></button>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="Perference" id="preference">
                     <div class="Perference-heading">
                         <h4>Language proficiency</h4>
                             <div class="add-div">
-                        <a href="#"
-                        hx-post="#"
-                        hx-vals='{"get_language_form": ""}'
-                        hx-target="#HtmxModal"
-                        hx-trigger="click"
-                        hx-swap="innerHTML"
-                        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                        hx-on="htmx:beforeRequest: startLoading();
-                        htmx:afterRequest: stopLoading();
-                        htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                        </a>
+
                             </div>
                     </div>
                     <div class="languages">
 
                         <div class="languages-row" id="my_language">
-                            {% include "jobseeker/htmx/profileLanguageShow.html" %}
+
+    <div class="languages-ul-div">
+
+        {% if my_languages %}
+        <table class="language-table">
+            <thead>
+                <tr>
+                    <th class="">Languages</th>
+                    <th class="">Speak</th>
+                    <th>Read</th>
+                    <th>Write</th>
+                    <th>Proficiency Level</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for lan in my_languages %}
+            <tr>
+                <td>{{lan.language_id}}
+                <td>{% if lan.can_speak %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}</td>
+                <td>{% if lan.can_read %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}</td>
+                <td>{% if lan.can_write %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-solid fa-circle-xmark"></i>{% endif %}</td>
+                <td>{{lan.proficiency|default_if_none:''}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+            {% else %}
+                    No record Found
+            {% endif %}
+
+
+    </div>
+    <div class="key-list-more">
+        <!-- <button class="more-btn">Check <i class="fa-solid fa-arrow-right"></i></button> -->
+    </div>
+    
+
                         </div>
                     </div>
                         <div class="Perference-heading">
                         <h4>Preferred locations</h4>
                         <div class="add-div">
-                                <a href="#"
-                                    hx-post="#"
-                                    hx-vals='{"get_location_form": ""}'
-                                    hx-target="#HtmxModal"
-                                    hx-trigger="click"
-                                    hx-swap="innerHTML"
-                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                                    hx-on="htmx:beforeRequest: startLoading();
-                                        htmx:afterRequest: stopLoading();
-                                        htmx:afterOnLoad: checkIfFullPage(event);openHtmxModalButton();">
-                                     <i class="fa-solid fa-pen-to-square"></i>
-                                    </a>
+
                         </div>
                         </div>
                     <div class="Preferred-text-div-par" id="locations">
-                        {% include "jobseeker/htmx/profileLocationShow.html" %}
+
+
+                            <div class="Preferred-text-div" id="PreferredTextDiv">
+                            <ul class="key-list-ul" id="keyUl">
+                                {% if location_list %}
+                                {% for loc in location_list %}
+                                {% if loc %}                                
+                                <li class="key-list-li">
+                                    {{ loc }}
+
+                                </li>
+                                {% else %}
+                                {% endif%}
+                                {% endfor %}
+
+                                {% else %}
+                                <li class="key-list-li">
+                                    
+                                    No Record Found
+                                </li>
+                                {% endif %}
+                                
+                            </ul>
+                        </div>
+                            <div class="Preferred-btn-dic">
+                                <button class="Preferred-more-btn" id="PreferredMoreBtn">More <i class="fa-solid fa-arrow-right"></i></button>
+                                <button class="Preferred-close-btn" id="PreferredCloseBtn">Close <i class="fa-solid fa-xmark"></i></button>
+                            </div>
+
+
                     </div>
                         
                          
@@ -185,16 +509,132 @@
 
 
                 <div class="employement" id="employment">
-                    {% include "jobseeker/htmx/profileEmploymentShow.html" %}
+                    <div class="employement-heading">
+                        <h4>Employment</h4>
+                        <div class="employement-add-div">
+                        </div>
+                    </div>
+                    
+                    {% if my_employment %}
+                    <div class="employement-flex1">
+                        <div class="employement-play">
+                            <p class="employement-role1">Organization name</p>
+                            <p class="employement-company1">Designation</p>
+                        </div>
+                        <div class="employement-date-div1">
+                            <p class="employement-date1">Time period</p>
+                            <p class="employement-time1">Employment type</p>
+                        </div>
+                    </div>
+                    {% for emp in my_employment %}
+                    <div class="employement-flex">
+                        <div class="employement-play">
+                            <p><p class="employement-role">{{emp.company_name|default_if_none:''}}</p>
+                                                        
+                            <p class="employement-company">{{emp.company_role|default_if_none:''}}</p>
+                        </div>
+                        <div class="employement-date-div">
+                            <p class="employement-date"><i style='font-size: smaller;'>
+                             {{emp.get_experience_duration }} 
+                            </i> / {{emp.doj|date:'M Y'|default_if_none:''}} - {% if emp.currently %} Present {% else %} {{emp.dol|date:'M Y'|default_if_none:''}} {% endif %} </p>
+                            <p class="employement-time">{{emp.type_id|default_if_none:''}}</p>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                    {% else %}
+                    <div class="education-name2-1">
+                        <div class="education-name2-1-col">
+                            No record found
+
+                        </div>
+                    </div>
+                    {% endif %}
+
+
                 </div>
 
                     <div class="career" id="career-info">              
-                        {% include "jobseeker/htmx/profileCareerShow.html" %}   
+                
+                        {% load currency_filters %}
+
+                        <div class="career-heading">
+                        <h4>Compensation and benefits</h4>
+                        <div class="career-add-div">
+                        </div>
+                    </div>
+                    <div class="career-info-list">
+<div class="career-info-list-1">
+    <div class="career-info-list-1-1">
+        <h4>Current CTC</h4>
+        <p> <i class="fa fa-inr"></i>
+            {{ candidate.present_ctc_amount|inr_format  }}
+            {{ candidate.get_present_ctc_type_display|default_if_none:"" }}
+        </p>
+    </div>
+
+    <div class="career-info-list-1-1">
+        <h4>Current Take Home</h4>
+        <p>
+            <i class="fa fa-inr"></i>
+            {{ candidate.present_take_home_amount|inr_format  }}
+            {{ candidate.get_present_take_home_type_display|default_if_none:"" }}
+        </p>
+    </div>
+
+    <div class="career-info-list-1-1">
+        <h4>Total Work Experience</h4>
+        <p>
+            {% if candidate.work_experience_years %}
+                {{ candidate.work_experience_years|default:0 }} years
+            {% endif %}
+            {% if candidate.work_experience_months %}
+                {{ candidate.work_experience_months|default:0 }} months
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+<div class="career-info-list-2">
+    <div class="career-info-list-2-1">
+        <h4>Expected CTC</h4>
+        <p>
+            <i class="fa fa-inr"></i>
+            {{ candidate.expected_ctc_amount|inr_format  }}
+            {{ candidate.get_expected_ctc_type_display|default_if_none:"" }}
+        </p>
+    </div>
+
+    <div class="career-info-list-2-1">
+        <h4>Expected Take Home</h4>
+        <p>
+            <i class="fa fa-inr"></i>
+            {{ candidate.expected_take_home_amount|inr_format  }}
+            {{ candidate.get_expected_take_home_type_display|default_if_none:"" }}
+        </p>
+    </div>
+
+    <div class="career-info-list-2-1">
+        <h4>Notice Period</h4>
+        <p>
+            {% if candidate.notice_period %}
+                {{ candidate.get_notice_period_display }}
+                {% if candidate.notice_period_negotiable %}
+                    <span>(Negotiable)</span>
+                {% endif %}
+            {% else %}
+                
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+
+
+                    </div>
                     </div> 
                 </div>
-                <div class="resume1" id="resume">
-                    {% include "jobseeker/htmx/profileResumeShow.html" %}
-            </div>
+
 
             </div>
             

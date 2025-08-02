@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.timezone import now
+import uuid
 from credentials.models import Users  # Import the custom Users model
 # from .models import Candidates
 from recruiters.models import Jobs,OfferLetters,Companies # Import the Jobs model from recruiters app
@@ -86,6 +87,7 @@ def upload_onboarding(instance, filename):
 
 class Candidates(models.Model):
     candidate_id = models.AutoField(primary_key=True)
+    candidate_uuid = models.UUIDField(default=uuid.uuid4, editable=False, null=True)
     user = models.OneToOneField(Users, on_delete=models.CASCADE, related_name='candidate', null=True, blank=True)
     
     # Personal Information
@@ -101,17 +103,18 @@ class Candidates(models.Model):
     address = models.CharField(max_length=255, blank=True, null=True)
     pincode = models.IntegerField(null=True, blank=True)
     marital_status = models.CharField(max_length=20, choices=[('Single', 'Single'), ('Married', 'Married')], blank=True, null=True)
-    last_update = models.DateField(default=now)   
+    last_update = models.DateTimeField(auto_now=True)   
     profile_pic = models.FileField(upload_to=upload_profile_pic, null=True, blank=True, validators=[
             FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png']),
             validate_file_size
         ]
     )
     resume = models.FileField(upload_to=upload_profile_resume, null=True, blank=True, validators=[
-            FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx']),
+            FileExtensionValidator(allowed_extensions=[ 'pdf', 'docx']),
             validate_file_size
         ]
     )
+    resume_text = models.TextField(blank=True, null=True) 
     
     # # Education Information
     # highest_qualification = models.CharField(max_length=100, blank=True, null=True)
@@ -155,10 +158,10 @@ class Candidates(models.Model):
     phone_otp_count = models.IntegerField(default=3)
     bookmarks_count = models.IntegerField(default=0)
 
-    def save(self, *args, **kwargs):
-        # Update the field with the current date on every save
-        self.date_field = now().date()
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # Update the field with the current date on every save
+    #     self.date_field = now().date()
+    #     super().save(*args, **kwargs)
 
     def add_skill(self, new_skill):
         """
@@ -182,6 +185,9 @@ class Candidates(models.Model):
         else:
             self.bookmarks_count -= 1
         self.save()
+    @property
+    def skill_list(self):
+        return [s.strip() for s in self.skill.split(',')] if self.skill else []
     def __str__(self):
         return f'{self.first_name} {self.last_name} - {self.user.email}'
 

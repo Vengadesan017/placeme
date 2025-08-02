@@ -63,25 +63,25 @@ Search Job
     <div class="action-button-container">
         {% if complete_profile_url %}
         <a href="{{ complete_profile_url }}" class="action-btn color2">
-            <div class="btn-content"><i class="fas fa-user-check"></i><span>Complete Profile</span></div>
+            <div class="btn-content"><i class="fas fa-user-check"></i><span>My Profile</span></div>
         </a>
         {% endif %}
         
-        {% if upload_resume_url %}
+        {% comment %} {% if upload_resume_url %}
         <a href="{{ upload_resume_url }}#resume" class="action-btn color1">
             <div class="btn-content"><i class="fas fa-file-upload"></i><span>Upload Resume</span></div>
         </a>
-        {% endif %}
+        {% endif %} {% endcomment %}
 
-        {% if saved_url %}
+        {% comment %} {% if saved_url %}
         <a href="{{ saved_url }}" class="action-btn color5">
             <div class="btn-content"><i class="fas fa-bookmark"></i><span>Saved Jobs</span></div>
         </a>
-        {% endif %}
+        {% endif %} {% endcomment %}
 
         {% if applied_url %}
         <a href="{{ applied_url }}" class="action-btn color6">
-            <div class="btn-content"><i class="fas fa-clipboard-check"></i><span>Applied Jobs</span></div>
+            <div class="btn-content"><i class="fas fa-clipboard-check"></i><span>My Jobs</span></div>
         </a>
         {% endif %}
 
@@ -98,17 +98,17 @@ Search Job
         </a>
         {% endif %}
 
-        {% if check_attendance_url %}
+        {% comment %} {% if check_attendance_url %} {% endcomment %}
         <a href="{{ check_attendance_url }}" class="action-btn color5">
             <div class="btn-content"><i class="fas fa-calendar-check"></i><span>Check Attendance</span></div>
         </a>
-        {% endif %}
+        {% comment %} {% endif %} {% endcomment %}
 
-        {% if apply_leave_url %}
-        <a href="{{ apply_leave_url }}" class="action-btn color6">
+        {% comment %} {% if apply_leave_url %} {% endcomment %}
+        <a href="{{ apply_leave_url }}" class="action-btn color1">
             <div class="btn-content"><i class="fas fa-calendar-minus"></i> <span>Apply for Leave</span></div>
         </a>
-        {% endif %}
+        {% comment %} {% endif %} {% endcomment %}
 
         {% if logout_url %}
         <a href="{{ logout_url }}" class="action-btn color7">

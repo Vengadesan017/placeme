@@ -789,6 +789,20 @@
   background-color: #0056b3;
 }
 
+.action-btn {
+  min-width: 120px;
+  text-align: center;
+  background-color:#141b5f ; 
+  color: #fff;
+  border-radius: 5px;
+  font-size: 14px;
+  padding: 8px 10px;
+}
+
+.action-btn:hover {
+  background-color: #141b5f;
+}
+
 .download-btn {
   width: 120px;
   text-align: center;

@@ -20,9 +20,11 @@ from .forms import CreateCompanyForm, CreateCompanyKYCForm, CreatePosition, Crea
     PositionGroupForm
 from .models import Companies, Positions, HireRequests, Qualifications, Locations, Benefits, Jobs, \
     PositionGroup
-from job_seekers.models import Candidates, Skills, SpecificationForEdu, JobApplications
+from job_seekers.models import Candidates, Skills, SpecificationForEdu, JobApplications, UserLanguages, \
+    Employment, EducationMap
 from .serializers import HireRequestSerializer, PositionSerializer, LocationSerializer, BenefitSerializer,\
     SkillSerializer, QualificationSerializer
+from .services import build_candidate_query
 from .decorators import is_kyc, is_recruiter
 from job_seekers.utils import form_errors_to_messages, form_errors_to_messages_htmx
 
@@ -109,67 +111,128 @@ def CompleteKYC(request):
 @is_recruiter
 @is_kyc
 def OpenSearch(request):
-    candidate = Candidates.objects.get(user=request.user)
-    company = Companies.objects.get(candidate=candidate)
-    candidate_titles = Candidates.objects.values_list('present_designation', flat=True).distinct()
-    context = {
-        'titles': candidate_titles,
-        'company':company
-    }
-    return render(request,'recruiters/keyword_search.html',context)
+    try:
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+        candidate_titles = Candidates.objects.values_list('present_designation', flat=True).distinct()
+        context = {
+            'titles': candidate_titles,
+            'company':company
+        }
+        return render(request,'recruiters/keyword_search.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
 
 @login_required
 @is_recruiter
 @is_kyc
 def AdvanceSearch(request):
-    candidate = Candidates.objects.get(user=request.user)
-    company = Companies.objects.get(candidate=candidate)
-    candidate_titles = Candidates.objects.values_list('present_designation', flat=True).distinct()
-    context = {
-        'titles': candidate_titles,
-        'company':company
-    }
-    return render(request,'recruiters/advance_search.html',context)
+    try:
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+        candidate_titles = Candidates.objects.values_list('present_designation', flat=True).distinct()
+        context = {
+            'titles': candidate_titles,
+            'company':company
+        }
+        return render(request,'recruiters/advance_search.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
 
 @login_required
 @is_recruiter
 @is_kyc
 def AllCandidates(request):
-    candidate = Candidates.objects.get(user=request.user)
-    company = Companies.objects.get(candidate=candidate)
-    candidate_titles = Candidates.objects.values_list('present_designation', flat=True).distinct()
-    context = {
-        'titles': candidate_titles,
-        'company':company
-    }
-    return render(request,'recruiters/all_candidates.html',context)
+    try:
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+        candidate_titles = Candidates.objects.values_list('present_designation', flat=True).distinct()
+
+        query = request.GET.get('q', '').strip()
+
+        if query:
+            # candidates = Candidates.objects.all()
+            q_object = build_candidate_query(query)
+            # candidates = candidates.filter(q_object).prefetch_related(
+            #     Prefetch('employment_company', queryset=Employment.objects.select_related('type_id')),
+            #     Prefetch('candidate_to_edu_map', queryset=EducationMap.objects.select_related('edu_id', 'type_id')),
+            #     Prefetch('user_language', queryset=UserLanguages.objects.select_related('language_id'))
+            # )
+            candidates = Candidates.objects.filter(q_object).prefetch_related(
+                Prefetch(
+                    'employment_company',  # Assuming correct related_name in Employment
+                    queryset=Employment.objects.select_related('type_id').order_by(F('dol').asc(nulls_first=True)),
+                    to_attr='my_employment'
+                ),
+                Prefetch(
+                    'candidate_to_edu_map',
+                    queryset=EducationMap.objects.select_related('edu_id', 'type_id').order_by(F('year_of_passing').asc(nulls_first=True)),
+                    to_attr='my_education'
+                ),
+                Prefetch(
+                    'user_language',
+                    queryset=UserLanguages.objects.select_related('language_id'),
+                    to_attr='my_language'
+                )
+            )
+
+        context = {
+            'titles': candidate_titles,
+            'candidates':candidates,
+            'company':company
+        }
+        return render(request,'recruiters/all_candidates.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
 
 @login_required
 @is_recruiter
 @is_kyc
 def MyCandidates(request):
-    candidate = Candidates.objects.get(user=request.user)
-    company = Companies.objects.get(candidate=candidate)
-    candidate_titles = Candidates.objects.values_list('present_designation', flat=True).distinct()
-    context = {
-        'titles': candidate_titles,
-        'company':company
-    }
-    return render(request,'recruiters/my_candidates.html',context)
+    try:
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+        candidate_titles = Candidates.objects.values_list('present_designation', flat=True).distinct()
+        position_grp_obj = PositionGroup.objects.filter(company=company)
+        context = {
+            'titles': candidate_titles,
+            'company':company,
+            'position_grp_obj': position_grp_obj
+        }
+        return render(request,'recruiters/my_candidates.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
 
 @login_required
 @is_recruiter
 @is_kyc
-def Candidate(request):
-    candidate = Candidates.objects.get(user=request.user)
-    company = Companies.objects.get(candidate=candidate)
-    candidate_titles = Candidates.objects.values_list('present_designation', flat=True).distinct()
-    context = {
-        'titles': candidate_titles,
-        'company':company,
-        'candidate': candidate
-    }
-    return render(request,'recruiters/candidate.html',context)
+def Candidate(request, candidate_uuid = None):
+    try:
+        if candidate_uuid is None:
+            return redirect('recruiters:home')
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+        candidate = get_object_or_404(Candidates, candidate_uuid=candidate_uuid)
+        
+        education = EducationMap.objects.filter(candidate=candidate).order_by('-year_of_passing')
+        language = UserLanguages.objects.filter(candidate=candidate)
+        employment = Employment.objects.filter(candidate=candidate).order_by('-dol')
+
+
+        skills_list = [skill.strip() for skill in candidate.skill.split(',')] if candidate.skill else []
+        location_list = [loc.strip() for loc in candidate.preferred_location.split(',')] if candidate.preferred_location else []
+        context = {
+            'company':company,
+            'candidate': candidate,
+            'skills_list': skills_list,
+            'location_list': location_list,
+            'my_education': education,
+            'my_employment': employment,
+            'my_languages': language
+        }
+        return render(request,'recruiters/candidate.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
 
 @login_required
 @is_recruiter

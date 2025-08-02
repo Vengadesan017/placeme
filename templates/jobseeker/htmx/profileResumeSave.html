@@ -31,10 +31,10 @@
                         <td>
                         <div class="upload-box">
                         <label for="resume" id="fileLabel">Choose Resume</label>
-                        <input type="file" name="resume" onchange="updateFileLabel(this)" id="resume-file" accept=".pdf,.doc,.docx" />
+                        <input type="file" name="resume" onchange="updateFileLabel(this)" id="resume-file" accept=".pdf,.docx" />
                         </div>
                     </tr>
-                    <tr><td><b>Supported formats: PDF, DOC, DOCX up to 5MB</b></td></tr>
+                    <tr><td><b>Supported formats: PDF, DOCX up to 5MB</b></td></tr>
              </tbody>
             </table>
 
@@ -61,7 +61,7 @@
       return;
     }
 
-    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
     const maxSize = 5 * 1024 * 1024; // 5MB in bytes
 
     // Check file type

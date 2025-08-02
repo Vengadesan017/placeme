@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'load_data',  
     'django_htmx',
     'django_cleanup.apps.CleanupConfig',    
-    # 'debug_toolbar',        # For debug only
+    'debug_toolbar',        # For debug only
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -71,7 +71,7 @@ MIDDLEWARE = [
     'django_ratelimit.middleware.RatelimitMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
     
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',  # For debug only
+    'debug_toolbar.middleware.DebugToolbarMiddleware',  # For debug only
 ]
 
 INTERNAL_IPS = ['127.0.0.1']

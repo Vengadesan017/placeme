@@ -82,7 +82,7 @@ Waiting for KYC verification
                       <div class="admin-name">
                           
                           <p >GST no.<span>*</span></p>
-                          <input type="text" name="gst_no" class="admin-input" value="{{KYCForm.gst_no.value}}" placeholder="Enter your company GST no." required/> 
+                          <input type="text" name="gst_no" class="admin-input" value="{{KYCForm.gst_no.value|default:''}}" placeholder="Enter your company GST no." required/> 
                       </div>
                       <div class="admin-role">
                           <p>GST Document <span>*</span></p>
@@ -94,7 +94,7 @@ Waiting for KYC verification
                       <div class="admin-name">
                           
                           <p >PAN no.<span>*</span></p>
-                          <input type="text" name="pan_no" class="admin-input" value="{{KYCForm.pan_no.value}}" placeholder="Enter your company PAN no." required/> 
+                          <input type="text" name="pan_no" class="admin-input" value="{{KYCForm.pan_no.value|default:''}}" placeholder="Enter your company PAN no." required/> 
                       </div>
                       <div class="admin-role">
                           <p>PAN Document <span>*</span></p>
@@ -107,7 +107,7 @@ Waiting for KYC verification
                       <div class="admin-name">
                           
                           <p >IFSC code<span>*</span></p>
-                          <input type="text" class="admin-input" name="back_ifsc_no" value="{{KYCForm.back_ifsc_no.value}}" placeholder="Enter your company bank IFSC code" required/> 
+                          <input type="text" class="admin-input" name="back_ifsc_no" value="{{KYCForm.back_ifsc_no.value|default:''}}" placeholder="Enter your company bank IFSC code" required/> 
                       </div>
                       <div class="admin-role">
                           <p>Bank book<span>*</span></p>
@@ -132,7 +132,7 @@ Waiting for KYC verification
   
   
               <div class="btn-div">
-                  <button type="submit" name="upload_kyc" class="btn" >Save Documents</button>
+                  <button type="submit" name="upload_kyc" class="btn" >Upload</button>
               </div>
           </form>
               {% else %}
