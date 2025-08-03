@@ -9,6 +9,7 @@ from django.db.models import Value as V, F
 from django.db import transaction
 from django.core.paginator import Paginator
 from django.core.files.storage import default_storage
+from django.forms import modelformset_factory
 
 from credentials.models import Users
 from recruiters.models import Jobs , Locations, Qualifications , OfferLetters, DistrictForLoc, StateForLoc
@@ -179,7 +180,7 @@ def Profile(request):
                         print("Form errors:", form.errors)
                         errors = form_errors_to_messages_htmx(form, level='error')
                         return JsonResponse(errors, status=400)
-                context['my_education'] =  EducationMap.objects.filter(candidate=candidate).order_by(F('year_of_passing').asc(nulls_first=True))
+                context['my_education'] =  EducationMap.objects.filter(candidate=candidate).order_by(F('year_of_passing').desc(nulls_first=True))
                 template_name = 'jobseeker/htmx/profileEducationShow.html'
             elif 'skill_save' in request.POST:
                 form = CandidateSkillUpdateForm(request.POST, instance=candidate)
@@ -246,7 +247,7 @@ def Profile(request):
                         print("Form errors:", form.errors)
                         errors = form_errors_to_messages_htmx(form, level='error')
                         return JsonResponse(errors, status=400)
-                context['my_employment'] =  Employment.objects.filter(candidate=candidate).order_by(F('dol').asc(nulls_first=True))
+                context['my_employment'] =  Employment.objects.filter(candidate=candidate).order_by(F('dol').desc(nulls_first=True))
                 template_name = 'jobseeker/htmx/profileEmploymentShow.html'
             elif 'career_save' in request.POST:
                 form = CandidateCareerUpdateForm(request.POST, instance=candidate)
@@ -286,9 +287,9 @@ def Profile(request):
                 return redirect("job_seeker:profile")
                     
 
-        education = EducationMap.objects.filter(candidate=candidate).order_by(F('year_of_passing').asc(nulls_first=True))
+        education = EducationMap.objects.filter(candidate=candidate).order_by(F('year_of_passing').desc(nulls_first=True))
         language = UserLanguages.objects.filter(candidate=candidate)
-        employment = Employment.objects.filter(candidate=candidate).order_by(F('dol').asc(nulls_first=True))
+        employment = Employment.objects.filter(candidate=candidate).order_by(F('dol').desc(nulls_first=True))
 
         levels = list(LevelForEdu.objects.all().values('level_id', 'name'))
         courses = list(CourseForEdu.objects.all().values('course_id', 'name', 'level_id'))
@@ -547,6 +548,17 @@ def OnboardingCandidate(request,onboarding_id, page):
             if 'personal' in request.POST:
                 candidate_form = OnboardingCandidatePersonalForm(request.POST, request.FILES, instance=Candidates.objects.get(user=request.user))
                 onboarding_form = OnboardingPersonalForm(request.POST, request.FILES, instance=Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id))
+                qs = UserLanguages.objects.filter(candidate=candidate)
+                UserLanguageFormSet = modelformset_factory(
+                    UserLanguages,
+                    form=CandidateLanguageUpdateForm,
+                    extra=0,
+                    max_num=3,
+                    validate_max=True
+                )
+
+                formset = UserLanguageFormSet(request.POST or None, queryset=qs)
+
                 page = "family"
                 if not candidate_form.is_valid():
                     form_errors_to_messages(request, candidate_form, 'error')
@@ -560,6 +572,14 @@ def OnboardingCandidate(request,onboarding_id, page):
                 else:
                     onboarding_form.save()
 
+                if not formset.is_valid():
+                    form_errors_to_messages(request, formset)
+                    page = "personal"
+                else:
+                    instances = formset.save(commit=False)
+                    for obj in instances:
+                        obj.candidate = candidate
+                        obj.save()
             if 'save_language' in request.POST or 'edit_language' in request.POST or 'delete_language' in request.POST or 'add_row_lang' in request.POST:      
                 lang_form = CandidateLanguageUpdateForm()
                 add_row = False
@@ -712,8 +732,21 @@ def OnboardingCandidate(request,onboarding_id, page):
         # onboarding_form = OnboardingPersonalForm(instance=Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id))
         onboarding = Onboarding.objects.get(candidate=candidate,Onbording_id=onboarding_id)
         onboarding_form = OnboardingPersonalForm(instance=onboarding)
-        
-        language_form = CandidateLanguageUpdateForm()
+        # language_form = CandidateLanguageUpdateForm()
+        qs = UserLanguages.objects.filter(candidate=candidate)
+
+        # Calculate how many empty forms to add to make total 3
+        existing_count = qs.count()
+        extra_forms = max(0, 3 - existing_count)
+
+        UserLanguageFormSet = modelformset_factory(
+            UserLanguages,
+            form=CandidateLanguageUpdateForm,
+            extra=extra_forms,
+            max_num=3,
+            validate_max=True
+        )
+
         languages = UserLanguages.objects.filter(candidate=candidate)
         education = EducationMap.objects.filter(candidate=candidate)
         my_experience = Employment.objects.filter(candidate=candidate)
@@ -731,7 +764,8 @@ def OnboardingCandidate(request,onboarding_id, page):
             'onboarding_obj':onboarding,
             'candidate': candidate_form,
             'onboarding': onboarding_form,
-            'language_form':language_form,
+            # 'language_form':language_form,
+            'language_form_set':UserLanguageFormSet,
             'languages':languages,
             'my_family': my_family,
             'family_form': family_form,

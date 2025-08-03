@@ -25,74 +25,97 @@
         <div class="modal-body">
         <div class="margin20">
         <div class="">
+        
+<div class="form-grid">
+    <div class="form-group">
+        <label for="firstName" class="form-label">First name</label>
+        <input type="text" id="firstname" name="first_name" 
+        value="{{ candidate_form.initial.first_name|default_if_none:'' }}" 
+        placeholder="Enter your first name"
+        required>
+    </div>
 
-            <table class="modal-table">
-                <tr> 
-                    <td><b>First name</b></td>
-                    <td><input type="text" id="firstname" name="first_name" value="{{ candidate_form.initial.first_name|default_if_none:'' }}" required></td>
-                </tr>
-                <tr> 
-                    <td><b>Last name</b></td>
-                    <td><input type="text" id="lastname" name="last_name" value="{{ candidate_form.initial.last_name|default_if_none:'' }}" required></td>
-                </tr>
-                <tr> 
-                    <td><b>Email</b></td>
-                    <td><input type="text" id="email" value="{{ candidate_form.instance.user.email|default_if_none:'' }}" disabled></td>
-                </tr>
-                <tr> 
-                    <td><b>Phone No</b></td>
-                    <td><input type="text" id="no" value="{{ candidate_form.instance.user.mobile_no|default_if_none:'' }}" disabled></td>
-                </tr>
-                <tr> 
-                    <td><b>Date of birth</b></td>
-                    <td>
+    <div class="form-group">
+        <label for="lastName" class="form-label">Last name</label>
+        <input type="text" id="lastname" name="last_name" 
+        value="{{ candidate_form.initial.last_name|default_if_none:'' }}" 
+        placeholder="Enter your last name"
+        required>   
+    </div>
 
-                        <input type="date" id="dob" name="dob" value="{{ candidate_form.initial.dob|date:'Y-m-d'|default_if_none:'' }}" >
+    <div class="form-group">
+        <label for="email" class="form-label">Email</label>
+        <input type="text" id="email" 
+        value="{{ candidate_form.instance.user.email|default_if_none:'' }}" 
+        placeholder="Your email"
+        disabled>
+    </div>
 
-                    </td>
-                </tr>
-                <tr> 
-                    <td><b>Country</b></td>
-                    <td><input type="text" id="country" name="country" value="{{ candidate_form.initial.country|default_if_none:'' }}"></td>
-                </tr>
-                <tr> 
-                    <td><b>State</b></td>
-                    <td><input type="text" id="state" name="state" value="{{ candidate_form.initial.state|default_if_none:'' }}"></td>
-                </tr>
-                <tr> 
-                    <td><b>City</b></td>
-                    <td><input type="text" id="city" name="city" value="{{ candidate_form.initial.city|default_if_none:'' }}"></td>
-                </tr>
-                <tr> 
-                    <td><b>Gender</b></td>
-                    <td><select id="gender" name="gender">
-                        <option value="">Select</option>
-                        <option value="Male" {% if candidate_form.initial.gender == 'Male' %}selected{% endif %}>Male</option>
-                        <option value="Female" {% if candidate_form.initial.gender == 'Female' %}selected{% endif %}>Female</option>
-                        <option value="Other" {% if candidate_form.initial.gender == 'Other' %}selected{% endif %}>Other</option>
-                    </select></td>
-                </tr>
-                <tr> 
-                    <td><b>Marital Status</b></td>
-                    <td><select id="marital_status" name="marital_status">
-                        <option value="">Select</option>
-                        <option value="Single" {% if candidate_form.initial.marital_status == 'Single' %}selected{% endif %}>Single</option>
-                        <option value="Married" {% if candidate_form.initial.marital_status == 'Married' %}selected{% endif %}>Married</option>
-                    </select></td>
-                </tr>
-                {% comment %} <tr> 
-                    <td><b>LinkedIn profile</b></td>
-                    <td><input type="text" id="linkedin_profile" name="linkedin_profile" value="{{ candidate.linkedin_profile|default_if_none:'' }}"></td>
-                </tr> {% endcomment %}
-                <tr> 
-                    <td><b>Work status</b></td>
-                    <td><select id="work_status" name="work_status">
-                        <option value="">Select</option>
-                        <option value="Fresher" {% if candidate_form.initial.work_status == 'Fresher' %}selected{% endif %}>Fresher</option>
-                        <option value="Experienced" {% if candidate_form.initial.work_status == 'Experienced' %}selected{% endif %}>Experienced</option>
-                    </select></td>
-                </tr>
-            </table>
+    <div class="form-group">
+        <label for="phone" class="form-label">Phone no</label>
+        <input type="text" id="no" 
+        value="{{ candidate_form.instance.user.mobile_no|default_if_none:'' }}" 
+        placeholder="Your phone number"
+        disabled>
+    </div>
+
+    <div class="form-group">
+        <label for="dob" class="form-label">Date of Birth</label>
+        <input type="date" id="dob" name="dob" 
+        value="{{ candidate_form.initial.dob|date:'Y-m-d'|default_if_none:'' }}"
+        placeholder="YYYY-MM-DD">
+    </div>
+
+    <div class="form-group">
+        <label for="gender" class="form-label">Gender</label>
+        <select id="gender" name="gender">
+            <option value="">Select</option>
+            <option value="Male" {% if candidate_form.initial.gender == 'Male' %}selected{% endif %}>Male</option>
+            <option value="Female" {% if candidate_form.initial.gender == 'Female' %}selected{% endif %}>Female</option>
+            <option value="Other" {% if candidate_form.initial.gender == 'Other' %}selected{% endif %}>Other</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="Country" class="form-label">Country</label>
+        <input type="text" id="country" name="country" 
+        value="{{ candidate_form.initial.country|default_if_none:'' }}"
+        placeholder="e.g. India">
+    </div>
+
+    <div class="form-group">
+        <label for="State" class="form-label">State</label>
+        <input type="text" id="state" name="state" 
+        value="{{ candidate_form.initial.state|default_if_none:'' }}"
+        placeholder="e.g. Tamil Nadu">
+    </div>
+
+    <div class="form-group">
+        <label for="City" class="form-label">City</label>
+        <input type="text" id="city" name="city" 
+        value="{{ candidate_form.initial.city|default_if_none:'' }}"
+        placeholder="e.g. Chennai">
+    </div>
+
+    <div class="form-group">
+        <label for="marital-status" class="form-label">Marital Status</label>
+        <select id="marital_status" name="marital_status">
+            <option value="">Select</option>
+            <option value="Single" {% if candidate_form.initial.marital_status == 'Single' %}selected{% endif %}>Single</option>
+            <option value="Married" {% if candidate_form.initial.marital_status == 'Married' %}selected{% endif %}>Married</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="work-status" class="form-label">Work Status</label>
+        <select id="work_status" name="work_status">
+            <option value="">Select</option>
+            <option value="Fresher" {% if candidate_form.initial.work_status == 'Fresher' %}selected{% endif %}>Fresher</option>
+            <option value="Experienced" {% if candidate_form.initial.work_status == 'Experienced' %}selected{% endif %}>Experienced</option>
+        </select>
+    </div>
+</div>
+
 
         </div>
         </div>

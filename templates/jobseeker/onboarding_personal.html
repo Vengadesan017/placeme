@@ -2,6 +2,7 @@
 <div class="tab-pane fade in active" id="tab1default">
     <form method="POST" action="#">
         {% csrf_token %}
+        {{ language_form_set.management_form }}
     <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-start align-items-start d-inline-block" style="padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;width:100%">
         <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-center order-2 d-inline-block bg-white align-top  align-items-start">
             <table border="0" class="tblassetsteps" style="width:100%">
@@ -15,26 +16,27 @@
                         <input type="text" id="txtFirstName" class="form-control " name="first_name" value="{{ candidate.first_name.value|default_if_none:'' }}" required>
                     </td>
                     <td>
-                        {% comment %} <label class="SideLabelBold">Middle Name</label> {% endcomment %}
-                    </td>
-                    <td>
-                        {% comment %} <input typeof="textbox" id="txtMiddleName" class="form-control  " type="text"> {% endcomment %}
-                    </td>
-                    <td>
                         <label class="SideLabelBold">Last Name</label>
                         <label><font size="3" color="red">*</font></label>
                     </td>
                     <td>
                         <input typeof="textbox" id="txtLastName" class="form-control  " name="last_name" value="{{ candidate.last_name.value|default_if_none:'' }}" type="text" required>
                     </td>
-                </tr>
-                <tr>
                     <td>
                         <label class="SideLabelBold">Father's Name</label>
                         <label><font size="3" color="red">*</font></label>
                     </td>
                     <td>
                         <input typeof="textbox" id="txtFatherName" class="form-control " name="father_name" value="{{ onboarding.father_name.value|default_if_none:''}}" type="text" required>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <label class="SideLabelBold">MailID</label>
+                    </td>
+                    <td>
+                        <input typeof="textbox" id="txtMailID" class="form-control  " name="email" value="{{ candidate.instance.user.email|default_if_none:'' }}" type="text" disabled>
                     </td>
                     <td>
                         <label class="SideLabelBold">Mobile No 1 </label>
@@ -52,10 +54,17 @@
                 </tr>
                 <tr>
                     <td>
-                        <label class="SideLabelBold">MailID</label>
+                        <label class="SideLabelBold">DOB</label>
+                        <label><font size="3" color="red">*</font></label>
                     </td>
                     <td>
-                        <input typeof="textbox" id="txtMailID" class="form-control  " name="email" value="{{ candidate.instance.user.email|default_if_none:'' }}" type="text" disabled>
+
+                        <input type="date" id="dob" name="dob" class="form-control" value="{{ candidate.dob.value|date:'Y-m-d'|default_if_none:'' }}"  required>
+                    {% comment %} {% if candidate.dob.value %}
+                    <input type="date" id="dob" name="dob" class="form-control" value="{{ candidate.dob.value|date:'Y-m-d'|default_if_none:'' }}" disabled>
+                {% else %}
+                <input type="date" id="dob" name="dob" class="form-control" value="{{ candidate.dob.value|date:'Y-m-d'|default_if_none:'' }}"  required>
+                {% endif %}             {% endcomment %}
                     </td>
                     <td>
                         <label class="SideLabelBold">Gender</label>
@@ -81,45 +90,8 @@
     
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <label class="SideLabelBold">DOB</label>
-                        <label><font size="3" color="red">*</font></label>
-                    </td>
-                    <td>
-
-                        <input type="date" id="dob" name="dob" class="form-control" value="{{ candidate.dob.value|date:'Y-m-d'|default_if_none:'' }}"  required>
-                    {% comment %} {% if candidate.dob.value %}
-                    <input type="date" id="dob" name="dob" class="form-control" value="{{ candidate.dob.value|date:'Y-m-d'|default_if_none:'' }}" disabled>
-                {% else %}
-                <input type="date" id="dob" name="dob" class="form-control" value="{{ candidate.dob.value|date:'Y-m-d'|default_if_none:'' }}"  required>
-                {% endif %}             {% endcomment %}
-                    </td>
-    
-                    <td>
-                        <label class="SideLabelBold">DOJ</label>
-                        
-                    </td>
-                    <td>
-                        {% comment %} {% if onboarding.doj.value %}
-                        <input type="date" id="" style="position: relative" class="" name="doj" value="{{ onboarding.doj.value|date:'Y-m-d'|default_if_none:'' }}" disabled>
-                    {% else %} {% endcomment %}
-                    <input type="date" id="" style="position: relative" class="form-control" name="doj" value="{{ onboarding.doj.value|date:'Y-m-d'|default_if_none:'' }}" required>
-                    {% comment %} {% endif %}  {% endcomment %}
-                    </td>
-    
-                    <td>
-                        <label class="SideLabelBold">DOL</label>
-                    </td>
-                    <td>
-                        {% comment %} {% if onboarding.dor %}
-                        <input type="date" id="" style="position: relative" class="" name="dol" value="{{ onboarding.dol.value|date:'Y-m-d'|default_if_none:'' }}" disabled>
-                    {% else %} {% endcomment %}
-                    <input type="date" id="" style="position: relative" class="form-control" name="dol" value="{{ onboarding.dol.value|date:'Y-m-d'|default_if_none:'' }}" >
-                    {% comment %} {% endif %}  {% endcomment %}
-                    </td>
-                </tr>
-                <tr>
+               
+                {% comment %} <tr>
                     <td>
                         <label class="SideLabelBold">Known Languages</label>
                         
@@ -133,7 +105,7 @@
                         </span>
                         <a href="#" class="open-modal-btn btn btn-primary" data-modal-id="HtmxModal"><i class="fa-solid fa-pen-to-square open-modal-btn"></i></a>
                     </td>
-                </tr>
+                </tr> {% endcomment %}
             </table>
             <div id="languages_wrapper">
 
@@ -142,36 +114,81 @@
     
     <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 align-self-start align-items-start d-inline-block " style="padding-left:0px;padding-right:0px;padding-top:5px;padding-bottom:5px;width:100%">
     
-        <div class="col-md-6 bg-white border-top rounded  align-items-start" style="padding: 20px;">
-            <label class="SideLabelBold" style="font-weight: bold;">Permanent Address</label>
-            <table border="0" class="tblassetsteps" style="width:100%">
+        <div class="row" style="margin: 0">
+        <!-- Language Proficiency -->
+  <div class="col-md-4 border-top rounded" style="padding:20px">
+    <label class="SideLabelBold" style="font-weight: bold;">Language Proficiency</label>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Language</th>
+          <th>Speak</th>
+          <th>Read</th>
+          <th>Write</th>
+          <th>Proficiency</th>
+        </tr>
+      </thead>
+<tbody>
+    {% for language_form in language_form_set.forms %}
+        <tr>
+            <!-- Language Dropdown -->
+            <td class="lang-col">
+                <select name="{{ language_form.language_id.name }}" class="form-control">
+                    <option value="">Select Language</option>
+                    {% for lang in language_form.fields.language_id.queryset %}
+                        <option value="{{ lang.pk }}" {% if lang.pk == language_form.initial.language_id %}selected{% endif %}>
+                            {{ lang }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </td>
+
+            <!-- Speak/Read/Write Checkboxes -->
+            <td>
+                <input type="checkbox" name="{{ language_form.can_speak.name }}" class="" {% if language_form.can_speak.value %}checked{% endif %}>
+            </td>
+            <td>
+                <input type="checkbox" name="{{ language_form.can_read.name }}" class="" {% if language_form.can_read.value %}checked{% endif %}>
+            </td>
+            <td>
+                <input type="checkbox" name="{{ language_form.can_write.name }}" class="" {% if language_form.can_write.value %}checked{% endif %}>
+            </td>
+
+            <!-- Proficiency Dropdown -->
+            <td class="prof-col">
+                <select name="{{ language_form.proficiency.name }}" class="form-control">
+                    <option value="">Select Proficiency Level</option>
+                    {% for choice in language_form.fields.proficiency.choices %}
+                        {% if choice.0 != "" %}
+                            <option value="{{ choice.0 }}" {% if choice.0 == language_form.initial.proficiency %}selected{% endif %}>
+                                {{ choice.1 }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </td>
+
+        </tr>
+    {% endfor %}
+</tbody>
+
+    </table>
+  </div>
+  <!-- Permanent Address -->
+  <div class="col-md-4 bg-white border-top rounded" style="padding: 20px;">
+    <label class="SideLabelBold" style="font-weight: bold;">Permanent Address</label>
+    <table border="0" class="tblassetsteps" style="width:100%">
+      <tbody>
                 <tr>
                     <td>
                         <label class="SideLabelBold">Address</label>
-                        
+                        <label><font size="3" color="red">*</font></label>
                     </td>
                     <td>
                         <input typeof="textbox" id="txtPAddress1" class="form-control  " name="address" value="{{ candidate.address.value|default_if_none:''}}" type="text">
                     </td>
                 </tr>
-                {% comment %} <tr>
-                    <td>
-                        <label class="SideLabelBold">Address2</label>
-                        
-                    </td>
-                    <td>
-                        <input typeof="textbox" id="txtPAddress2" class="form-control  " type="text">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label class="SideLabelBold">Address3</label>
-                        
-                    </td>
-                    <td>
-                        <input typeof="textbox" id="txtPAddress3" class="form-control  " type="text">
-                    </td>
-                </tr> {% endcomment %}
+
                 <tr>
                     <td>
                         <label class="SideLabelBold">State</label>
@@ -199,15 +216,23 @@
                     <td>
                         <input typeof="textbox" id="txtPPIN" class="form-control  " name="pincode" value="{{ candidate.pincode.value|default_if_none:''}}" type="text">
                 </tr>
-            </table>
-    
-        </div>
-        <div class="col-md-6 border-top rounded  align-items-start" style="padding:20px">
-            <div>
-                <label class="SideLabelBold" style="font-weight: bold;">Communication Address</label>
-                <input style="display:inline-block;margin-left:50px" type="checkbox" id="chkUsePaddressAsCommAdd" name="chkUsePaddress" onchange="UsePermanentAddress()" /> <label class="SideLabelBold" id="lblUsePadd">Same as Permanent Address</label>
-            </div>
-            <table border="0" class="tblassetsteps" style="width:100%">
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-md-4 border-top rounded" style="padding:20px 0">
+  <div class="address-header">
+    <label class="SideLabelBold" style="font-weight: bold;">Communication Address</label>
+    <div class="same-address">
+        <label class="SideLabelBold" id="lblUsePadd">
+          <input type="checkbox" id="chkUsePaddressAsCommAdd" name="chkUsePaddress" onchange="UsePermanentAddress()"> 
+        
+        Same as Permanent Address</label>
+    </div>
+  </div>
+  
+  <table border="0" class="tblassetsteps" style="width:100%">
+    <tbody>
                 <tr>
                     <td>
                         <label class="SideLabelBold">Address</label>
@@ -216,22 +241,7 @@
                         <input typeof="textbox" id="txtCAddress1" class="form-control  "  name="communication_address" value="{{ onboarding.communication_address.value|default_if_none:''}}" type="text">
                     </td>
                 </tr>
-                {% comment %} <tr>
-                    <td>
-                        <label class="SideLabelBold">Address2</label>
-                    </td>
-                    <td>
-                        <input typeof="textbox" id="txtCAddress2" class="form-control  " type="text">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label class="SideLabelBold">Address3</label>
-                    </td>
-                    <td>
-                        <input typeof="textbox" id="txtCAddress3" class="form-control  " type="text">
-                    </td>
-                </tr> {% endcomment %}
+
                 <tr>
                     <td>
                         <label class="SideLabelBold">State</label>
@@ -256,8 +266,15 @@
                         <input typeof="textbox" id="txtCPincode" class="form-control  " name="communication_pincode" value="{{ onboarding.communication_pincode.value|default_if_none:''}}" type="text">
                     </td>
                 </tr>
-            </table>
-        </div>
+    </tbody>
+  </table>
+</div>
+
+
+  
+</div>
+
+
        
         <div style="float:right">
             {% comment %} <button id="btnEmpSave" onclick="saveEmpData()" style="color:#254b96 !important;margin-left:1000px" class="btn btn-default">Save & Next</button> {% endcomment %}

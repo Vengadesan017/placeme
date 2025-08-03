@@ -21,53 +21,76 @@
             <div class="modal-body">
             <div class="margin20">
             <div class="">
-                <table class="modal-table">
-                    <tr> 
-                        <td><b>Company name</b></td>
-                        <td>
-                            <input type="text" name="company_name" id="" value="{{ employment_form.initial.company_name|default_if_none:'' }}" placeholder="Enter the company name" required/></td>       
-                        </td>
-                    </tr>
-                    <tr> 
-                        <td><b>Designation</b></td>
-                        <td>
-                            <input type="text" name="company_role" id="" value="{{ employment_form.initial.company_role|default_if_none:'' }}" placeholder="Enter your Designation" required/></td>          
-                    </td>
-                    </tr>
-                    <tr> 
-                        <td><b>Work type</b></td>
-                        <td>
-                            <select name="type_id" id="id_type_id" required>
-                                <option value="">Select work Type</option>
-                                {% for option in employment_form.fields.type_id.queryset %}
-                                    <option value="{{ option.pk }}" {% if option.pk == employment_form.initial.type_id %}selected{% endif %}>
-                                        {{ option }}
-                                    </option>
-                                {% endfor %}
-                            </select>       
-                    </td>
-                    </tr>
-                    <tr> 
-                        <td><b>Time period</b></td>
-                        <td>
-                            <input type="month" name="doj" id="" class="modal-half-input" value="{{ employment_form.initial.doj|date:'Y-m'|default_if_none:'' }}" placeholder="Enter DOJ" />
-                             to 
-                            <input type="month" class="modal-half-input" name="dol" id="" value="{{ employment_form.initial.dol|date:'Y-m'|default_if_none:'' }}" placeholder="Enter DOL" /></td>
-                    </tr>
-                    <tr> 
-                        <td></td>
-                        <td><label for="currently">
 
-                            <input type="checkbox" name="currently" id="currently" class="" {% if employment_form.initial.currently %}checked{% endif %} placeholder="Enter DOJ" />
-                            I am Currently working here
-                        </label>
-                            <td>
-                    </tr>
-                    <td><b>Reason for leaving</b></td>
-                        <td>
-                            <input type="text" name="reason_for_leaving" id="" value="{{ employment_form.initial.reason_for_leaving|default_if_none:'' }}" placeholder="Reason for leaving job" /></td>
-                    </tr>
-                </table>
+<div class="form-grid">
+
+    <!-- Company Name -->
+    <div class="form-group">
+        <label for="id_company_name" class="form-label">Company Name</label>
+        <input type="text" name="company_name" id="id_company_name"
+            class="form-input"
+            placeholder="Enter the company name"
+            value="{{ employment_form.initial.company_name|default_if_none:'' }}"
+            required />
+    </div>
+
+    <!-- Designation -->
+    <div class="form-group">
+        <label for="id_company_role" class="form-label">Designation</label>
+        <input type="text" name="company_role" id="id_company_role"
+            class="form-input"
+            placeholder="Enter your Designation"
+            value="{{ employment_form.initial.company_role|default_if_none:'' }}"
+            required />
+    </div>
+
+    <!-- Work Type -->
+    <div class="form-group">
+        <label for="id_type_id" class="form-label">Work Type</label>
+        <select name="type_id" id="id_type_id" class="form-input" required>
+            <option value="">Select Work Type</option>
+            {% for option in employment_form.fields.type_id.queryset %}
+                <option value="{{ option.pk }}"
+                    {% if option.pk == employment_form.initial.type_id %}selected{% endif %}>
+                    {{ option }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Time Period -->
+    <div class="form-group">
+        <label for="id_doj" class="form-label">Employment Period</label>
+        <div class="input-row">
+            <input type="month" name="doj" id="id_doj"
+                class="modal-half-input"
+                placeholder="Enter DOJ"
+                value="{{ employment_form.initial.doj|date:'Y-m'|default_if_none:'' }}" />
+            to
+            <input type="month" name="dol" id="id_dol"
+                class="modal-half-input"
+                placeholder="Enter DOL"
+                value="{{ employment_form.initial.dol|date:'Y-m'|default_if_none:'' }}" />
+        </div>
+        <div class="checkbox-group">
+            <label class="agreement">
+                <input type="checkbox" name="currently" id="currently"
+                    {% if employment_form.initial.currently %}checked{% endif %}>
+                I am currently working here
+            </label>
+        </div>
+    </div>
+
+    <!-- Reason for Leaving -->
+    <div class="form-group">
+        <label for="id_reason_for_leaving" class="form-label">Reason for Leaving</label>
+        <input type="text" name="reason_for_leaving" id="id_reason_for_leaving"
+            class="form-input"
+            placeholder="Reason for leaving job"
+            value="{{ employment_form.initial.reason_for_leaving|default_if_none:'' }}" />
+    </div>
+
+</div>
 
             </div>
             </div>
@@ -76,6 +99,13 @@
             <!-- Modal Footer -->
             <div class="modal-footer">
                 {% comment %} <button type="submit" name="profile_education_create" class="model-btn-save" id="">Save</button> {% endcomment %}
+                <button type="submit" 
+                
+                name="employment_save"
+                class="model-btn-save"
+                value="{{ employment_form.instance.work_company_id|default:'' }}"
+                hx-include="this"
+                >Save</button>
                 {% if employment_form.instance.work_company_id %}
                 
                 <button type="submit" 
@@ -86,13 +116,6 @@
                     hx-include="this"
                 >Delete</button>
                 {% endif %}
-            <button type="submit" 
-            
-                name="employment_save"
-            class="model-btn-save"
-                value="{{ employment_form.instance.work_company_id|default:'' }}"
-                hx-include="this"
-            >Save</button>
 
             </div>
         

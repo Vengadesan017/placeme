@@ -25,11 +25,13 @@
   <script src="{% static 'js/htmx/1_9_12.min.js' %}" defer></script>
 <script src="{% static 'js/loading.js' %}" defer></script>
   <style>
+
     * {
       font-family: Poppins, sans-serif;
     }
     .form-control {
-      width: 100%;
+      width: 87%;
+      margin-right: 50px;
     }
     ol,
     ul {
@@ -51,9 +53,6 @@
       background-color: #ffbd03;
       color: #000;
       border: #ffbd03;
-    }
-    .btn{
-      margin: 2px;
     }
   .btn-primary:active , .btn-primary:focus {
     background-color: #141b5f;
@@ -83,7 +82,7 @@
 
 .language-table-wrapper {
     overflow-x: auto;
-    {% comment %} min-width: 730px; {% endcomment %}
+    
     border: 1px solid #ccc;
     overflow-y: auto;
 }
@@ -119,14 +118,35 @@
     width: 25%;
 }
 
-.fa-circle-check{
-    color: rgb(37, 155, 56);
-}
-.fa-circle-xmark{
-    color: rgb(163, 46, 46);
+/* Hide the real checkbox */
+.custom-checkbox {
+display: none;
 }
 
+/* Style the label normally */
+.checkbox-label {
+height: 38px;
+min-width: 90px;
+width: fit-content;
+padding: 7px 18px;
+background-color: #fff;
+display: flex;
+justify-content: center;
+align-items: center;
+border: 1px solid gray;
+border-radius: 50px;
+cursor: pointer;
+margin: 3px 17px;
+transition: 0.3s;
 
+}
+
+/* Style the label when checkbox is checked */
+.custom-checkbox:checked + label {
+background-color: #FFBD03;
+color: #000000;
+border-color: #FFBD03;
+}
 
 .modal-body {
     min-height: 300px;
@@ -145,6 +165,56 @@
   width: 45%;
 }
 
+.btn-warning {
+    
+    background-color: unset;
+    border-color: unset;
+
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+    i{
+            color: #141b5f;
+            margin-top: unset;
+            margin-left: unset;
+    }
+}
+.btn-danger {
+      background-color: unset;
+   
+    border-color: unset;
+
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+    i{
+            color: #d43f3a;
+    }
+}
   </style>
 {% endblock %}
 

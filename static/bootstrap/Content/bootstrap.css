@@ -3369,7 +3369,7 @@ fieldset[disabled] .btn-info.focus {
   color: #5bc0de;
   background-color: #fff;
 }
-.btn-warning {
+/* .btn-warning {
   color: #fff;
   background-color: #f0ad4e;
   border-color: #eea236;
@@ -3421,8 +3421,8 @@ fieldset[disabled] .btn-warning.focus {
 .btn-warning .badge {
   color: #f0ad4e;
   background-color: #fff;
-}
-.btn-danger {
+} */
+/* .btn-danger {
   color: #fff;
   background-color: #d9534f;
   border-color: #d43f3a;
@@ -3474,7 +3474,7 @@ fieldset[disabled] .btn-danger.focus {
 .btn-danger .badge {
   color: #d9534f;
   background-color: #fff;
-}
+} */
 .btn-link {
   font-weight: 400;
   color: #337ab7;

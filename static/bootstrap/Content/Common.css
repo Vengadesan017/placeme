@@ -8,13 +8,13 @@
 
 .SideLabelBold
 {
-    font-family: Arial, Verdana, Times New Roman !important;
+    /* font-family: Arial, Verdana, Times New Roman !important; */
     font-size: 14px !important;
     color: #254b96 !important;
     font-weight:normal;
 }
 .SideLabeltext {
-    font-family: Arial, Verdana, Times New Roman !important;
+    /* font-family: Arial, Verdana, Times New Roman !important; */
     font-size: 12px !important;
 }
 .tabheader {
