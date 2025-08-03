@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-t8ovx6ha2tj2hhamki83z2^z2_7!#x24=hr-a19xv0_ztdrkcz
 # SECURITY WARNING: don't run with debug turned on in production! https://577d-38-134-138-191.ngrok-free.app/
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost','52.63.139.176']
-CSRF_TRUSTED_ORIGINS = ['https://52.63.139.176']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost','13.239.32.113']
+CSRF_TRUSTED_ORIGINS = ['https://13.239.32.113']
 
 # ALLOWED_HOSTS = []
 
@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'load_data',  
     'django_htmx',
     'django_cleanup.apps.CleanupConfig',    
-    'debug_toolbar',        # For debug only
+    # 'debug_toolbar',        # For debug only
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -71,10 +71,10 @@ MIDDLEWARE = [
     'django_ratelimit.middleware.RatelimitMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
     
-    'debug_toolbar.middleware.DebugToolbarMiddleware',  # For debug only
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',  # For debug only
 ]
 
-INTERNAL_IPS = ['127.0.0.1']
+INTERNAL_IPS = ['127.0.0.1','13.239.32.113']
 
 ROOT_URLCONF = 'placeme.urls'
 
@@ -101,26 +101,26 @@ WSGI_APPLICATION = 'placeme.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'placeme_hrms',
-#         'USER': 'newuser',
-#         'PASSWORD': 'Str0ngP@ssw0rd!',
-#         'HOST': 'localhost',  
-#         'PORT': '3306',        
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'placenow_hrms',
-        'USER': 'root',
-        'PASSWORD': '123456',
+        'NAME': 'placeme_hrms',
+        'USER': 'newuser',
+        'PASSWORD': 'Str0ngP@ssw0rd!',
         'HOST': 'localhost',  
         'PORT': '3306',        
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'placenow_hrms',
+#         'USER': 'root',
+#         'PASSWORD': '123456',
+#         'HOST': 'localhost',  
+#         'PORT': '3306',        
+#     }
+# }
 
 
 
