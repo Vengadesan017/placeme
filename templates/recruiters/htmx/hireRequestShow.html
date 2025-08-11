@@ -2,6 +2,7 @@
   <thead>
     <tr>
       <th class="recruiters-th">Hire request</th>
+      <th class="recruiters-th">Position</th>
       <th class="recruiters-th">Opened at</th>
       <th class="recruiters-th">Candidate</th>
       <th class="recruiters-th">Status</th>
@@ -24,11 +25,15 @@
         <td class="recruiters-td">
           <a href="#">
             <div class="major">{{ hire_request.hire_request_code }}</div>
-            <div class="minor">
+            {% comment %} <div class="minor">
               {{ hire_request.position_group.position_title }} -
               {{ hire_request.position_group.position_code }}
-            </div>
+            </div> {% endcomment %}
           </a>
+        </td>
+        <td class="recruiters-td">
+          {{ hire_request.position_group.position_title }} -
+              {{ hire_request.position_group.position_code }}
         </td>
         <td class="recruiters-td">{{ hire_request.created_at|date:"d M Y" }}</td>
         <td class="recruiters-td">

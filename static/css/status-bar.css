@@ -1,6 +1,6 @@
 /* green 1 - 2db36f, 2 - 47b749 */
 #progressbar {
-        margin: 2em 0 30px 0;
+        margin: 15px 0 10px 0;
         padding: 0;
         overflow-y: auto;
         /*counter-reset: step;*/
@@ -133,3 +133,7 @@
         color: #fff;
         font-weight: bold;
     }
+
+  .detail-1 .bar-set {
+    width: 100%;
+  }

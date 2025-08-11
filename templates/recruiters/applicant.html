@@ -1,4 +1,4 @@
-{% extends "recruiters/layout.html" %}
+ {% extends "recruiters/layout.html" %}
 
 {% block title %}
 {{ candidate.first_name }} {{ candidate.last_name }}'s profile
@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="{% static 'css/profile-right-skill.css' %}">
 <link rel="stylesheet" href="{% static 'css/profile-right-skill-2.css' %}">
 <link rel="stylesheet" href="{% static 'css/profile-moblie-view.css' %}">
+<link rel="stylesheet" href="{% static 'css/status-bar.css' %}">
 <link rel="stylesheet" href="{% static 'css/model.css' %}">
 
 
@@ -53,6 +54,12 @@
                         <li>
                             <div class="li-1">
                                 <div class="personal-div"><a href="#personal-info" class="profile-link">Personal Info</a></div>
+                                <div class="height"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="li-1">
+                                <div class="personal-div"><a href="#status" class="profile-link">Application Status</a></div>
                                 <div class="height"></div>
                             </div>
                         </li>
@@ -215,8 +222,7 @@
                                 <li>
                                     <div class="phone-box-person">
                                         <i class="fa-solid fa-phone"></i>
-                                        {% comment %} <p>{{ candidate.user.mobile_no|default_if_none:'' }}</p> {% endcomment %}
-                                        Unlock Profile
+                                        <p>{{ candidate.user.mobile_no|default_if_none:'' }}</p>
                                         
                                     </div>
                                 </li>
@@ -225,8 +231,7 @@
                                     <div class="phone-box-date">
                                         <i class="fa-solid fa-envelope"></i>
                                         <div class="email-div">
-                                            {% comment %} <p class="email" id="email">{{ candidate.user.email|default_if_none:'' }}</p> {% endcomment %}
-                                            Unlock Profile
+                                            <p class="email" id="email">{{ candidate.user.email|default_if_none:'' }}</p>
                                            
                                         </div>
                                     </div>
@@ -276,22 +281,84 @@
 
         
 <div class="bottom-nav">
-    <button class="nav-btn">
-        <i class="fas fa-unlock"></i> Unlock Profile
-    </button>
-    <button class="nav-btn">
-        <i class="fas fa-cogs"></i> Make Actions
-    </button>
     {% comment %} <button class="nav-btn">
+        <i class="fas fa-unlock"></i> Unlock Profile
+    </button> {% endcomment %}
+    <button class="nav-btn">
         <i class="fas fa-eye"></i> View CV
     </button>
     <button class="nav-btn">
         <i class="fas fa-download"></i> Download CV
-    </button> {% endcomment %}
+    </button>
+    <button class="nav-btn">
+        <i class="fas fa-cogs"></i> Make Actions
+    </button>
     <button class="nav-btn">
         <i class="fas fa-tasks"></i> Add Remarks
     </button>
 
+</div>
+
+
+<div class="resume1" id="status">
+    <div class="resume-name1">
+        <h4>Application Status </h4>
+
+        <div class="detail-1 detail-1-recruiters">
+          <div class="bar-set">
+            <div class="progress-track">
+              <ul id="progressbar">
+                <li class="{% if application.applied_date %}active{% endif %}">
+                  {% if application.applied_date %}
+                    Applied<p>{{ application.applied_date|date:'d M Y' }}</p>
+                  {% else %}
+                    Application Not Sent
+                  {% endif %}
+                </li>
+                <li class="{% if application.viewed_at %}active{% endif %}">
+                  {% if application.viewed_at %}
+                    Application Viewed<p>{{ application.viewed_at|date:'d M Y' }}</p>
+                  {% else %}
+                    Not Yet Viewed
+                  {% endif %}
+                </li>
+                {% if application.not_shortlisted_at %}
+                  <li class="{% if application.not_shortlisted_at %}inactive{% endif %}">
+                    Not Shortlisted<p>{{ application.rejected_at|date:'d M Y' }}</p>
+                  </li>
+                {% else %}
+                  <li class="{% if application.shortlisted_at %}active{% endif %}">
+                    {% if application.shortlisted_at %}
+                      Shortlisted<p>{{ application.shortlisted_at|date:'d M Y' }}</p>
+                    {% else %}
+                      Awaiting Shortlisting
+                    {% endif %}
+                  </li>
+                  <li class="{% if application.interview_at %}active{% endif %}">
+                    {% if application.interview_at %}
+                      Interviewed<p>{{ application.interview_at|date:'d M Y' }}</p>
+                    {% else %}
+                      Interview Pending
+                    {% endif %}
+                  </li>
+                  <li class="{% if application.selected_at %}active{% endif %}">
+                    {% if application.selected_at %}
+                      Selected<p>{{ application.selected_at|date:'d M Y' }}</p>
+                    {% else %}
+                      Selection Awaited
+                    {% endif %}
+                  </li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="p3 flex-space-between">
+        <p>Post : {{ application.job.title }}</p>
+        <p>Hire Request ID : {{ application.job.hire_request|default:'Anonymous' }}</p>
+        <p>Position : {{ application.job.position_grp|default:'Anonymous' }}</p>
+    </div>
 </div>
 
             <div class="summary-container" id="professional-summary">

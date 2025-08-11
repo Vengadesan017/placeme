@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-t8ovx6ha2tj2hhamki83z2^z2_7!#x24=hr-a19xv0_ztdrkcz
 # SECURITY WARNING: don't run with debug turned on in production! https://577d-38-134-138-191.ngrok-free.app/
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost','13.239.32.113']
-CSRF_TRUSTED_ORIGINS = ['https://13.239.32.113']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost','3.27.206.106']
+CSRF_TRUSTED_ORIGINS = ['https://3.27.206.106']
 
 # ALLOWED_HOSTS = []
 
@@ -74,7 +74,7 @@ MIDDLEWARE = [
     # 'debug_toolbar.middleware.DebugToolbarMiddleware',  # For debug only
 ]
 
-INTERNAL_IPS = ['127.0.0.1','13.239.32.113']
+INTERNAL_IPS = ['127.0.0.1','3.27.206.106']
 
 ROOT_URLCONF = 'placeme.urls'
 

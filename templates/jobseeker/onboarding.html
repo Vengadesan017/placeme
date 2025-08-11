@@ -257,6 +257,9 @@ border-color: #FFBD03;
                 <li class="{% if page == 'identity' %}active{% endif %}">
                   <a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page='identity' %}" data-toggle="">Identity Details</a>
                 </li>
+                <li class="{% if page == 'review' %}active{% endif %}">
+                  <a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page='review' %}" data-toggle="">Review</a>
+                </li>
                 {% comment %} <li class="{% if request.resolver_match.kwargs.page == 'personal' %}active{% endif %}">
                   <a href="{% url 'job_seeker:onboarding' onboarding_id=request.resolver_match.kwargs.onboarding_id page='personal' %}" data-toggle="">Personal details</a>
                 </li>
@@ -286,6 +289,8 @@ border-color: #FFBD03;
                   {% include 'jobseeker/onboarding_experience.html' %}
                 {% elif page == 'identity' %}
                   {% include 'jobseeker/onboarding_indentity.html' %}
+                {% elif page == 'review' %}
+                  {% include 'jobseeker/onboarding_review.html' %}
                 {% else %}
                   <h2>Invalid page</h2>
                 {% endif %}

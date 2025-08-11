@@ -16,7 +16,13 @@ def is_onboarding(view_func):
             onboarding = Onboarding.objects.filter(candidate=candidate, Onbording_id=onboarding_id).first()
             # print("2 ",onboarding)
             if onboarding:
-                if onboarding.created_date and not onboarding.completed_date and not onboarding.closed:
+                if not onboarding.created_date and onboarding.closed:
+                    messages.warning(request, "You do not have access to enter the onboarding page.")
+                    return redirect('job_seeker:home')
+                elif onboarding.is_completed:
+                    messages.warning(request, "You have already completed the onboarding process.")
+                    return redirect('job_seeker:home')
+                else:
                     # print("3 ",onboarding)
                     return view_func(request, *args, **kwargs)
         messages.warning(request, "You do not have access to enter the onboarding page.")

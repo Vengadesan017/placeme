@@ -284,6 +284,11 @@
   /* background-color: aquamarine; */
   width: 100%;
   display: flex;
+
+}
+.detail-1-recruiters {
+
+    border-bottom: 1px solid #d0d0d0;
 }
 
 /* mod */
@@ -867,6 +872,48 @@
     justify-content: flex-end;
 }
 
+
+.bottom-nav {
+    /* background: #fff; */
+    width: 97%; /* Fixed width */
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 10px;
+  scroll-behavior: smooth;
+    padding: 10px 0 0 0 ;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    position: relative;
+    z-index: 0;
+    top: -0.7%;
+    margin-left: 15px;
+}
+
+.nav-btn {
+  background: #141b5f;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  /* border-radius: 8px; */
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.nav-btn:hover {
+  background: #0d215e;
+}
+.bottom-nav .nav-btn:first-child {
+  border-bottom-left-radius: 12px;
+  border-top-left-radius: 0;
+}
+
+.bottom-nav .nav-btn:last-child {
+  border-bottom-right-radius: 12px;
+  border-top-right-radius: 0;
+}
+.info-container .p3{
+    color: #6673B3;
+}
 .flex-space-between {
     display: flex;
     justify-content: space-between;

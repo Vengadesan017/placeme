@@ -1,6 +1,6 @@
 .multi-select-container {
     width: inherit;
-    width: 80%;
+    width: 100%;
     margin: 10px 0 10px 0;
     font-family: sans-serif;
     position: relative;
@@ -77,7 +77,7 @@ align-items: center;
 border: 1px solid gray;
 border-radius: 50px;
 cursor: pointer;
-margin: 3px 15px;
+margin: 3px 3px;
 transition: 0.3s;
 
 }
@@ -87,4 +87,16 @@ transition: 0.3s;
 background-color: #FFBD03;
 color: #000000;
 border-color: #FFBD03;
+}
+
+.btn{
+margin: 0 5px;
+    cursor: pointer;
+    background-color: #141B5F;
+    border: none;
+    font-size: 16px;
+    color: aliceblue;
+    padding: 6px 12px;
+    border-radius: 5px;
+    flex: 1;
 }

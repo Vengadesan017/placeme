@@ -78,7 +78,7 @@ def Home(request):
                 offered_at__isnull=False,
                 accepted_at__isnull=True,
                 rejected_at__isnull=True
-            ).values_list("id", flat=True).first()
+            ).values_list("applicant_id", flat=True).first()
             if offer_letter_id:
                 context['review_offer_url'] = reverse("job_seeker:status", kwargs={
                     'page': 'offered',
@@ -492,9 +492,9 @@ def Status(request, page, id=None):
         offer = False
         # Try to get job_status directly if id is provided
         if page == 'applied' and id:
-            job_status = JobApplications.objects.filter(id=id, candidate=candidate).first()
+            job_status = JobApplications.objects.filter(applicant_id=id, candidate=candidate).first()
         elif page == 'offered' and id:
-            job_status = JobApplications.objects.filter(id=id, candidate=candidate).first()
+            job_status = JobApplications.objects.filter(applicant_id=id, candidate=candidate).first()
             if job_status:
                 onboarding_id = Onboarding.objects.filter(candidate=candidate, job_post=job_status.id).values_list('Onbording_id', flat=True).first()
 
@@ -553,6 +553,7 @@ def OnboardingCandidate(request,onboarding_id, page):
                     UserLanguages,
                     form=CandidateLanguageUpdateForm,
                     extra=0,
+                    can_delete=True,
                     max_num=3,
                     validate_max=True
                 )
@@ -573,6 +574,7 @@ def OnboardingCandidate(request,onboarding_id, page):
                     onboarding_form.save()
 
                 if not formset.is_valid():
+                    print("Formset errors:", formset)
                     form_errors_to_messages(request, formset)
                     page = "personal"
                 else:
@@ -708,7 +710,7 @@ def OnboardingCandidate(request,onboarding_id, page):
                     return render(request,"jobseeker/htmx/onboarding_exp_table.html",context)
                 return redirect("job_seeker:onboarding",onboarding_id=onboarding_id,page='experience')
 
-            if 'complete_onboarding' in request.POST:
+            if 'save_indentity' in request.POST:
                 onboarding = Onboarding.objects.get(pk=onboarding_id)
                 company = onboarding.company  # adjust if job_post or company is linked differently
 
@@ -720,7 +722,29 @@ def OnboardingCandidate(request,onboarding_id, page):
                 else:
                     form = IdentityForm(instance=onboarding, company=company)
 
-                return redirect("job_seeker:home")
+                return redirect("job_seeker:onboarding",onboarding_id=onboarding_id,page='review')
+
+            if 'complete_onboarding' in request.POST:
+                onboarding = Onboarding.objects.get(pk=onboarding_id)
+                agree_terms = request.POST.get('agree_terms', '')  # Returns 'on' if checked
+                acknowledge = request.POST.get('acknowledge', '')  # Returns 'on' if checked
+
+                if not agree_terms:
+                    messages.error(request, "You must agree to the terms and conditions before completing onboarding.")
+                    return redirect(request.path)
+                if not acknowledge:
+                    messages.error(request, "You must acknowledge the onboarding process before completing.")
+                    return redirect(request.path)
+                
+                # If all validations pass, update onboarding status
+                onboarding.is_completed = True  # or whatever value means "done"
+                onboarding.completed_date = timezone.now()
+                onboarding.save()
+
+                messages.success(request, "Onboarding completed successfully.<br>Please wait for the company to review your profile.")
+                return redirect('job_seeker:home') 
+
+            return redirect("job_seeker:onboarding",onboarding_id=onboarding_id,page='personal')
 
                     
 
@@ -743,6 +767,7 @@ def OnboardingCandidate(request,onboarding_id, page):
             UserLanguages,
             form=CandidateLanguageUpdateForm,
             extra=extra_forms,
+            can_delete=True,
             max_num=3,
             validate_max=True
         )

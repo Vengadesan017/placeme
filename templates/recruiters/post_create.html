@@ -18,6 +18,7 @@ Job vacancy post
 <script src="{% static 'js/recruiters/post.js' %}" defer></script>
 <script src="{% static 'js/recruiters/post_create_form_multiple_select.js' %}" defer></script>
 <script src="{% static 'js/recruiters/post_create_form_load_options.js' %}" defer></script>
+<link rel="stylesheet" href="{% static 'css/model-input.css' %}">
 {% comment %} <script src="{% static 'js/recruiters/word-count.js' %}" defer></script> {% endcomment %}
 
 
@@ -62,7 +63,7 @@ Job vacancy post
 
 
 .multi-select-container {
-  width: 80%;
+  width: 100%;
 /*  margin: 10px 0;
   font-family: sans-serif;
   background-color: #fff;
@@ -151,11 +152,13 @@ Job vacancy post
   background: #f0f0f0;
 }
 
+.no-padding {
+  padding: 0 !important;
+}
 
-
-
-
-
+.search-input{
+    padding: 0.875rem 1rem;
+}
 
 
 
@@ -183,45 +186,52 @@ Job vacancy post
                         <p class="account">Create new job post</p>
                     </div>
                     <div class="info-list">
-                
-                        <div class="company-div">
-                            <div class="admin-name">
-                                <p>Position<span class="red-star">*</span></p>
-                                {{ form.position_grp}}
-                            </div>
+                                <div class="height-adjustment">
 
-                            <div class="admin-name">
-                                <p>Hire Request<span class="red-star">*</span></p>
-                                {{ form.hire_request}}
-                            </div>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="firstName" class="form-label">Position <span class="red-star">*</span></label>
+                                            {{ form.position_grp}}
+                                        </div>
 
-                        </div>
-                        <div class="company-div">
-                            <div class="admin-name">
-                                <p>Job Title <span class="red-star">*</span></p>
-                                <input class="admin-input" name="title" value="{{form.title.value|default:''}}" placeholder="Enter Job title" required /> 
-                            </div>
-                            <div class="admin-role">
-                                <p>Work Mode <span class="red-star">*</span></p>
-                                <p>
-                                    <input type="checkbox" class="custom-checkbox" name="is_onsite" id="is_onsite" />
-                                    <label for="is_onsite" class="checkbox-label">Onsite</label>
-                                </p>
-                                <p>
-                                    <input type="checkbox" class="custom-checkbox" name="is_work_from_home" id="is_work_from_home" />
-                                    <label for="is_work_from_home" class="checkbox-label">Remote</label>
-                                </p>
-                                <p>
-                                    <input type="checkbox" class="custom-checkbox" name="is_hybrid" id="is_hybrid" />
-                                    <label for="is_hybrid" class="checkbox-label">Hybrid</label>
-                                </p>
-                            </div>
-                        </div>
-                
-                        <div class="admin-div">
-                            <p>Job Location <span class="red-star">*</span></p>
+                                        <div class="form-group">
+                                            <label for="lastName" class="form-label">Hire Request<span class="red-star">*</span></label>
+                                             {{ form.hire_request}}
+                                        </div>
+                                        <div class="form-group hide">
+                                            
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="lastName" class="form-label">Job Title<span class="red-star">*</span></label>
+                                            <input class="form-input" name="title" value="{{form.title.value|default:''}}" placeholder="Enter Job title" required /> 
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="lastName" class="form-label">Job Type<span class="red-star">*</span></label>
+                                            {{form.employment_type}}
+                                        </div>
+                                        <div class="admin-role">
+                                            <label for="lastName" class="form-label">Work Mode<span class="red-star">*</span></label>
+                                            <p>
+                                                <input type="checkbox" class="custom-checkbox" name="is_onsite" id="is_onsite" />
+                                                <label for="is_onsite" class="checkbox-label">Onsite</label>
+                                            </p>
+                                            <p>
+                                                <input type="checkbox" class="custom-checkbox" name="is_work_from_home" id="is_work_from_home" />
+                                                <label for="is_work_from_home" class="checkbox-label">Remote</label>
+                                            </p>
+                                            <p>
+                                                <input type="checkbox" class="custom-checkbox" name="is_hybrid" id="is_hybrid" />
+                                                <label for="is_hybrid" class="checkbox-label">Hybrid</label>
+                                            </p>
+                                        </div>
+                                    </div>
+                                
+                                <div class="form-grid">
+                                    <div class="form-group">
                             <!-- Locations -->
-                            <div class="multi-select-container admin-input" id="location-wrapper">
+                                            <label for="firstName" class="form-label">Location <span class="red-star">*</span></label>
+                            <div class="multi-select-container form-input no-padding" id="location-wrapper">
                                 <div class="selected-tags" id="selected-tags-location">
                                 </div>
                                 <input type="text" class="search-input" id="search-location" placeholder="Search or add locations..." autocomplete="off">
@@ -236,17 +246,71 @@ Job vacancy post
                                     <option value="{{ loc.pk }}">{{ loc }}</option>
                                 {% endfor %}   {% endcomment %}
                             </select> 
-                        </div>
-                
-                        <div class="company-div">
-                            <div class="email-name">
-                                <p>Job type <span class="red-star">*</span></p>
-                                {{form.employment_type}}
-
+                                    </div>
+                                </div>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                            <!-- Locations -->
+                                            <label for="firstName" class="form-label">Qualifications <span class="red-star">*</span></label>
+                            <div class="multi-select-container form-input no-padding" id="qualifications-wrapper">
+                                <div class="selected-tags" id="selected-tags-qualifications"></div>
+                                <input type="text" class="search-input" id="search-qualifications" placeholder="Search or add qualifications..." autocomplete="off">
+                                <div class="dropdown-list" id="dropdown-qualifications"></div>
                             </div>
-                            <div class="website">
-                                <p>Shift <span class="red-star">*</span></p>
+                                 <select class="company-input" id="multi-select-qualifications" name="qualifications" multiple style="display: none;">
+                                {% comment %} {% for q in form.qualifications.field.queryset %}
+                                    <option value="{{ q.pk }}">{{ q }}</option>
+                                {% endfor %} {% endcomment %}
+                            </select> 
+                                    </div>
+                                </div>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                            <!-- Locations -->
+                                            <label for="firstName" class="form-label">key Skills <span class="red-star">*</span></label>
+                            <div class="multi-select-container form-input no-padding" id="skills-wrapper">
+                                <div class="selected-tags" id="selected-tags-skills"></div>
+                                <input type="text" class="search-input" id="search-skills" placeholder="Search or add Key Skills..." autocomplete="off">
+                                <div class="dropdown-list" id="dropdown-skills"></div>
+                            </div>
+                             <select class="company-input" id="multi-select-skills" name="skills" style="display: none;" multiple>
+                                {% comment %} {% for loc in form.skills.field.queryset %}
+                                    <option value="{{ loc.pk }}">{{ loc }}</option>
+                                {% endfor %} {% endcomment %}
+                            </select>  
+                                    </div>
+                                </div>
+
+{% comment %} 3333333333333333 {% endcomment %}
+                                <div class="form-grid">
+
+                                    <div class="form-group">
                             
+                                 <label for="firstName" class="form-label">Experience <span class="red-star">*</span></label>
+                                 <div class="admin-role">
+
+                                     {{form.min_experience}}
+                                
+                                
+                                     to
+                                     {{form.max_experience}}
+                                 </div>
+                            
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="firstName" class="form-label">Salary <span class="red-star">*</span></label>
+                            <div class="admin-role">
+                                <input class="form-select-to" name="salary"  type="text" value="{{form.salary.value|default:''}}" id="id_salary" oninput="formatIndianNumber(this)"min="0" placeholder="Enter salary" required />
+
+                                {{ form.salary_type }}
+                                {% comment %} <label for="hide-salary">
+                                    <input type="checkbox" name="hide-salary" id="hide-salary" value="">Hide the salary in post
+                                </label> {% endcomment %}
+                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                <label for="firstName" class="form-label">Shift <span class="red-star">*</span></label>
+                                <div class="admin-role">
                                 <!-- Rotational Shift -->
                                 <p>
                                     <input type="checkbox" class="custom-checkbox" name="is_rotational_shift" id="is_rotational_shift" />
@@ -254,7 +318,7 @@ Job vacancy post
                                 </p>
 
                                 <!-- Parent: Fixed Shift -->
-                                <p>
+                                
                                     <input type="checkbox" class="custom-checkbox" name="is_fixed_shift" id="is_fixed_shift" />
                                     <label for="is_fixed_shift" class="checkbox-label">Fixed</label>
                                         <!-- Inline Children: Day / Night -->
@@ -265,120 +329,63 @@ Job vacancy post
                                             <label for="is_night_shift" class="checkbox-label">Night</label>
                                         </span>
                                 </p>
-                            
+                                </div>
                         
-                            
-                            </div>
-                            
-                        </div>
-                
-                        <div class="admin-div">
-                            <p>Qualifications <span class="red-star">*</span></p>
-                            <!-- Qualifications -->
-                            <div class="multi-select-container admin-input" id="qualifications-wrapper">
-                                <div class="selected-tags" id="selected-tags-qualifications"></div>
-                                <input type="text" class="search-input" id="search-qualifications" placeholder="Search or add qualifications..." autocomplete="off">
-                                <div class="dropdown-list" id="dropdown-qualifications"></div>
-                            </div>
-                                 <select class="company-input" id="multi-select-qualifications" name="qualifications" multiple style="display: none;">
-                                {% comment %} {% for q in form.qualifications.field.queryset %}
-                                    <option value="{{ q.pk }}">{{ q }}</option>
-                                {% endfor %} {% endcomment %}
-                            </select> 
+                                    </div>
+                                </div>
 
 
-
-                        </div>
-                
-                        <div class="company-div">
-                            <div class="admin-name">
-                                <p>Experience <span class="red-star">*</span></p>
-                                {{form.min_experience}}
-                            </div>
-                            <div class="admin-role">
-                                <p>To</p>
-                                {{form.max_experience}}
-                            </div>
-                        </div>
-
-                        <div class="admin-div">
-                            <p>Key Skills <span class="red-star">*</span></p>
+                                <div class="form-grid">
+                                    <div class="form-group">
                             <!-- Locations -->
-                            <div class="multi-select-container admin-input" id="skills-wrapper">
-                                <div class="selected-tags" id="selected-tags-skills"></div>
-                                <input type="text" class="search-input" id="search-skills" placeholder="Search or add Key Skills..." autocomplete="off">
-                                <div class="dropdown-list" id="dropdown-skills"></div>
-                            </div>
-                             <select class="company-input" id="multi-select-skills" name="skills" style="display: none;" multiple>
-                                {% comment %} {% for loc in form.skills.field.queryset %}
-                                    <option value="{{ loc.pk }}">{{ loc }}</option>
-                                {% endfor %} {% endcomment %}
-                            </select> 
-                        </div>
-
-                        <div class="company-div">
-                            <div class="email-name">
-                                <p>Salary <span class="red-star">*</span></p>
-                                <input class="admin-input-sel" name="salary"  type="text" value="{{form.salary.value}}" id="id_salary" oninput="formatIndianNumber(this)"min="0" placeholder="Enter salary in LPA" required />
-                            </div>
-                            <div class="website">
-                                {{ form.salary_type }}
-                                <label for="hide-salary">
-                                    <input type="checkbox" name="hide-salary" id="hide-salary" value="">Hide the salary in post
-                                </label>
-                            </div>
-                        </div>
-                        <div class="company-div">
-                            <div class="email-name">
-                                <p>Opening Count <span class="red-star">*</span></p>
-                                <input class="admin-input-sel" name="opening_count" type="number" min="1" required />
-                            </div>
-                            {% comment %} <div class="website">
-
-                            </div> {% endcomment %}
-                        </div>
-                
-                        <div class="description">
-                            <div class="about-p-div">
-                                <p>Job Description <span class="red-star">*</span></p>
-                            </div>
-                            <div class="textarea-div">
-                                <input type="hidden" name="description" id="hidden-description" value="{{ form.initial.description|default_if_none:'' }}" required>
-                                <div id="editor-container" style="height: 200px;"></div>
-                                <p id="char-count">0/1000 characters</p>
-                            </div>
-                        </div>
-                
-                        <div class="admin-div">
-                            <p>Employee Benefits <span class="red-star">*</span></p>
+                                            <label for="firstName" class="form-label">Benefits <span class="red-star">*</span></label>
                              <select class="company-input-last" id="multi-select-benefits" name="benefit_id" style="display: none;"  multiple>
                                 {% comment %} {% for b in form.benefit_id.field.queryset %}
                                     <option value="{{ b.pk }}">{{ b }}</option>
                                 {% endfor %} {% endcomment %}
                             </select> 
                             <!-- Benefits -->
-                            <div class="multi-select-container admin-input" id="benefit-wrapper">
+                            <div class="multi-select-container form-input no-padding" id="benefit-wrapper">
                                 <div class="selected-tags" id="selected-tags-benefits"></div>
                                 <input type="text" class="search-input" id="search-benefits" placeholder="Search or add benefits..." autocomplete="off"> 
                                 <div class="dropdown-list" id="dropdown-benefits"></div>
                             </div>
-                        </div>
-                        <div class="company-div">
-                            <div class="admin-name-last">
-                                <p>Last date to apply <span class="red-star">*</span></p>
-                                <input class="admin-input-last" name="last_date_to_apply" type="datetime-local" required />
+                                    </div>
+                                </div>
+                            
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="firstName" class="form-label">Job Description <span class="red-star">*</span></label>
+                            <div class="admin-role">
                             </div>
-                        </div>
-    <input type="hidden" name="new_qualifications" id="new-qualifications">
-    <input type="hidden" name="new_locations" id="new-locations">
-    <input type="hidden" name="new_skills" id="new-skills">
-    <input type="hidden" name="new_benefits" id="new-benefits">
+                            <div class="textarea-div">
+                                <input type="hidden" name="description" id="hidden-description" value="{{ form.initial.description|default_if_none:'' }}" required>
+                                <div id="editor-container" style="height: 200px;"></div>
+                                <p id="char-count">0/1000 characters</p>
+                            </div>
+                                    </div>
+                                </div>
+
+ 
+
+                
+
+                
+
+
+        
+                <input type="hidden" name="new_qualifications" id="new-qualifications">
+                <input type="hidden" name="new_locations" id="new-locations">
+                <input type="hidden" name="new_skills" id="new-skills">
+                <input type="hidden" name="new_benefits" id="new-benefits">
                 
                         <div class="btn-div">
-                            <button class="btn open-modal-btn" type="button" id="preview-btn" data-modal-id="previewNewJob">Preview</button>
+                            <button class="btn open-modal-btn" type="button" id="preview-btn" 
+                            data-modal-id="previewNewJob">Preview</button>
                             <button class="btn" type="submit" name="action" value="draft">Save as Draft</button>
                             <button class="btn" type="submit" name="action" value="publish">Publish Job</button>
                         </div>
+                    </div>
                     </div>
                 </form>
                 

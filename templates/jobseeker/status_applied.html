@@ -9,7 +9,7 @@
       <button class="button">Recuiter action</button>
     </div>
     {% for job in applied %}
-        <a href="{% url 'job_seeker:status' page='applied' id=job.id %}">
+        <a href="{% url 'job_seeker:status' page='applied' id=job.applicant_id %}">
           <div class="dev-detail-2 {% if job_status == job %}active{% endif %}">
             <div class="dev-detail-2-inside">
               <h1 class="dev-name">{{ job.job.title }}</h1>

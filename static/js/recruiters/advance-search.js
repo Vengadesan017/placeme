@@ -59,12 +59,12 @@ document.addEventListener("DOMContentLoaded", function () {
     // Education Candidate Selection with Input Toggle
     const candidatesEdu = document.querySelectorAll(".select-candidate-edu");
     const classMap = {
-        "10th": "tenth",
-        "12th": "twelfth",
+        "SSLC": "tenth",
+        "HSC": "twelfth",
         "UG": "ug",
         "PG": "pg",
         "Diplomo": "diplomo",
-        "PHD": "phd"
+        "Phd": "phd",
     };
 
     candidatesEdu.forEach(candidate => {
@@ -81,4 +81,13 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
+    
+    document.querySelectorAll('.select-candidate').forEach(item => {
+        item.addEventListener('click', function() {
+            const checkbox = this.querySelector('.gender-checkbox');
+            checkbox.checked = !checkbox.checked;
+            this.classList.toggle('active', checkbox.checked);
+        });
+    });
+
 })

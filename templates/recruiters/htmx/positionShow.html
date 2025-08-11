@@ -2,10 +2,10 @@
   <thead>
     <tr>
       <th class="recruiters-th">Position</th>
-      <th class="recruiters-th">No. of opening</th>
-      <th class="recruiters-th">Active Hirerequest</th>
-      <th class="recruiters-th">Offered candidates</th>
-      <th class="recruiters-th">Joined candidates</th>
+      <th class="recruiters-th">Total Position</th>
+      <th class="recruiters-th">Filled Position</th>
+      <th class="recruiters-th">In Progress Position</th>
+      <th class="recruiters-th">Pending Position</th>
       <th class="recruiters-th">Status</th>
       <th class="recruiters-th">Department</th>
       <th class="recruiters-th">Budget</th>
@@ -31,7 +31,9 @@
             <div class="minor">{{ position.position_code }}</div>
           </a>
         </td>
-        <td class="recruiters-td">{{ position.total_positions }}</td>
+        <td class="recruiters-td">{{ position.total }}</td>
+        <td class="recruiters-td">{{ position.hired }}</td>
+        <td class="recruiters-td">{{ position.inprogress }}</td>
         <td class="recruiters-td">
           <a href="#"
             {% comment %} class="open-modal-btn" {% endcomment %}
@@ -43,12 +45,10 @@
             hx-swap="innerHTML"
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
             
-            {{ position.hiring_need }}
+            {{ position.pending }}
             <i class="fa-solid fa-pencil"></i>
                 </a>
         </td>
-        <td class="recruiters-td">{{ position.total_offered }}</td>
-        <td class="recruiters-td">{{ position.total_joined }}</td>
         <td class="recruiters-td">
           {% if position.approved_by %}
             Approved

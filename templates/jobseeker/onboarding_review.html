@@ -1,0 +1,301 @@
+{% load static %}
+<div class="container-fluid" style="margin: 30px 0;">
+  <div class="row">
+    <div class="col-md-12">
+      <h3 class="text-center">Review Your Onboarding Information</h3>
+      <hr>
+    </div>
+
+    <!--  PERSONAL DETAILS - 3 COLUMNS -->
+    <div class="col-md-12 mb-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 style="display: inline-block;">Personal Details</h4>
+        <a class="btn btn-warning btn-sm" href="{% url 'job_seeker:onboarding' onboarding_id=onboarding_obj.Onbording_id page='personal' %}"><i class="fa-solid fa-pencil open-modal-btn"></i></a>
+      </div>
+      <table class="table table-striped">
+        <tr>
+          <td><strong class="SideLabelBold">First Name:</strong> {{ candidate.first_name.value }}</td>
+          <td><strong class="SideLabelBold">Last Name:</strong> {{ candidate.last_name.value }}</td>
+          <td><strong class="SideLabelBold">Father's Name:</strong> {{ onboarding.father_name.value }}</td>
+        </tr>
+        <tr>
+          <td><strong class="SideLabelBold">Email:</strong> {{ candidate.instance.user.email }}</td>
+          <td><strong class="SideLabelBold">Mobile 1:</strong> {{ candidate.instance.user.mobile_no }}</td>
+          <td><strong class="SideLabelBold">Mobile 2:</strong> {{ onboarding.mobile_two.value }}</td>
+        </tr>
+        <tr>
+          <td><strong class="SideLabelBold">Date of Birth:</strong> {{ candidate.dob.value|date:'d M Y' }}</td>
+          <td><strong class="SideLabelBold">Gender:</strong> {{ candidate.gender.value }}</td>
+          <td><strong class="SideLabelBold">Marital Status:</strong> {{ candidate.marital_status.value }}</td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <strong class="SideLabelBold">Permanent Address:</strong>
+            {{ candidate.address.value|linebreaksbr|default:"" }},
+            {{ candidate.state.value|linebreaksbr|default:"" }},
+            {{ candidate.country.value|linebreaksbr|default:"" }},
+            {{ candidate.pincode.value|linebreaksbr|default:"" }}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <strong class="SideLabelBold">Communication Address:</strong>
+            {{ onboarding.communication_address.value|linebreaksbr|default:"-" }},
+            {{ onboarding.communication_state.value|linebreaksbr|default:"-" }},
+            {{ onboarding.communication_country.value|linebreaksbr|default:"-" }},
+            {{ onboarding.communication_pincode.value|linebreaksbr|default:"-" }}
+
+          </td>
+        </tr>
+      </table>
+    </div>
+
+        <!--  LANGUAGE DETAILS -->
+    <div class="col-md-12 mb-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 style="display: inline-block;">Language Details</h4>
+        <a class="btn btn-warning btn-sm" href="{% url 'job_seeker:onboarding' onboarding_id=onboarding_obj.Onbording_id page='personal' %}"><i class="fa-solid fa-pencil open-modal-btn"></i></a>
+      </div>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Language</th>
+            <th>Can Read</th>
+            <th>Can Write</th>
+            <th>Can Speak</th>
+            <th>Proficiency</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for lang in languages %}
+          <tr>
+            <td>{{ lang.language_id }}</td>
+            <td>{{ lang.can_read|yesno:"Yes,No" }}</td>
+            <td>{{ lang.can_write|yesno:"Yes,No" }}</td>
+            <td>{{ lang.can_speak|yesno:"Yes,No" }}</td>
+            <td>{{ lang.proficiency }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4" class="text-center">No language records available.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+
+    <!-- Family Details Section -->
+    <div class="col-md-12 mb-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 style="display: inline-block;">Family Details</h4>
+        <a class="btn btn-warning btn-sm" href="{% url 'job_seeker:onboarding' onboarding_id=onboarding_obj.Onbording_id page='family' %}"><i class="fa-solid fa-pencil open-modal-btn"></i></a>
+      </div>
+      <div class="panel-body">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Gender</th>
+              <th>Relationship</th>
+              <th>Date of Birth</th>
+              <th>Aadhar No</th>
+              <th>Mobile No</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for member in my_family %}
+            <tr>
+              <td>{{ member.first_name }}</td>
+              <td>{{ member.last_name }}</td>
+              <td>{{ member.gender }}</td>
+              <td>{{ member.relationship }}</td>
+              <td>{{ member.dob|date:'d M Y' }}</td>
+              <td>{{ member.aadhar_no }}</td>
+              <td>{{ member.mobile_no }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7">No family data found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Education Details Section -->
+    <div class="col-md-12 mb-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 style="display: inline-block;">Educational Details</h4>
+        <a class="btn btn-warning btn-sm" href="{% url 'job_seeker:onboarding' onboarding_id=onboarding_obj.Onbording_id page='education' %}"><i class="fa-solid fa-pencil open-modal-btn"></i></a>
+      </div>
+      <div class="panel-body">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Level</th>
+              <th>Degree</th>
+              <th>Specialization</th>
+              <th>Institute</th>
+              <th>Type</th>
+              <th>Duration</th>
+              <th>Score</th>
+              <th>Proof</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for edu in my_education %}
+            <tr>
+              <td>{{ edu.edu_id.course.level.name }}</td>
+              <td>{{ edu.edu_id.course.name }}</td>
+              <td>{{ edu.edu_id.name }}</td>
+              <td>{{ edu.institute }}</td>
+              <td>{{ edu.type_id }}</td>
+              <td>{{ edu.year_of_joining }} - {{ edu.year_of_passing }}</td>
+              <td>{{ edu.score }}</td>
+              <td>
+                {% if edu.doc %}
+                  <a href="{{ edu.doc.url }}" target="_blank">View</a>
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="8">No education data found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Experience Details Section -->
+    <div class="col-md-12 mb-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 style="display: inline-block;">Experience Details</h4>
+        <a class="btn btn-warning btn-sm" href="{% url 'job_seeker:onboarding' onboarding_id=onboarding_obj.Onbording_id page='experience' %}"><i class="fa-solid fa-pencil open-modal-btn"></i></a>
+      </div>
+      <div class="panel-body">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Company Name</th>
+              <th>Role</th>
+              <th>Type</th>
+              <th>Joining</th>
+              <th>Leaving</th>
+              <th>Reason for Leaving</th>
+              <th>Document</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for exp in my_experience %}
+            <tr>
+              <td>{{ exp.company_name }}</td>
+              <td>{{ exp.company_role }}</td>
+              <td>{{ exp.type_id }}</td>
+              <td>{{ exp.doj|date:'M Y' }}</td>
+              <td>{{ exp.dol|date:'M Y' }}</td>
+              <td>{{ exp.reason_for_leaving }}</td>
+              <td>
+                {% if exp.doc %}
+                  <a href="{{ exp.doc.url }}" target="_blank">View</a>
+                {% else %}
+                  -
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7">No experience data found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <!--  IDENTITY DETAILS - 3 COLUMNS -->
+    <div class="col-md-12 mb-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 style="display: inline-block;">Identity Details</h4>
+        <a class="btn btn-warning btn-sm" href="{% url 'job_seeker:onboarding' onboarding_id=onboarding_obj.Onbording_id page='identity' %}"><i class="fa-solid fa-pencil open-modal-btn"></i></a>
+      </div>
+      <table class="table table-striped">
+        <tr>
+          <td><strong class="SideLabelBold">Aadhar Number:</strong> {{ indentity_form.aadhar_number.value|default:'-' }}</td>
+          <td><strong class="SideLabelBold">PF Number:</strong> {{ indentity_form.pf_number.value|default:'-' }}</td>
+          <td><strong class="SideLabelBold">PAN Number:</strong> {{ indentity_form.pan_number.value|default:'-' }}</td>
+        </tr>
+        <tr>
+          <td><strong class="SideLabelBold">Bank Name:</strong> {{ indentity_form.bank_name.value|default:'-' }}</td>
+          <td><strong class="SideLabelBold">IFSC Code:</strong> {{ indentity_form.ifsc_code.value|default:'-' }}</td>
+          <td><strong class="SideLabelBold">Account Number:</strong> {{ indentity_form.account_number.value|default:'-' }}</td>
+        </tr>
+        <tr>
+          <td><strong class="SideLabelBold">PF UAN:</strong> {{ indentity_form.pf_uan.value|default:'-' }}</td>
+          <td><strong class="SideLabelBold">ESIC Number:</strong> {{ indentity_form.esic_number.value|default:'-' }}</td>
+          <td><strong class="SideLabelBold">-</strong></td>
+        </tr>
+        <tr>
+          <td>
+            <strong class="SideLabelBold">Aadhar Card:</strong>
+            {% if indentity_form.instance.aadhar_card %}
+              <a href="{{ indentity_form.instance.aadhar_card.url }}" target="_blank">View</a>
+            {% else %}-{% endif %}
+          </td>
+          <td>
+            <strong class="SideLabelBold">PAN Card:</strong>
+            {% if indentity_form.instance.pan_card %}
+              <a href="{{ indentity_form.instance.pan_card.url }}" target="_blank">View</a>
+            {% else %}-{% endif %}
+          </td>
+          <td>
+            <strong class="SideLabelBold">Bank Book:</strong>
+            {% if indentity_form.instance.bank_book %}
+              <a href="{{ indentity_form.instance.bank_book.url }}" target="_blank">View</a>
+            {% else %}-{% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <strong class="SideLabelBold">Address Proof:</strong>
+            {% if indentity_form.instance.address_proof %}
+              <a href="{{ indentity_form.instance.address_proof.url }}" target="_blank">View</a>
+            {% else %}-{% endif %}
+          </td>
+        </tr>
+      </table>
+    </div>
+
+
+
+    <!--  COMPLETE ONBOARDING BUTTON -->
+    <div class="col-md-12 text-end mt-3">
+      <form method="POST">
+        {% csrf_token %}
+        <!--  TERMS AND CONDITIONS / DISCLOSURE SECTION -->
+<div class="col-md-12 mt-4">
+  <div class="form-check">
+      <label class="form-check-label" for="acknowledge">
+        <input class="form-check-input" type="checkbox" name="acknowledge" id="acknowledge" required>
+      I confirm that the information I provided is true and correct to the best of my knowledge.
+    </label>
+  </div>
+  <div class="form-check">
+      <label class="form-check-label" for="agreeTerms">
+        <input class="form-check-input" type="checkbox" name="agree_terms" id="agreeTerms" required>
+      I accept the <a href="{% url 'job_seeker:home' %}" target="_blank">terms and conditions</a>.
+    </label>
+  </div>
+</div>
+
+
+        <div style="float:right">
+            {% comment %} <button id="btnEmpSave" onclick="saveEmpData()" style="color:#254b96 !important;margin-left:1000px" class="btn btn-default">Save & Next</button> {% endcomment %}
+            <button type="submit" name="complete_onboarding"  style="margin-top: 25px;" class="btn btn-primary btn-save btn-bottom">Complete Onboarding</button>
+            
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

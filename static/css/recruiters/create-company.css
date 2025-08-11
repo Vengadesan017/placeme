@@ -6,23 +6,24 @@
     padding-top: 100px;
 }
 .all-info{
-    padding: 20px;
+    padding: 30px 20px 20px 20px;
     border-radius: 20px;
-    width: 1100px;
+    width: 1060px;
     /* background-color: bisque; */
     min-height: 500px;
     height: auto;
     background-color: #fff;
-    box-shadow: #141B5F 0px 0px 6px 0px;
+    box-shadow: #d0d0d0 0px 0px 6px 0px;
 }
 
 .account{
     font-size: 22px;
-    
+    font-weight: 500;
+    margin-left: 27px;
     color: #141B5F;    
 }
 .info-list{
-    width: 100%;
+    width: fit-content;
     min-height: 400px;
     height: auto;
     /* background-color: khaki; */
@@ -55,7 +56,6 @@ span{
     /*background-color: #f0f4f8;  */
     /* Light background color */
     transition: all 0.3s ease;   /* Smooth transition for effects */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for elevation */
 }
 
 
@@ -63,7 +63,6 @@ span{
 .company-input:focus ,.admin-input:focus ,.textarea-div textarea:focus {
     border: 1px solid #999999;  /* Blue border on focus */
     background-color: #fff;     /* White background when focused */
-    box-shadow: 0 4px 8px rgba(0, 91, 181, 0.3); /* Subtle blue shadow */
     outline: none;  /* Remove default outline */
 }
 
@@ -71,19 +70,17 @@ span{
 .company-input:hover ,.admin-input:hover,.textarea-div textarea:hover {
     border: 1px solid #999999;  /* Change border color on hover */
     background-color: #e8f0fe;   /* Slightly darker background */
-    box-shadow: 0 2px 8px rgba(0, 91, 181, 0.3); /* Light shadow on hover */
 }
 
 /* Active state style when typing (focused and typed into) */
 .company-input:active ,.admin-input:active ,.textarea-div textarea:active {
-    border: 1px solid #005bb5;  /* Darker blue border when typing */
-    box-shadow: 0 2px 8px rgba(0, 91, 181, 0.3); /* Darker shadow when typing */
+    border: 1px solid #d0d0d0;  /* Darker blue border when typing */
 }
 
 /* Placeholder text customization */
 .company-input::placeholder ,.admin-input::placeholder{
     color: #999;  /* Light grey placeholder */
-    font-style: italic;
+    font-style: none;
     opacity: 0.7;  /* Slightly transparent */
 }
 
@@ -116,7 +113,7 @@ span{
     flex-direction: column; 
     /* changes */
     width: 50%;
-    gap: 8px;
+    gap: 2px;
     /* background-color: brown; */
     justify-content: center;
     
@@ -133,7 +130,6 @@ span{
     /*background-color: #f0f4f8;  */
     /* Light background color */
     transition: all 0.3s ease;   /* Smooth transition for effects */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for elevation */
 }
 .admin-role{
     display: flex;
@@ -141,9 +137,9 @@ span{
     width: 50%;
     /* background-color: cornflowerblue; */
     justify-content: center;
-    gap: 10px;
+    gap: 2px;
     padding-left: 20px;
-    
+    margin-bottom: 2px;
 }
 .admin-role p{
     font-size: 16px;
@@ -161,8 +157,8 @@ span{
     width: 50%;
     /* background-color: rgb(34, 110, 38); */
     justify-content: center;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: 2px;
+    margin-bottom: 2px;
 }
 .email-name p{
     font-size: 16px;
@@ -173,8 +169,8 @@ span{
     flex-direction: column;
     /* background-color: rgb(221, 100, 237); */
     justify-content: center;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: 2px;
+    margin-bottom: 2px;
     padding-left: 20px;
      
 }
@@ -225,7 +221,7 @@ border-color: #47b749;       /* Green border when checked */
 
 /* Optional: Styling for hover effect */
 .check:hover {
-border-color: #007BFF; /* Change border color on hover */
+border-color: #d0d0d0; /* Change border color on hover */
 }
 
 /* Optional: Style when radio button is focused */
@@ -262,10 +258,7 @@ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 width: 300px;
 
 }
-.admin-input-sel:active{
-border: 3px solid #005bb5;  /* Darker blue border when typing */
-box-shadow: 0 2px 8px rgba(0, 91, 181, 0.3); 
-}
+
 .textarea-div textarea{
 width: 100%;
 padding: 5px;
@@ -297,13 +290,14 @@ color: #555;
 
 
 .btn-div{
-display: flex;
+position: relative;
+left: 79%;
+top: 20px;
 /* background-color: darksalmon; */
 width: 1000px;
 height: 80px;
-justify-content: end;
-align-items: center;
-margin-bottom: 20px;
+
+margin-right: 20px;
 }
 
 .btn{

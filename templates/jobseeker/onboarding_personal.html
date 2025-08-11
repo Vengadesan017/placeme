@@ -129,18 +129,66 @@
         </tr>
       </thead>
 <tbody>
-    {% for language_form in language_form_set.forms %}
+{% for form in language_form_set.forms %}
+<tr>
+    <td>
+        <select name="{{ form.language_id.html_name }}" id="{{ form.language_id.id_for_label }}" class="form-control">
+            <option value="">Select Language</option>
+            {% for lang in form.fields.language_id.queryset %}
+                <option value="{{ lang.pk }}" {% if lang.pk|stringformat:"s" == form.language_id.value|stringformat:"s" %}selected{% endif %}>
+                    {{ lang }}
+                </option>
+            {% endfor %}
+        </select>
+        {% if form.language_id.errors %}
+            <ul class="errorlist">{{ form.language_id.errors }}</ul>
+        {% endif %}
+    </td>
+
+    <td>
+        <input type="checkbox" name="{{ form.can_speak.html_name }}" id="{{ form.can_speak.id_for_label }}" {% if form.can_speak.value %}checked{% endif %}>
+    </td>
+    <td>
+        <input type="checkbox" name="{{ form.can_read.html_name }}" id="{{ form.can_read.id_for_label }}" {% if form.can_read.value %}checked{% endif %}>
+    </td>
+    <td>
+        <input type="checkbox" name="{{ form.can_write.html_name }}" id="{{ form.can_write.id_for_label }}" {% if form.can_write.value %}checked{% endif %}>
+    </td>
+
+    <td>
+        <select name="{{ form.proficiency.html_name }}" id="{{ form.proficiency.id_for_label }}" class="form-control">
+            <option value="">Select Proficiency</option>
+            {% for value, label in form.fields.proficiency.choices %}
+                {% if value %}
+                    <option value="{{ value }}" {% if value|stringformat:"s" == form.proficiency.value|stringformat:"s" %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        {% if form.proficiency.errors %}
+            <ul class="errorlist">{{ form.proficiency.errors }}</ul>
+        {% endif %}
+    </td>
+
+    {{ form.user_language_id }}
+</tr>
+{% endfor %}
+
+    {% comment %} {% for language_form in language_form_set.forms %}
         <tr>
             <!-- Language Dropdown -->
             <td class="lang-col">
+                <input type="hidden" name="{{ language_form.user_language_id.name }}" value="{{ language_form.user_language_id.value|default:'' }}">
                 <select name="{{ language_form.language_id.name }}" class="form-control">
                     <option value="">Select Language</option>
                     {% for lang in language_form.fields.language_id.queryset %}
-                        <option value="{{ lang.pk }}" {% if lang.pk == language_form.initial.language_id %}selected{% endif %}>
+                        <option value="{{ lang.pk }}" {% if lang.pk|stringformat:"s" == language_form.language_id.value|stringformat:"s" %}selected{% endif %}>
                             {{ lang }}
                         </option>
                     {% endfor %}
                 </select>
+
             </td>
 
             <!-- Speak/Read/Write Checkboxes -->
@@ -160,7 +208,7 @@
                     <option value="">Select Proficiency Level</option>
                     {% for choice in language_form.fields.proficiency.choices %}
                         {% if choice.0 != "" %}
-                            <option value="{{ choice.0 }}" {% if choice.0 == language_form.initial.proficiency %}selected{% endif %}>
+                            <option value="{{ choice.0 }}" {% if choice.0 == language_form.proficiency %}selected{% endif %}>
                                 {{ choice.1 }}
                             </option>
                         {% endif %}
@@ -169,7 +217,7 @@
             </td>
 
         </tr>
-    {% endfor %}
+    {% endfor %} {% endcomment %}
 </tbody>
 
     </table>

@@ -252,6 +252,8 @@ class Onboarding(models.Model):
     address_proof = models.FileField(upload_to=upload_onboarding, blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'pdf']), validate_file_size])
     
     created_date = models.DateTimeField(auto_now_add=True,null=True,blank=True)
+    created_by = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='onbording_created_by', null=True, blank=True)
+    is_completed = models.BooleanField(default=False)
     completed_date = models.DateTimeField(blank=True, null=True)
     verified = models.BooleanField(default=False)
     verified_by = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='onbording_verified_by', null=True, blank=True)
@@ -294,6 +296,7 @@ class OnboardingDocumentRequirement(models.Model):
         return f"{self.company} - {self.field_name}"
 # =====================================Onboarding end========================================================
 class JobApplications(models.Model):
+    applicant_id = models.AutoField(primary_key=True)
     candidate = models.ForeignKey('Candidates', on_delete=models.CASCADE, related_name='candidate_form', null=True, blank=True)
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE, related_name='job_applications', null=True, blank=True)  
     offer_id = models.ForeignKey(OfferLetters, on_delete=models.CASCADE, related_name='job_applications_offer', null=True, blank=True)  

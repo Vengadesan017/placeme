@@ -1,216 +1,160 @@
+<div class="modal-dialog">       
+    <form
+        hx-post="#"
+        hx-target="#table-container"
+        hx-swap="innerHTML">
+        {% csrf_token %}
+        <div class="modal-content">
 
-        <div class="modal-dialog">       
-                <form
-                        hx-post="#"
-            hx-target="#table-container"
-            hx-swap="innerHTML">
-                {% csrf_token %}
-            <div class="modal-content">
-        
             <!-- Modal Header -->
             <div class="modal-header">
                 <h3 class="modal-title">Position</h3>
-                <button type="button" class="btn-close close-modal-btn" id="closeEduModalButton" onclick="closeHtmxModalButton()"><i class='fas fa-times edit'></i></button>
+                <button type="button" class="btn-close close-modal-btn" id="closeEduModalButton" onclick="closeHtmxModalButton()">
+                    <i class='fas fa-times edit'></i>
+                </button>
             </div>
-        
+
             <!-- Modal Body -->
             <div class="modal-body">
-            <div class="margin20">
-            <div class="">
-                <table class="modal-table">
-        <tr>
-            <td><b>Title</b></td>
-            <td>
-                <input type="text" name="position_title" id="id_position_title"
-                    value="{{ position_form.initial.position_title|default_if_none:'' }}" required />
-            </td>
-        </tr>
-        <tr>
-            <td><b>No. of openings</b></td>
-            <td>
-                <input type="number" name="count" id="id_position_title"
-                    value="{{position_obj.total_positions}}" min="1" max="100" required />
-            </td>
-        </tr>
-        <tr>
-            <td><b>Locations</b></td>
-            <td>
+                <div class="margin20">
+
+                    <!-- First grid block -->
+                    <div class="form-grid">
+                        <!-- Title -->
+                        <div class="form-group">
+                            <label for="id_position_title" class="form-label">Title<span class="red-star">*</span></label>
+                            <input type="text" name="position_title" id="id_position_title"
+                                value="{{ position_form.initial.position_title|default_if_none:'' }}" 
+                                required>
+                        </div>
+
+                        <!-- No. of openings -->
+                        <div class="form-group">
+                            <label for="id_count" class="form-label">No. of openings<span class="red-star">*</span></label>
+                            <input type="number" name="count" id="id_count"
+                                value="{{ position_obj.total_positions }}" min="1" max="100" required>
+                        </div>
+                    </div>
+                    <!-- Second grid block -->
+                    <div class="form-grid">
+                        <!-- Locations -->
+                        <div class="form-group full-width">
+                            <label class="form-label">Locations<span class="red-star">*</span></label>
                             <div class="multi-select-container admin-input" id="location-wrapper">
-                                <div class="selected-tags" id="selected-tags-location">
-                                </div>
-                                <input type="text" class="search-input" id="search-location" placeholder="Search or add locations..." autocomplete="off">
+                                <div class="selected-tags" id="selected-tags-location"></div>
+                                <input type="text" class="search-input" id="search-location" 
+                                    placeholder="Search or add locations..." autocomplete="off">
                                 <div class="dropdown-list" id="dropdown-location"></div>
                             </div>
-
                             <select class="company-input" id="multi-select-location" name="locations" style="display: none;"
-                             data-selected-loc="{{ selected_loc_ids }}" multiple>
-                                {% comment %} {% for loc in form.location_id.field.queryset %}
-                                    <option value="{{ loc.pk }}">{{ loc }}</option>
-                                {% endfor %}   {% endcomment %}
-                            </select> 
+                                data-selected-loc="{{ selected_loc_ids }}" multiple></select> 
                             <input type="hidden" name="new_locations" id="new-locations">
                             {% if not position_obj %}
-                            <label for="currently">
-                                <input type="checkbox" name="group_all" id="currently" class="" placeholder="Enter DOJ" />
-                                Create unique position ID for each locations
+                            <label class="agreement">
+                                <input type="checkbox" name="group_all" id="currently">
+                                Create unique position ID for each location
                             </label>
-                            
                             {% endif %}
-                {% comment %} <select name="locations" id="id_locations" multiple>
-                    {% for loc in position_form.fields.locations.queryset %}
-                        <option value="{{ loc.pk }}"
-                            {% if loc in position_form.initial.locations %}
-                                selected
-                            {% endif %}
-                        >{{ loc }}</option>
-                    {% endfor %}
-                </select> {% endcomment %}
-            </td>
-        </tr>
-        <tr>
-            <td><b>Job Description</b></td>
-            <td>
+                        </div>
+                    </div>
+                     <div class="form-grid">
+                        <!-- Budget -->
+                        <div class="form-group">
+                            <label for="id_budget" class="form-label">Budget</label>
+                            <div class="input-row">
+                                <input type="text" name="budget" id="id_budget" 
+                                    class="modal-half-input" 
+                                    oninput="formatIndianNumber(this)"
+                                    value="{{ position_form.initial.budget|default_if_none:'' }}">
+                                <select name="budget_type" id="id_budget_type" class="modal-half-input">
+                                    <option value="">Select Payment Type</option>
+                                    {% for value, label in position_form.fields.budget_type.choices %}
+                                        <option value="{{ value }}" {% if value == position_form.initial.budget_type %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
 
+                        <!-- Department -->
+                        <div class="form-group">
+                            <label for="id_department" class="form-label">Department</label>
+                            <input type="text" name="department" id="id_department"
+                                value="{{ position_form.initial.department|default_if_none:'' }}">
+                        </div>
+
+                        <!-- Division -->
+                        <div class="form-group">
+                            <label for="id_division" class="form-label">Division</label>
+                            <input type="text" name="division" id="id_division"
+                                value="{{ position_form.initial.division|default_if_none:'' }}">
+                        </div>
+
+                        <!-- Cost Center -->
+                        <div class="form-group">
+                            <label for="id_cost_center" class="form-label">Cost Center</label>
+                            <input type="text" name="cost_center" id="id_cost_center"
+                                value="{{ position_form.initial.cost_center|default_if_none:'' }}">
+                        </div>
+
+                        <!-- Supervisor -->
+                        <div class="form-group">
+                            <label for="id_Supervisor" class="form-label">Supervisor</label>
+                            <input type="text" name="Supervisor" id="id_Supervisor"
+                                value="{{ position_form.initial.Supervisor|default_if_none:'' }}">
+                        </div>
+
+                        <!-- HRBP -->
+                        <div class="form-group">
+                            <label for="id_hrbp" class="form-label">HRBP</label>
+                            <input type="text" name="hrbp" id="id_hrbp"
+                                value="{{ position_form.initial.hrbp|default_if_none:'' }}">
+                        </div>
+
+                        <!-- HRMS -->
+                        <div class="form-group">
+                            <label for="id_hrms" class="form-label">HRMS</label>
+                            <input type="text" name="hrms" id="id_hrms"
+                                value="{{ position_form.initial.hrms|default_if_none:'' }}">
+                        </div>
+                    </div>
+
+                    <!-- Separate grid for full-width fields -->
+
+                    <div class="form-grid">
+                        <!-- Job Description -->
+                        <div class="form-group full-width">
+                            <label class="form-label">Job Description</label>
                             <div class="textarea-div">
-                                <input type="hidden" name="jd" id="hidden-description" value="{{ position_form.initial.jd|default_if_none:'' }}" required>
+                                <input type="hidden" name="jd" id="hidden-description" 
+                                    value="{{ position_form.initial.jd|default_if_none:'' }}" required>
                                 <div id="editor-container" style="height: 200px;"></div>
                                 <p id="char-count">0/2000 characters</p>
                             </div>
+                        </div>
+                    </div>
 
-            </td>
-        </tr>
-
-        <tr>
-            <td><b>Budget</b></td>
-            <td>
-                <input type="text" name="budget" id="id_budget" class="modal-half-input" oninput="formatIndianNumber(this)"
-                    value="{{ position_form.initial.budget|default_if_none:'' }}" />
-
-                                        <select name="budget_type" id="id_budget_type" class="modal-half-input">
-                        <option value="">Select Payment Type</option>
-                        {% for value, label in position_form.fields.budget_type.choices %}
-                            <option value="{{ value }}" {% if value == position_form.initial.budget_type %}selected{% endif %}>
-                                {{ label }}
-                            </option>
-                        {% endfor %}
-                    </select>
-            </td>
-        </tr>
-
-        <tr>
-            <td><b>Department</b></td>
-            <td>
-                <input type="text" name="department" id="id_department"
-                    value="{{ position_form.initial.department|default_if_none:'' }}" />
-            </td>
-        </tr>
-        <tr>
-            <td><b>Division</b></td>
-            <td>
-                <input type="text" name="division" id="id_division"
-                    value="{{ position_form.initial.division|default_if_none:'' }}" />
-            </td>
-        </tr>
-        <tr>
-            <td><b>Cost Center</b></td>
-            <td>
-                <input type="text" name="cost_center" id="id_cost_center"
-                    value="{{ position_form.initial.cost_center|default_if_none:'' }}" />
-            </td>
-        </tr>
-
-        <tr>
-            <td><b>Supervisor</b></td>
-            <td>
-                <input type="text" name="Supervisor" id="id_Supervisor"
-                    value="{{ position_form.initial.Supervisor|default_if_none:'' }}" />
-            </td>
-        </tr>
-
-        <tr>
-            <td><b>HRBP</b></td>
-            <td>
-                <input type="text" name="hrbp" id="id_hrbp"
-                    value="{{ position_form.initial.hrbp|default_if_none:'' }}" />
-            </td>
-        </tr>
-        <tr>
-            <td><b>HRMS</b></td>
-            <td>
-                <input type="text" name="hrms" id="id_hrms"
-                    value="{{ position_form.initial.hrms|default_if_none:'' }}" />
-            </td>
-        </tr>
-
-
-
-
-
-
-
-
-                    {% comment %} <tr> 
-                        <td><b>Course duration</b></td>
-                        <td>
-                            <select id="id_year_of_passing" class="modal-half-input" name="year_of_joining" required>
-                                <option value="">Select Starting Year</option>
-                            {% for value, label in education_form.fields.year_of_joining.choices %}
-                                <option value="{{ value }}"
-                                    {% if value == education_form.initial.year_of_joining %}selected{% endif %}>
-                                    {{ label }}
-                                </option>
-                            {% endfor %}
-                            </select>
-                            to
-                            <select id="id_year_of_passing" class="modal-half-input" name="year_of_passing" required>
-                                <option value="">Select Ending Year</option>
-                            {% for value, label in education_form.fields.year_of_passing.choices %}
-                                <option value="{{ value }}"
-                                    {% if value == education_form.initial.year_of_passing %}selected{% endif %}>
-                                    {{ label }}
-                                </option>
-                            {% endfor %}
-                            </select>
-                        </td>
-                    </tr> {% endcomment %}
-
-                    {% comment %} <tr> 
-                        <td><b>Doc</b></td>
-                        <td><input type="text" id="city" name="city" value="{{ candidate.city|default_if_none:'' }}"></td>
-                    </tr> {% endcomment %}
-
-                </table>
-
+                </div>
             </div>
-            </div>
-            </div>
-        
+
             <!-- Modal Footer -->
             <div class="modal-footer">
-                {% comment %} <button type="submit" name="profile_education_create" class="model-btn-save" id="">Save</button> {% endcomment %}
-                {% if position_obj.position_group_id %}
-                
-                <button type="submit" 
-                    formnovalidate
-                    name="position_delete"
-                class="model-btn-delete"
+                <button type="submit" name="position_save" class="model-btn-save"
                     value="{{ position_obj.position_group_id|default:'' }}"
-                    hx-include="this"
-                >Close Position</button>
-                {% endif %}
-            <button type="submit" 
-            
-                name="position_save"
-            class="model-btn-save"
-                value="{{ position_obj.position_group_id|default:'' }}"
-                hx-include="this"
-            >Save</button>
+                    hx-include="this">Save</button>
 
+                {% if position_obj.position_group_id %}
+                <button type="submit" formnovalidate name="position_delete"
+                    class="model-btn-delete"
+                    value="{{ position_obj.position_group_id|default:'' }}"
+                    hx-include="this">Close Position</button>
+                {% endif %}
             </div>
-        
-            </div>
-        </form>
         </div>
+    </form>
+</div>
+
 
         
 <script>

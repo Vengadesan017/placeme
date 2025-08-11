@@ -13,6 +13,7 @@ from django.db.models import IntegerField
 from django.db.models import Count, Q
 from django.db.models import Value as V
 from django.db.models.functions import Concat
+from django.db.models.functions import Coalesce
 from django.utils import timezone
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
@@ -231,6 +232,44 @@ def Candidate(request, candidate_uuid = None):
             'my_languages': language
         }
         return render(request,'recruiters/candidate.html',context)
+    except Exception as e:
+        return HttpResponse(f"An error occurred: {e}", status=500)
+
+@login_required
+@is_recruiter
+@is_kyc
+def Applicant(request, applicant_id = None):
+    try:
+        if applicant_id is None:
+            return redirect('recruiters:home')
+        candidate = Candidates.objects.get(user=request.user)
+        company = Companies.objects.get(candidate=candidate)
+        application = get_object_or_404(JobApplications, applicant_id=applicant_id)
+
+        # Mark as viewed if not already
+        if application.viewed_at is None:
+            application.viewed_at = timezone.now()
+            application.viewed_by = candidate
+            application.save()
+        
+        education = EducationMap.objects.filter(candidate=candidate).order_by('-year_of_passing')
+        language = UserLanguages.objects.filter(candidate=candidate)
+        employment = Employment.objects.filter(candidate=candidate).order_by('-dol')
+
+
+        skills_list = [skill.strip() for skill in candidate.skill.split(',')] if candidate.skill else []
+        location_list = [loc.strip() for loc in candidate.preferred_location.split(',')] if candidate.preferred_location else []
+        context = {
+            'company':company,
+            'candidate': candidate,
+            'skills_list': skills_list,
+            'location_list': location_list,
+            'my_education': education,
+            'my_employment': employment,
+            'my_languages': language,
+            'application': application
+        }
+        return render(request,'recruiters/applicant.html',context)
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
 
@@ -727,51 +766,54 @@ def PositionManager(request):
 
 
             if not template_name:
-                position_groups = PositionGroup.objects.filter(company=company)  \
-                .annotate(
-                    total_positions=Count('positions', distinct=True),
-                    total_hire_requests=Count('position_grp_in_hr', distinct=True),
-                    open_hire_requests=Count(
-                        'position_grp_in_hr',
-                        filter=Q(position_grp_in_hr__is_open=True),
-                        distinct=True
-                    ),
-                    active_hire_requests=Count(
-                        'position_grp_in_hr',
-                        filter=Q(position_grp_in_hr__is_active=True),
-                        distinct=True
-                    ),
-
-                    total_offered=Count(
-                        'position_grp_in_hr',
-                        filter=Q(position_grp_in_hr__is_offered=True),
-                        distinct=True
-                    ),
-                    total_joined=Count(
-                        'position_grp_in_hr',
-                        filter=Q(position_grp_in_hr__is_hire=True),
-                        distinct=True
-                    ),
-                    empty_position=Count(
-                        'positions',
-                        filter=Q(
-                            positions__is_open=True,
-                            positions__is_active=True
-                                 ),
-                        distinct=True
-                    ),
-
-                    hiring_need=Count(
-                        'position_grp_in_hr',
-                        filter=Q(
-                            position_grp_in_hr__is_open=True,
-                            position_grp_in_hr__is_active=True,
-                            position_grp_in_hr__employee_id__isnull=True,
-                            position_grp_in_hr__is_hire=False
+                position_groups = (
+                    PositionGroup.objects.filter(company=company)
+                    .annotate(
+                        # Openings
+                        total=Count(
+                            'positions',
+                            filter=Q(positions__is_open=True, positions__is_active=True),
+                            distinct=True
                         ),
-                        distinct=True
+                        # Hired
+                        hired=Count(
+                            'position_grp_in_hr',
+                            filter=Q(
+                                    positions__is_open=True,
+                                     positions__is_active=True,
+                                     position_grp_in_hr__is_hire=True
+                                     ),
+                            distinct=True
+                        ),
+                        # In progess
+                        inprogress=Count(
+                            'position_grp_in_hr',
+                            filter=Q(
+                                positions__is_open=True,
+                                positions__is_active=True,
+                                position_grp_in_hr__is_open=True,
+                                position_grp_in_hr__is_active=True,
+                                position_grp_in_hr__is_hire=False
+                            ),
+                            distinct=True
+                        ),
+                        # pending
+                        pending=Count(
+                            'positions',
+                            filter=Q(
+                                positions__is_open=True,
+                                positions__is_active=True,
+                                positions__position_in_hr__isnull=True  # no hire request linked
+                            ),
+                            distinct=True
+                        ),
                     )
-                ).order_by('-empty_position','-hiring_need')
+                    .annotate(
+                        pending=Coalesce(F('total') - F('inprogress') -F('hired'), Value(0))
+                    )
+                    .order_by('-pending', '-total', '-hired', '-inprogress')
+                )
+
 
                 context['position_groups'] = position_groups
                 template_name = 'recruiters/htmx/positionShow.html'
@@ -895,52 +937,98 @@ def PositionManager(request):
             positions = []
             # ================================error here in showing data
             
-
-        position_groups = PositionGroup.objects.filter(company=company)  \
-        .annotate(
-            total_positions=Count('positions', distinct=True),
-            total_hire_requests=Count('position_grp_in_hr', distinct=True),
-            open_hire_requests=Count(
-                'position_grp_in_hr',
-                filter=Q(position_grp_in_hr__is_open=True),
-                distinct=True
-            ),
-            active_hire_requests=Count(
-                'position_grp_in_hr',
-                filter=Q(position_grp_in_hr__is_active=True),
-                distinct=True
-            ),
-
-            total_offered=Count(
-                'position_grp_in_hr',
-                filter=Q(position_grp_in_hr__is_offered=True),
-                distinct=True
-            ),
-            total_joined=Count(
-                'position_grp_in_hr',
-                filter=Q(position_grp_in_hr__is_hire=True),
-                distinct=True
-            ),
-            empty_position=Count(
-                'positions',
-                filter=Q(
-                    positions__is_open=True,
-                    positions__is_active=True
-                            ),
-                distinct=True
-            ),
-
-            hiring_need=Count(
-                'position_grp_in_hr',
-                filter=Q(
-                    position_grp_in_hr__is_open=True,
-                    position_grp_in_hr__is_active=True,
-                    position_grp_in_hr__employee_id__isnull=True,
-                    position_grp_in_hr__is_hire=False
+        position_groups = (
+            PositionGroup.objects.filter(company=company)
+            .annotate(
+                # Openings
+                total=Count(
+                    'positions',
+                    filter=Q(positions__is_open=True, positions__is_active=True),
+                    distinct=True
                 ),
-                distinct=True
+                # Hired
+                hired=Count(
+                    'position_grp_in_hr',
+                    filter=Q(
+                            positions__is_open=True,
+                                positions__is_active=True,
+                                position_grp_in_hr__is_hire=True
+                                ),
+                    distinct=True
+                ),
+                # In progess
+                inprogress=Count(
+                    'position_grp_in_hr',
+                    filter=Q(
+                        positions__is_open=True,
+                        positions__is_active=True,
+                        position_grp_in_hr__is_open=True,
+                        position_grp_in_hr__is_active=True,
+                        position_grp_in_hr__is_hire=False
+                    ),
+                    distinct=True
+                ),
+                # pending
+                pending=Count(
+                    'positions',
+                    filter=Q(
+                        positions__is_open=True,
+                        positions__is_active=True,
+                        positions__position_in_hr__isnull=True  # no hire request linked
+                    ),
+                    distinct=True
+                ),
             )
-        ).order_by('-empty_position','-hiring_need')
+            .annotate(
+                pending=Coalesce(F('total') - F('inprogress') -F('hired'), Value(0))
+            )
+            .order_by('-pending', '-total', '-hired', '-inprogress')
+        )
+        # position_groups = PositionGroup.objects.filter(company=company)  \
+        # .annotate(
+        #     total_positions=Count('positions', distinct=True),
+        #     total_hire_requests=Count('position_grp_in_hr', distinct=True),
+        #     open_hire_requests=Count(
+        #         'position_grp_in_hr',
+        #         filter=Q(position_grp_in_hr__is_open=True),
+        #         distinct=True
+        #     ),
+        #     active_hire_requests=Count(
+        #         'position_grp_in_hr',
+        #         filter=Q(position_grp_in_hr__is_active=True),
+        #         distinct=True
+        #     ),
+
+        #     total_offered=Count(
+        #         'position_grp_in_hr',
+        #         filter=Q(position_grp_in_hr__is_offered=True),
+        #         distinct=True
+        #     ),
+        #     total_joined=Count(
+        #         'position_grp_in_hr',
+        #         filter=Q(position_grp_in_hr__is_hire=True),
+        #         distinct=True
+        #     ),
+        #     empty_position=Count(
+        #         'positions',
+        #         filter=Q(
+        #             positions__is_open=True,
+        #             positions__is_active=True
+        #                     ),
+        #         distinct=True
+        #     ),
+
+        #     hiring_need=Count(
+        #         'position_grp_in_hr',
+        #         filter=Q(
+        #             position_grp_in_hr__is_open=True,
+        #             position_grp_in_hr__is_active=True,
+        #             position_grp_in_hr__employee_id__isnull=True,
+        #             position_grp_in_hr__is_hire=False
+        #         ),
+        #         distinct=True
+        #     )
+        # ).order_by('-empty_position','-hiring_need')
 
         
 

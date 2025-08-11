@@ -1,25 +1,29 @@
 .r-down-main{
-    margin-top: 20px;
-    padding-right: 20px;
-    border-radius: 10px;
+    margin-top: 10px;
+    border-radius: 12px;
     background-color: #fff;
     
 }
 
-.account{
-        font-size: 18px;
-        text-decoration: underline solid #141B5F;
-        color: #141B5F;
-        margin-left: 10px; 
-        /* background-color: #333; */
-        padding-left: 15px;   
+.account-div {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.account {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #141b5f;
+    margin: 0;
+    /* padding: 10px 0; */
 }
 .info-list{
         width: auto;
-        min-height: 1000px;
+        min-height: 600px;
         height: auto;
         /* background-color: khaki; */
-        margin-top: 10px;
+        margin-top: 20px;
         margin-left:30px ;
         display: flex;
         flex-direction: column;
@@ -146,16 +150,19 @@
     }
     .admin-role{
         display: flex;
-        width: 50%;
+        width: 100%;
+        /* width: 50%; */
         /* background-color: cornflowerblue; */
-        justify-content: space-between;
-        padding-left: 20px;
+        /* justify-content: space-between; */
+        /* padding-left: 20px; */
         align-items: center;
     }
     .admin-role p{
         font-size: 20px;
         width: 40%;
         flex-wrap: nowrap;
+        margin: 0;
+        padding: 0.25rem 0;
     }
     .email-div{
         display: flex;
@@ -177,15 +184,18 @@
     }
     .website{
         display: flex;
-        width: 50%;
+        /* width: 50%; */
+        width: 100%;
         /* background-color: rgb(221, 100, 237); */
-        justify-content: space-between;
-        padding-left: 20px;
+        justify-content: space-evenly;
+        /* padding-left: 20px; */
         align-items: center; 
     }
     .website p{
         font-size: 20px;
         width: 40%;
+        margin: 0;
+        padding: 0.25rem 0;
     }
 
     .based-div {
@@ -305,7 +315,7 @@
     
 }
 .textarea-div{
- width: 80%;
+ width: 100%;
  /* background-color: bisque; */
  display: flex;
  flex-direction: column;

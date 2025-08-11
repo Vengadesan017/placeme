@@ -21,7 +21,6 @@ My Candidate
 <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.min.js"></script>
   <style>
-    /* new dropdown button  */
     .dropbtn {
       background-color: #141b5f;
       color: #ffffff;
@@ -114,7 +113,7 @@ My Candidate
 }
 
 
-{% comment %} from open search {% endcomment %}
+
 
 .r-down-main{
     width: 100%;
@@ -129,7 +128,7 @@ My Candidate
     box-shadow: unset;
 }
 
-{% comment %} for recommandation {% endcomment %}
+
 
     /* Main container styling */
     .search-container {
@@ -200,6 +199,15 @@ My Candidate
         /* cursor: pointer; */
         transition: color 0.3s ease;
     }
+    .new-hire-request-div {
+    padding: 10px 10px;
+    /* background-color: #ffff; */
+    color: #141b5f;
+    font-weight: 500;
+    border-radius: 10px;
+    font-size: 16px;
+    border: 1px solid #141b5f;
+}
   </style>
   <script>
 
@@ -277,10 +285,17 @@ My Candidate
             <div class="new-hire-request-search">
               <div class="new-hire-request-parent">
                 <select class="new-hire-request-div" name="" id="">
-                  <option value="All Hire Request">All Hire Request</option>
-                  <option value="New Hire Request">New Hire Request</option>
-                  <option value="Opened Hire Request">Opened Hire Request</option>
-                  <option value="Closed Hire Request">Closed Hire Request</option>
+                  <option value="all">All Applications</option>
+                  <option value="unviewed">Unviewed Applications</option>
+                  <option value="viewed">Viewed Applications</option>
+                  <option value="shortlisted">Shortlisted Applications</option>
+                  <option value="notshortlisted">Not Shortlisted Applications</option>
+                  <option value="interviewed">Interviewed Applications</option>
+                  <option value="offered">Offered Applications</option>
+                  <option value="accepted">Offer Accepted Applications</option>
+                  <option value="rejected">Offer Rejected Applications</option>
+                  <option value="hired">Hired Applications</option>
+
                 </select>
 
                 <div class="dev-text">
@@ -337,10 +352,10 @@ My Candidate
 
                             </div> {% endcomment %}
 
-                            <span class="total-candidates">
+                            {% comment %} <span class="total-candidates">
                                 1 - 5 of 5 
                                 <strong>General Manager</strong> Roles
-                            </span>
+                            </span> {% endcomment %}
 
 {% comment %} 
                             <div class="right-box-1">
@@ -813,7 +828,27 @@ My Candidate
 
 {% comment %}  {% endcomment %}
 
+        <div class="pagination">
+          {% if page_obj.has_previous %}
+            <a href="?q={{ keyword1 }}&p={{ keyword2 }}&page={{ page_obj.previous_page_number }}">Previous</a>
+          {% endif %}
 
+          {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+              <span class="current">{{ num }}</span>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+              <a href="?q={{ keyword1 }}&p={{ keyword2 }}&page={{ num }}">{{ num }}</a>
+            {% elif num == 1 or num == page_obj.paginator.num_pages %}
+              <a href="?q={{ keyword1 }}&p={{ keyword2 }}&page={{ num }}">{{ num }}</a>
+            {% elif num == page_obj.number|add:'-4' or num == page_obj.number|add:'4' %}
+              <span>...</span>
+            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+            <a href="?q={{ keyword1 }}&p={{ keyword2 }}&page={{ page_obj.next_page_number }}" class="last">Next</a>
+          {% endif %}
+        </div>
 
 
 

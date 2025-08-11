@@ -110,23 +110,22 @@ class CreateJobs(forms.ModelForm):
 
         widgets = {
             'salary_type': forms.Select(attrs={
-                'class': 'admin-input-sel',
-                # 'style': 'width: 35%;',
+                'class': 'form-select-to',
             }),
             'position_grp': forms.Select(attrs={
-                'class': 'admin-input-sel',
+                'class': 'form-select',
             }),
             'hire_request': forms.Select(attrs={
-                'class': 'admin-input-sel',
+                'class': 'form-select',
             }),
             'min_experience': forms.Select(attrs={
-                'class': 'admin-input-sel'
+                'class': 'form-select-to'
             }),
             'max_experience': forms.Select(attrs={
-                'class': 'admin-input-sel'
+                'class': 'form-select-to'
             }),
             'employment_type': forms.Select(attrs={
-                'class': 'admin-input-sel'
+                'class': 'form-select'
             }),
             # 'qualifications': forms.Select(attrs={
             #     'class': 'company-input',

@@ -25,7 +25,7 @@
     /* background-color: cornflowerblue; */
     align-items: center;
     gap: 10px;
-    padding-left: 10px;
+    padding-left:30px;
 }
 .navigation-header-1-1{
     height: 40px;
@@ -33,9 +33,6 @@
     /* background-color: bisque; */
     display: flex;
     align-items: center;
-
-
-
     font-size: 16px;
     font-weight: 600;
     padding: 5px 20px;
@@ -60,7 +57,7 @@
     justify-content: end;
     align-items: center;
     gap: 10px;
-    padding-right: 10px;
+    padding-right: 20px;
 }
 
 .navigation-header-2 .navigation-header-input-div{
@@ -71,7 +68,7 @@
     /* background-color: #fff; */
     /* background-color: #141B5F; */
     border-radius: 8px;
-    border: 1px solid black;
+    border: 1px solid #d0d0d0;
 }
 .navigation-header-input-div input{
     height: 38px;
@@ -110,7 +107,7 @@
     flex-direction: column;
     border-radius: 7px;
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
-    padding-left: 15px;
+    padding: 20px 40px 20px 40px;
 }
 .search-cadidate{
     width: 100%;
@@ -133,7 +130,8 @@
     padding-right: 20px; 
 }
 .search-cadidate-div p{
-    font-size: 18px;
+    font-size: 22px;
+    font-weight: 500;
     user-select: none;
     color: #141B5F;
 }
@@ -151,32 +149,82 @@
     /* background-color: #c8c652; */
     display: flex;
     flex-direction: column;
-    padding-right: 20px; 
 }
 .search-cadidate-keyboard{
     width: 100%;
 
     height: auto;
     background-color: #fff;
+    /* background-color: #005bb5; */
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     /* border-bottom: 1px solid #999999; */
 }
-.search-cadidate-keyboard p{
-    font-size: 16px;
-    /* color: #141B5F; */
+.search-cadidate-keyboard-col{
+    width: 100%;
+
+    height: auto;
+    /* background-color: #a02323; */
+    display: flex;
+    flex-direction: column;
+}
+.search-cadidate-keyword-wrap{
+     width: 100%;
+    height: auto;
+    background-color: #fff;
+    /* background-color: #005bb5; */
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
     color: black;
     margin-bottom: 10px;
     user-select: none;
+    margin-top: 5px;
 }
-.search-cadidate-keyboard input{
+
+.education-row{
+width: 100%;
+    min-height: 60px;
+    height: auto;
+    /* background-color: #bb9ddb; */
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+.search-cadidate-keyboard-col-p{
+    width: 15%;
+
+}
+.search-cadidate-keyboard-col-p-mx{
+    width: 15%;
+}
+.search-cadidate-keyboard-col-p p{
+    font-size: 16px;
+    /* color: #141B5F; */
+    margin-bottom: 5px;
+    user-select: none;
+    margin-top: 5px;
+    margin-left: 3px;
+}
+.search-cadidate-keyboard-col-p-mx p{
+    width: max-content;
+    font-size: 16px;
+    /* color: #141B5F; */
+    color: #000000;
+    margin-bottom: 5px;
+    user-select: none;
+    margin-top: 5px;
+    margin-left: 2px;
+
+}
+
+.search-cadidate-keyboard-col input{
+    margin-bottom: 10px;
     height: 40px;
     border-radius: 10px;
-    border: 0.5px solid #999999;
-    transition: all 0.3s ease;   /* Smooth transition for effects */
-    box-shadow: 0 2px 8px rgba(0, 91, 181, 0.3);
-    
+    border: 1px solid #d0d0d0;
+    transition: all 0.3s ease;   /* Smooth transition for effects */    
 }
 .search-cadidate-keyboard input:active{
     border: 1px solid #005bb5;  /* Darker blue border when typing */
@@ -184,20 +232,19 @@
 }
 .search-cadidate-mark{
     display: flex;
-    margin-top: 10px;
+    /* margin-top: 10px; */
     /* background-color: bisque; */
     align-items: center;
-    
+    margin-left: 15px;
     gap: 10px;
 }
 
 .search-cadidate-keyboard .search-cadidate-mark ,.employement-candidate .search-cadidate-mark{
     display: flex;
-    margin-top: 10px;
     /* background-color: bisque; */
     align-items: center;
-    
     gap: 10px;
+    margin-left: 15px;
 }
 .search-cadidate-keyboard .search-cadidate-mark input, .employement-candidate .search-cadidate-mark input{
     background-color: white;
@@ -205,9 +252,9 @@
     height: 15px;
 }
 .search-cadidate-keyboard .search-cadidate-mark p , .employement-candidate .search-cadidate-mark p{
-    margin-top: 10px;
     user-select: none;
     font-size: 14px;   
+    color: #555;
 }
 .search-cadidate-mark input{
     background-color: white;
@@ -215,9 +262,9 @@
     height: 15px;
 }
 .search-cadidate-mark p{
-    margin-top: 10px;
     user-select: none;
     font-size: 14px;
+    color: #555;
 }
 .search-cadidate-mark-p{
     margin-top: 10px;
@@ -271,8 +318,14 @@
     /* background-color: #bb9ddb; */
     display: flex;
     flex-direction: column;
+    margin-top: 10px;
 }
-.search-cadidate-exprience p{
+.search-cadidate-exprience-p{
+    width: 50%;
+    display: flex;
+    align-items: center;
+}
+.search-cadidate-exprience-p p{
     font-size: 16px;
     /* color: #141B5F; */
     margin-bottom: 5px;
@@ -288,8 +341,19 @@
     display: flex;
     margin-bottom: 5px;
 }
+
+.search-cadidate-exprience-2{
+    width: 50%;
+    
+    /* background-color: bisque; */
+    
+    min-height: 40px;
+    height: auto;
+    display: flex;
+    margin-bottom: 5px;
+}
 .search-cadidate-exprience-1-1{
-    width: 30%;
+    width: 50%;
     
     /* background-color: rgb(153, 95, 24); */
     display: flex;
@@ -304,7 +368,7 @@
     height: 40px;
     width: 80%;
     border-radius: 10px;
-    border: 1px solid #999999;
+    border: 1px solid #d0d0d0;
     padding-left: 10px;
     font-size: 16px;
     color: #333;
@@ -318,7 +382,7 @@
     width: 800px;
     height: 40px;
     border-radius: 10px;
-    border: 1px solid #999999;
+    border: 1px solid #d0d0d0;
     padding-left: 10px;
     font-size: 16px;
     color: #333;
@@ -343,7 +407,7 @@
 /* Placeholder text customization */
 .search-cadidate-exprience-1-1 input::placeholder {
     color: #999;  /* Light grey placeholder */
-    font-style: italic;
+    font-style: normal;
     opacity: 0.7;  /* Slightly transparent */
     user-select: none;
 }
@@ -370,10 +434,11 @@
     padding-right: 20px;
 }
 .employement-candidate-div p{
-    font-size: 18px;
-    padding: 20px;
+    font-size: 16px;
+    padding: 20px 0;
     /* color: #555555; */
     color: #141B5F;
+    font-weight: 500;
     user-select: none;
     user-select: none;
 }
@@ -393,40 +458,68 @@
     display: none;
     flex-direction: column;
 }
+.Employement-body-col{
+    display: flex;
+    flex-direction: row;
+    width: 35%;
+    margin-top: 15px;
+}
 
+.Employement-body-col-1{
+    display: flex;
+    flex-direction: column;
+    width: 35%;
+    margin-top: 15px;
+}
 
+.Employement-body-col-full{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+.Employement-body-col-p{
+    display: flex;
+    /* background-color: #005bb5; */
+    width: 30%;
+    align-items: center;
+}
 
 .select{
     border: none;
     font-size: 16px;
-    color: #555555;
+    color: #999;
+    border: 1px solid #d0d0d0;
+    padding: 7px;
+    border-radius: 8px;
     max-width: 80px;
     min-width: 60px;
 }
 
 .search-cadidate-exprience-1-1-input{
     height: 40px;
-    width: 80%;
+    width: 90%;
     display: flex;
     align-items: center;
     background-color: #fff;
     border-radius: 8px;
-    border: 1px solid black;
+    color: #999;
+    /* border: 1px solid black; */
+    border: 1px solid #d0d0d0;
 }
 
 
 
 .search-cadidate-exprience-1-1-input p{
     width: 20%;
-    font-size: 17px;
+    font-size: 16px;
     margin-left: 14px;
-    margin-top: 5px;
-    border-right: 0.5px solid black;
+    /* margin-top: 5px; */
+    border-right: 1px solid #d0d0d0;
     user-select: none;
 }
 .search-cadidate-exprience-1-1-input input{
     height: 35px;
-    width: 80%;
+    width: 90%;
     /* border-radius: 10px; */
     margin-left: 2px;
     background-color: #fff;
@@ -462,7 +555,7 @@
 /* Placeholder text customization */
 .search-cadidate-exprience-1-1-input input::placeholder {
 user-select: none; 
-    font-style: italic;
+    font-style: normal;
     opacity: 0.7;  /* Slightly transparent */
 }
 .select-option{
@@ -475,7 +568,8 @@ user-select: none;
     padding-left: 5px;
     border: none;
     padding-top: 2px;
-    border: 0.5px solid #999999;
+    border: 1px solid #d0d0d0;
+    color: #999;
 }
 .search-cadidate-exprience-1-1-input input:focus{
     border: none; /* Removes border */
@@ -486,7 +580,7 @@ user-select: none;
     width: 90%;
     height: 40px;
     border-radius: 10px;
-    border: 0.5px solid #999999;
+    border: 1px solid #d0d0d0;
     padding-left: 10px;
     /*background-color: #f0f4f8;  */
     /* Light background color */
@@ -522,6 +616,7 @@ user-select: none;
     /* justify-content: space-evenly; */
 }
 .gender-select-candidate-div{
+    margin-left: 20px;
     min-height: 40px;
     height: auto;
     width: 40%;
@@ -541,17 +636,31 @@ user-select: none;
     margin-bottom: 15px;
 }
 .Employement-body p{
-    font-size: 18px;
+    font-size: 16px;
     margin-top: 5px;
     margin-bottom: 10px;
     user-select: none;
+    width: max-content;
 }
 
 
-.select-candidate.active {
-    background-color: #ff7f00; /* Highlight color */
+/* .select-candidate.active {
+    background-color: #ff7f00; 
     color: white;
     border-color: #ff7f00;
+} */
+.select-candidate {
+    cursor: pointer;
+    padding: 10px 15px;
+    border-radius: 8px;
+    background-color: white;
+    transition: background-color 0.3s ease-in-out;
+    border: 1px solid #d0d0d0;
+}
+
+.select-candidate.active {
+    background-color: #FFBD03; /* Yellow for selected */
+    color: black;
 }
 
 .search-cadidate-btn{
@@ -585,16 +694,34 @@ user-select: none;
     /* background-color: #141B5F; */
 }
 
+.education-option-wrap{
+width: 100%;
+    height: auto;
+    background-color: #fff;
+    /* background-color: #005bb5; */
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+    color: black;
+    margin-bottom: 10px;
+    user-select: none;
+    margin-top: 5px;
+}
+
+.all-hz {
+    margin-top: 10px;
+    border-top: 1px solid #999;
+}
 .tenth p, .twelfth p, .ug p, .pg p , .diplomo p, .phd p{
     font-size: 16px;
-    color: #141B5F;
+    color: #000;
     /* margin-bottom: 10px; */
 }
 
 .tenth input, .twelfth input, .ug input, .pg input, .diplomo input, .phd input{
     height: 40px;
     border-radius: 10px;
-    border: 0.5px solid #999999;
+    border: 0.5px solid #d0d0d0;
     transition: all 0.3s ease;   /* Smooth transition for effects */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
 }
@@ -617,7 +744,8 @@ user-select: none;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid black;
+    border: 1px solid #d0d0d0;
+    color: #999;
     border-radius: 50px;
     cursor: pointer;
     margin: 3px 15px;
@@ -634,7 +762,8 @@ user-select: none;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid black;
+    border: 1px solid #d0d0d0;
+    color: #999;
     border-radius: 50px;
     cursor: pointer;
     margin: 3px 15px;
@@ -703,7 +832,7 @@ user-select: none;
         padding-left: 5px;
     }
     .navigation-header-1-1 p{
-        font-size: 13px;
+        font-size: 14px;
         
     }
     .navigation-header-1-2{
@@ -711,7 +840,7 @@ user-select: none;
         padding-left: 5px;
     }
     .navigation-header-1-2 p{
-        font-size: 13px;
+        font-size: 14px;
         
     }
 
@@ -743,7 +872,7 @@ user-select: none;
 
 @media (min-width : 550px) and (max-width : 650px){
     .select-candidate{
-        font-size: 13px;
+        font-size: 14px;
     }
 } 
 
@@ -788,7 +917,7 @@ user-select: none;
         padding-left: 5px;
     }
     .navigation-header-1-1 p{
-        font-size: 13px;
+        font-size: 14px;
         
     }
     .navigation-header-1-2{
@@ -796,7 +925,7 @@ user-select: none;
         padding-left: 5px;
     }
     .navigation-header-1-2 p{
-        font-size: 13px;
+        font-size: 14px;
         
     }
 

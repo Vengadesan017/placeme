@@ -68,7 +68,7 @@
     max-height: 400px;
     overflow: auto;
     padding: 10px 20px;
-    /* background-color: #141b5f; */
+    background-color: #fff;
 }
 
 .modal-body b{

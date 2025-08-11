@@ -16,19 +16,14 @@ Search Result
 <script src="{% static 'js/jobseeker/search-bar-recommandation.js' %}" defer></script>
 <style>
 
-.kyc-card{
-    background-color: #fff;
-    width: 100%;
-    height: 100%;
-    border-radius: 20px;
-    padding: 20px 20px;
-    margin-bottom: 20px;
-}
 
 .total-candidates{
     display: block;
     font-size: .7rem;
     margin: 10px 0;
+    width: 100vh;
+    position: relative;
+    left: 73vh;
 }
 
 .description {
@@ -41,9 +36,6 @@ Search Result
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .form{
     border: none;
@@ -54,7 +46,7 @@ Search Result
 }
 
 
-{% comment %} from open search {% endcomment %}
+
 
 .r-down-main{
     width: 100%;
@@ -69,7 +61,7 @@ Search Result
     box-shadow: unset;
 }
 
-{% comment %} for recommandation {% endcomment %}
+
 
     /* Main container styling */
     .search-container {
@@ -85,20 +77,20 @@ Search Result
         font-size: 16px;
         border: 1px solid #ddd;
         border-radius: 5px;
+        height: 50px;
 
     }
     .search-bar input[type="text"] {
-        padding: 20px 0 20px 20px;
-        width: 150px;
+    padding: 0px 0 0px 20px;
+    width: 150px;
     }
     .min-exp , .max-exp {
-    border: none;
+        border: none;
     outline: none;
-    padding: 20px 0;
-    border-radius: 50px;
     font-size: medium;
-     width: 135px; 
-     color: #555;
+    width: 135px;
+    height: 50px;
+    color: #555;
     }
     /* Recommendation dropdown styling */
     .recommendation-box {
@@ -140,6 +132,14 @@ Search Result
         /* cursor: pointer; */
         transition: color 0.3s ease;
     }
+.search-form {
+    display: flex;
+    align-items: center;
+    height: 50px;
+}
+.search-bar .search-button {    
+    padding: 12px 33px;
+}
 </style>
 {% endblock statics %}
 
@@ -739,7 +739,7 @@ Search Result
     <div class="job-header">
         <div>
             <h2>{{ candidate.first_name }} {{ candidate.last_name }}</h2>
-            <p class="company-name">{{ candidate.present_designation|default:"-" }}</p>
+            <p class="company-name">{{ candidate.my_employment.0.company_role|default:"-" }}</p>
         </div>
 
         <a href="{% url 'recruiters:candidate' candidate_uuid=candidate.candidate_uuid %}" class="apply-job">View</a>
@@ -859,7 +859,27 @@ Search Result
         </form>
     </div>
 </div>
+        <div class="pagination">
+          {% if page_obj.has_previous %}
+            <a href="?q={{ keyword1 }}&p={{ keyword2 }}&page={{ page_obj.previous_page_number }}">Previous</a>
+          {% endif %}
 
+          {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+              <span class="current">{{ num }}</span>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+              <a href="?q={{ keyword1 }}&p={{ keyword2 }}&page={{ num }}">{{ num }}</a>
+            {% elif num == 1 or num == page_obj.paginator.num_pages %}
+              <a href="?q={{ keyword1 }}&p={{ keyword2 }}&page={{ num }}">{{ num }}</a>
+            {% elif num == page_obj.number|add:'-4' or num == page_obj.number|add:'4' %}
+              <span>...</span>
+            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+            <a href="?q={{ keyword1 }}&p={{ keyword2 }}&page={{ page_obj.next_page_number }}" class="last">Next</a>
+          {% endif %}
+        </div>
 
 {% empty %}
 No Record found

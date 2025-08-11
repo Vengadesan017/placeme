@@ -94,17 +94,19 @@
                         </a>
                     </div>
                     <div class="box-1">
-                        <a href="{% url 'recruiters:post' %} " class="{% if request.resolver_match.url_name == 'post' or request.resolver_match.url_name == 'post_draft' or request.resolver_match.url_name == 'create_post' %}active{% endif %}">
+                        <a href="{% url 'recruiters:position_manager' %}" class="{% if request.resolver_match.url_name == 'position_manager' %}active{% endif %}">
                             <div class="p">
-                                <i class="fa-solid fa-suitcase"></i> <p>Job posting</p> 
+                                <i class="fa-solid fa-clipboard-list" style="font-size: 18px;"></i> <p>Position manager</p>
                             </div>
                             <i class="fa-solid fa-caret-right"></i>
                         </a>
                         
                     </div>
-                    <div class="box-1-hide">
-                        <a href="{% url 'recruiters:post' %}" class="{% if request.resolver_match.url_name == 'post' or request.resolver_match.url_name == 'post_draft' or request.resolver_match.url_name == 'create_post' %}active{% endif %}">
-                            <i class="fa-solid fa-suitcase"></i> 
+                
+
+                    <div class="box-1-hide"> 
+                        <a href="{% url 'recruiters:position_manager' %}" class="{% if request.resolver_match.url_name == 'position_manager' %}active{% endif %}">
+                            <i class="fa-solid fa-clipboard-list"></i> 
                         </a>
                     </div>
                     <div class="box-1">
@@ -121,21 +123,24 @@
                             <i class="fa-solid fa-building-user"></i> 
                         </a>
                     </div>
-
+                    
                     <div class="box-1">
-                        <a href="{% url 'recruiters:position_manager' %}" class="{% if request.resolver_match.url_name == 'position_manager' %}active{% endif %}">
+                        <a href="{% url 'recruiters:post' %} " class="{% if request.resolver_match.url_name == 'post' or request.resolver_match.url_name == 'post_draft' or request.resolver_match.url_name == 'create_post' %}active{% endif %}">
                             <div class="p">
-                                <i class="fa-solid fa-clipboard-list" style="font-size: 18px;"></i> <p>Position manager</p>
+                                <i class="fa-solid fa-suitcase"></i> <p>Job posting</p> 
                             </div>
                             <i class="fa-solid fa-caret-right"></i>
                         </a>
                         
                     </div>
-                    <div class="box-1-hide"> 
-                        <a href="{% url 'recruiters:position_manager' %}" class="{% if request.resolver_match.url_name == 'position_manager' %}active{% endif %}">
-                            <i class="fa-solid fa-clipboard-list"></i> 
+                    <div class="box-1-hide">
+                        <a href="{% url 'recruiters:post' %}" class="{% if request.resolver_match.url_name == 'post' or request.resolver_match.url_name == 'post_draft' or request.resolver_match.url_name == 'create_post' %}active{% endif %}">
+                            <i class="fa-solid fa-suitcase"></i> 
                         </a>
                     </div>
+
+
+
 
                     <div class="box-1">
                         <a href="{% url 'recruiters:admin_control' page='package' %}" class="{% if request.resolver_match.url_name == 'admin_control' %}active{% endif %}">

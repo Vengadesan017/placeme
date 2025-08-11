@@ -23,7 +23,7 @@
 
         
         {% comment %} <div onclick="window.location='/status/applied';" class="apply-job">View</div> {% endcomment %}
-        <div onclick="#" class="apply-job">View</div>
+        <a href="{% url "recruiters:applicant" applicant_id=app.applicant_id %}" class="apply-job">View</a>
         
     </div>
 
